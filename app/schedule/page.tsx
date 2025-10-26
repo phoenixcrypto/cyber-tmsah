@@ -1,9 +1,12 @@
-import { Calendar, Clock, MapPin, User, BookOpen } from 'lucide-react'
+'use client'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+import { Calendar, Clock, MapPin, User, BookOpen, Search } from 'lucide-react'
+import { useState } from 'react'
 
 export default function SchedulePage() {
+  const [selectedGroup, setSelectedGroup] = useState('')
+  const [selectedSection, setSelectedSection] = useState('')
+  const [filteredSchedule, setFilteredSchedule] = useState<any[]>([])
   const scheduleData = [
     {
       id: '1',
@@ -12,7 +15,9 @@ export default function SchedulePage() {
       location: 'Main Hall A',
       instructor: 'Dr. Ahmed Mohamed',
       type: 'lecture',
-      section: 'Group A (350 students)'
+      section: 'Group A (350 students)',
+      group: 'Group 1',
+      sectionNumber: null
     },
     {
       id: '2',
@@ -21,7 +26,9 @@ export default function SchedulePage() {
       location: 'Main Hall B',
       instructor: 'Dr. Ahmed Mohamed',
       type: 'lecture',
-      section: 'Group B (350 students)'
+      section: 'Group B (350 students)',
+      group: 'Group 2',
+      sectionNumber: null
     },
     {
       id: '3',
@@ -30,7 +37,9 @@ export default function SchedulePage() {
       location: 'Main Hall A',
       instructor: 'Dr. Sara Ahmed',
       type: 'lecture',
-      section: 'Group A (350 students)'
+      section: 'Group A (350 students)',
+      group: 'Group 1',
+      sectionNumber: null
     },
     {
       id: '4',
@@ -39,7 +48,9 @@ export default function SchedulePage() {
       location: 'Main Hall B',
       instructor: 'Dr. Sara Ahmed',
       type: 'lecture',
-      section: 'Group B (350 students)'
+      section: 'Group B (350 students)',
+      group: 'Group 2',
+      sectionNumber: null
     },
     {
       id: '5',
@@ -48,7 +59,9 @@ export default function SchedulePage() {
       location: 'Main Hall A',
       instructor: 'Dr. Mohamed Ali',
       type: 'lecture',
-      section: 'Group A (350 students)'
+      section: 'Group A (350 students)',
+      group: 'Group 1',
+      sectionNumber: null
     },
     {
       id: '6',
@@ -57,7 +70,9 @@ export default function SchedulePage() {
       location: 'Main Hall B',
       instructor: 'Dr. Mohamed Ali',
       type: 'lecture',
-      section: 'Group B (350 students)'
+      section: 'Group B (350 students)',
+      group: 'Group 2',
+      sectionNumber: null
     },
     {
       id: '7',
@@ -66,7 +81,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 1',
       instructor: 'Dr. Fatma Hassan',
       type: 'lab',
-      section: 'Section 1 (47 students)'
+      section: 'Section 1 (47 students)',
+      group: 'Group 1',
+      sectionNumber: 1
     },
     {
       id: '8',
@@ -75,7 +92,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 2',
       instructor: 'Dr. Fatma Hassan',
       type: 'lab',
-      section: 'Section 2 (47 students)'
+      section: 'Section 2 (47 students)',
+      group: 'Group 1',
+      sectionNumber: 2
     },
     {
       id: '9',
@@ -84,7 +103,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 3',
       instructor: 'Dr. Fatma Hassan',
       type: 'lab',
-      section: 'Section 3 (47 students)'
+      section: 'Section 3 (47 students)',
+      group: 'Group 1',
+      sectionNumber: 3
     },
     {
       id: '10',
@@ -93,7 +114,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 1',
       instructor: 'Eng. Ali Mahmoud',
       type: 'lab',
-      section: 'Section 4 (47 students)'
+      section: 'Section 4 (47 students)',
+      group: 'Group 1',
+      sectionNumber: 4
     },
     {
       id: '11',
@@ -102,7 +125,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 2',
       instructor: 'Eng. Ali Mahmoud',
       type: 'lab',
-      section: 'Section 5 (47 students)'
+      section: 'Section 5 (47 students)',
+      group: 'Group 1',
+      sectionNumber: 5
     },
     {
       id: '12',
@@ -111,7 +136,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 3',
       instructor: 'Eng. Ali Mahmoud',
       type: 'lab',
-      section: 'Section 6 (47 students)'
+      section: 'Section 6 (47 students)',
+      group: 'Group 1',
+      sectionNumber: 6
     },
     {
       id: '13',
@@ -120,7 +147,9 @@ export default function SchedulePage() {
       location: 'Language Lab 1',
       instructor: 'Dr. Nour El-Din',
       type: 'lab',
-      section: 'Section 7 (47 students)'
+      section: 'Section 7 (47 students)',
+      group: 'Group 1',
+      sectionNumber: 7
     },
     {
       id: '14',
@@ -129,7 +158,9 @@ export default function SchedulePage() {
       location: 'Language Lab 2',
       instructor: 'Dr. Nour El-Din',
       type: 'lab',
-      section: 'Section 8 (47 students)'
+      section: 'Section 8 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 8
     },
     {
       id: '15',
@@ -138,7 +169,9 @@ export default function SchedulePage() {
       location: 'Language Lab 3',
       instructor: 'Dr. Nour El-Din',
       type: 'lab',
-      section: 'Section 9 (47 students)'
+      section: 'Section 9 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 9
     },
     {
       id: '16',
@@ -147,7 +180,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 4',
       instructor: 'Eng. Mariam Ahmed',
       type: 'lab',
-      section: 'Section 10 (47 students)'
+      section: 'Section 10 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 10
     },
     {
       id: '17',
@@ -156,7 +191,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 5',
       instructor: 'Eng. Mariam Ahmed',
       type: 'lab',
-      section: 'Section 11 (47 students)'
+      section: 'Section 11 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 11
     },
     {
       id: '18',
@@ -165,7 +202,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 6',
       instructor: 'Eng. Mariam Ahmed',
       type: 'lab',
-      section: 'Section 12 (47 students)'
+      section: 'Section 12 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 12
     },
     {
       id: '19',
@@ -174,7 +213,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 7',
       instructor: 'Dr. Fatma Hassan',
       type: 'lab',
-      section: 'Section 13 (47 students)'
+      section: 'Section 13 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 13
     },
     {
       id: '20',
@@ -183,7 +224,9 @@ export default function SchedulePage() {
       location: 'Computer Lab 8',
       instructor: 'Eng. Ali Mahmoud',
       type: 'lab',
-      section: 'Section 14 (47 students)'
+      section: 'Section 14 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 14
     },
     {
       id: '21',
@@ -192,11 +235,23 @@ export default function SchedulePage() {
       location: 'Computer Lab 9',
       instructor: 'Eng. Mariam Ahmed',
       type: 'lab',
-      section: 'Section 15 (47 students)'
+      section: 'Section 15 (47 students)',
+      group: 'Group 2',
+      sectionNumber: 15
     }
   ]
 
-  const sections = [...new Set(scheduleData.map(item => item.section))]
+  const handleSearch = () => {
+    let filtered = scheduleData.filter(item => {
+      const matchesGroup = !selectedGroup || item.group === selectedGroup
+      const matchesSection = !selectedSection || item.sectionNumber === parseInt(selectedSection)
+      return matchesGroup && matchesSection
+    })
+    setFilteredSchedule(filtered)
+  }
+
+  const groups = ['Group 1', 'Group 2']
+  const sections = Array.from({length: 15}, (_, i) => i + 1)
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -237,24 +292,61 @@ export default function SchedulePage() {
           </p>
         </div>
 
-        {/* Section Filter */}
+        {/* Search Interface */}
         <div className="mb-8 animate-slide-up">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {sections.map((section, index) => (
-              <button
-                key={section}
-                className="px-4 py-2 rounded-lg bg-cyber-dark/50 border border-cyber-neon/20 text-dark-200 hover:bg-cyber-neon/10 hover:text-cyber-neon transition-all duration-300 text-sm font-medium"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {section}
-              </button>
-            ))}
+          <div className="enhanced-card p-6">
+            <h2 className="text-xl font-semibold text-dark-100 mb-4 text-center">
+              اختر مجموعتك وسكشنك لعرض جدولك الأسبوعي
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+              <div>
+                <label className="block text-sm font-medium text-dark-200 mb-2">
+                  المجموعة
+                </label>
+                <select
+                  value={selectedGroup}
+                  onChange={(e) => setSelectedGroup(e.target.value)}
+                  className="w-full px-3 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+                >
+                  <option value="">اختر المجموعة</option>
+                  {groups.map(group => (
+                    <option key={group} value={group}>{group}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-dark-200 mb-2">
+                  السكشن
+                </label>
+                <select
+                  value={selectedSection}
+                  onChange={(e) => setSelectedSection(e.target.value)}
+                  className="w-full px-3 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+                >
+                  <option value="">اختر السكشن</option>
+                  {sections.map(section => (
+                    <option key={section} value={section}>Section {section}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <button
+                  onClick={handleSearch}
+                  className="w-full bg-gradient-to-r from-cyber-neon to-cyber-green hover:from-cyber-green hover:to-cyber-neon text-dark-100 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                >
+                  <Search className="w-4 h-4" />
+                  البحث
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Schedule Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {scheduleData.map((item, index) => {
+          {(filteredSchedule.length > 0 ? filteredSchedule : scheduleData).map((item, index) => {
             const TypeIcon = getTypeIcon(item.type)
             return (
               <div

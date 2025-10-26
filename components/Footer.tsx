@@ -5,7 +5,7 @@ import { MessageCircle, User, Code, Award } from 'lucide-react'
 export default function Footer() {
   const handleWhatsAppContact = () => {
     const message = encodeURIComponent('مرحباً! أريد التواصل معكم حول منصة Cyber TMSAH')
-    const whatsappUrl = `https://wa.me/201234567890?text=${message}`
+    const whatsappUrl = `https://wa.me/201553450232?text=${message}`
     window.open(whatsappUrl, '_blank')
   }
 
