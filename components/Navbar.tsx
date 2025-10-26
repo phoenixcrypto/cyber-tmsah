@@ -16,11 +16,11 @@ export default function Navbar() {
   }
 
   const navItems = [
-    { href: '/', label: 'الرئيسية', icon: Home, iconColor: 'text-cyber-neon' },
-    { href: '/schedule', label: 'الجدول', icon: Calendar, iconColor: 'text-cyber-violet' },
-    { href: '/tasks', label: 'المهام', icon: CheckSquare, iconColor: 'text-cyber-green' },
-    { href: '/materials', label: 'المواد', icon: BookOpen, iconColor: 'text-cyber-blue' },
-    { href: '/about', label: 'حول', icon: Info, iconColor: 'text-cyber-neon' },
+    { href: '/', label: 'الرئيسية', icon: Home },
+    { href: '/schedule', label: 'الجدول', icon: Calendar },
+    { href: '/tasks', label: 'المهام', icon: CheckSquare },
+    { href: '/materials', label: 'المواد', icon: BookOpen },
+    { href: '/about', label: 'حول', icon: Info },
   ]
 
   return (
@@ -45,9 +45,9 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center space-x-3 px-3 py-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
+                  className="flex items-center space-x-4 px-3 py-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
                 >
-                  <Icon className={`w-4 h-4 ${item.iconColor} group-hover:scale-110 transition-transform`} />
+                  <Icon className="w-4 h-4 text-cyber-neon group-hover:scale-110 transition-transform" />
                   <span className="text-sm font-medium">{item.label}</span>
                 </Link>
               )
@@ -79,9 +79,9 @@ export default function Navbar() {
                     key={item.href}
                     href={item.href}
                     onClick={closeMenu}
-                    className="flex items-center space-x-4 px-3 py-3 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
+                    className="flex items-center space-x-5 px-3 py-3 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
                   >
-                    <Icon className={`w-5 h-5 ${item.iconColor} group-hover:scale-110 transition-transform`} />
+                    <Icon className="w-5 h-5 text-cyber-neon group-hover:scale-110 transition-transform" />
                     <span className="text-base font-medium">{item.label}</span>
                   </Link>
                 )
