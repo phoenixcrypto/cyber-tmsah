@@ -137,7 +137,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={index}
-                  className="enhanced-card p-6 text-center hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
+                  className={`${index >= 2 ? 'glass-card bg-gradient-to-br from-cyber-dark to-cyber-dark/50' : 'enhanced-card'} p-6 text-center hover:scale-105 transition-all duration-300 animate-slide-up-delayed`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-neon/30`}>
