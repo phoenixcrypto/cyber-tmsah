@@ -260,10 +260,10 @@ export default function SchedulePage() {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            الجدول الأكاديمي
+            Academic Schedule
           </h1>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            جدول المحاضرات والمختبرات للفصل الدراسي الحالي
+            Comprehensive lecture and laboratory schedule for the current academic semester
           </p>
         </div>
 
@@ -271,19 +271,19 @@ export default function SchedulePage() {
         <div className="mb-8 animate-slide-up">
           <div className="enhanced-card p-6">
             <h2 className="text-xl font-semibold text-dark-100 mb-4 text-center">
-              اختر مجموعتك وسكشنك لعرض جدولك الأسبوعي
+              Select your group and attendance section to view your weekly schedule
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  المجموعة
+                  Group
                 </label>
                 <select
                   value={selectedGroup}
                   onChange={(e) => setSelectedGroup(e.target.value)}
                   className="w-full px-3 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
                 >
-                  <option value="">اختر المجموعة</option>
+                  <option value="">Select Group</option>
                   {groups.map(group => (
                     <option key={group} value={group}>{group}</option>
                   ))}
@@ -292,14 +292,14 @@ export default function SchedulePage() {
               
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  السكشن
+                  Attendance
                 </label>
                 <select
                   value={selectedSection}
                   onChange={(e) => setSelectedSection(e.target.value)}
                   className="w-full px-3 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
                 >
-                  <option value="">اختر السكشن</option>
+                  <option value="">Select Attendance</option>
                   {sections.map(section => (
                     <option key={section} value={section}>Section {section}</option>
                   ))}
@@ -312,7 +312,7 @@ export default function SchedulePage() {
                   className="w-full bg-gradient-to-r from-cyber-neon to-cyber-green hover:from-cyber-green hover:to-cyber-neon text-dark-100 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
                 >
                   <Search className="w-4 h-4" />
-                  البحث
+                  Search
                 </button>
               </div>
             </div>
@@ -325,13 +325,13 @@ export default function SchedulePage() {
             <table className="w-full">
               <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
                 <tr>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">التوقيت</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المادة</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المحاضر</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">القاعة</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">النوع</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المجموعة</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">السكشن</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Group</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Attendance</th>
                 </tr>
               </thead>
               <tbody>
@@ -373,7 +373,7 @@ export default function SchedulePage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                      {item.sectionNumber ? `السكشن ${item.sectionNumber}` : 'محاضرة عامة'}
+                      {item.sectionNumber ? `Attendance ${item.sectionNumber}` : 'General Lecture'}
                     </td>
                   </tr>
                 ))}

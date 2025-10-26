@@ -7,32 +7,32 @@ export default function AboutPage() {
   const features = [
     {
       icon: Users,
-      title: 'مجتمع تعليمي',
-      description: 'نحن نؤمن بقوة التعلم الجماعي وتبادل المعرفة',
+      title: 'Academic Community',
+      description: 'We believe in the power of collaborative learning and knowledge sharing',
       color: 'from-cyber-neon to-cyber-green',
       bgGradient: 'from-cyber-green/20 to-cyber-neon/20',
       cardBg: 'bg-gradient-to-br from-cyber-green/10 to-cyber-neon/10'
     },
     {
       icon: BookOpen,
-      title: 'محتوى عالي الجودة',
-      description: 'نقدم مواد تعليمية متميزة ومحدثة باستمرار',
+      title: 'High-Quality Content',
+      description: 'We provide exceptional and continuously updated educational materials',
       color: 'from-cyber-violet to-cyber-blue',
       bgGradient: 'from-cyber-violet/20 to-cyber-blue/20',
       cardBg: 'bg-gradient-to-br from-cyber-violet/10 to-cyber-blue/10'
     },
     {
       icon: Award,
-      title: 'خبرة متميزة',
-      description: 'فريق من الخبراء والمتخصصين في مجال التعليم',
+      title: 'Distinguished Expertise',
+      description: 'A team of experts and specialists in the field of education',
       color: 'from-cyber-green to-cyber-neon',
       bgGradient: 'from-cyber-green/20 to-cyber-neon/20',
       cardBg: 'bg-gradient-to-br from-cyber-green/15 to-cyber-neon/15'
     },
     {
       icon: Target,
-      title: 'أهداف واضحة',
-      description: 'نسعى لتحقيق أفضل النتائج التعليمية',
+      title: 'Clear Objectives',
+      description: 'We strive to achieve the best educational outcomes',
       color: 'from-cyber-blue to-cyber-violet',
       bgGradient: 'from-cyber-blue/20 to-cyber-violet/20',
       cardBg: 'bg-gradient-to-br from-cyber-blue/15 to-cyber-violet/15'
@@ -42,23 +42,23 @@ export default function AboutPage() {
   const values = [
     {
       icon: Heart,
-      title: 'الشغف بالتعلم',
-      description: 'نؤمن بأن التعلم هو رحلة مستمرة مدى الحياة'
+      title: 'Passion for Learning',
+      description: 'We believe that learning is a lifelong journey'
     },
     {
       icon: Lightbulb,
-      title: 'الابتكار',
-      description: 'نستخدم أحدث التقنيات لتحسين تجربة التعلم'
+      title: 'Innovation',
+      description: 'We use cutting-edge technologies to enhance the learning experience'
     },
     {
       icon: Users,
-      title: 'التعاون',
-      description: 'نعمل معاً لتحقيق أهدافنا المشتركة'
+      title: 'Collaboration',
+      description: 'We work together to achieve our shared goals'
     },
     {
       icon: Award,
-      title: 'التميز',
-      description: 'نسعى للتميز في كل ما نقدمه'
+      title: 'Excellence',
+      description: 'We strive for excellence in everything we offer'
     }
   ]
 
@@ -70,11 +70,11 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <Info className="w-8 h-8 text-cyber-neon" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              حول منصة Cyber TMSAH
+              About Cyber TMSAH Platform
             </h1>
           </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم
+            An advanced educational platform integrating cutting-edge technology with academic excellence for superior learning experiences
           </p>
         </div>
 
@@ -84,13 +84,13 @@ export default function AboutPage() {
             <div className="flex items-center justify-center gap-4 mb-6">
               <Target className="w-6 h-6 text-cyber-neon" />
               <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-                رسالتنا
+                Our Mission
               </h2>
             </div>
             <p className="text-lg text-dark-300 leading-relaxed max-w-4xl mx-auto">
-              نسعى لتوفير بيئة تعليمية متطورة ومحفزة تساعد الطلاب على تحقيق أقصى استفادة من تعلمهم. 
-              نؤمن بأن التعليم يجب أن يكون تفاعلياً وممتعاً ومتاحاً للجميع، ولهذا نستخدم أحدث التقنيات 
-              لإنشاء تجربة تعلم فريدة ومتميزة.
+              We strive to provide an advanced and stimulating educational environment that helps students maximize their learning potential. 
+              We believe that education should be interactive, engaging, and accessible to everyone, which is why we use cutting-edge technologies 
+              to create a unique and exceptional learning experience.
             </p>
           </div>
         </div>
@@ -100,7 +100,7 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-4 mb-8">
             <Star className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              مميزاتنا
+              Our Features
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -132,7 +132,7 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-4 mb-8">
             <Heart className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              قيمنا
+              Our Values
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -168,7 +168,7 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-4 mb-8">
             <Users className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              أعضاء هيئة التدريس
+              Faculty Members
             </h2>
           </div>
           
@@ -179,17 +179,17 @@ export default function AboutPage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">الرياضيات</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">Mathematics</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>د. سييمون عزت</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>م. ايهاب غلاب</p>
                     <p>م. احمد نشأت</p>
@@ -206,17 +206,17 @@ export default function AboutPage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
                   <Target className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">الفيزياء التطبيقية</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">Applied Physics</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>د. احمد بكر</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>م. احمد نشأت</p>
                     <p>م. امنية ابراهيم</p>
@@ -233,17 +233,17 @@ export default function AboutPage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-xl flex items-center justify-center shadow-lg shadow-cyber-green/30">
                   <Award className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">قواعد البيانات ومهارات الريادة والتفكير الإبداعي</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">Database Systems & Entrepreneurship and Creative Thinking Skills</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>د. عبير حسن</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>م. نجلاء سعيد</p>
                     <p>م. كريم عادل</p>
@@ -260,17 +260,17 @@ export default function AboutPage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-blue to-cyber-violet rounded-xl flex items-center justify-center shadow-lg shadow-cyber-blue/30">
                   <Users className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">تكنولوجيا المعلومات</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">Information Technology</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>د. شيماء احمد</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>م. محمد عمار</p>
                   </div>
@@ -286,17 +286,17 @@ export default function AboutPage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
                   <Heart className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">اللغة الإنجليزية</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">English Language</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>د. نشوي</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>لا يوجد معيدين</p>
                   </div>
@@ -312,17 +312,17 @@ export default function AboutPage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
                   <Lightbulb className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">نظم المعلومات</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">Information Systems</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>د. هند زيادة</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
                   <div className="space-y-2 text-dark-300">
                     <p>م. محمود محمد</p>
                     <p>م. مريم اشرف</p>

@@ -13,22 +13,22 @@ export default function HomePage() {
   const features = [
     {
       icon: Calendar,
-      title: 'جدول الحصص',
-      description: 'عرض جدول الحصص والأحداث المهمة',
+      title: 'Academic Schedule',
+      description: 'Comprehensive class schedules and important academic events',
       href: '/schedule',
       color: 'from-cyber-neon via-cyber-green to-cyber-neon'
     },
     {
       icon: CheckSquare,
-      title: 'إدارة المهام',
-      description: 'تنظيم المهام والواجبات',
+      title: 'Assignment Management',
+      description: 'Organize and track academic assignments and projects',
       href: '/tasks',
       color: 'from-cyber-violet via-cyber-blue to-cyber-violet'
     },
     {
       icon: BookOpen,
-      title: 'المواد التعليمية',
-      description: 'الوصول للمواد والمحاضرات',
+      title: 'Learning Materials',
+      description: 'Access comprehensive course materials and resources',
       href: '/materials',
       color: 'from-cyber-green via-cyber-neon to-cyber-green'
     }
@@ -125,14 +125,14 @@ export default function HomePage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-fade-in">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-bold text-dark-100 mb-6 leading-tight">
-              مرحباً بك في
+              Welcome to
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green">
                 Cyber TMSAH
               </span>
             </h1>
             
             <p className="text-lg sm:text-xl md:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              منصة تعليمية حديثة ومتطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم
+              An advanced university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -140,7 +140,7 @@ export default function HomePage() {
                 href="/schedule"
                 className="btn-primary text-lg px-8 py-4 rounded-xl font-semibold group"
               >
-                ابدأ التعلم
+                Begin Learning
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               
@@ -148,7 +148,7 @@ export default function HomePage() {
                 href="/materials"
                 className="btn-secondary text-lg px-8 py-4 rounded-xl font-semibold group"
               >
-                استكشف المواد
+                Explore Materials
                 <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               </Link>
             </div>
@@ -160,24 +160,24 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-cyber-neon/30">
                 <Zap className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">تعلم سريع</h3>
-              <p className="text-dark-300">تقنيات متقدمة للتعلم السريع والفعال</p>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">Accelerated Learning</h3>
+              <p className="text-dark-300">Advanced techniques for efficient and effective learning</p>
             </div>
             
             <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
               <div className="w-16 h-16 bg-gradient-to-br from-cyber-violet via-cyber-blue to-cyber-violet rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-cyber-violet/30">
                 <Shield className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">آمن ومضمون</h3>
-              <p className="text-dark-300">حماية كاملة لبياناتك ومعلوماتك</p>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">Secure & Reliable</h3>
+              <p className="text-dark-300">Comprehensive protection for your data and information</p>
             </div>
             
             <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
               <div className="w-16 h-16 bg-gradient-to-br from-cyber-green via-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-cyber-neon/30">
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">تجربة مميزة</h3>
-              <p className="text-dark-300">واجهة مستخدم حديثة وسهلة الاستخدام</p>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">Premium Experience</h3>
+              <p className="text-dark-300">Modern, intuitive user interface designed for academic excellence</p>
             </div>
           </div>
         </div>
@@ -195,10 +195,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-slide-up">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-              الميزات الرئيسية
+              Core Features
             </h2>
             <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-              اكتشف جميع الميزات المتاحة في منصتنا التعليمية
+              Discover all the advanced features available in our academic platform
             </p>
           </div>
           
@@ -237,7 +237,7 @@ export default function HomePage() {
             <div className="flex items-center justify-center gap-3 mb-6">
               <Calendar className="w-8 h-8 text-cyber-neon" />
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-                جدول اليوم
+                Today's Schedule
               </h2>
             </div>
             <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
@@ -255,31 +255,31 @@ export default function HomePage() {
           <div className="mb-8 animate-slide-up">
             <div className="enhanced-card p-6 max-w-4xl mx-auto">
               <h3 className="text-xl font-semibold text-dark-100 mb-4 text-center">
-                اختر مجموعتك وسكشنك لعرض جدولك اليومي
+                Select your group and attendance section to view your personalized schedule
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-dark-300 mb-2">المجموعة</label>
+                  <label className="block text-sm font-medium text-dark-300 mb-2">Group</label>
                   <select
                     value={selectedGroup}
                     onChange={(e) => setSelectedGroup(e.target.value)}
                     className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
-                    <option value="">اختر المجموعة</option>
-                    <option value="Group 1">المجموعة 1 (السكشن 1-7)</option>
-                    <option value="Group 2">المجموعة 2 (السكشن 8-15)</option>
+                    <option value="">Select Group</option>
+                    <option value="Group 1">Group 1 (Attendance 1-7)</option>
+                    <option value="Group 2">Group 2 (Attendance 8-15)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-dark-300 mb-2">السكشن</label>
+                  <label className="block text-sm font-medium text-dark-300 mb-2">Attendance</label>
                   <select
                     value={selectedSection}
                     onChange={(e) => setSelectedSection(e.target.value)}
                     className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
-                    <option value="">اختر السكشن</option>
+                    <option value="">Select Attendance</option>
                     {sections.map(section => (
-                      <option key={section} value={section}>السكشن {section}</option>
+                      <option key={section} value={section}>Attendance {section}</option>
                     ))}
                   </select>
                 </div>
@@ -288,7 +288,7 @@ export default function HomePage() {
                     onClick={handleSearch}
                     className="w-full btn-primary py-3 px-6 rounded-lg font-semibold hover:scale-105 transition-transform"
                   >
-                    عرض الجدول
+                    View Schedule
                   </button>
                 </div>
               </div>
@@ -303,12 +303,12 @@ export default function HomePage() {
                   <table className="w-full">
                     <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
                       <tr>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">التوقيت</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المادة</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المحاضر</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">القاعة</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">النوع</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">السكشن</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Attendance</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -345,7 +345,7 @@ export default function HomePage() {
                             </span>
                           </td>
                           <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                            {schedule.sectionNumber ? `السكشن ${schedule.sectionNumber}` : 'محاضرة عامة'}
+                            {schedule.sectionNumber ? `Attendance ${schedule.sectionNumber}` : 'General Lecture'}
                           </td>
                         </tr>
                       ))}
@@ -359,8 +359,8 @@ export default function HomePage() {
               <div className="w-24 h-24 bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Calendar className="w-12 h-12 text-cyber-neon" />
               </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">اختر مجموعتك وسكشنك</h3>
-              <p className="text-dark-300">للعرض جدولك اليومي المخصص</p>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">Select your group and attendance</h3>
+              <p className="text-dark-300">to view your personalized daily schedule</p>
             </div>
           )}
           
@@ -369,7 +369,7 @@ export default function HomePage() {
               href="/schedule"
               className="btn-primary inline-flex items-center gap-2"
             >
-              عرض الجدول الكامل
+              View Full Schedule
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

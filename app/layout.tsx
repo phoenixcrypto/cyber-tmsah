@@ -23,9 +23,9 @@ const orbitron = Orbitron({
 })
 
 export const metadata: Metadata = {
-  title: 'Cyber TMSAH - منصة تعليمية حديثة',
-  description: 'منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم',
-  keywords: ['تعليم', 'برمجة', 'تكنولوجيا', 'تعلم', 'cyber', 'tmsah'],
+  title: 'Cyber TMSAH - Advanced Academic Learning Platform',
+  description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
+  keywords: ['education', 'programming', 'technology', 'learning', 'university', 'academic', 'cyber', 'tmsah', 'computer science'],
   authors: [{ name: 'ZEYAD MOHAMED' }],
   creator: 'ZEYAD MOHAMED',
   publisher: 'Cyber TMSAH',
@@ -38,13 +38,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
     languages: {
-      'ar-SA': '/ar',
       'en-US': '/en',
     },
   },
   openGraph: {
-    title: 'Cyber TMSAH - منصة تعليمية حديثة',
-    description: 'منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم',
+    title: 'Cyber TMSAH - Advanced Academic Learning Platform',
+    description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
     url: 'https://cyber-tmsah.vercel.app',
     siteName: 'Cyber TMSAH',
     images: [
@@ -52,16 +51,16 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Cyber TMSAH - منصة تعليمية حديثة',
+        alt: 'Cyber TMSAH - Advanced Academic Learning Platform',
       },
     ],
-    locale: 'ar_SA',
+    locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cyber TMSAH - منصة تعليمية حديثة',
-    description: 'منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم',
+    title: 'Cyber TMSAH - Advanced Academic Learning Platform',
+    description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
     images: ['/og-image.jpg'],
     creator: '@cyber_tmsah',
   },
@@ -87,7 +86,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl" className={`${inter.variable} ${orbitron.variable}`}>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${orbitron.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

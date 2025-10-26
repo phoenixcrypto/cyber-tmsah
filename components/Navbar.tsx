@@ -16,11 +16,11 @@ export default function Navbar() {
   }
 
   const navItems = [
-    { href: '/', label: 'الرئيسية', icon: Home },
-    { href: '/schedule', label: 'الجدول', icon: Calendar },
-    { href: '/tasks', label: 'المهام', icon: CheckSquare },
-    { href: '/materials', label: 'المواد', icon: BookOpen },
-    { href: '/about', label: 'حول', icon: Info },
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/schedule', label: 'Schedule', icon: Calendar },
+    { href: '/tasks', label: 'Assignments', icon: CheckSquare },
+    { href: '/materials', label: 'Materials', icon: BookOpen },
+    { href: '/about', label: 'About', icon: Info },
   ]
 
   return (
@@ -33,7 +33,7 @@ export default function Navbar() {
               <span className="font-orbitron font-bold text-2xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent group-hover:from-cyber-violet group-hover:via-cyber-green group-hover:to-cyber-neon transition-all duration-300">
                 Cyber TMSAH
               </span>
-              <span className="text-sm text-cyber-neon/70 font-medium">منصة تعليمية متطورة</span>
+              <span className="text-sm text-cyber-neon/70 font-medium">Advanced Academic Platform</span>
             </div>
           </Link>
 
