@@ -8,12 +8,16 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
+  fallback: ['system-ui', 'arial'],
+  preload: true,
 })
 
 const orbitron = Orbitron({ 
   subsets: ['latin'],
   variable: '--font-orbitron',
   display: 'swap',
+  fallback: ['monospace'],
+  preload: true,
 })
 
 export const metadata: Metadata = {

@@ -15,6 +15,9 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
+  // Font optimization
+  optimizeFonts: true,
+  
   // Compression
   compress: true,
   
