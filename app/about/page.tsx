@@ -1,6 +1,6 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, ThumbsUp, Star } from 'lucide-react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, ThumbsUp, Star, Info } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 export default function AboutPage() {
@@ -95,9 +95,12 @@ export default function AboutPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            حول منصة Cyber TMSAH
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <Info className="w-8 h-8 text-cyber-neon" />
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
+              حول منصة Cyber TMSAH
+            </h1>
+          </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
             منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم
           </p>
@@ -106,9 +109,12 @@ export default function AboutPage() {
         {/* Mission Section */}
         <div className="mb-16 animate-slide-up">
           <div className="enhanced-card p-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-6">
-              رسالتنا
-            </h2>
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Target className="w-6 h-6 text-cyber-neon" />
+              <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
+                رسالتنا
+              </h2>
+            </div>
             <p className="text-lg text-dark-300 leading-relaxed max-w-4xl mx-auto">
               نسعى لتوفير بيئة تعليمية متطورة ومحفزة تساعد الطلاب على تحقيق أقصى استفادة من تعلمهم. 
               نؤمن بأن التعليم يجب أن يكون تفاعلياً وممتعاً ومتاحاً للجميع، ولهذا نستخدم أحدث التقنيات 
@@ -119,9 +125,12 @@ export default function AboutPage() {
 
         {/* Features Section */}
         <div className="mb-16 animate-slide-up">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-8 text-center">
-            مميزاتنا
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <Star className="w-6 h-6 text-cyber-neon" />
+            <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
+              مميزاتنا
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => {
               const Icon = feature.icon
@@ -148,9 +157,12 @@ export default function AboutPage() {
 
         {/* Values Section */}
         <div className="mb-16 animate-slide-up">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-8 text-center">
-            قيمنا
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <Heart className="w-6 h-6 text-cyber-neon" />
+            <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
+              قيمنا
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {values.map((value, index) => {
               const Icon = value.icon
@@ -181,9 +193,12 @@ export default function AboutPage() {
 
         {/* Interactive Stats Section */}
         <div className="mb-16 animate-slide-up">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-8 text-center">
-            إحصائياتنا التفاعلية
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <ThumbsUp className="w-6 h-6 text-cyber-neon" />
+            <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
+              إحصائياتنا التفاعلية
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="glass-card p-6 text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4">

@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Clock, MessageCircle, User, Code, Award } from 'lucide-react'
+import { Mail, Phone, MapPin, Clock, MessageCircle, User, Code, Award, HeadphonesIcon, HelpCircle, MessageSquare, Users } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -42,9 +42,12 @@ export default function ContactPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            اتصل بنا
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <MessageCircle className="w-8 h-8 text-cyber-neon" />
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
+              اتصل بنا
+            </h1>
+          </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
             نحن هنا لمساعدتك. تواصل معنا لأي استفسار أو دعم
           </p>
@@ -120,14 +123,20 @@ export default function ContactPage() {
         {/* Additional Info */}
         <div className="max-w-4xl mx-auto animate-slide-up">
           <div className="enhanced-card p-8 text-center">
-            <h3 className="text-2xl font-semibold text-dark-100 mb-6">
-              لماذا تتواصل معنا؟
-            </h3>
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <HelpCircle className="w-6 h-6 text-cyber-neon" />
+              <h3 className="text-2xl font-semibold text-dark-100">
+                لماذا تتواصل معنا؟
+              </h3>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="text-right">
-                <h4 className="text-xl font-semibold text-dark-100 mb-4">
-                  الدعم الفني
-                </h4>
+                <div className="flex items-center gap-2 mb-4">
+                  <HeadphonesIcon className="w-5 h-5 text-cyber-green" />
+                  <h4 className="text-xl font-semibold text-dark-100">
+                    الدعم الفني
+                  </h4>
+                </div>
                 <p className="text-dark-300 leading-relaxed">
                   نحن هنا لمساعدتك في حل أي مشاكل تقنية قد تواجهها أثناء استخدام المنصة. 
                   فريقنا الفني متاح لمساعدتك في أي وقت.
@@ -135,9 +144,12 @@ export default function ContactPage() {
               </div>
               
               <div className="text-right">
-                <h4 className="text-xl font-semibold text-dark-100 mb-4">
-                  الاستفسارات العامة
-                </h4>
+                <div className="flex items-center gap-2 mb-4">
+                  <HelpCircle className="w-5 h-5 text-cyber-violet" />
+                  <h4 className="text-xl font-semibold text-dark-100">
+                    الاستفسارات العامة
+                  </h4>
+                </div>
                 <p className="text-dark-300 leading-relaxed">
                   لديك استفسار حول المنصة أو تريد معرفة المزيد عن خدماتنا؟ 
                   نحن سعداء للإجابة على جميع استفساراتك.
@@ -145,9 +157,12 @@ export default function ContactPage() {
               </div>
               
               <div className="text-right">
-                <h4 className="text-xl font-semibold text-dark-100 mb-4">
-                  الملاحظات والاقتراحات
-                </h4>
+                <div className="flex items-center gap-2 mb-4">
+                  <MessageSquare className="w-5 h-5 text-cyber-blue" />
+                  <h4 className="text-xl font-semibold text-dark-100">
+                    الملاحظات والاقتراحات
+                  </h4>
+                </div>
                 <p className="text-dark-300 leading-relaxed">
                   نرحب بملاحظاتك واقتراحاتك لتحسين تجربتك. 
                   آراؤك مهمة لنا وتساعدنا في تطوير المنصة.
@@ -155,9 +170,12 @@ export default function ContactPage() {
               </div>
               
               <div className="text-right">
-                <h4 className="text-xl font-semibold text-dark-100 mb-4">
-                  الشراكات والتعاون
-                </h4>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Users className="w-5 h-5 text-cyber-neon" />
+                    <h4 className="text-xl font-semibold text-dark-100">
+                      الشراكات والتعاون
+                    </h4>
+                  </div>
                 <p className="text-dark-300 leading-relaxed">
                   تريد التعاون معنا أو لديك فكرة مشروع مشترك؟ 
                   نحن متحمسون لسماع أفكارك ومقترحاتك.

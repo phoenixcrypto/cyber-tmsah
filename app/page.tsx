@@ -197,9 +197,12 @@ export default function HomePage() {
       <section className="py-20 bg-gradient-to-b from-cyber-dark/50 to-cyber-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-slide-up">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-              جدول اليوم
-            </h2>
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Calendar className="w-8 h-8 text-cyber-neon" />
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
+                جدول اليوم
+              </h2>
+            </div>
             <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
               {getCurrentDate()}
             </p>
