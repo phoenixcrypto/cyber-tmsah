@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Calendar, CheckSquare, BookOpen, User, ArrowRight, Sparkles, Zap, Shield } from 'lucide-react'
+import { Calendar, CheckSquare, BookOpen, ArrowRight, Sparkles, Zap, Shield } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -26,13 +26,6 @@ export default function HomePage() {
       description: 'الوصول للمواد والمحاضرات',
       href: '/materials',
       color: 'from-cyber-green to-cyber-neon'
-    },
-    {
-      icon: User,
-      title: 'لوحة الإدارة',
-      description: 'إدارة المحتوى والإعدادات',
-      href: '/admin',
-      color: 'from-cyber-blue to-cyber-violet'
     }
   ]
 

@@ -20,7 +20,6 @@ export default function Navbar() {
     { href: '/schedule', label: 'الجدول', icon: Calendar },
     { href: '/tasks', label: 'المهام', icon: CheckSquare },
     { href: '/materials', label: 'المواد', icon: BookOpen },
-    { href: '/admin', label: 'الإدارة', icon: User },
     { href: '/about', label: 'حول', icon: Info },
     { href: '/contact', label: 'اتصل بنا', icon: Mail },
   ]
@@ -31,10 +30,9 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 text-cyber-neon hover:text-cyber-violet transition-colors">
-            <div className="w-8 h-8 bg-gradient-to-r from-cyber-neon to-cyber-violet rounded-lg flex items-center justify-center">
-              <span className="text-cyber-dark font-bold text-sm">C</span>
-            </div>
-            <span className="font-orbitron font-bold text-lg">Cyber TMSAH</span>
+            <span className="font-orbitron font-bold text-xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent">
+              Cyber TMSAH
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
