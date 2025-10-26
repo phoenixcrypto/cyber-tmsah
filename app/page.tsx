@@ -63,7 +63,7 @@ export default function HomePage() {
         hour: '2-digit', 
         minute: '2-digit',
         second: '2-digit',
-        hour12: false 
+        hour12: true 
       }))
       setCurrentDate(now.toLocaleDateString('ar-SA', {
         weekday: 'long',
