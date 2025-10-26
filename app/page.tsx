@@ -11,21 +11,21 @@ export default function HomePage() {
       title: 'جدول الحصص',
       description: 'عرض جدول الحصص والأحداث المهمة',
       href: '/schedule',
-      color: 'from-cyber-neon to-cyber-green'
+      color: 'from-cyber-neon via-cyber-green to-cyber-neon'
     },
     {
       icon: CheckSquare,
       title: 'إدارة المهام',
       description: 'تنظيم المهام والواجبات',
       href: '/tasks',
-      color: 'from-cyber-violet to-cyber-blue'
+      color: 'from-cyber-violet via-cyber-blue to-cyber-violet'
     },
     {
       icon: BookOpen,
       title: 'المواد التعليمية',
       description: 'الوصول للمواد والمحاضرات',
       href: '/materials',
-      color: 'from-cyber-green to-cyber-neon'
+      color: 'from-cyber-green via-cyber-neon to-cyber-green'
     }
   ]
 
@@ -176,8 +176,8 @@ export default function HomePage() {
                 >
                   <div className="enhanced-card p-6 text-center h-full hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
                        style={{ animationDelay: `${index * 0.1}s` }}>
-                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform`}>
-                      <Icon className="w-8 h-8 text-dark-100" />
+                    <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-cyber-neon/30`}>
+                      <Icon className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-dark-100 mb-2 group-hover:text-cyber-neon transition-colors">
                       {feature.title}
