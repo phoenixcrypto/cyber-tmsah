@@ -68,6 +68,9 @@ export default function AboutPage() {
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+              <span className="text-white font-bold text-xl">C</span>
+            </div>
             <Info className="w-8 h-8 text-cyber-neon" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
               حول منصة Cyber TMSAH
@@ -266,7 +269,7 @@ export default function AboutPage() {
                 <div>
                   <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
                   <div className="space-y-2 text-dark-300">
-                    <p>د. ششيماء احمد</p>
+                    <p>د. شيماء احمد</p>
                   </div>
                 </div>
                 <div>

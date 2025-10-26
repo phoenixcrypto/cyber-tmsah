@@ -284,9 +284,14 @@ export default function SchedulePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            الجدول الأكاديمي
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+              <span className="text-white font-bold text-xl">C</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
+              الجدول الأكاديمي
+            </h1>
+          </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
             جدول المحاضرات والمختبرات للفصل الدراسي الحالي
           </p>

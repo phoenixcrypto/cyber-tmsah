@@ -93,12 +93,17 @@ export default function HomePage() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-fade-in">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-bold text-dark-100 mb-6 leading-tight">
-              مرحباً بك في
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green">
-                Cyber TMSAH
-              </span>
-            </h1>
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-2xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+                <span className="text-white font-bold text-2xl">C</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-bold text-dark-100 leading-tight">
+                مرحباً بك في
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green">
+                  Cyber TMSAH
+                </span>
+              </h1>
+            </div>
             
             <p className="text-lg sm:text-xl md:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               منصة تعليمية حديثة ومتطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم
