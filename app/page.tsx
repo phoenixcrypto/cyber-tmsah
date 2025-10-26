@@ -1,10 +1,12 @@
+'use client'
+
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import { Calendar, CheckSquare, BookOpen, ArrowRight, Sparkles, Zap, Shield, Clock, MapPin, User } from 'lucide-react'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
 export default function HomePage() {
+  const [currentTime, setCurrentTime] = useState('')
+  const [currentDate, setCurrentDate] = useState('')
   const features = [
     {
       icon: Calendar,
@@ -54,24 +56,28 @@ export default function HomePage() {
     }
   ]
 
-  const getCurrentTime = () => {
-    const now = new Date()
-    return now.toLocaleTimeString('ar-SA', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false 
-    })
-  }
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date()
+      setCurrentTime(now.toLocaleTimeString('ar-SA', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false 
+      }))
+      setCurrentDate(now.toLocaleDateString('ar-SA', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }))
+    }
 
-  const getCurrentDate = () => {
-    const now = new Date()
-    return now.toLocaleDateString('ar-SA', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
+    updateTime()
+    const interval = setInterval(updateTime, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="min-h-screen">
@@ -204,13 +210,13 @@ export default function HomePage() {
               </h2>
             </div>
             <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-              {getCurrentDate()}
+              {currentDate}
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <div className="w-6 h-6 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-full flex items-center justify-center shadow-lg shadow-cyber-neon/30">
                 <Clock className="w-4 h-4 text-white" />
               </div>
-              <span className="text-cyber-neon font-semibold">{getCurrentTime()}</span>
+              <span className="text-cyber-neon font-semibold text-lg">{currentTime}</span>
             </div>
           </div>
           
