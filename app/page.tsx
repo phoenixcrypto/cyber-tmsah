@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import Hero from '@/components/Hero'
 import TodaySchedule from '@/components/TodaySchedule'
 import { useState } from 'react'

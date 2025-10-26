@@ -10,7 +10,7 @@ import ParticlesBackground from '@/components/ParticlesBackground'
 import ScrollProgress from '@/components/ScrollProgress'
 import BackToTop from '@/components/BackToTop'
 import SmartParticles from '@/components/SmartParticles'
-import PageTransition from '@/components/PageTransition'
+
 import DynamicBackground from '@/components/DynamicBackground'
 
 const inter = Inter({ 
@@ -113,11 +113,9 @@ export default function RootLayout({
         
         <Navbar />
         <AnimatedLayout>
-          <PageTransition>
-            <main className="relative z-10">
-              {children}
-            </main>
-          </PageTransition>
+          <main className="relative z-10">
+            {children}
+          </main>
           <Footer />
           <FloatingWhatsApp />
         </AnimatedLayout>
