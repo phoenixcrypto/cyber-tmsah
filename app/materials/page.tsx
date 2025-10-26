@@ -51,10 +51,10 @@ const MaterialsPage = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl md:text-7xl font-orbitron font-black text-cyber-neon mb-6">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-orbitron font-black text-cyber-neon mb-4 sm:mb-6 px-4">
             Study Materials
           </h1>
-          <p className="text-xl text-dark-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto leading-relaxed px-4">
             Comprehensive cybersecurity learning resources and study materials
           </p>
         </motion.div>

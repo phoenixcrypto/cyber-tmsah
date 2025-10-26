@@ -69,10 +69,10 @@ const TasksPage = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl md:text-7xl font-orbitron font-black mb-6 text-cyber-neon">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-orbitron font-black mb-4 sm:mb-6 text-cyber-neon px-4">
             Tasks
           </h1>
-          <p className="text-xl text-dark-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto leading-relaxed px-4">
             Interactive tasks and assignments to enhance your cybersecurity learning journey
           </p>
         </motion.div>

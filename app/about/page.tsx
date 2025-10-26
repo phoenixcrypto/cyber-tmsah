@@ -84,7 +84,7 @@ const AboutPage = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center text-5xl md:text-7xl font-orbitron font-black mb-6 text-cyber-neon"
+          className="text-center text-3xl sm:text-5xl md:text-7xl font-orbitron font-black mb-4 sm:mb-6 text-cyber-neon px-4"
         >
           About Us
         </motion.h1>
@@ -93,7 +93,7 @@ const AboutPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center text-xl text-dark-300 max-w-4xl mx-auto mb-16"
+          className="text-center text-lg sm:text-xl text-dark-300 max-w-4xl mx-auto mb-12 sm:mb-16 px-4"
         >
           Your Cyber Fortress for the Future - Empowering the next generation of cybersecurity professionals
         </motion.p>

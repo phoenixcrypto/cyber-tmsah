@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "analyze": "cross-env ANALYZE=true next build",
+    "build:analyze": "npm run build && npm run analyze"
   },
   "dependencies": {
     "next": "14.0.4",

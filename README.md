@@ -1,91 +1,114 @@
-# Cyber Tmsah - Schedule Management System
+# 🛡️ Cyber Tmsah
 
-## 📋 نظرة عامة
-نظام إدارة الجداول الدراسية لبرنامج الأمن السيبراني - الفرقة الأولى. مشروع نظيف ومحسن يحتوي على البيانات الأساسية فقط.
+A modern cybersecurity learning platform built with Next.js 14, featuring interactive schedules, study materials, and educational resources.
 
-## 🚀 الميزات
-- **جدول يوم الاثنين**: عرض محاضرات وجلسات يوم الاثنين فقط
-- **واجهة مستخدم حديثة**: تصميم عصري مع تأثيرات بصرية جذابة
-- **استجابة كاملة**: يعمل على جميع الأجهزة (موبايل، تابلت، ديسكتوب)
-- **أمان متقدم**: حماية من الهجمات السيبرانية
-- **أداء محسن**: حجم مشروع محسن (527.35 MB)
+## ✨ Features
 
-## 📊 البيانات الحالية
-- **إجمالي العناصر**: 21 عنصر
-- **المحاضرات**: 5 محاضرات
-- **الجلسات**: 16 جلسة
-- **المواد**: Information Systems, Information Technology, Database Systems
+- 📅 **Interactive Schedule System** - Personalized schedules for different groups and sections
+- 📚 **Study Materials** - Comprehensive cybersecurity learning resources
+- 🎯 **Task Management** - Interactive tasks and assignments (Coming Soon)
+- 👥 **Multi-Group Support** - Support for multiple student groups and sections
+- 📱 **Responsive Design** - Optimized for all devices
+- 🎨 **Modern UI/UX** - Clean, professional interface with smooth animations
+- 🌟 **Advanced Visual Effects** - Subtle animations and interactive elements
 
-## 🛠️ التقنيات المستخدمة
-- **Next.js 14** (App Router, TypeScript)
-- **TailwindCSS** (تصميم متجاوب)
-- **Framer Motion** (تأثيرات الحركة)
-- **Lucide React** (أيقونات)
+## 🚀 Tech Stack
 
-## 📁 هيكل المشروع النهائي
+- **Framework**: Next.js 14
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Language**: TypeScript
+- **Deployment**: Cloudflare Pages
+
+## 🛠️ Getting Started
+
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/cyber-tmsah.git
+cd cyber-tmsah
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Run the development server
+```bash
+npm run dev
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 📁 Project Structure
+
 ```
 cyber-tmsah/
-├── app/                    # صفحات التطبيق (10 صفحات)
-├── components/             # مكونات React (11 مكون)
-├── lib/                    # مكتبات مساعدة
-├── public/                 # ملفات عامة
-├── monday_only_schedule.json # بيانات الجدول
-├── package.json            # تبعيات المشروع
-├── next.config.js          # تكوين Next.js
-├── tailwind.config.js      # تكوين TailwindCSS
-├── tsconfig.json           # تكوين TypeScript
-├── middleware.ts           # أمان المشروع
-└── README.md               # هذا الملف
+├── app/                    # Next.js app directory
+│   ├── about/             # About page
+│   ├── admin/             # Admin dashboard
+│   ├── materials/         # Study materials
+│   ├── schedule/          # Schedule system
+│   └── tasks/             # Task management
+├── components/            # Reusable components
+│   ├── AnimatedIcon.tsx   # Interactive icons
+│   ├── Hero.tsx           # Landing hero section
+│   ├── Footer.tsx         # Site footer
+│   └── Navbar.tsx         # Navigation bar
+├── lib/                   # Utility functions
+└── public/               # Static assets
 ```
 
-## 🚀 التشغيل
-```bash
-# تثبيت التبعيات
-npm install
+## 🌐 Deployment
 
-# تشغيل المشروع
-npm run dev
+This project is optimized for deployment on Cloudflare Pages:
 
-# بناء المشروع للإنتاج
-npm run build
+1. **Connect Repository**: Connect your GitHub repository to Cloudflare Pages
+2. **Build Settings**:
+   - Build command: `npm run build`
+   - Output directory: `.next`
+   - Node.js version: 18.x
+3. **Deploy**: Click deploy and your site will be live!
 
-# تشغيل الإنتاج
-npm start
-```
+## 🎨 Design Features
 
-## 📱 الوصول
-- **الرابط المحلي**: http://localhost:3000
-- **الرابط الشبكي**: http://[IP-Address]:3000
+- **Clean Interface**: Minimal, professional design
+- **Smooth Animations**: Subtle, non-distracting effects
+- **Responsive Layout**: Works perfectly on all devices
+- **Interactive Elements**: Engaging user interactions
+- **Modern Typography**: Clean, readable fonts
 
-## 📊 إحصائيات المشروع
-- **حجم المشروع**: 527.35 MB
-- **عدد الصفحات**: 10 صفحات
-- **عدد المكونات**: 11 مكون
-- **حجم البناء**: 121 kB (First Load JS)
-- **حجم Middleware**: 40.6 kB
+## 📱 Pages
 
-## 🔧 التكوين
-- **Port**: 3000 (افتراضي)
-- **Environment**: Development/Production
-- **Database**: JSON Files
-- **Security**: CSP Headers, Rate Limiting
+- **Home**: Landing page with overview
+- **Schedule**: Interactive schedule system
+- **Materials**: Study materials and resources
+- **Tasks**: Task management (Coming Soon)
+- **About**: Information about the platform
+- **Admin**: Administrative dashboard
 
-## 📝 الترخيص
-هذا المشروع مرخص تحت رخصة MIT - راجع ملف [LICENSE](LICENSE) للتفاصيل.
+## 🤝 Contributing
 
-## 👥 المساهمون
-- **Zeyad Eltmsah** - المؤسس والمطور الرئيسي
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
-## 📞 التواصل
-- **WhatsApp**: [رابط الواتساب](https://wa.me/201553450232)
+## 📄 License
 
-## 🎯 حالة المشروع
-- ✅ **نظيف ومحسن** - لا توجد ملفات غير مهمة
-- ✅ **جاهز للإنتاج** - بناء ناجح بدون أخطاء
-- ✅ **أداء محسن** - حجم مشروع محسن
-- ✅ **أمان متقدم** - حماية من الهجمات
-- ✅ **استجابة كاملة** - يعمل على جميع الأجهزة
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **Live Demo**: [https://cyber-tmsah.pages.dev](https://cyber-tmsah.pages.dev)
+- **GitHub**: [https://github.com/yourusername/cyber-tmsah](https://github.com/yourusername/cyber-tmsah)
+
+## 📞 Contact
+
+For questions or support, please contact us at [contact@cybertmsah.com](mailto:contact@cybertmsah.com)
 
 ---
-**تم تطوير هذا المشروع بواسطة فريق Cyber Tmsah**  
-**آخر تحديث**: ديسمبر 2024
+
+Made with ❤️ for cybersecurity education

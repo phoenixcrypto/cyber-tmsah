@@ -36,12 +36,12 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-4xl md:text-6xl font-orbitron font-black mb-6 text-cyber-neon">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-orbitron font-black mb-4 sm:mb-6 text-cyber-neon px-4">
             Today's Overview
           </h2>
-          <p className="text-xl text-dark-300 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto px-4">
             Stay updated with your daily cybersecurity learning journey
           </p>
         </motion.div>
@@ -51,22 +51,22 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="enhanced-card mb-12 wave-effect reflection-effect interactive-hover"
+          className="enhanced-card mb-8 sm:mb-12 wave-effect reflection-effect interactive-hover mx-4"
         >
-          <div className="text-center mb-8">
+          <div className="text-center mb-6 sm:mb-8 px-4">
             <motion.div
               whileHover={{ scale: 1.1, rotate: 360 }}
               transition={{ duration: 0.6 }}
-              className="w-20 h-20 mx-auto mb-6 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
+              className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
             >
               <AnimatedIcon variant="rotate" size={32} delay={0}>
                 <Users className="text-white" size={32} />
               </AnimatedIcon>
             </motion.div>
-            <h3 className="text-2xl font-orbitron font-bold text-cyber-neon mb-4">
+            <h3 className="text-xl sm:text-2xl font-orbitron font-bold text-cyber-neon mb-3 sm:mb-4">
               Select Your Section
             </h3>
-            <p className="text-dark-300 text-lg">
+            <p className="text-dark-300 text-base sm:text-lg">
               Choose your section to view today's personalized schedule
             </p>
           </div>

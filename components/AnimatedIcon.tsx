@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ReactNode } from 'react'
+import { ReactNode, memo } from 'react'
 
 interface AnimatedIconProps {
   children: ReactNode
@@ -11,11 +11,11 @@ interface AnimatedIconProps {
   delay?: number
 }
 
-const AnimatedIcon = ({ 
+const AnimatedIcon = memo(({ 
   children, 
   className = '', 
   size = 24, 
-  variant = 'pulse',
+  variant = 'pulse', 
   delay = 0 
 }: AnimatedIconProps) => {
   const variants = {
@@ -107,6 +107,8 @@ const AnimatedIcon = ({
       {children}
     </motion.div>
   )
-}
+})
+
+AnimatedIcon.displayName = 'AnimatedIcon'
 
 export default AnimatedIcon

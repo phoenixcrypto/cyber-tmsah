@@ -86,11 +86,11 @@ export default function AdminPage() {
                 <AnimatedIcon variant="glow" size={48} delay={0}>
                   <Shield className="text-cyber-neon" size={48} />
                 </AnimatedIcon>
-                <h1 className="text-5xl font-orbitron font-black text-cyber-neon">
+                <h1 className="text-3xl sm:text-5xl font-orbitron font-black text-cyber-neon">
                   Admin Dashboard
                 </h1>
               </motion.div>
-              <p className="text-dark-300 text-lg">Manage your educational content and platform</p>
+              <p className="text-dark-300 text-base sm:text-lg">Manage your educational content and platform</p>
             </div>
             <motion.div
               whileHover={{ scale: 1.05 }}

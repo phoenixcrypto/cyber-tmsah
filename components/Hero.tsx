@@ -149,9 +149,9 @@ const Hero = () => {
             
             {/* Logo Text */}
             <motion.h1
-              className="font-orbitron font-black text-5xl md:text-7xl text-cyber-neon"
+              className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl text-cyber-neon px-4"
               style={{
-                letterSpacing: '4px'
+                letterSpacing: '2px'
               }}
             >
               CYBER TMSAH

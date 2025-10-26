@@ -567,7 +567,7 @@ const SchedulePage = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center text-5xl md:text-7xl font-orbitron font-black mb-6 text-cyber-neon"
+          className="text-center text-3xl sm:text-5xl md:text-7xl font-orbitron font-black mb-4 sm:mb-6 text-cyber-neon px-4"
         >
           Schedule
         </motion.h1>
@@ -576,7 +576,7 @@ const SchedulePage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center text-xl text-dark-300 max-w-4xl mx-auto mb-16"
+          className="text-center text-lg sm:text-xl text-dark-300 max-w-4xl mx-auto mb-12 sm:mb-16 px-4"
         >
           Your complete cybersecurity learning schedule - organized and optimized for success
         </motion.p>
@@ -586,22 +586,22 @@ const SchedulePage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="enhanced-card mb-8"
+          className="enhanced-card mb-6 sm:mb-8 mx-4"
         >
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <AnimatedIcon variant="pulse" size={24} delay={0}>
-                <Clock className="text-cyber-neon" size={24} />
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <AnimatedIcon variant="pulse" size={20} delay={0}>
+                <Clock className="text-cyber-neon" size={20} />
               </AnimatedIcon>
-              <span className="text-cyber-neon text-2xl font-bold font-orbitron">
+              <span className="text-cyber-neon text-lg sm:text-2xl font-bold font-orbitron">
                 {currentTime}
               </span>
             </div>
-            <div className="flex items-center gap-3">
-              <AnimatedIcon variant="bounce" size={24} delay={0.2}>
-                <Calendar className="text-cyber-violet" size={24} />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <AnimatedIcon variant="bounce" size={20} delay={0.2}>
+                <Calendar className="text-cyber-violet" size={20} />
               </AnimatedIcon>
-              <span className="text-dark-300 text-lg">
+              <span className="text-dark-300 text-base sm:text-lg">
                 {currentDate}
               </span>
             </div>
