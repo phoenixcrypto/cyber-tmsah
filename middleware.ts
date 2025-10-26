@@ -43,6 +43,13 @@ export function middleware(request: NextRequest) {
   // Security headers
   const response = NextResponse.next()
 
+  // Force HTTPS redirect
+  if (request.headers.get('x-forwarded-proto') !== 'https') {
+    const httpsUrl = new URL(request.url)
+    httpsUrl.protocol = 'https:'
+    return NextResponse.redirect(httpsUrl, 301)
+  }
+
   // Content Security Policy
   const csp = [
     "default-src 'self'",
@@ -60,6 +67,7 @@ export function middleware(request: NextRequest) {
   ].join('; ')
 
   response.headers.set('Content-Security-Policy', csp)
+  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('Referrer-Policy', 'origin-when-cross-origin')
