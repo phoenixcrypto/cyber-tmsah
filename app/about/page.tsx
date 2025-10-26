@@ -109,7 +109,7 @@ export default function AboutPage() {
         {/* Mission Section */}
         <div className="mb-16 animate-slide-up">
           <div className="enhanced-card p-8 text-center">
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center justify-center gap-4 mb-6">
               <Target className="w-6 h-6 text-cyber-neon" />
               <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
                 رسالتنا
@@ -125,7 +125,7 @@ export default function AboutPage() {
 
         {/* Features Section */}
         <div className="mb-16 animate-slide-up">
-          <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="flex items-center justify-center gap-4 mb-8">
             <Star className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
               مميزاتنا
@@ -157,7 +157,7 @@ export default function AboutPage() {
 
         {/* Values Section */}
         <div className="mb-16 animate-slide-up">
-          <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="flex items-center justify-center gap-4 mb-8">
             <Heart className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
               قيمنا
@@ -193,7 +193,7 @@ export default function AboutPage() {
 
         {/* Interactive Stats Section */}
         <div className="mb-16 animate-slide-up">
-          <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="flex items-center justify-center gap-4 mb-8">
             <ThumbsUp className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
               إحصائياتنا التفاعلية
@@ -249,16 +249,16 @@ export default function AboutPage() {
         {/* Team Section */}
         <div className="animate-slide-up">
           <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-8 text-center">
-            فريقنا
+            عني
           </h2>
           <div className="enhanced-card p-8 text-center">
             <h3 className="text-xl font-semibold text-dark-100 mb-4">
-              فريق من الخبراء والمتخصصين
+              مطور ومصمم المنصة
             </h3>
             <p className="text-dark-300 leading-relaxed max-w-3xl mx-auto">
-              نحن فريق من الخبراء والمتخصصين في مجال التعليم والتكنولوجيا، 
-              نعمل معاً لتوفير أفضل تجربة تعلم ممكنة. فريقنا يتمتع بخبرة واسعة 
-              في تطوير المنصات التعليمية وتصميم المحتوى التعليمي التفاعلي.
+              أنا مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، 
+              أعمل على تطوير منصات تعليمية متطورة وتصميم تجارب مستخدم متميزة. 
+              لدي خبرة واسعة في تطوير المنصات التعليمية وتصميم المحتوى التعليمي التفاعلي.
             </p>
           </div>
         </div>

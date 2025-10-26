@@ -42,7 +42,7 @@ export default function ContactPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="flex items-center justify-center gap-4 mb-6">
             <MessageCircle className="w-8 h-8 text-cyber-neon" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
               اتصل بنا
@@ -123,7 +123,7 @@ export default function ContactPage() {
         {/* Additional Info */}
         <div className="max-w-4xl mx-auto animate-slide-up">
           <div className="enhanced-card p-8 text-center">
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center justify-center gap-4 mb-6">
               <HelpCircle className="w-6 h-6 text-cyber-neon" />
               <h3 className="text-2xl font-semibold text-dark-100">
                 لماذا تتواصل معنا؟
@@ -131,33 +131,33 @@ export default function ContactPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="text-right">
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-3 mb-4">
                   <HeadphonesIcon className="w-5 h-5 text-cyber-green" />
                   <h4 className="text-xl font-semibold text-dark-100">
                     الدعم الفني
                   </h4>
                 </div>
                 <p className="text-dark-300 leading-relaxed">
-                  نحن هنا لمساعدتك في حل أي مشاكل تقنية قد تواجهها أثناء استخدام المنصة. 
-                  فريقنا الفني متاح لمساعدتك في أي وقت.
+                  أنا هنا لمساعدتك في حل أي مشاكل تقنية قد تواجهها أثناء استخدام المنصة. 
+                  أنا متاح لمساعدتك في أي وقت.
                 </p>
               </div>
               
               <div className="text-right">
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-3 mb-4">
                   <HelpCircle className="w-5 h-5 text-cyber-violet" />
                   <h4 className="text-xl font-semibold text-dark-100">
                     الاستفسارات العامة
                   </h4>
                 </div>
                 <p className="text-dark-300 leading-relaxed">
-                  لديك استفسار حول المنصة أو تريد معرفة المزيد عن خدماتنا؟ 
-                  نحن سعداء للإجابة على جميع استفساراتك.
+                  لديك استفسار حول المنصة أو تريد معرفة المزيد عن خدماتي؟ 
+                  أنا سعيد للإجابة على جميع استفساراتك.
                 </p>
               </div>
               
               <div className="text-right">
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-3 mb-4">
                   <MessageSquare className="w-5 h-5 text-cyber-blue" />
                   <h4 className="text-xl font-semibold text-dark-100">
                     الملاحظات والاقتراحات
@@ -165,20 +165,20 @@ export default function ContactPage() {
                 </div>
                 <p className="text-dark-300 leading-relaxed">
                   نرحب بملاحظاتك واقتراحاتك لتحسين تجربتك. 
-                  آراؤك مهمة لنا وتساعدنا في تطوير المنصة.
+                  آراؤك مهمة لي وتساعدني في تطوير المنصة.
                 </p>
               </div>
               
               <div className="text-right">
-                  <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center gap-3 mb-4">
                     <Users className="w-5 h-5 text-cyber-neon" />
                     <h4 className="text-xl font-semibold text-dark-100">
                       الشراكات والتعاون
                     </h4>
                   </div>
                 <p className="text-dark-300 leading-relaxed">
-                  تريد التعاون معنا أو لديك فكرة مشروع مشترك؟ 
-                  نحن متحمسون لسماع أفكارك ومقترحاتك.
+                  تريد التعاون معي أو لديك فكرة مشروع مشترك؟ 
+                  أنا متحمس لسماع أفكارك ومقترحاتك.
                 </p>
               </div>
             </div>
