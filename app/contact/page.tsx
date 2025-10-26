@@ -69,11 +69,15 @@ export default function ContactPage() {
                 <p className="text-xl text-cyber-neon mb-4">مطور ومصمم المنصة</p>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-end mb-6">
                   <div className="flex items-center gap-2 text-dark-300">
-                    <Code className="w-5 h-5 text-cyber-green" />
+                    <div className="w-6 h-6 bg-cyber-green/20 rounded-full flex items-center justify-center">
+                      <Code className="w-4 h-4 text-cyber-green" />
+                    </div>
                     <span>مطور Full Stack</span>
                   </div>
                   <div className="flex items-center gap-2 text-dark-300">
-                    <Award className="w-5 h-5 text-cyber-violet" />
+                    <div className="w-6 h-6 bg-cyber-violet/20 rounded-full flex items-center justify-center">
+                      <Award className="w-4 h-4 text-cyber-violet" />
+                    </div>
                     <span>مصمم UI/UX</span>
                   </div>
                 </div>
@@ -132,7 +136,9 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="text-right">
                 <div className="flex items-center gap-3 mb-4">
-                  <HeadphonesIcon className="w-5 h-5 text-cyber-green" />
+                  <div className="w-8 h-8 bg-cyber-green/20 rounded-full flex items-center justify-center">
+                    <HeadphonesIcon className="w-5 h-5 text-cyber-green" />
+                  </div>
                   <h4 className="text-xl font-semibold text-dark-100">
                     الدعم الفني
                   </h4>
@@ -145,7 +151,9 @@ export default function ContactPage() {
               
               <div className="text-right">
                 <div className="flex items-center gap-3 mb-4">
-                  <HelpCircle className="w-5 h-5 text-cyber-violet" />
+                  <div className="w-8 h-8 bg-cyber-violet/20 rounded-full flex items-center justify-center">
+                    <HelpCircle className="w-5 h-5 text-cyber-violet" />
+                  </div>
                   <h4 className="text-xl font-semibold text-dark-100">
                     الاستفسارات العامة
                   </h4>
@@ -158,7 +166,9 @@ export default function ContactPage() {
               
               <div className="text-right">
                 <div className="flex items-center gap-3 mb-4">
-                  <MessageSquare className="w-5 h-5 text-cyber-blue" />
+                  <div className="w-8 h-8 bg-cyber-blue/20 rounded-full flex items-center justify-center">
+                    <MessageSquare className="w-5 h-5 text-cyber-blue" />
+                  </div>
                   <h4 className="text-xl font-semibold text-dark-100">
                     الملاحظات والاقتراحات
                   </h4>
@@ -171,7 +181,9 @@ export default function ContactPage() {
               
               <div className="text-right">
                   <div className="flex items-center gap-3 mb-4">
-                    <Users className="w-5 h-5 text-cyber-neon" />
+                    <div className="w-8 h-8 bg-cyber-neon/20 rounded-full flex items-center justify-center">
+                      <Users className="w-5 h-5 text-cyber-neon" />
+                    </div>
                     <h4 className="text-xl font-semibold text-dark-100">
                       الشراكات والتعاون
                     </h4>

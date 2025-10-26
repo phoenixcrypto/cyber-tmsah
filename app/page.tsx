@@ -206,8 +206,10 @@ export default function HomePage() {
             <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
               {getCurrentDate()}
             </p>
-            <div className="flex items-center justify-center gap-2 mt-4">
-              <Clock className="w-5 h-5 text-cyber-neon" />
+            <div className="flex items-center justify-center gap-3 mt-4">
+              <div className="w-6 h-6 bg-cyber-neon/20 rounded-full flex items-center justify-center">
+                <Clock className="w-4 h-4 text-cyber-neon" />
+              </div>
               <span className="text-cyber-neon font-semibold">{getCurrentTime()}</span>
             </div>
           </div>
@@ -220,8 +222,10 @@ export default function HomePage() {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-cyber-neon" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 bg-cyber-neon/20 rounded-full flex items-center justify-center">
+                      <Clock className="w-4 h-4 text-cyber-neon" />
+                    </div>
                     <span className="text-cyber-neon font-semibold">{schedule.time}</span>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -238,14 +242,18 @@ export default function HomePage() {
                 </h3>
                 
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-dark-300">
-                    <User className="w-4 h-4 text-cyber-violet" />
-                    <span className="text-sm">{schedule.instructor}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-dark-300">
-                    <MapPin className="w-4 h-4 text-cyber-green" />
-                    <span className="text-sm">{schedule.room}</span>
-                  </div>
+                      <div className="flex items-center gap-3 text-dark-300">
+                        <div className="w-6 h-6 bg-cyber-violet/20 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-cyber-violet" />
+                        </div>
+                        <span className="text-sm">{schedule.instructor}</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-dark-300">
+                        <div className="w-6 h-6 bg-cyber-green/20 rounded-full flex items-center justify-center">
+                          <MapPin className="w-4 h-4 text-cyber-green" />
+                        </div>
+                        <span className="text-sm">{schedule.room}</span>
+                      </div>
                 </div>
               </div>
             ))}
