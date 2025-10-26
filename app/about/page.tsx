@@ -168,167 +168,49 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-4 mb-8">
             <Users className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              Faculty Members
+              Our Team
             </h2>
           </div>
           
-          {/* Mathematics */}
+          {/* Professors Section */}
           <div className="mb-8">
             <div className="enhanced-card p-6">
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-                  <BookOpen className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-semibold text-dark-100">Mathematics</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>د. سييمون عزت</p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>م. ايهاب غلاب</p>
-                    <p>م. احمد نشأت</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Applied Physics */}
-          <div className="mb-8">
-            <div className="enhanced-card p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
-                  <Target className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-semibold text-dark-100">Applied Physics</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>د. احمد بكر</p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>م. احمد نشأت</p>
-                    <p>م. امنية ابراهيم</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Database Systems & Entrepreneurship */}
-          <div className="mb-8">
-            <div className="enhanced-card p-6 bg-gradient-to-br from-cyber-green/10 to-cyber-neon/10 border border-cyber-green/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-xl flex items-center justify-center shadow-lg shadow-cyber-green/30">
                   <Award className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">Database Systems & Entrepreneurship and Creative Thinking Skills</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">Professors</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>د. عبير حسن</p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>م. نجلاء سعيد</p>
-                    <p>م. كريم عادل</p>
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="text-dark-300">Dr. Simon Ezzat - Mathematics</div>
+                <div className="text-dark-300">Dr. Ahmed Bakr - Applied Physics</div>
+                <div className="text-dark-300">Dr. Abeer Hassan - Database Systems & Entrepreneurship</div>
+                <div className="text-dark-300">Dr. Shaima Ahmed - Information Technology</div>
+                <div className="text-dark-300">Dr. Nashwa - English Language</div>
+                <div className="text-dark-300">Dr. Hind Ziada - Information Systems</div>
               </div>
             </div>
           </div>
 
-          {/* Information Technology */}
+          {/* Teaching Assistants Section */}
           <div className="mb-8">
-            <div className="enhanced-card p-6 bg-gradient-to-br from-cyber-blue/10 to-cyber-violet/10 border border-cyber-blue/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyber-blue to-cyber-violet rounded-xl flex items-center justify-center shadow-lg shadow-cyber-blue/30">
+            <div className="enhanced-card p-6 bg-gradient-to-br from-cyber-violet/10 to-cyber-blue/10 border border-cyber-violet/20">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
                   <Users className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">Information Technology</h3>
+                <h3 className="text-2xl font-semibold text-dark-100">Teaching Assistants</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>د. شيماء احمد</p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>م. محمد عمار</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* English */}
-          <div className="mb-8">
-            <div className="enhanced-card p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-                  <Heart className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-semibold text-dark-100">English Language</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>د. نشوي</p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>لا يوجد معيدين</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Information System */}
-          <div className="mb-8">
-            <div className="enhanced-card p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
-                  <Lightbulb className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-semibold text-dark-100">Information Systems</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">Professors</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>د. هند زيادة</p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">Teaching Assistants</h4>
-                  <div className="space-y-2 text-dark-300">
-                    <p>م. محمود محمد</p>
-                    <p>م. مريم اشرف</p>
-                    <p>م. دينا علي</p>
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="text-dark-300">Ehab Gallab</div>
+                <div className="text-dark-300">Ahmed Nashaat</div>
+                <div className="text-dark-300">Nagla Saeed</div>
+                <div className="text-dark-300">Kareem Adel</div>
+                <div className="text-dark-300">Mohamed Ammar</div>
+                <div className="text-dark-300">Mahmoud Mohamed</div>
+                <div className="text-dark-300">Mariam Ashraf</div>
+                <div className="text-dark-300">Dina Ali</div>
+                <div className="text-dark-300">Amany Ibrahim</div>
               </div>
             </div>
           </div>
@@ -337,16 +219,16 @@ export default function AboutPage() {
         {/* Team Section */}
         <div className="animate-slide-up">
           <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-8 text-center">
-            عني
+            About Me
           </h2>
           <div className="enhanced-card p-8 text-center">
             <h3 className="text-xl font-semibold text-dark-100 mb-4">
-              مطور ومصمم المنصة
+              Platform Developer & Designer
             </h3>
             <p className="text-dark-300 leading-relaxed max-w-3xl mx-auto">
-              أنا مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، 
-              أعمل على تطوير منصات تعليمية متطورة وتصميم تجارب مستخدم متميزة. 
-              لدي خبرة واسعة في تطوير المنصات التعليمية وتصميم المحتوى التعليمي التفاعلي.
+              I am a developer and designer specializing in the field of education and technology, 
+              working on developing advanced educational platforms and designing exceptional user experiences. 
+              I have extensive experience in developing educational platforms and designing interactive educational content.
             </p>
           </div>
         </div>
