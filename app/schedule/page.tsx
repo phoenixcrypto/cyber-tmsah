@@ -665,8 +665,8 @@ const SchedulePage = () => {
             <p className="text-dark-300 text-lg">
               Choose your section to view your personalized schedule
             </p>
-          </div>
-                
+              </div>
+
           {/* Section Selection */}
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto mb-8">
             {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => {
@@ -696,8 +696,8 @@ const SchedulePage = () => {
                 </motion.button>
               )
             })}
-          </div>
-
+                </div>
+                
           {/* View Schedule Button */}
           <div className="text-center">
             <motion.button
@@ -712,7 +712,7 @@ const SchedulePage = () => {
               
               View My Schedule
             </motion.button>
-          </div>
+                </div>
         </motion.div>
 
         {/* Schedule Display */}
@@ -740,7 +740,7 @@ const SchedulePage = () => {
                 Group {selectedGroup} • Section {selectedSection}
               </p>
                 </div>
-                
+
             {/* Color Legend */}
             <div className="flex justify-center gap-6 mb-8">
               <div className="flex items-center gap-2">

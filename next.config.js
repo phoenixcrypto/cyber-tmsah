@@ -17,6 +17,9 @@ const nextConfig = {
   // Output configuration
   trailingSlash: true,
   
+  // Disable static generation completely
+  output: 'standalone',
+  
   // Disable problematic features
   experimental: {
     // Remove problematic optimizations
