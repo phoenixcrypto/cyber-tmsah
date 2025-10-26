@@ -41,8 +41,10 @@ export default function Footer() {
                   </div>
                 </div>
                 <p className="text-dark-300 text-sm leading-relaxed mb-4 max-w-2xl mx-auto">
-                  A technology and education enthusiast, specialized in developing modern web applications
-                  and designing exceptional user experiences. Always striving to enhance learning through technology.
+                  A university student and innovative developer focused on making education easier and more interactive 
+                  through modern technology. I love building smart solutions that help fellow students succeed. 
+                  An independent developer passionate about creating educational platforms that empower learners 
+                  to achieve their goals through user-friendly digital experiences.
                 </p>
                 <button
                   onClick={handleWhatsAppContact}
