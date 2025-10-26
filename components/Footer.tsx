@@ -25,7 +25,7 @@ export default function Footer() {
                 <h2 className="text-2xl font-orbitron font-bold text-dark-100 mb-2">
                   ZEYAD MOHAMED
                 </h2>
-                <p className="text-lg text-cyber-neon mb-3">Platform Developer & Designer</p>
+                <p className="text-lg text-cyber-neon mb-3">Creative Developer & Designer</p>
                 <div className="flex flex-wrap gap-3 justify-center md:justify-end mb-4">
                   <div className="flex items-center gap-2 text-dark-300">
                     <div className="w-5 h-5 bg-gradient-to-br from-cyber-green via-cyber-neon to-cyber-green rounded-full flex items-center justify-center shadow-lg shadow-cyber-green/30">

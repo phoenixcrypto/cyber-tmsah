@@ -90,13 +90,13 @@ export default function HomePage() {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date()
-      setCurrentTime(now.toLocaleTimeString('ar-SA', { 
+      setCurrentTime(now.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
         minute: '2-digit',
         second: '2-digit',
         hour12: true 
       }))
-      setCurrentDate(now.toLocaleDateString('ar-SA', {
+      setCurrentDate(now.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
