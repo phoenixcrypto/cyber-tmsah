@@ -1,259 +1,252 @@
-'use client'
+import Link from 'next/link'
+import { ArrowLeft, BookOpen, Download, Calendar, User, FileText, Clock } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
-export const dynamicParams = false
 export const revalidate = 0
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { ArrowLeft, BookOpen, Users, Clock, Calendar, FileText, Video, Download, ChevronLeft, ChevronRight } from 'lucide-react'
-
-
-// Sample content data - this would come from a CMS or database
-const contentData = {
-  'math-lecture-1-content': {
-    title: 'Introduction to Calculus',
-    type: 'lecture',
-    instructor: 'Dr. Ahmed Hassan',
-    date: '2025-01-15',
-    duration: '2 hours',
-    description: 'Basic concepts of differential and integral calculus',
-    content: [
-      {
-        id: 'section-1',
-        title: 'What is Calculus?',
-        type: 'text',
-        content: `Calculus is a branch of mathematics that deals with the study of change and motion. It is divided into two main branches: differential calculus and integral calculus.`
-      },
-      {
-        id: 'section-2',
-        title: 'Historical Development',
-        type: 'text',
-        content: `The development of calculus is credited to two great mathematicians: Isaac Newton and Gottfried Wilhelm Leibniz. Both developed the fundamental concepts independently in the late 17th century.`
-      }
-    ],
-    materials: [
-      { name: 'calculus-basics.pdf', type: 'PDF', size: '2.3 MB' },
-      { name: 'practice-problems.pdf', type: 'PDF', size: '1.8 MB' }
-    ]
-  },
-  'math-session-1-content': {
-    title: 'Calculus Problem Solving',
-    type: 'session',
-    instructor: 'Eng. Sarah Mohamed',
-    date: '2025-01-17',
-    duration: '1.5 hours',
-    description: 'Practical exercises and problem solving techniques',
-    content: [
-      {
-        id: 'section-1',
-        title: 'Problem Solving Strategy',
-        type: 'text',
-        content: `When approaching calculus problems, follow these steps: 1. Read the problem carefully, 2. Determine which concepts apply, 3. Set up the problem, 4. Solve step by step, 5. Check your answer.`
-      }
-    ],
-    materials: [
-      { name: 'problem-sets.pdf', type: 'PDF', size: '3.1 MB' },
-      { name: 'solutions.pdf', type: 'PDF', size: '2.5 MB' }
-    ]
-  }
-}
-
-interface ContentPageProps {
-  params: {
+export default function ContentDetailPage({ 
+  params 
+}: { 
+  params: { 
     id: string
     type: string
     contentId: string
-  }
-}
+  } 
+}) {
+  const content = {
+    id: params.contentId,
+    title: 'مقدمة في البرمجة - الجزء الأول',
+    description: 'تعلم أساسيات البرمجة والمفاهيم الأساسية',
+    type: params.type,
+    instructor: 'د. أحمد محمد',
+    date: '2024-02-01',
+    content: `
+      <h2>مقدمة في البرمجة</h2>
+      <p>البرمجة هي عملية كتابة تعليمات للحاسوب لتنفيذ مهام محددة. في هذا الدرس سنتعلم:</p>
+      <ul>
+        <li>مفهوم البرمجة وأهميتها</li>
+        <li>أنواع لغات البرمجة</li>
+        <li>أساسيات البرمجة</li>
+        <li>أمثلة عملية</li>
+      </ul>
+      
+      <h3>مفهوم البرمجة</h3>
+      <p>البرمجة هي فن وعلم كتابة التعليمات للحاسوب بطريقة منطقية ومنظمة. المبرمج يكتب الكود باستخدام لغة برمجة معينة، ثم يتم تحويل هذا الكود إلى لغة يفهمها الحاسوب.</p>
+      
+      <h3>أنواع لغات البرمجة</h3>
+      <p>هناك عدة أنواع من لغات البرمجة:</p>
+      <ul>
+        <li><strong>لغات البرمجة عالية المستوى:</strong> مثل Python, Java, C++</li>
+        <li><strong>لغات البرمجة منخفضة المستوى:</strong> مثل Assembly</li>
+        <li><strong>لغات البرمجة الوظيفية:</strong> مثل Haskell, Lisp</li>
+        <li><strong>لغات البرمجة الكائنية:</strong> مثل Java, C#</li>
+      </ul>
+      
+      <h3>أساسيات البرمجة</h3>
+      <p>أساسيات البرمجة تشمل:</p>
+      <ul>
+        <li>المتغيرات والثوابت</li>
+        <li>أنواع البيانات</li>
+        <li>الهياكل الشرطية</li>
+        <li>الحلقات التكرارية</li>
+        <li>الدوال والإجراءات</li>
+      </ul>
+      
+      <h3>أمثلة عملية</h3>
+      <p>إليك مثال بسيط في لغة Python:</p>
+      <pre><code># برنامج بسيط لطباعة رسالة ترحيب
+name = input("ما اسمك؟ ")
+print(f"مرحباً {name}!")
 
-export default function ContentPage({ params }: ContentPageProps) {
-  const [currentSection, setCurrentSection] = useState(0)
-  
-  const content = contentData[`${params.contentId}-content` as keyof typeof contentData]
-  
-  if (!content) {
-    return (
-      <div className="min-h-screen bg-cyber-dark text-dark-100 pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h1 className="text-4xl font-orbitron font-bold text-cyber-neon mb-4">
-              Content Not Found
-            </h1>
-            <Link href="/materials" className="text-cyber-violet hover:text-cyber-neon">
-              ← Back to Materials
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
+# برنامج لحساب مجموع عددين
+a = int(input("أدخل الرقم الأول: "))
+b = int(input("أدخل الرقم الثاني: "))
+sum = a + b
+print(f"المجموع هو: {sum}")</code></pre>
+      
+      <h3>الخلاصة</h3>
+      <p>البرمجة مهارة مهمة في العصر الحديث. تعلم البرمجة يساعد على:</p>
+      <ul>
+        <li>تطوير التفكير المنطقي</li>
+        <li>حل المشاكل بطريقة منهجية</li>
+        <li>إنشاء تطبيقات مفيدة</li>
+        <li>فتح آفاق مهنية جديدة</li>
+      </ul>
+    `,
+    attachments: [
+      { name: 'intro-programming.pdf', size: '2.5 MB', type: 'PDF' },
+      { name: 'examples.zip', size: '1.2 MB', type: 'ZIP' },
+      { name: 'slides.pptx', size: '3.8 MB', type: 'PPTX' }
+    ],
+    points: 100,
+    duration: '90 دقيقة'
   }
 
-  const currentContent = content.content[currentSection]
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'lecture':
+        return 'bg-gradient-to-r from-cyber-neon to-cyber-green'
+      case 'assignment':
+        return 'bg-gradient-to-r from-cyber-violet to-cyber-blue'
+      case 'exam':
+        return 'bg-gradient-to-r from-red-500 to-red-600'
+      case 'resource':
+        return 'bg-gradient-to-r from-cyber-green to-cyber-neon'
+      default:
+        return 'bg-gradient-to-r from-cyber-blue to-cyber-violet'
+    }
+  }
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'lecture':
+        return BookOpen
+      case 'assignment':
+        return FileText
+      case 'exam':
+        return Calendar
+      case 'resource':
+        return Download
+      default:
+        return BookOpen
+    }
+  }
+
+  const getTypeText = (type: string) => {
+    switch (type) {
+      case 'lecture':
+        return 'محاضرة'
+      case 'assignment':
+        return 'واجب'
+      case 'exam':
+        return 'امتحان'
+      case 'resource':
+        return 'مصدر تعليمي'
+      default:
+        return 'غير محدد'
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('ar-SA', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
+  const TypeIcon = getTypeIcon(content.type)
 
   return (
-    <div className="min-h-screen bg-cyber-dark text-dark-100 pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        {/* Breadcrumbs */}
-        <div className="breadcrumbs mb-8">
-          <Link href="/" className="breadcrumb-item">Home</Link>
-          <span className="breadcrumb-separator">›</span>
-          <Link href="/materials" className="breadcrumb-item">Materials</Link>
-          <span className="breadcrumb-separator">›</span>
-          <Link href={`/materials/${params.id}`} className="breadcrumb-item">{params.id}</Link>
-          <span className="breadcrumb-separator">›</span>
-          <span className="breadcrumb-current">{content.title}</span>
+    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="mb-8 animate-fade-in">
+          <Link
+            href={`/materials/${params.id}`}
+            className="inline-flex items-center gap-2 text-cyber-neon hover:text-cyber-violet transition-colors mb-4"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            العودة إلى المادة
+          </Link>
+          
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-12 h-12 ${getTypeColor(content.type)} rounded-xl flex items-center justify-center`}>
+                  <TypeIcon className="w-6 h-6 text-dark-100" />
+                </div>
+                <div>
+                  <span className="text-sm px-3 py-1 rounded-full bg-cyber-neon/20 text-cyber-neon font-medium">
+                    {getTypeText(content.type)}
+                  </span>
+                  <span className="text-sm px-3 py-1 rounded-full bg-cyber-violet/20 text-cyber-violet font-medium mr-2">
+                    {content.points} نقطة
+                  </span>
+                </div>
+              </div>
+              
+              <h1 className="text-3xl sm:text-4xl font-orbitron font-bold text-dark-100 mb-4">
+                {content.title}
+              </h1>
+              
+              <p className="text-lg text-dark-300 mb-6">
+                {content.description}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="glass-card sticky top-24"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                {content.type === 'lecture' ? <Users size={24} className="text-cyber-neon" /> : <BookOpen size={24} className="text-cyber-violet" />}
-                <h3 className="text-lg font-orbitron font-bold text-cyber-neon">
-                  {content.type === 'lecture' ? 'Lecture' : 'Session'} Content
-                </h3>
+        {/* Content Info */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-slide-up">
+          <div className="glass-card p-4">
+            <div className="flex items-center gap-3">
+              <User className="w-5 h-5 text-cyber-neon" />
+              <div>
+                <p className="text-sm text-dark-400">المحاضر</p>
+                <p className="text-dark-100 font-medium">{content.instructor}</p>
               </div>
-
-              <div className="space-y-2">
-                {content.content.map((section, index) => (
-                  <button
-                    key={section.id}
-                    onClick={() => setCurrentSection(index)}
-                    className={`w-full text-left p-3 rounded-lg transition-all duration-300 ${
-                      currentSection === index
-                        ? 'bg-cyber-neon/20 text-cyber-neon border border-cyber-neon/30'
-                        : 'text-dark-300 hover:text-cyber-neon hover:bg-cyber-glow/10'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 bg-cyber-dark rounded-full flex items-center justify-center text-xs font-bold">
-                        {index + 1}
-                      </span>
-                      <span className="text-sm font-medium">{section.title}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Materials */}
-              <div className="mt-8">
-                <h4 className="text-md font-orbitron font-bold text-cyber-violet mb-4">
-                  Materials
-                </h4>
-                <div className="space-y-2">
-                  {content.materials.map((material, index) => (
-                    <a
-                      key={index}
-                      href={`/materials/${material.name}`}
-                      download
-                      className="flex items-center gap-2 p-2 bg-cyber-dark/30 rounded-lg hover:bg-cyber-glow/10 transition-all duration-300"
-                    >
-                      <FileText size={16} className="text-cyber-violet" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-dark-300 truncate">{material.name}</p>
-                        <p className="text-xs text-dark-400">{material.type} • {material.size}</p>
-                      </div>
-                      <Download size={14} className="text-cyber-violet" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+            </div>
           </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="glass-card"
-            >
-              {/* Header */}
-              <div className="mb-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <Link 
-                    href={`/materials/${params.id}`}
-                    className="p-2 bg-cyber-dark/50 border border-cyber-glow rounded-lg hover:bg-cyber-glow/20 transition-all duration-300"
-                  >
-                    <ArrowLeft size={20} className="text-cyber-neon" />
-                  </Link>
-                  <div>
-                    <h1 className="text-3xl font-orbitron font-bold text-cyber-neon mb-2">
-                      {content.title}
-                    </h1>
-                    <p className="text-dark-300">{content.description}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <div className="flex items-center text-dark-300">
-                    <Users size={16} className="mr-2 text-cyber-violet" />
-                    <span className="text-sm">{content.instructor}</span>
-                  </div>
-                  
-                  <div className="flex items-center text-dark-300">
-                    <Calendar size={16} className="mr-2 text-cyber-violet" />
-                    <span className="text-sm">{content.date}</span>
-                  </div>
-
-                  <div className="flex items-center text-dark-300">
-                    <Clock size={16} className="mr-2 text-cyber-violet" />
-                    <span className="text-sm">{content.duration}</span>
-                  </div>
-                </div>
+          
+          <div className="glass-card p-4">
+            <div className="flex items-center gap-3">
+              <Calendar className="w-5 h-5 text-cyber-violet" />
+              <div>
+                <p className="text-sm text-dark-400">تاريخ النشر</p>
+                <p className="text-dark-100 font-medium">{formatDate(content.date)}</p>
               </div>
+            </div>
+          </div>
+          
+          <div className="glass-card p-4">
+            <div className="flex items-center gap-3">
+              <Clock className="w-5 h-5 text-cyber-green" />
+              <div>
+                <p className="text-sm text-dark-400">المدة</p>
+                <p className="text-dark-100 font-medium">{content.duration}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              {/* Content Section */}
-              <motion.div
-                key={currentSection}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                className="prose prose-invert max-w-none"
+        {/* Content */}
+        <div className="enhanced-card p-8 mb-8 animate-slide-up-delayed">
+          <h2 className="text-2xl font-semibold text-dark-100 mb-6">
+            محتوى الدرس
+          </h2>
+          <div 
+            className="prose prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: content.content }}
+          />
+        </div>
+
+        {/* Attachments */}
+        <div className="enhanced-card p-8 animate-slide-up-delayed">
+          <h2 className="text-2xl font-semibold text-dark-100 mb-6">
+            المرفقات
+          </h2>
+          
+          <div className="space-y-4">
+            {content.attachments.map((attachment, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-4 bg-cyber-dark/50 rounded-lg border border-cyber-neon/20 hover:border-cyber-neon/40 transition-colors"
               >
-                <h2 className="text-2xl font-orbitron font-bold text-cyber-neon mb-6">
-                  {currentContent.title}
-                </h2>
-                
-                <div className="text-dark-300 leading-relaxed whitespace-pre-line">
-                  {currentContent.content}
+                <div className="flex items-center gap-3">
+                  <Download className="w-5 h-5 text-cyber-neon" />
+                  <div>
+                    <p className="text-dark-100 font-medium">{attachment.name}</p>
+                    <p className="text-sm text-dark-400">{attachment.size} • {attachment.type}</p>
+                  </div>
                 </div>
-              </motion.div>
-
-              {/* Navigation */}
-              <div className="flex justify-between items-center mt-8 pt-6 border-t border-cyber-glow/30">
-                <button
-                  onClick={() => setCurrentSection(Math.max(0, currentSection - 1))}
-                  disabled={currentSection === 0}
-                  className="flex items-center gap-2 px-4 py-2 bg-cyber-dark/50 border border-cyber-glow rounded-lg text-dark-300 hover:text-cyber-neon hover:bg-cyber-glow/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ChevronLeft size={16} />
-                  Previous
-                </button>
-
-                <span className="text-dark-400 text-sm">
-                  {currentSection + 1} of {content.content.length}
-                </span>
-
-                <button
-                  onClick={() => setCurrentSection(Math.min(content.content.length - 1, currentSection + 1))}
-                  disabled={currentSection === content.content.length - 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-cyber-dark/50 border border-cyber-glow rounded-lg text-dark-300 hover:text-cyber-neon hover:bg-cyber-glow/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                  <ChevronRight size={16} />
+                
+                <button className="btn-secondary text-sm px-4 py-2">
+                  تحميل
                 </button>
               </div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </div>

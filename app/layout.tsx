@@ -1,52 +1,63 @@
 import type { Metadata } from 'next'
 import { Inter, Orbitron } from 'next/font/google'
 import './globals.css'
-import ClientLayout from '@/components/ClientLayout'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
 const inter = Inter({ 
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 })
 
 const orbitron = Orbitron({ 
   subsets: ['latin'],
   variable: '--font-orbitron',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'Cyber Tmsah - Your Cyber Fortress for the Future',
-  description: 'Your Cyber Fortress for the Future - Cybersecurity Learning Platform',
-  keywords: ['cybersecurity', 'learning', 'education', 'cyber tmsah', 'security'],
-  authors: [{ name: 'Cyber Tmsah Team' }],
-  creator: 'Cyber Tmsah',
-  publisher: 'Cyber Tmsah',
+  title: 'Cyber TMSAH - منصة تعليمية حديثة',
+  description: 'منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم',
+  keywords: ['تعليم', 'برمجة', 'تكنولوجيا', 'تعلم', 'cyber', 'tmsah'],
+  authors: [{ name: 'ZEYAD MOHAMED' }],
+  creator: 'ZEYAD MOHAMED',
+  publisher: 'Cyber TMSAH',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://cyber-tmsah.site'),
+  metadataBase: new URL('https://cyber-tmsah.vercel.app'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'ar-SA': '/ar',
+      'en-US': '/en',
+    },
+  },
   openGraph: {
-    title: 'Cyber Tmsah - Your Cyber Fortress for the Future',
-    description: 'Your Cyber Fortress for the Future - Cybersecurity Learning Platform',
-    url: 'https://cyber-tmsah.site',
-    siteName: 'Cyber Tmsah',
+    title: 'Cyber TMSAH - منصة تعليمية حديثة',
+    description: 'منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم',
+    url: 'https://cyber-tmsah.vercel.app',
+    siteName: 'Cyber TMSAH',
     images: [
       {
-        url: '/images/og-image.jpg',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Cyber Tmsah - Cybersecurity Learning Platform',
+        alt: 'Cyber TMSAH - منصة تعليمية حديثة',
       },
     ],
-    locale: 'en_US',
+    locale: 'ar_SA',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cyber Tmsah - Your Cyber Fortress for the Future',
-    description: 'Your Cyber Fortress for the Future - Cybersecurity Learning Platform',
-    images: ['/images/og-image.jpg'],
+    title: 'Cyber TMSAH - منصة تعليمية حديثة',
+    description: 'منصة تعليمية متطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم',
+    images: ['/og-image.jpg'],
+    creator: '@cyber_tmsah',
   },
   robots: {
     index: true,
@@ -59,12 +70,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+  verification: {
+    google: 'your-google-verification-code',
   },
-  manifest: '/manifest.json',
 }
 
 export default function RootLayout({
@@ -73,11 +81,24 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${orbitron.variable}`}>
-      <body className="font-inter bg-cyber-dark text-dark-100 overflow-x-hidden">
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+    <html lang="ar" dir="rtl" className={`${inter.variable} ${orbitron.variable}`}>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#0a0a0a" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+      </head>
+      <body className={`${inter.className} bg-cyber-dark text-dark-100 antialiased`}>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   )

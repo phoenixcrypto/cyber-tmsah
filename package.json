@@ -1,37 +1,69 @@
 {
   "name": "cyber-tmsah",
-  "version": "1.0.0",
-  "description": "Your Cyber Fortress for the Future - Cybersecurity Learning Platform",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next out",
+    "analyze": "ANALYZE=true next build",
+    "export": "next build && next export"
   },
   "dependencies": {
-    "next": "14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "framer-motion": "^10.16.16",
-    "lucide-react": "^0.294.0"
+    "next": "14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lucide-react": "^0.263.1",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
-    "autoprefixer": "^10.4.16",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4",
-    "postcss": "^8.4.32",
-    "prettier": "^3.1.1",
-    "tailwindcss": "^3.3.6",
-    "typescript": "^5.3.3"
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.3"
   },
   "engines": {
-    "node": ">=18.0.0"
-  }
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "typescript",
+    "tailwindcss",
+    "cyber",
+    "education",
+    "tmsah"
+  ],
+  "author": "ZEYAD MOHAMED",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/cyber-tmsah.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/cyber-tmsah/issues"
+  },
+  "homepage": "https://cyber-tmsah.vercel.app"
 }

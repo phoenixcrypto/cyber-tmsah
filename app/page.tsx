@@ -1,122 +1,191 @@
-'use client'
+import Link from 'next/link'
+import { Calendar, CheckSquare, BookOpen, User, ArrowRight, Sparkles, Zap, Shield } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-import Hero from '@/components/Hero'
-import TodaySchedule from '@/components/TodaySchedule'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Calendar, Users, Target } from 'lucide-react'
-
 export default function HomePage() {
-  // State for selected group and section
-  const [selectedGroup, setSelectedGroup] = useState<string>('1')
-  const [selectedSection, setSelectedSection] = useState<string>('1')
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
+  const features = [
+    {
+      icon: Calendar,
+      title: 'جدول الحصص',
+      description: 'عرض جدول الحصص والأحداث المهمة',
+      href: '/schedule',
+      color: 'from-cyber-neon to-cyber-green'
+    },
+    {
+      icon: CheckSquare,
+      title: 'إدارة المهام',
+      description: 'تنظيم المهام والواجبات',
+      href: '/tasks',
+      color: 'from-cyber-violet to-cyber-blue'
+    },
+    {
+      icon: BookOpen,
+      title: 'المواد التعليمية',
+      description: 'الوصول للمواد والمحاضرات',
+      href: '/materials',
+      color: 'from-cyber-green to-cyber-neon'
+    },
+    {
+      icon: User,
+      title: 'لوحة الإدارة',
+      description: 'إدارة المحتوى والإعدادات',
+      href: '/admin',
+      color: 'from-cyber-blue to-cyber-violet'
     }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 }
-  }
+  ]
 
   return (
-    <div>
-      <Hero />
-      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        {/* Today's Schedule section on Home page */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-8 sm:mb-12"
-        >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-orbitron font-black mb-3 sm:mb-4 md:mb-6 text-cyber-neon px-2">
-            Today's Overview
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-dark-300 max-w-3xl mx-auto px-2">
-            Stay updated with your daily cybersecurity learning journey
-          </p>
-        </motion.div>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
         
-        {/* Section Selection for Home Page */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="enhanced-card mb-6 sm:mb-8 wave-effect reflection-effect interactive-hover mx-2 sm:mx-4"
-        >
-          <div className="text-center mb-4 sm:mb-6 px-3 sm:px-4">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.6 }}
-              className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
-            >
-              <Users className="text-white" size={24} />
-            </motion.div>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-orbitron font-bold text-cyber-neon mb-2 sm:mb-3">
-              Select Your Section
-            </h3>
-            <p className="text-dark-300 text-sm sm:text-base md:text-lg">
-              Choose your section to view today's personalized schedule
+        {/* Animated Background Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-cyber-neon/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-32 h-32 bg-cyber-violet/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 left-1/4 w-24 h-24 bg-cyber-green/10 rounded-full blur-xl animate-pulse delay-2000"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="animate-fade-in">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-bold text-dark-100 mb-6 leading-tight">
+              مرحباً بك في
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green">
+                Cyber TMSAH
+              </span>
+            </h1>
+            
+            <p className="text-lg sm:text-xl md:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+              منصة تعليمية حديثة ومتطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <Link
+                href="/schedule"
+                className="btn-primary text-lg px-8 py-4 rounded-xl font-semibold group"
+              >
+                ابدأ التعلم
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              
+              <Link
+                href="/materials"
+                className="btn-secondary text-lg px-8 py-4 rounded-xl font-semibold group"
+              >
+                استكشف المواد
+                <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+              </Link>
+            </div>
+          </div>
+          
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto animate-slide-up">
+            <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+                <Zap className="w-8 h-8 text-cyber-dark" />
+              </div>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">تعلم سريع</h3>
+              <p className="text-dark-300">تقنيات متقدمة للتعلم السريع والفعال</p>
+            </div>
+            
+            <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+                <Shield className="w-8 h-8 text-dark-100" />
+              </div>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">آمن ومضمون</h3>
+              <p className="text-dark-300">حماية كاملة لبياناتك ومعلوماتك</p>
+            </div>
+            
+            <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+                <Sparkles className="w-8 h-8 text-cyber-dark" />
+              </div>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">تجربة مميزة</h3>
+              <p className="text-dark-300">واجهة مستخدم حديثة وسهلة الاستخدام</p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-cyber-neon rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-cyber-neon rounded-full mt-2 animate-pulse"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gradient-to-b from-cyber-dark to-cyber-dark/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 animate-slide-up">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
+              الميزات الرئيسية
+            </h2>
+            <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
+              اكتشف جميع الميزات المتاحة في منصتنا التعليمية
             </p>
           </div>
-
-          {/* Section Selection */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto px-2"
-          >
-            {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => {
-              const group = parseInt(section.toString()) <= 7 ? '1' : '2'
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => {
+              const Icon = feature.icon
               return (
-                <motion.button
-                  key={section}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    setSelectedSection(section.toString())
-                    setSelectedGroup(group)
-                  }}
-                  className={`px-3 py-2 sm:px-4 sm:py-3 rounded-lg font-semibold transition-all duration-300 enhanced-card interactive-hover text-sm sm:text-base ${
-                    selectedSection === section.toString()
-                      ? 'bg-cyber-violet/20 text-cyber-violet border-2 border-cyber-violet/50 glow-pulse' 
-                      : 'bg-cyber-dark/30 text-dark-300 border border-cyber-glow/30 hover:border-cyber-violet/50'
-                  }`}
+                <Link
+                  key={feature.href}
+                  href={feature.href}
+                  className="group block"
                 >
-                  <div className="flex items-center gap-2">
-                    <Target size={16} />
-                    <span>{section}</span>
-                    <span className="text-xs opacity-70">(G{group})</span>
+                  <div className="enhanced-card p-6 text-center h-full hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
+                       style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform`}>
+                      <Icon className="w-8 h-8 text-dark-100" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-dark-100 mb-2 group-hover:text-cyber-neon transition-colors">
+                      {feature.title}
+                    </h3>
+                    <p className="text-dark-300 group-hover:text-dark-200 transition-colors">
+                      {feature.description}
+                    </p>
                   </div>
-                </motion.button>
+                </Link>
               )
             })}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
+      </section>
 
-        {/* Today's Schedule */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <TodaySchedule selectedGroup={selectedGroup} selectedSection={selectedSection} />
-        </motion.div>
-      </div>
+      {/* Schedule Preview Section */}
+      <section className="py-20 bg-gradient-to-b from-cyber-dark/50 to-cyber-dark">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 animate-slide-up">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
+              جدول اليوم
+            </h2>
+            <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
+              اعرض جدول حصص اليوم والأحداث القادمة
+            </p>
+          </div>
+          
+          <div className="glass-card p-8 text-center animate-slide-up-delayed">
+            <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
+            <h3 className="text-2xl font-semibold text-dark-100 mb-4">
+              الجدول قريباً
+            </h3>
+            <p className="text-dark-300 mb-6">
+              سيتم إضافة جدول الحصص قريباً. ابق متابعاً للتحديثات!
+            </p>
+            <Link
+              href="/schedule"
+              className="btn-primary inline-flex items-center gap-2"
+            >
+              عرض الجدول الكامل
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

@@ -1,144 +1,95 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { useState } from 'react'
+import { Menu, X, Home, Calendar, CheckSquare, BookOpen, User, Info, Mail } from 'lucide-react'
 
-const Navbar = () => {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const pathname = usePathname()
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const closeMenu = () => {
+    setIsOpen(false)
+  }
 
   const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '/materials', label: 'Materials' },
-    { href: '/schedule', label: 'Schedule' },
-    { href: '/tasks', label: 'Tasks' },
-    { href: '/about', label: 'About' },
-    { href: '/admin', label: 'Admin', admin: true },
+    { href: '/', label: 'الرئيسية', icon: Home },
+    { href: '/schedule', label: 'الجدول', icon: Calendar },
+    { href: '/tasks', label: 'المهام', icon: CheckSquare },
+    { href: '/materials', label: 'المواد', icon: BookOpen },
+    { href: '/admin', label: 'الإدارة', icon: User },
+    { href: '/about', label: 'حول', icon: Info },
+    { href: '/contact', label: 'اتصل بنا', icon: Mail },
   ]
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[100] bg-black/95 backdrop-blur-md border-b border-green-500 h-16 sm:h-20 flex items-center shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex justify-between items-center h-16 sm:h-20 w-full">
+    <nav className="bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-neon/20 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="font-orbitron font-black text-lg sm:text-xl md:text-2xl"
-              style={{
-                background: 'linear-gradient(135deg, #00FF88, #8A2BE2, #00FF88)',
-                backgroundSize: '200% 200%',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                letterSpacing: '1px',
-                animation: 'gradientShift 4s ease infinite'
-              }}
-            >
-              <span className="hidden sm:inline">CYBER TMSAH</span>
-              <span className="sm:hidden">CT</span>
-            </motion.div>
+          <Link href="/" className="flex items-center space-x-2 text-cyber-neon hover:text-cyber-violet transition-colors">
+            <div className="w-8 h-8 bg-gradient-to-r from-cyber-neon to-cyber-violet rounded-lg flex items-center justify-center">
+              <span className="text-cyber-dark font-bold text-sm">C</span>
+            </div>
+            <span className="font-orbitron font-bold text-lg">Cyber TMSAH</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
+          <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
-              // Hide admin link for now (you can add authentication later)
-              if (item.admin) return null
-              
+              const Icon = item.icon
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative px-3 py-2 font-semibold transition-all duration-300 text-sm lg:text-base ${
-                    pathname === item.href
-                      ? 'text-green-400 bg-green-400/10 rounded-lg'
-                      : 'text-white hover:text-green-400 hover:bg-green-400/10 rounded-lg'
-                  }`}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
                 >
-                  {item.label}
-                  {pathname === item.href && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-purple-500 rounded-full"
-                      initial={false}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    />
-                  )}
+                  <Icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium">{item.label}</span>
                 </Link>
               )
             })}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <motion.button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-green-400 transition-colors duration-300 p-2 rounded-lg hover:bg-green-400/10"
-              whileTap={{ scale: 0.95 }}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </motion.button>
-          </div>
+          {/* Mobile Menu Button */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden p-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
         </div>
 
-        {/* Mobile Navigation - Full Screen Dropdown */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden absolute top-full left-0 right-0 bg-black/98 backdrop-blur-lg border-t border-green-500 shadow-2xl"
-            >
-              <div className="px-4 py-6 space-y-3">
-                {navItems.map((item, index) => {
-                  // Hide admin link for now
-                  if (item.admin) return null
-                  
-                  return (
-                    <motion.div
-                      key={item.href}
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Link
-                        href={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className={`block px-6 py-4 font-semibold transition-all duration-300 text-lg rounded-xl ${
-                          pathname === item.href
-                            ? 'text-green-400 bg-green-400/20 border border-green-400/30'
-                            : 'text-white hover:text-green-400 hover:bg-green-400/10 border border-transparent'
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    </motion.div>
-                  )
-                })}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-cyber-dark/95 backdrop-blur-md border-t border-cyber-neon/20">
+              {navItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="flex items-center space-x-3 px-3 py-3 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
+                  >
+                    <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span className="text-base font-medium">{item.label}</span>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   )
 }
-
-export default Navbar

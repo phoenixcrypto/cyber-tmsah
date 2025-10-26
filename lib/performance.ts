@@ -59,7 +59,7 @@ export const preloadCriticalResources = () => {
 }
 
 // Optimize images
-export const optimizeImage = (src: string, width?: number, height?: number) => {
+export const optimizeImage = (src: string, _width?: number, _height?: number) => {
   if (typeof window !== 'undefined') {
     // Use Next.js Image optimization
     return src

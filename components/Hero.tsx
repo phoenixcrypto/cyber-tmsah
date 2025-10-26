@@ -1,265 +1,83 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, Shield, BookOpen, Users, Zap, Target } from 'lucide-react'
+import { ArrowRight, Sparkles, Zap, Shield } from 'lucide-react'
 
-
-const Hero = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut',
-      },
-    },
-  }
-
-  const logoVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.8,
-        ease: 'easeOut',
-      },
-    },
-  }
-
+export default function Hero() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{
-            rotate: 360,
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            rotate: -360,
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-cyber-violet/10 to-cyber-neon/10 rounded-full blur-3xl"
-        />
-      </div>
-
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="text-center max-w-6xl mx-auto relative z-10"
-      >
-        {/* Logo Container */}
-        <motion.div variants={logoVariants} className="mb-8">
-          <div className="flex items-center justify-center gap-8 mb-8 flex-wrap">
-            <motion.div
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              className="w-32 h-32 relative"
-              animate={{ 
-                filter: [
-                  'drop-shadow(0 0 20px rgba(0,255,136,0.6))',
-                  'drop-shadow(0 0 40px rgba(0,255,136,0.9))',
-                  'drop-shadow(0 0 20px rgba(0,255,136,0.6))'
-                ]
-              }}
-              transition={{ 
-                duration: 3, 
-                repeat: Infinity, 
-                ease: 'easeInOut' 
-              }}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
+      
+      {/* Animated Background Elements */}
+      <div className="absolute top-20 left-10 w-20 h-20 bg-cyber-neon/10 rounded-full blur-xl animate-pulse"></div>
+      <div className="absolute top-40 right-20 w-32 h-32 bg-cyber-violet/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+      <div className="absolute bottom-20 left-1/4 w-24 h-24 bg-cyber-green/10 rounded-full blur-xl animate-pulse delay-2000"></div>
+      
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="animate-fade-in">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-bold text-dark-100 mb-6 leading-tight">
+            مرحباً بك في
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green">
+              Cyber TMSAH
+            </span>
+          </h1>
+          
+          <p className="text-lg sm:text-xl md:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+            منصة تعليمية حديثة ومتطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <Link
+              href="/schedule"
+              className="btn-primary text-lg px-8 py-4 rounded-xl font-semibold group"
             >
-            <svg
-              viewBox="0 0 200 200"
-              className="w-full h-full"
-            >
-              {/* Shield Base */}
-              <path
-                d="M100 20 L180 60 L180 120 L100 180 L20 120 L20 60 Z"
-                fill="none"
-                stroke="#00FF88"
-                strokeWidth="4"
-                opacity="0.9"
-              />
-              {/* Inner Shield */}
-              <path
-                d="M100 35 L160 65 L160 115 L100 165 L40 115 L40 65 Z"
-                fill="none"
-                stroke="#8A2BE2"
-                strokeWidth="3"
-                opacity="0.7"
-              />
-              {/* Security Lock */}
-              <rect
-                x="85"
-                y="100"
-                width="30"
-                height="25"
-                rx="4"
-                fill="none"
-                stroke="#00FF88"
-                strokeWidth="3"
-                opacity="0.8"
-              />
-              <path
-                d="M95 100 Q95 90 100 90 Q105 90 105 100"
-                fill="none"
-                stroke="#00FF88"
-                strokeWidth="3"
-                opacity="0.8"
-              />
-              {/* Circuit Pattern */}
-              <circle cx="60" cy="80" r="3" fill="#00FF88" opacity="0.9" />
-              <circle cx="140" cy="80" r="3" fill="#8A2BE2" opacity="0.9" />
-              <circle cx="100" cy="50" r="3" fill="#00FF88" opacity="0.9" />
-              <circle cx="100" cy="150" r="3" fill="#8A2BE2" opacity="0.9" />
-              
-              {/* Connection Lines */}
-              <line x1="60" y1="80" x2="100" y2="50" stroke="#00FF88" strokeWidth="2" opacity="0.6" />
-              <line x1="140" y1="80" x2="100" y2="50" stroke="#8A2BE2" strokeWidth="2" opacity="0.6" />
-              <line x1="100" y1="50" x2="100" y2="90" stroke="#00FF88" strokeWidth="2" opacity="0.6" />
-              <line x1="100" y1="125" x2="100" y2="150" stroke="#8A2BE2" strokeWidth="2" opacity="0.6" />
-            </svg>
-            </motion.div>
+              ابدأ التعلم
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
             
-            {/* Logo Text */}
-            <motion.h1
-              className="font-orbitron font-black text-2xl sm:text-3xl md:text-4xl lg:text-6xl text-cyber-neon px-2"
-              style={{
-                letterSpacing: '1px'
-              }}
+            <Link
+              href="/materials"
+              className="btn-secondary text-lg px-8 py-4 rounded-xl font-semibold group"
             >
-              CYBER TMSAH
-            </motion.h1>
+              استكشف المواد
+              <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            </Link>
           </div>
-        </motion.div>
-
-        {/* Tagline */}
-        <motion.p
-          variants={itemVariants}
-          className="text-base sm:text-lg md:text-xl lg:text-2xl text-cyber-neon neon-text mb-6 sm:mb-8 font-light tracking-wide px-2"
-          style={{
-            color: '#00FF88',
-            textShadow: '0 0 20px rgba(0, 255, 136, 0.6)',
-            fontWeight: '300',
-            letterSpacing: '1px'
-          }}
-        >
-          Your Cyber Fortress for the Future
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          variants={itemVariants}
-          className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 sm:mb-12 px-2"
-        >
-          <motion.div 
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: '0 0 50px rgba(0, 255, 136, 0.6)',
-              y: -3
-            }} 
-            whileTap={{ scale: 0.95 }}
-            className="relative"
-          >
-            <Link 
-              href="/materials" 
-              className="btn-primary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
-            >
-              <BookOpen size={20} />
-              Explore Materials
-            </Link>
-          </motion.div>
-          <motion.div 
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: '0 0 50px rgba(138, 43, 226, 0.6)',
-              y: -3
-            }} 
-            whileTap={{ scale: 0.95 }}
-            className="relative"
-          >
-            <Link 
-              href="/about" 
-              className="btn-secondary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
-            >
-              <Users size={20} />
-              Learn About Us
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Features */}
-        <motion.div
-          variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto px-2"
-        >
-          {[
-            {
-              icon: Shield,
-              title: 'Secure Learning',
-              description: 'Advanced cybersecurity education with real-world applications',
-            },
-            {
-              icon: BookOpen,
-              title: 'Comprehensive Materials',
-              description: 'Extensive collection of study materials and resources',
-            },
-            {
-              icon: Users,
-              title: 'Expert Community',
-              description: 'Connect with cybersecurity professionals and learners',
-            },
-          ].map((feature, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ y: -5 }}
-              className="glass-card text-center group"
-            >
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
-                className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-cyber-neon to-cyber-violet rounded-full flex items-center justify-center cyber-glow"
-              >
-                <feature.icon size={24} className="text-cyber-dark" />
-              </motion.div>
-              <h3 className="text-lg sm:text-xl font-orbitron font-bold text-cyber-neon mb-2 sm:mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-sm sm:text-base text-dark-200 leading-relaxed">
-                {feature.description}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
+        </div>
+        
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto animate-slide-up">
+          <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
+            <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+              <Zap className="w-8 h-8 text-cyber-dark" />
+            </div>
+            <h3 className="text-xl font-semibold text-dark-100 mb-2">تعلم سريع</h3>
+            <p className="text-dark-300">تقنيات متقدمة للتعلم السريع والفعال</p>
+          </div>
+          
+          <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
+            <div className="w-16 h-16 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+              <Shield className="w-8 h-8 text-dark-100" />
+            </div>
+            <h3 className="text-xl font-semibold text-dark-100 mb-2">آمن ومضمون</h3>
+            <p className="text-dark-300">حماية كاملة لبياناتك ومعلوماتك</p>
+          </div>
+          
+          <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
+            <div className="w-16 h-16 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+              <Sparkles className="w-8 h-8 text-cyber-dark" />
+            </div>
+            <h3 className="text-xl font-semibold text-dark-100 mb-2">تجربة مميزة</h3>
+            <p className="text-dark-300">واجهة مستخدم حديثة وسهلة الاستخدام</p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div className="w-6 h-10 border-2 border-cyber-neon rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-cyber-neon rounded-full mt-2 animate-pulse"></div>
+        </div>
+      </div>
     </section>
   )
 }
-
-export default Hero
