@@ -1,44 +1,8 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, ThumbsUp, Star, Info } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, GraduationCap, UserCheck, Star } from 'lucide-react'
 
 export default function AboutPage() {
-  const [satisfactionRate, setSatisfactionRate] = useState(89)
-  const [uptime, setUptime] = useState('99.9%')
-  const [totalRatings, setTotalRatings] = useState(0)
-
-  // محاكاة نظام التقييم التفاعلي
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // محاكاة تقييمات جديدة
-      const newRatings = Math.floor(Math.random() * 3) + 1
-      setTotalRatings(prev => prev + newRatings)
-      
-      // تحديث معدل الرضا بناءً على التقييمات الجديدة
-      if (newRatings > 0) {
-        const currentRate = satisfactionRate
-        const newRate = Math.min(100, currentRate + (newRatings * 0.1))
-        setSatisfactionRate(Math.round(newRate * 10) / 10)
-      }
-    }, 5000) // كل 5 ثوان
-
-    return () => clearInterval(interval)
-  }, [satisfactionRate])
-
-  // محاكاة حساب مدة التشغيل
-  useEffect(() => {
-    const calculateUptime = () => {
-      // محاكاة مدة تشغيل عالية
-      const uptimePercentage = 99.9 + (Math.random() * 0.1)
-      setUptime(`${uptimePercentage.toFixed(1)}%`)
-    }
-
-    calculateUptime()
-    const interval = setInterval(calculateUptime, 10000) // كل 10 ثوان
-
-    return () => clearInterval(interval)
-  }, [])
 
   const features = [
     {
@@ -199,56 +163,57 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Interactive Stats Section */}
+        {/* Faculty Section */}
         <div className="mb-16 animate-slide-up">
           <div className="flex items-center justify-center gap-4 mb-8">
-            <ThumbsUp className="w-6 h-6 text-cyber-neon" />
+            <Users className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              إحصائياتنا التفاعلية
+              أعضاء هيئة التدريس
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="glass-card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-cyber-dark" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Doctors */}
+            <div className="enhanced-card p-6 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-neon/30">
+                <GraduationCap className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-cyber-neon mb-2">700+</h3>
-              <p className="text-dark-300">طالب نشط</p>
-              <div className="mt-2 flex items-center justify-center gap-1">
-                <ThumbsUp className="w-4 h-4 text-cyber-green" />
-                <span className="text-sm text-cyber-green">+{totalRatings} تقييم جديد</span>
-              </div>
-            </div>
-            
-            <div className="glass-card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-8 h-8 text-dark-100" />
-              </div>
-              <h3 className="text-3xl font-bold text-cyber-violet mb-2">7</h3>
-              <p className="text-dark-300">مادة تعليمية</p>
-            </div>
-            
-            <div className="glass-card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8 text-cyber-dark" />
-              </div>
-              <h3 className="text-3xl font-bold text-cyber-green mb-2">{satisfactionRate}%</h3>
-              <p className="text-dark-300">معدل الرضا</p>
-              <div className="mt-2 flex items-center justify-center gap-1">
-                <Star className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm text-yellow-400">متجدد تلقائياً</span>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">الدكاترة</h3>
+              <div className="space-y-2 text-dark-300">
+                <p>د. أحمد محمد - فيزياء تطبيقية</p>
+                <p>د. سارة أحمد - رياضيات</p>
+                <p>د. محمد علي - مهارات الريادة</p>
+                <p>د. فاطمة حسن - تكنولوجيا المعلومات</p>
+                <p>د. نور الدين - إنجليزي</p>
               </div>
             </div>
-            
-            <div className="glass-card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-blue to-cyber-violet rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Target className="w-8 h-8 text-dark-100" />
+
+            {/* Teaching Assistants */}
+            <div className="enhanced-card p-6 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-violet/30">
+                <BookOpen className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-cyber-blue mb-2">{uptime}</h3>
-              <p className="text-dark-300">وقت التشغيل</p>
-              <div className="mt-2 flex items-center justify-center gap-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-sm text-green-400">محدث تلقائياً</span>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">المعيدين</h3>
+              <div className="space-y-2 text-dark-300">
+                <p>م. علي محمود - نظم قواعد البيانات</p>
+                <p>م. مريم أحمد - انفورميشن سيستيم</p>
+                <p>م. أحمد علي - تكنولوجيا المعلومات</p>
+                <p>م. فاطمة علي - نظم قواعد البيانات</p>
+                <p>م. محمد حسن - انفورميشن سيستيم</p>
+              </div>
+            </div>
+
+            {/* Support Staff */}
+            <div className="enhanced-card p-6 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-green/30">
+                <UserCheck className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">الموظفين المساعدين</h3>
+              <div className="space-y-2 text-dark-300">
+                <p>أ. سارة محمد - إدارة الطلاب</p>
+                <p>أ. خالد محمد - الدعم التقني</p>
+                <p>أ. نورا أحمد - شؤون أكاديمية</p>
+                <p>أ. محمود حسن - التنسيق</p>
+                <p>أ. ياسمين علي - المتابعة</p>
               </div>
             </div>
           </div>
