@@ -3,9 +3,6 @@
 import { Users, BookOpen, Award, Target, Heart, Lightbulb, ThumbsUp, Star } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
-
 export default function AboutPage() {
   const [satisfactionRate, setSatisfactionRate] = useState(89)
   const [uptime, setUptime] = useState('99.9%')
