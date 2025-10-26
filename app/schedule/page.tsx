@@ -447,8 +447,42 @@ const scheduleData: Record<string, Record<string, ScheduleItem[]>> = {
     '13': [
     ],
     '14': [
+      {
+        id: 'S14-Database Systems-Monday-P8',
+        title: 'Database Systems',
+        instructor: 'Eng. نجلاء سعيد',
+        day: 'Monday',
+        date: '2025-01-18',
+        time: '5:10 PM',
+        duration: '1 hour 10 minutes',
+        location: 'D102',
+        description: 'Database Systems with Eng. نجلاء سعيد',
+        category: 'Database Systems',
+        status: 'upcoming' as const,
+        icon: Database,
+        type: 'session' as const,
+        period: 8,
+        section: '14'
+      },
     ],
     '15': [
+      {
+        id: 'S15-Database Systems-Monday-P7',
+        title: 'Database Systems',
+        instructor: 'Eng. نجلاء سعيد',
+        day: 'Monday',
+        date: '2025-01-18',
+        time: '4:00 PM',
+        duration: '1 hour',
+        location: 'D101',
+        description: 'Database Systems with Eng. نجلاء سعيد',
+        category: 'Database Systems',
+        status: 'upcoming' as const,
+        icon: Database,
+        type: 'session' as const,
+        period: 7,
+        section: '15'
+      },
     ],
   },
 }
