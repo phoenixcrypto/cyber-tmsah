@@ -1,0 +1,127 @@
+{
+  "subjects": {
+    "mathematics": {
+      "name": "Mathematics",
+      "icon": "📐",
+      "description": "Fundamentals of algebra, calculus, and mathematical analysis",
+      "hasSessions": true,
+      "instructor": "Dr. Ahmed Hassan",
+      "assistant": "Eng. Sarah Mohamed"
+    },
+    "information-technology": {
+      "name": "Information Technology",
+      "icon": "🔧",
+      "description": "IT infrastructure, systems administration, and technical support",
+      "hasSessions": true,
+      "instructor": "Dr. Mohamed Ali",
+      "assistant": "Eng. Fatma Ahmed"
+    },
+    "applied-physics": {
+      "name": "Applied Physics",
+      "icon": "⚡",
+      "description": "Physics principles applied to technology and engineering",
+      "hasSessions": true,
+      "instructor": "Dr. Youssef Ibrahim",
+      "assistant": "Eng. Nour Hassan"
+    },
+    "database-systems": {
+      "name": "Database Systems",
+      "icon": "🗄️",
+      "description": "SQL fundamentals, database design, and data management",
+      "hasSessions": true,
+      "instructor": "Dr. Amr Salah",
+      "assistant": "Eng. Dina Mahmoud"
+    },
+    "information-systems": {
+      "name": "Information Systems",
+      "icon": "💻",
+      "description": "Information systems design, analysis, and management",
+      "hasSessions": true,
+      "instructor": "Dr. Hala Mostafa",
+      "assistant": "Eng. Omar Tarek"
+    },
+    "english": {
+      "name": "English",
+      "icon": "📚",
+      "description": "Academic writing, research papers, and communication skills",
+      "hasSessions": false,
+      "instructor": "Dr. Sarah Johnson",
+      "assistant": "Eng. Michael Brown"
+    },
+    "entrepreneurship": {
+      "name": "Entrepreneurship & Creative Thinking",
+      "icon": "💡",
+      "description": "Business development, innovation, and creative problem solving",
+      "hasSessions": false,
+      "instructor": "Dr. Ahmed El-Sayed",
+      "assistant": "Eng. Fatma Ali"
+    }
+  },
+  "content": {
+    "math-lecture-1": {
+      "id": "math-lecture-1",
+      "title": "Introduction to Calculus",
+      "type": "lecture",
+      "subject": "mathematics",
+      "instructor": "Dr. Ahmed Hassan",
+      "date": "2025-01-15",
+      "duration": "2 hours",
+      "description": "Basic concepts of differential and integral calculus",
+      "status": "published",
+      "sections": [
+        {
+          "id": "section-1",
+          "title": "What is Calculus?",
+          "content": "Calculus is a branch of mathematics that deals with the study of change and motion. It is divided into two main branches: differential calculus and integral calculus."
+        },
+        {
+          "id": "section-2",
+          "title": "Historical Development",
+          "content": "The development of calculus is credited to two great mathematicians: Isaac Newton and Gottfried Wilhelm Leibniz. Both developed the fundamental concepts independently in the late 17th century."
+        }
+      ],
+      "materials": [
+        {
+          "name": "calculus-basics.pdf",
+          "type": "PDF",
+          "size": "2.3 MB"
+        },
+        {
+          "name": "practice-problems.pdf",
+          "type": "PDF",
+          "size": "1.8 MB"
+        }
+      ]
+    },
+    "math-session-1": {
+      "id": "math-session-1",
+      "title": "Calculus Problem Solving",
+      "type": "session",
+      "subject": "mathematics",
+      "instructor": "Eng. Sarah Mohamed",
+      "date": "2025-01-17",
+      "duration": "1.5 hours",
+      "description": "Practical exercises and problem solving techniques",
+      "status": "published",
+      "sections": [
+        {
+          "id": "section-1",
+          "title": "Problem Solving Strategy",
+          "content": "When approaching calculus problems, follow these steps: 1. Read the problem carefully, 2. Determine which concepts apply, 3. Set up the problem, 4. Solve step by step, 5. Check your answer."
+        }
+      ],
+      "materials": [
+        {
+          "name": "problem-sets.pdf",
+          "type": "PDF",
+          "size": "3.1 MB"
+        },
+        {
+          "name": "solutions.pdf",
+          "type": "PDF",
+          "size": "2.5 MB"
+        }
+      ]
+    }
+  }
+}
