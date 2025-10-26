@@ -1,6 +1,6 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, GraduationCap, UserCheck, Star } from 'lucide-react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star } from 'lucide-react'
 
 export default function AboutPage() {
 
@@ -171,49 +171,164 @@ export default function AboutPage() {
               أعضاء هيئة التدريس
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Doctors */}
-            <div className="enhanced-card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-neon/30">
-                <GraduationCap className="w-8 h-8 text-white" />
+          
+          {/* Mathematics */}
+          <div className="mb-8">
+            <div className="enhanced-card p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-semibold text-dark-100">الرياضيات</h3>
               </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">الدكاترة</h3>
-              <div className="space-y-2 text-dark-300">
-                <p>د. أحمد محمد - فيزياء تطبيقية</p>
-                <p>د. سارة أحمد - رياضيات</p>
-                <p>د. محمد علي - مهارات الريادة</p>
-                <p>د. فاطمة حسن - تكنولوجيا المعلومات</p>
-                <p>د. نور الدين - إنجليزي</p>
-              </div>
-            </div>
-
-            {/* Teaching Assistants */}
-            <div className="enhanced-card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-violet/30">
-                <BookOpen className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">المعيدين</h3>
-              <div className="space-y-2 text-dark-300">
-                <p>م. علي محمود - نظم قواعد البيانات</p>
-                <p>م. مريم أحمد - انفورميشن سيستيم</p>
-                <p>م. أحمد علي - تكنولوجيا المعلومات</p>
-                <p>م. فاطمة علي - نظم قواعد البيانات</p>
-                <p>م. محمد حسن - انفورميشن سيستيم</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>د. سييمون عزت</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>م. ايهاب غلاب</p>
+                    <p>م. احمد نشأت</p>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* Support Staff */}
-            <div className="enhanced-card p-6 text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-green/30">
-                <UserCheck className="w-8 h-8 text-white" />
+          {/* Applied Physics */}
+          <div className="mb-8">
+            <div className="enhanced-card p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-semibold text-dark-100">الفيزياء التطبيقية</h3>
               </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">الموظفين المساعدين</h3>
-              <div className="space-y-2 text-dark-300">
-                <p>أ. سارة محمد - إدارة الطلاب</p>
-                <p>أ. خالد محمد - الدعم التقني</p>
-                <p>أ. نورا أحمد - شؤون أكاديمية</p>
-                <p>أ. محمود حسن - التنسيق</p>
-                <p>أ. ياسمين علي - المتابعة</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>د. احمد بكر</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>م. احمد نشأت</p>
+                    <p>م. امنية ابراهيم</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Database Systems & Entrepreneurship */}
+          <div className="mb-8">
+            <div className="enhanced-card p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-xl flex items-center justify-center shadow-lg shadow-cyber-green/30">
+                  <Award className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-semibold text-dark-100">قواعد البيانات ومهارات الريادة والتفكير الإبداعي</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>د. عبير حسن</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>م. نجلاء سعيد</p>
+                    <p>م. كريم عادل</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Information Technology */}
+          <div className="mb-8">
+            <div className="enhanced-card p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyber-blue to-cyber-violet rounded-xl flex items-center justify-center shadow-lg shadow-cyber-blue/30">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-semibold text-dark-100">تكنولوجيا المعلومات</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>د. ششيماء احمد</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>م. محمد عمار</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* English */}
+          <div className="mb-8">
+            <div className="enhanced-card p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+                  <Heart className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-semibold text-dark-100">اللغة الإنجليزية</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>د. نشوي</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>لا يوجد معيدين</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Information System */}
+          <div className="mb-8">
+            <div className="enhanced-card p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
+                  <Lightbulb className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-semibold text-dark-100">نظم المعلومات</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-neon mb-3">الدكاترة</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>د. هند زيادة</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-cyber-violet mb-3">المعيدين</h4>
+                  <div className="space-y-2 text-dark-300">
+                    <p>م. محمود محمد</p>
+                    <p>م. مريم اشرف</p>
+                    <p>م. دينا علي</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
