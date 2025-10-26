@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Calendar, CheckSquare, BookOpen, ArrowRight, Sparkles, Zap, Shield } from 'lucide-react'
+import { Calendar, CheckSquare, BookOpen, ArrowRight, Sparkles, Zap, Shield, Clock, MapPin, User } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -28,6 +28,50 @@ export default function HomePage() {
       color: 'from-cyber-green to-cyber-neon'
     }
   ]
+
+  // جدول اليوم
+  const todaySchedule = [
+    {
+      time: '09:00 - 10:30',
+      subject: 'قواعد البيانات',
+      instructor: 'د. أحمد محمد',
+      room: 'قاعة 101',
+      type: 'محاضرة'
+    },
+    {
+      time: '11:00 - 12:30',
+      subject: 'البرمجة المتقدمة',
+      instructor: 'د. فاطمة علي',
+      room: 'معمل 205',
+      type: 'عملي'
+    },
+    {
+      time: '14:00 - 15:30',
+      subject: 'الشبكات',
+      instructor: 'د. محمد حسن',
+      room: 'قاعة 301',
+      type: 'محاضرة'
+    }
+  ]
+
+  const getCurrentTime = () => {
+    const now = new Date()
+    return now.toLocaleTimeString('ar-SA', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    })
+  }
+
+  const getCurrentDate = () => {
+    const now = new Date()
+    return now.toLocaleDateString('ar-SA', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
 
   return (
     <div className="min-h-screen">
@@ -157,18 +201,54 @@ export default function HomePage() {
               جدول اليوم
             </h2>
             <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-              اعرض جدول حصص اليوم والأحداث القادمة
+              {getCurrentDate()}
             </p>
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <Clock className="w-5 h-5 text-cyber-neon" />
+              <span className="text-cyber-neon font-semibold">{getCurrentTime()}</span>
+            </div>
           </div>
           
-          <div className="glass-card p-8 text-center animate-slide-up-delayed">
-            <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
-            <h3 className="text-2xl font-semibold text-dark-100 mb-4">
-              الجدول قريباً
-            </h3>
-            <p className="text-dark-300 mb-6">
-              سيتم إضافة جدول الحصص قريباً. ابق متابعاً للتحديثات!
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {todaySchedule.map((schedule, index) => (
+              <div
+                key={index}
+                className="enhanced-card p-6 hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-cyber-neon" />
+                    <span className="text-cyber-neon font-semibold">{schedule.time}</span>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    schedule.type === 'محاضرة' 
+                      ? 'bg-cyber-violet/20 text-cyber-violet' 
+                      : 'bg-cyber-green/20 text-cyber-green'
+                  }`}>
+                    {schedule.type}
+                  </span>
+                </div>
+                
+                <h3 className="text-xl font-semibold text-dark-100 mb-3">
+                  {schedule.subject}
+                </h3>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-dark-300">
+                    <User className="w-4 h-4 text-cyber-violet" />
+                    <span className="text-sm">{schedule.instructor}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-dark-300">
+                    <MapPin className="w-4 h-4 text-cyber-green" />
+                    <span className="text-sm">{schedule.room}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center animate-slide-up-delayed">
             <Link
               href="/schedule"
               className="btn-primary inline-flex items-center gap-2"

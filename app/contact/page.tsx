@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Clock } from 'lucide-react'
+import { Mail, Phone, MapPin, Clock, MessageCircle, User, Code, Award } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -31,6 +31,12 @@ export default function ContactPage() {
     }
   ]
 
+  const handleWhatsAppContact = () => {
+    const message = encodeURIComponent('مرحباً! أريد التواصل معكم حول منصة Cyber TMSAH')
+    const whatsappUrl = `https://wa.me/201234567890?text=${message}`
+    window.open(whatsappUrl, '_blank')
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -42,6 +48,46 @@ export default function ContactPage() {
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
             نحن هنا لمساعدتك. تواصل معنا لأي استفسار أو دعم
           </p>
+        </div>
+
+        {/* Developer Card */}
+        <div className="max-w-4xl mx-auto mb-16 animate-slide-up">
+          <div className="enhanced-card p-8 text-center">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-shrink-0">
+                <div className="w-32 h-32 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-full flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+                  <User className="w-16 h-16 text-white" />
+                </div>
+              </div>
+              <div className="flex-1 text-right">
+                <h2 className="text-3xl font-orbitron font-bold text-dark-100 mb-4">
+                  ZEYAD MOHAMED
+                </h2>
+                <p className="text-xl text-cyber-neon mb-4">مطور ومصمم المنصة</p>
+                <div className="flex flex-wrap gap-4 justify-center md:justify-end mb-6">
+                  <div className="flex items-center gap-2 text-dark-300">
+                    <Code className="w-5 h-5 text-cyber-green" />
+                    <span>مطور Full Stack</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-dark-300">
+                    <Award className="w-5 h-5 text-cyber-violet" />
+                    <span>مصمم UI/UX</span>
+                  </div>
+                </div>
+                <p className="text-dark-300 leading-relaxed mb-6">
+                  مطور شغوف بالتكنولوجيا والتعليم، متخصص في تطوير تطبيقات الويب الحديثة 
+                  وتصميم تجارب مستخدم متميزة. أسعى دائماً لتحسين تجربة التعلم من خلال التكنولوجيا.
+                </p>
+                <button
+                  onClick={handleWhatsAppContact}
+                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-3 mx-auto transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-green-500/30"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  تواصل عبر واتساب
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Contact Info Grid */}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Home, Calendar, CheckSquare, BookOpen, Info, Mail } from 'lucide-react'
+import { Menu, X, Home, Calendar, Info, Mail } from 'lucide-react'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,8 +18,6 @@ export default function Navbar() {
   const navItems = [
     { href: '/', label: 'الرئيسية', icon: Home },
     { href: '/schedule', label: 'الجدول', icon: Calendar },
-    { href: '/tasks', label: 'المهام', icon: CheckSquare },
-    { href: '/materials', label: 'المواد', icon: BookOpen },
     { href: '/about', label: 'حول', icon: Info },
     { href: '/contact', label: 'اتصل بنا', icon: Mail },
   ]
@@ -29,10 +27,19 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 text-cyber-neon hover:text-cyber-violet transition-colors">
-            <span className="font-orbitron font-bold text-xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent">
-              Cyber TMSAH
-            </span>
+          <Link href="/" className="flex items-center space-x-3 text-cyber-neon hover:text-cyber-violet transition-colors group">
+            <div className="relative">
+              <div className="w-10 h-10 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-lg flex items-center justify-center shadow-lg shadow-cyber-neon/30 group-hover:shadow-cyber-violet/40 transition-all duration-300">
+                <span className="font-orbitron font-bold text-white text-lg">C</span>
+              </div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-cyber-green rounded-full animate-pulse"></div>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-orbitron font-bold text-xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent group-hover:from-cyber-violet group-hover:via-cyber-green group-hover:to-cyber-neon transition-all duration-300">
+                Cyber TMSAH
+              </span>
+              <span className="text-xs text-cyber-neon/70 font-medium">منصة تعليمية متطورة</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
