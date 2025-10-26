@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Home, Calendar, CheckSquare, BookOpen, User, Info, Mail } from 'lucide-react'
+import { Menu, X, Home, Calendar, CheckSquare, BookOpen, Info, Mail } from 'lucide-react'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
