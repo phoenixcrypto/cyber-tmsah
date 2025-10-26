@@ -46,28 +46,32 @@ export default function AboutPage() {
       title: 'مجتمع تعليمي',
       description: 'نحن نؤمن بقوة التعلم الجماعي وتبادل المعرفة',
       color: 'from-cyber-neon to-cyber-green',
-      bgGradient: 'from-cyber-green/20 to-cyber-neon/20'
+      bgGradient: 'from-cyber-green/20 to-cyber-neon/20',
+      cardBg: 'bg-gradient-to-br from-cyber-green/10 to-cyber-neon/10'
     },
     {
       icon: BookOpen,
       title: 'محتوى عالي الجودة',
       description: 'نقدم مواد تعليمية متميزة ومحدثة باستمرار',
       color: 'from-cyber-violet to-cyber-blue',
-      bgGradient: 'from-cyber-violet/20 to-cyber-blue/20'
+      bgGradient: 'from-cyber-violet/20 to-cyber-blue/20',
+      cardBg: 'bg-gradient-to-br from-cyber-violet/10 to-cyber-blue/10'
     },
     {
       icon: Award,
       title: 'خبرة متميزة',
       description: 'فريق من الخبراء والمتخصصين في مجال التعليم',
       color: 'from-cyber-green to-cyber-neon',
-      bgGradient: 'from-cyber-green/20 to-cyber-neon/20'
+      bgGradient: 'from-cyber-green/20 to-cyber-neon/20',
+      cardBg: 'bg-gradient-to-br from-cyber-green/15 to-cyber-neon/15'
     },
     {
       icon: Target,
       title: 'أهداف واضحة',
       description: 'نسعى لتحقيق أفضل النتائج التعليمية',
       color: 'from-cyber-blue to-cyber-violet',
-      bgGradient: 'from-cyber-blue/20 to-cyber-violet/20'
+      bgGradient: 'from-cyber-blue/20 to-cyber-violet/20',
+      cardBg: 'bg-gradient-to-br from-cyber-blue/15 to-cyber-violet/15'
     }
   ]
 
@@ -141,7 +145,7 @@ export default function AboutPage() {
               return (
                 <div
                   key={index}
-                  className={`glass-card bg-gradient-to-br ${feature.bgGradient} p-6 text-center hover:scale-105 transition-all duration-300 animate-slide-up-delayed`}
+                  className={`glass-card ${feature.cardBg} p-6 text-center hover:scale-105 transition-all duration-300 animate-slide-up-delayed`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-neon/30`}>
