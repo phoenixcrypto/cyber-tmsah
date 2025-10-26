@@ -7,7 +7,7 @@ const nextConfig = {
   
   // Image optimization
   images: {
-    domains: ['localhost', 'example.com'],
+    domains: ['localhost', 'example.com', 'cyber-tmsah.site', 'www.cyber-tmsah.site'],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,

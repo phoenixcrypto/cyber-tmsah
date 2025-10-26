@@ -25,11 +25,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://cyber-tmsah.com'),
+  metadataBase: new URL('https://cyber-tmsah.site'),
   openGraph: {
     title: 'Cyber Tmsah - Your Cyber Fortress for the Future',
     description: 'Your Cyber Fortress for the Future - Cybersecurity Learning Platform',
-    url: 'https://cyber-tmsah.com',
+    url: 'https://cyber-tmsah.site',
     siteName: 'Cyber Tmsah',
     images: [
       {
