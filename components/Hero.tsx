@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Shield, BookOpen, Users, Zap, Target } from 'lucide-react'
-import AnimatedIcon from '@/components/AnimatedIcon'
+
 
 const Hero = () => {
   const containerVariants = {
@@ -191,9 +191,7 @@ const Hero = () => {
               href="/materials" 
               className="btn-primary text-lg px-12 py-6"
             >
-              <AnimatedIcon variant="glow" size={24} delay={0}>
-                <BookOpen size={24} />
-              </AnimatedIcon>
+              <BookOpen size={24} />
               Explore Materials
             </Link>
           </motion.div>
@@ -210,9 +208,7 @@ const Hero = () => {
               href="/about" 
               className="btn-secondary text-lg px-12 py-6"
             >
-              <AnimatedIcon variant="rotate" size={24} delay={0}>
-                <Users size={24} />
-              </AnimatedIcon>
+              <Users size={24} />
               Learn About Us
             </Link>
           </motion.div>

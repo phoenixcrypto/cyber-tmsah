@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Shield, Mail, Phone, MapPin, Users, BookOpen, Calendar, Target, Zap, Globe, Heart } from 'lucide-react'
-import AnimatedIcon from '@/components/AnimatedIcon'
+
 
 const Footer = () => {
   const containerVariants = {
@@ -45,9 +45,7 @@ const Footer = () => {
                 transition={{ duration: 0.6 }}
                 className="w-16 h-16 animated-gradient rounded-xl flex items-center justify-center glow-pulse magnetic-hover"
               >
-                <AnimatedIcon variant="glow" size={32} delay={0}>
-                  <Shield className="text-white" size={32} />
-                </AnimatedIcon>
+                <Shield className="text-white" size={32} />
               </motion.div>
               <span className="font-orbitron font-black text-3xl text-cyber-neon">
                 CYBER TMSAH
@@ -64,17 +62,13 @@ const Footer = () => {
                 whileHover={{ scale: 1.1, y: -2 }}
                 className="w-12 h-12 bg-cyber-neon/10 border border-cyber-neon/30 rounded-full flex items-center justify-center cursor-pointer interactive-hover"
               >
-                <AnimatedIcon variant="pulse" size={20} delay={0}>
-                  <Globe className="text-cyber-neon" size={20} />
-                </AnimatedIcon>
+                <Globe className="text-cyber-neon" size={20} />
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.1, y: -2 }}
                 className="w-12 h-12 bg-cyber-violet/10 border border-cyber-violet/30 rounded-full flex items-center justify-center cursor-pointer interactive-hover"
               >
-                <AnimatedIcon variant="bounce" size={20} delay={0.2}>
-                  <Heart className="text-cyber-violet" size={20} />
-                </AnimatedIcon>
+                <Heart className="text-cyber-violet" size={20} />
               </motion.div>
             </div>
           </motion.div>
@@ -97,9 +91,7 @@ const Footer = () => {
                     href={link.href}
                     className="text-dark-300 hover:text-cyber-neon transition-all duration-300 flex items-center group enhanced-card p-3 rounded-lg interactive-hover"
                   >
-                    <AnimatedIcon variant="pulse" size={16} delay={index * 0.1}>
-                      <link.icon className="text-cyber-neon mr-3" size={16} />
-                    </AnimatedIcon>
+                    <link.icon className="text-cyber-neon mr-3" size={16} />
                     <span className="group-hover:translate-x-1 transition-transform duration-300">
                       {link.label}
                     </span>
@@ -116,21 +108,15 @@ const Footer = () => {
             </h3>
             <ul className="space-y-6">
               <li className="flex items-center text-dark-300 enhanced-card p-4 rounded-lg interactive-hover">
-                <AnimatedIcon variant="rotate" size={20} delay={0}>
-                  <Phone className="text-cyber-neon mr-4" size={20} />
-                </AnimatedIcon>
+                <Phone className="text-cyber-neon mr-4" size={20} />
                 <span className="text-sm">+20 155 345 0232</span>
               </li>
               <li className="flex items-center text-dark-300 enhanced-card p-4 rounded-lg interactive-hover">
-                <AnimatedIcon variant="glow" size={20} delay={0.2}>
-                  <MapPin className="text-cyber-violet mr-4" size={20} />
-                </AnimatedIcon>
+                <MapPin className="text-cyber-violet mr-4" size={20} />
                 <span className="text-sm">Egypt</span>
               </li>
               <li className="flex items-center text-dark-300 enhanced-card p-4 rounded-lg interactive-hover">
-                <AnimatedIcon variant="bounce" size={20} delay={0.4}>
-                  <Zap className="text-cyber-neon mr-4" size={20} />
-                </AnimatedIcon>
+                <Zap className="text-cyber-neon mr-4" size={20} />
                 <span className="text-sm">24/7 Support</span>
               </li>
             </ul>
@@ -143,9 +129,7 @@ const Footer = () => {
           className="border-t border-cyber-glow/30 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center"
         >
           <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <AnimatedIcon variant="pulse" size={16} delay={0}>
-              <Heart className="text-cyber-neon" size={16} />
-            </AnimatedIcon>
+            <Heart className="text-cyber-neon" size={16} />
             <p className="text-dark-400 text-sm">
               Made with passion for cybersecurity education
             </p>
