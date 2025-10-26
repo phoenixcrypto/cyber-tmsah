@@ -20,9 +20,18 @@ const nextConfig = {
   // Disable static optimization completely
   staticPageGenerationTimeout: 0,
   
-  // Disable problematic features
+  // Mobile performance optimizations
   experimental: {
-    // Remove problematic optimizations
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
   
   // Headers for performance and security

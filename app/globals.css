@@ -7,6 +7,9 @@
   html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    /* Mobile performance optimizations */
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -16,10 +19,20 @@
     overflow-x: hidden;
     position: relative;
     padding-top: 80px;
+    /* Mobile performance optimizations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   * {
     box-sizing: border-box;
+  }
+
+  /* Mobile touch optimizations */
+  button, a, input, textarea {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
       /* Animated background grid effect */
@@ -444,7 +457,7 @@
   }
 
   .glass-card {
-    @apply bg-white/5 backdrop-blur-md border border-cyber-glow rounded-2xl p-8 relative overflow-hidden transition-all duration-300;
+    @apply bg-white/5 backdrop-blur-md border border-cyber-glow rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 relative overflow-hidden transition-all duration-300;
   }
 
   .glass-card::before {
@@ -475,7 +488,7 @@
   }
 
   .btn-primary {
-    @apply px-8 py-4 bg-cyber-glow/10 border-2 border-cyber-neon text-cyber-neon rounded-full font-orbitron font-semibold transition-all duration-300 hover:bg-cyber-glow/20 hover:shadow-cyber-glow hover:-translate-y-1 relative overflow-hidden;
+    @apply px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-cyber-glow/10 border-2 border-cyber-neon text-cyber-neon rounded-full font-orbitron font-semibold transition-all duration-300 hover:bg-cyber-glow/20 hover:shadow-cyber-glow hover:-translate-y-1 relative overflow-hidden text-sm sm:text-base;
   }
 
   .btn-primary::before {
@@ -494,7 +507,7 @@
   }
 
   .btn-secondary {
-    @apply px-8 py-4 bg-cyber-violetGlow/10 border-2 border-cyber-violet text-cyber-violet rounded-full font-orbitron font-semibold transition-all duration-300 hover:bg-cyber-violetGlow/20 hover:shadow-cyber-violetGlow hover:-translate-y-1 relative overflow-hidden;
+    @apply px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-cyber-violetGlow/10 border-2 border-cyber-violet text-cyber-violet rounded-full font-orbitron font-semibold transition-all duration-300 hover:bg-cyber-violetGlow/20 hover:shadow-cyber-violetGlow hover:-translate-y-1 relative overflow-hidden text-sm sm:text-base;
   }
 
   .btn-secondary::before {
@@ -1014,10 +1027,17 @@
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(0, 255, 136, 0.2);
-  border-radius: 20px;
-  padding: 30px;
+  border-radius: 12px;
+  padding: 16px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .enhanced-card {
+    border-radius: 20px;
+    padding: 30px;
+  }
 }
 
 .enhanced-card::before {
@@ -1036,11 +1056,20 @@
 }
 
 .enhanced-card:hover {
-  transform: translateY(-10px) rotateX(5deg);
+  transform: translateY(-5px);
   box-shadow: 
-    0 20px 60px rgba(0, 255, 136, 0.3),
+    0 10px 30px rgba(0, 255, 136, 0.3),
     0 0 0 1px rgba(0, 255, 136, 0.5);
   border-color: rgba(0, 255, 136, 0.6);
+}
+
+@media (min-width: 640px) {
+  .enhanced-card:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    box-shadow: 
+      0 20px 60px rgba(0, 255, 136, 0.3),
+      0 0 0 1px rgba(0, 255, 136, 0.5);
+  }
 }
 
 /* Magnetic Hover Effect */

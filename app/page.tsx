@@ -32,18 +32,18 @@ export default function HomePage() {
   return (
     <div>
       <Hero />
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
         {/* Today's Schedule section on Home page */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-orbitron font-black mb-4 sm:mb-6 text-cyber-neon px-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-orbitron font-black mb-3 sm:mb-4 md:mb-6 text-cyber-neon px-2">
             Today's Overview
           </h2>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto px-4">
+          <p className="text-base sm:text-lg md:text-xl text-dark-300 max-w-3xl mx-auto px-2">
             Stay updated with your daily cybersecurity learning journey
           </p>
         </motion.div>
@@ -53,20 +53,20 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="enhanced-card mb-8 sm:mb-12 wave-effect reflection-effect interactive-hover mx-4"
+          className="enhanced-card mb-6 sm:mb-8 wave-effect reflection-effect interactive-hover mx-2 sm:mx-4"
         >
-          <div className="text-center mb-6 sm:mb-8 px-4">
+          <div className="text-center mb-4 sm:mb-6 px-3 sm:px-4">
             <motion.div
               whileHover={{ scale: 1.1, rotate: 360 }}
               transition={{ duration: 0.6 }}
-              className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
+              className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-3 sm:mb-4 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
             >
-              <Users className="text-white" size={32} />
+              <Users className="text-white" size={24} />
             </motion.div>
-            <h3 className="text-xl sm:text-2xl font-orbitron font-bold text-cyber-neon mb-3 sm:mb-4">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-orbitron font-bold text-cyber-neon mb-2 sm:mb-3">
               Select Your Section
             </h3>
-            <p className="text-dark-300 text-base sm:text-lg">
+            <p className="text-dark-300 text-sm sm:text-base md:text-lg">
               Choose your section to view today's personalized schedule
             </p>
           </div>
@@ -77,7 +77,7 @@ export default function HomePage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto"
+            className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto px-2"
           >
             {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => {
               const group = parseInt(section.toString()) <= 7 ? '1' : '2'
@@ -91,7 +91,7 @@ export default function HomePage() {
                     setSelectedSection(section.toString())
                     setSelectedGroup(group)
                   }}
-                  className={`px-4 py-3 rounded-xl font-semibold transition-all duration-300 enhanced-card interactive-hover ${
+                  className={`px-3 py-2 sm:px-4 sm:py-3 rounded-lg font-semibold transition-all duration-300 enhanced-card interactive-hover text-sm sm:text-base ${
                     selectedSection === section.toString()
                       ? 'bg-cyber-violet/20 text-cyber-violet border-2 border-cyber-violet/50 glow-pulse' 
                       : 'bg-cyber-dark/30 text-dark-300 border border-cyber-glow/30 hover:border-cyber-violet/50'

@@ -88,7 +88,7 @@ export default function AdminPage() {
                 
                   <Shield className="text-cyber-neon" size={48} />
                 
-                <h1 className="text-3xl sm:text-5xl font-orbitron font-black text-cyber-neon">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-orbitron font-black text-cyber-neon mb-3 sm:mb-4">
                   Admin Dashboard
                 </h1>
               </motion.div>

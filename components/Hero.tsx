@@ -149,9 +149,9 @@ const Hero = () => {
             
             {/* Logo Text */}
             <motion.h1
-              className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl text-cyber-neon px-4"
+              className="font-orbitron font-black text-2xl sm:text-3xl md:text-4xl lg:text-6xl text-cyber-neon px-2"
               style={{
-                letterSpacing: '2px'
+                letterSpacing: '1px'
               }}
             >
               CYBER TMSAH
@@ -162,12 +162,12 @@ const Hero = () => {
         {/* Tagline */}
         <motion.p
           variants={itemVariants}
-          className="text-xl md:text-2xl lg:text-3xl text-cyber-neon neon-text mb-12 font-light tracking-wide"
+          className="text-base sm:text-lg md:text-xl lg:text-2xl text-cyber-neon neon-text mb-6 sm:mb-8 font-light tracking-wide px-2"
           style={{
             color: '#00FF88',
             textShadow: '0 0 20px rgba(0, 255, 136, 0.6)',
             fontWeight: '300',
-            letterSpacing: '2px'
+            letterSpacing: '1px'
           }}
         >
           Your Cyber Fortress for the Future
@@ -176,7 +176,7 @@ const Hero = () => {
         {/* CTA Buttons */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-16"
+          className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 sm:mb-12 px-2"
         >
           <motion.div 
             whileHover={{ 
@@ -189,9 +189,9 @@ const Hero = () => {
           >
             <Link 
               href="/materials" 
-              className="btn-primary text-lg px-12 py-6"
+              className="btn-primary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
             >
-              <BookOpen size={24} />
+              <BookOpen size={20} />
               Explore Materials
             </Link>
           </motion.div>
@@ -206,9 +206,9 @@ const Hero = () => {
           >
             <Link 
               href="/about" 
-              className="btn-secondary text-lg px-12 py-6"
+              className="btn-secondary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
             >
-              <Users size={24} />
+              <Users size={20} />
               Learn About Us
             </Link>
           </motion.div>
@@ -217,7 +217,7 @@ const Hero = () => {
         {/* Features */}
         <motion.div
           variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto px-2"
         >
           {[
             {
@@ -244,14 +244,14 @@ const Hero = () => {
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
-                className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-cyber-neon to-cyber-violet rounded-full flex items-center justify-center cyber-glow"
+                className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-gradient-to-r from-cyber-neon to-cyber-violet rounded-full flex items-center justify-center cyber-glow"
               >
-                <feature.icon size={32} className="text-cyber-dark" />
+                <feature.icon size={24} className="text-cyber-dark" />
               </motion.div>
-              <h3 className="text-xl font-orbitron font-bold text-cyber-neon mb-3">
+              <h3 className="text-lg sm:text-xl font-orbitron font-bold text-cyber-neon mb-2 sm:mb-3">
                 {feature.title}
               </h3>
-              <p className="text-dark-200 leading-relaxed">
+              <p className="text-sm sm:text-base text-dark-200 leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>

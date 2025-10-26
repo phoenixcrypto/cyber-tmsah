@@ -603,7 +603,7 @@ const SchedulePage = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center text-3xl sm:text-5xl md:text-7xl font-orbitron font-black mb-4 sm:mb-6 text-cyber-neon px-4"
+          className="text-center text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-orbitron font-black mb-3 sm:mb-4 md:mb-6 text-cyber-neon px-2"
         >
           Schedule
         </motion.h1>
@@ -612,7 +612,7 @@ const SchedulePage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center text-lg sm:text-xl text-dark-300 max-w-4xl mx-auto mb-12 sm:mb-16 px-4"
+          className="text-center text-base sm:text-lg md:text-xl text-dark-300 max-w-3xl mx-auto px-2 mb-6 sm:mb-8"
         >
           Your complete cybersecurity learning schedule - organized and optimized for success
         </motion.p>
@@ -681,7 +681,7 @@ const SchedulePage = () => {
                     setSelectedSection(section.toString())
                     setSelectedGroup(group)
                   }}
-                  className={`px-4 py-3 rounded-xl font-semibold transition-all duration-300 enhanced-card interactive-hover ${
+                  className={`px-3 py-2 sm:px-4 sm:py-3 rounded-lg font-semibold transition-all duration-300 enhanced-card interactive-hover text-sm sm:text-base ${
                     selectedSection === section.toString()
                       ? 'bg-cyber-violet/20 text-cyber-violet border-2 border-cyber-violet/50' 
                       : 'bg-cyber-dark/30 text-dark-300 border border-cyber-glow/30 hover:border-cyber-violet/50'
@@ -760,12 +760,12 @@ const SchedulePage = () => {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-cyber-glow/30">
-                      <th className="text-left py-4 px-6 text-cyber-neon font-orbitron font-bold">Day</th>
-                      <th className="text-left py-4 px-6 text-cyber-neon font-orbitron font-bold">Time</th>
-                      <th className="text-left py-4 px-6 text-cyber-neon font-orbitron font-bold">Subject</th>
-                      <th className="text-left py-4 px-6 text-cyber-neon font-orbitron font-bold">Instructor</th>
-                      <th className="text-left py-4 px-6 text-cyber-neon font-orbitron font-bold">Location</th>
-                      <th className="text-left py-4 px-6 text-cyber-neon font-orbitron font-bold">Type</th>
+                      <th className="text-left py-2 px-2 sm:py-4 sm:px-6 text-cyber-neon font-orbitron font-bold text-xs sm:text-sm">Day</th>
+                      <th className="text-left py-2 px-2 sm:py-4 sm:px-6 text-cyber-neon font-orbitron font-bold text-xs sm:text-sm">Time</th>
+                      <th className="text-left py-2 px-2 sm:py-4 sm:px-6 text-cyber-neon font-orbitron font-bold text-xs sm:text-sm">Subject</th>
+                      <th className="text-left py-2 px-2 sm:py-4 sm:px-6 text-cyber-neon font-orbitron font-bold text-xs sm:text-sm">Instructor</th>
+                      <th className="text-left py-2 px-2 sm:py-4 sm:px-6 text-cyber-neon font-orbitron font-bold text-xs sm:text-sm">Location</th>
+                      <th className="text-left py-2 px-2 sm:py-4 sm:px-6 text-cyber-neon font-orbitron font-bold text-xs sm:text-sm">Type</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -773,14 +773,14 @@ const SchedulePage = () => {
                       if (items.length === 0) {
                         return (
                           <tr key={day} className="border-b border-cyber-glow/20">
-                            <td className="py-4 px-6 text-dark-300 font-medium">{day}</td>
-                            <td className="py-4 px-6 text-dark-400">-</td>
-                            <td className="py-4 px-6 text-dark-400">
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-300 font-medium text-xs sm:text-sm">{day}</td>
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-400 text-xs sm:text-sm">-</td>
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-400 text-xs sm:text-sm">
                               {day === 'Thursday' || day === 'Friday' ? 'Holiday' : 'No Classes'}
                             </td>
-                            <td className="py-4 px-6 text-dark-400">-</td>
-                            <td className="py-4 px-6 text-dark-400">-</td>
-                            <td className="py-4 px-6 text-dark-400">-</td>
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-400 text-xs sm:text-sm">-</td>
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-400 text-xs sm:text-sm">-</td>
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-400 text-xs sm:text-sm">-</td>
                           </tr>
                         )
                       }
@@ -795,40 +795,40 @@ const SchedulePage = () => {
                             transition={{ duration: 0.2, delay: index * 0.1 }}
                             className="border-b border-cyber-glow/20 hover:bg-cyber-dark/20 transition-colors duration-300"
                           >
-                            <td className="py-4 px-6 text-dark-300 font-medium">
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-300 font-medium text-xs sm:text-sm">
                               {index === 0 ? day : ''}
                             </td>
-                            <td className="py-4 px-6 text-dark-300">
-                              <div className="flex items-center gap-2">
-                                <Clock size={16} />
-                                <span className="font-medium">{item.time}</span>
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-300">
+                              <div className="flex items-center gap-1 sm:gap-2">
+                                <Clock size={12} className="sm:w-4 sm:h-4" />
+                                <span className="font-medium text-xs sm:text-sm">{item.time}</span>
                               </div>
                             </td>
-                            <td className="py-4 px-6">
-                              <div className="flex items-center gap-3">
+                            <td className="py-2 px-2 sm:py-4 sm:px-6">
+                              <div className="flex items-center gap-2 sm:gap-3">
                                 <div 
-                                  className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0"
+                                  className="w-6 h-6 sm:w-8 sm:h-8 rounded flex items-center justify-center flex-shrink-0"
                                   style={{
                                     backgroundColor: item.type === 'lecture' ? '#8A2BE2' : '#00BFFF'
                                   }}
                                 >
-                                  <IconComponent size={16} className="text-white" />
+                                  <IconComponent size={12} className="text-white sm:w-4 sm:h-4" />
                                 </div>
-                                <span className="text-cyber-neon font-medium break-words">{item.title}</span>
+                                <span className="text-cyber-neon font-medium break-words text-xs sm:text-sm">{item.title}</span>
                               </div>
                             </td>
-                            <td className="py-4 px-6 text-dark-300 break-words">
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-300 break-words text-xs sm:text-sm">
                               {item.instructor}
                             </td>
-                            <td className="py-4 px-6 text-dark-300">
-                              <div className="flex items-center gap-2">
-                                <MapPin size={16} />
-                                <span className="break-words">{item.location}</span>
+                            <td className="py-2 px-2 sm:py-4 sm:px-6 text-dark-300">
+                              <div className="flex items-center gap-1 sm:gap-2">
+                                <MapPin size={12} className="sm:w-4 sm:h-4" />
+                                <span className="break-words text-xs sm:text-sm">{item.location}</span>
                               </div>
                             </td>
-                            <td className="py-4 px-6">
+                            <td className="py-2 px-2 sm:py-4 sm:px-6">
                               <span 
-                                className="px-3 py-1 text-xs rounded-full font-medium"
+                                className="px-2 py-1 text-xs rounded-full font-medium"
                                 style={{
                                   backgroundColor: item.type === 'lecture' ? '#8A2BE2' : '#00BFFF',
                                   color: 'white'
