@@ -7,138 +7,66 @@ export default function SchedulePage() {
   const scheduleData = [
     {
       id: '1',
-      title: 'مقدمة في البرمجة',
+      title: 'Applied Physics',
       time: '09:00 - 10:30',
-      location: 'قاعة 101',
-      instructor: 'د. أحمد محمد',
+      location: 'Hall 101',
+      instructor: 'Dr. Ahmed Mohamed',
       type: 'lecture',
-      section: 'القسم الأول'
+      section: 'Section 1'
     },
     {
       id: '2',
-      title: 'مختبر البرمجة',
+      title: 'Mathematics',
       time: '11:00 - 12:30',
-      location: 'مختبر الحاسوب 1',
-      instructor: 'م. سارة أحمد',
-      type: 'lab',
-      section: 'القسم الأول'
+      location: 'Hall 102',
+      instructor: 'Dr. Sara Ahmed',
+      type: 'lecture',
+      section: 'Section 1'
     },
     {
       id: '3',
-      title: 'هياكل البيانات',
+      title: 'Entrepreneurship and Creative Thinking Skills',
       time: '14:00 - 15:30',
-      location: 'قاعة 102',
-      instructor: 'د. محمد علي',
+      location: 'Hall 103',
+      instructor: 'Dr. Mohamed Ali',
       type: 'lecture',
-      section: 'القسم الثاني'
+      section: 'Section 2'
     },
     {
       id: '4',
-      title: 'قواعد البيانات',
+      title: 'Information Technology',
       time: '16:00 - 17:30',
-      location: 'قاعة 103',
-      instructor: 'د. فاطمة حسن',
-      type: 'lecture',
-      section: 'القسم الثالث'
+      location: 'Computer Lab 1',
+      instructor: 'Dr. Fatma Hassan',
+      type: 'lab',
+      section: 'Section 2'
     },
     {
       id: '5',
-      title: 'مختبر قواعد البيانات',
+      title: 'Database Systems',
       time: '18:00 - 19:30',
-      location: 'مختبر الحاسوب 2',
-      instructor: 'م. علي محمود',
+      location: 'Computer Lab 2',
+      instructor: 'Eng. Ali Mahmoud',
       type: 'lab',
-      section: 'القسم الثالث'
+      section: 'Section 3'
     },
     {
       id: '6',
-      title: 'أنظمة التشغيل',
+      title: 'English',
       time: '08:00 - 09:30',
-      location: 'قاعة 104',
-      instructor: 'د. نور الدين',
+      location: 'Hall 104',
+      instructor: 'Dr. Nour El-Din',
       type: 'lecture',
-      section: 'القسم الرابع'
+      section: 'Section 3'
     },
     {
       id: '7',
-      title: 'مختبر أنظمة التشغيل',
+      title: 'Information System',
       time: '10:00 - 11:30',
-      location: 'مختبر الحاسوب 3',
-      instructor: 'م. مريم أحمد',
+      location: 'Computer Lab 3',
+      instructor: 'Eng. Mariam Ahmed',
       type: 'lab',
-      section: 'القسم الرابع'
-    },
-    {
-      id: '8',
-      title: 'الشبكات',
-      time: '12:00 - 13:30',
-      location: 'قاعة 105',
-      instructor: 'د. خالد محمد',
-      type: 'lecture',
-      section: 'القسم الخامس'
-    },
-    {
-      id: '9',
-      title: 'مختبر الشبكات',
-      time: '14:00 - 15:30',
-      location: 'مختبر الحاسوب 4',
-      instructor: 'م. أحمد علي',
-      type: 'lab',
-      section: 'القسم الخامس'
-    },
-    {
-      id: '10',
-      title: 'الأمن السيبراني',
-      time: '16:00 - 17:30',
-      location: 'قاعة 106',
-      instructor: 'د. سارة محمد',
-      type: 'lecture',
-      section: 'القسم السادس'
-    },
-    {
-      id: '11',
-      title: 'مختبر الأمن السيبراني',
-      time: '18:00 - 19:30',
-      location: 'مختبر الحاسوب 5',
-      instructor: 'م. محمد حسن',
-      type: 'lab',
-      section: 'القسم السادس'
-    },
-    {
-      id: '12',
-      title: 'الذكاء الاصطناعي',
-      time: '08:00 - 09:30',
-      location: 'قاعة 107',
-      instructor: 'د. أحمد فتحي',
-      type: 'lecture',
-      section: 'القسم السابع'
-    },
-    {
-      id: '13',
-      title: 'مختبر الذكاء الاصطناعي',
-      time: '10:00 - 11:30',
-      location: 'مختبر الحاسوب 6',
-      instructor: 'م. فاطمة علي',
-      type: 'lab',
-      section: 'القسم السابع'
-    },
-    {
-      id: '14',
-      title: 'قواعد البيانات - القسم 14',
-      time: '12:00 - 13:30',
-      location: 'قاعة 108',
-      instructor: 'د. محمد أحمد',
-      type: 'lecture',
-      section: 'القسم الرابع عشر'
-    },
-    {
-      id: '15',
-      title: 'قواعد البيانات - القسم 15',
-      time: '14:00 - 15:30',
-      location: 'قاعة 109',
-      instructor: 'د. أحمد محمد',
-      type: 'lecture',
-      section: 'القسم الخامس عشر'
+      section: 'Section 4'
     }
   ]
 
@@ -176,10 +104,10 @@ export default function SchedulePage() {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            جدول الحصص
+            الجدول الأكاديمي
           </h1>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            اعرض جدول الحصص والأحداث المهمة لجميع الأقسام
+            جدول المحاضرات والمختبرات للفصل الدراسي الحالي
           </p>
         </div>
 
@@ -252,10 +180,10 @@ export default function SchedulePage() {
           <div className="text-center py-20 animate-fade-in">
             <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
             <h3 className="text-2xl font-semibold text-dark-100 mb-4">
-              لا توجد حصص متاحة
+              لا توجد محاضرات متاحة
             </h3>
             <p className="text-dark-300">
-              سيتم إضافة جدول الحصص قريباً. ابق متابعاً للتحديثات!
+              سيتم إضافة الجدول الأكاديمي قريباً. ابق متابعاً للتحديثات!
             </p>
           </div>
         )}
