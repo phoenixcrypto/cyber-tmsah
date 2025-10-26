@@ -9,64 +9,190 @@ export default function SchedulePage() {
       id: '1',
       title: 'Applied Physics',
       time: '09:00 - 10:30',
-      location: 'Hall 101',
+      location: 'Main Hall A',
       instructor: 'Dr. Ahmed Mohamed',
       type: 'lecture',
-      section: 'Section 1'
+      section: 'Group A (350 students)'
     },
     {
       id: '2',
-      title: 'Mathematics',
+      title: 'Applied Physics',
       time: '11:00 - 12:30',
-      location: 'Hall 102',
-      instructor: 'Dr. Sara Ahmed',
+      location: 'Main Hall B',
+      instructor: 'Dr. Ahmed Mohamed',
       type: 'lecture',
-      section: 'Section 1'
+      section: 'Group B (350 students)'
     },
     {
       id: '3',
-      title: 'Entrepreneurship and Creative Thinking Skills',
+      title: 'Mathematics',
       time: '14:00 - 15:30',
-      location: 'Hall 103',
-      instructor: 'Dr. Mohamed Ali',
+      location: 'Main Hall A',
+      instructor: 'Dr. Sara Ahmed',
       type: 'lecture',
-      section: 'Section 2'
+      section: 'Group A (350 students)'
     },
     {
       id: '4',
-      title: 'Information Technology',
+      title: 'Mathematics',
       time: '16:00 - 17:30',
-      location: 'Computer Lab 1',
-      instructor: 'Dr. Fatma Hassan',
-      type: 'lab',
-      section: 'Section 2'
+      location: 'Main Hall B',
+      instructor: 'Dr. Sara Ahmed',
+      type: 'lecture',
+      section: 'Group B (350 students)'
     },
     {
       id: '5',
+      title: 'Entrepreneurship and Creative Thinking Skills',
+      time: '18:00 - 19:30',
+      location: 'Main Hall A',
+      instructor: 'Dr. Mohamed Ali',
+      type: 'lecture',
+      section: 'Group A (350 students)'
+    },
+    {
+      id: '6',
+      title: 'Entrepreneurship and Creative Thinking Skills',
+      time: '08:00 - 09:30',
+      location: 'Main Hall B',
+      instructor: 'Dr. Mohamed Ali',
+      type: 'lecture',
+      section: 'Group B (350 students)'
+    },
+    {
+      id: '7',
+      title: 'Information Technology',
+      time: '10:00 - 11:30',
+      location: 'Computer Lab 1',
+      instructor: 'Dr. Fatma Hassan',
+      type: 'lab',
+      section: 'Section 1 (47 students)'
+    },
+    {
+      id: '8',
+      title: 'Information Technology',
+      time: '12:00 - 13:30',
+      location: 'Computer Lab 2',
+      instructor: 'Dr. Fatma Hassan',
+      type: 'lab',
+      section: 'Section 2 (47 students)'
+    },
+    {
+      id: '9',
+      title: 'Information Technology',
+      time: '14:00 - 15:30',
+      location: 'Computer Lab 3',
+      instructor: 'Dr. Fatma Hassan',
+      type: 'lab',
+      section: 'Section 3 (47 students)'
+    },
+    {
+      id: '10',
+      title: 'Database Systems',
+      time: '16:00 - 17:30',
+      location: 'Computer Lab 1',
+      instructor: 'Eng. Ali Mahmoud',
+      type: 'lab',
+      section: 'Section 4 (47 students)'
+    },
+    {
+      id: '11',
       title: 'Database Systems',
       time: '18:00 - 19:30',
       location: 'Computer Lab 2',
       instructor: 'Eng. Ali Mahmoud',
       type: 'lab',
-      section: 'Section 3'
+      section: 'Section 5 (47 students)'
     },
     {
-      id: '6',
-      title: 'English',
+      id: '12',
+      title: 'Database Systems',
       time: '08:00 - 09:30',
-      location: 'Hall 104',
-      instructor: 'Dr. Nour El-Din',
-      type: 'lecture',
-      section: 'Section 3'
+      location: 'Computer Lab 3',
+      instructor: 'Eng. Ali Mahmoud',
+      type: 'lab',
+      section: 'Section 6 (47 students)'
     },
     {
-      id: '7',
-      title: 'Information System',
+      id: '13',
+      title: 'English',
       time: '10:00 - 11:30',
-      location: 'Computer Lab 3',
+      location: 'Language Lab 1',
+      instructor: 'Dr. Nour El-Din',
+      type: 'lab',
+      section: 'Section 7 (47 students)'
+    },
+    {
+      id: '14',
+      title: 'English',
+      time: '12:00 - 13:30',
+      location: 'Language Lab 2',
+      instructor: 'Dr. Nour El-Din',
+      type: 'lab',
+      section: 'Section 8 (47 students)'
+    },
+    {
+      id: '15',
+      title: 'English',
+      time: '14:00 - 15:30',
+      location: 'Language Lab 3',
+      instructor: 'Dr. Nour El-Din',
+      type: 'lab',
+      section: 'Section 9 (47 students)'
+    },
+    {
+      id: '16',
+      title: 'Information System',
+      time: '16:00 - 17:30',
+      location: 'Computer Lab 4',
       instructor: 'Eng. Mariam Ahmed',
       type: 'lab',
-      section: 'Section 4'
+      section: 'Section 10 (47 students)'
+    },
+    {
+      id: '17',
+      title: 'Information System',
+      time: '18:00 - 19:30',
+      location: 'Computer Lab 5',
+      instructor: 'Eng. Mariam Ahmed',
+      type: 'lab',
+      section: 'Section 11 (47 students)'
+    },
+    {
+      id: '18',
+      title: 'Information System',
+      time: '08:00 - 09:30',
+      location: 'Computer Lab 6',
+      instructor: 'Eng. Mariam Ahmed',
+      type: 'lab',
+      section: 'Section 12 (47 students)'
+    },
+    {
+      id: '19',
+      title: 'Information Technology',
+      time: '10:00 - 11:30',
+      location: 'Computer Lab 7',
+      instructor: 'Dr. Fatma Hassan',
+      type: 'lab',
+      section: 'Section 13 (47 students)'
+    },
+    {
+      id: '20',
+      title: 'Database Systems',
+      time: '12:00 - 13:30',
+      location: 'Computer Lab 8',
+      instructor: 'Eng. Ali Mahmoud',
+      type: 'lab',
+      section: 'Section 14 (47 students)'
+    },
+    {
+      id: '21',
+      title: 'Information System',
+      time: '14:00 - 15:30',
+      location: 'Computer Lab 9',
+      instructor: 'Eng. Mariam Ahmed',
+      type: 'lab',
+      section: 'Section 15 (47 students)'
     }
   ]
 
