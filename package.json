@@ -6,12 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next build && next export",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "type-check": "tsc --noEmit",
-    "analyze": "cross-env ANALYZE=true next build",
-    "build:analyze": "npm run build && npm run analyze"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "next": "14.0.4",

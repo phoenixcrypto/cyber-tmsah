@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, Users, Clock, Calendar, FileText, Video, Download, ChevronLeft, ChevronRight } from 'lucide-react'
 
+
 // Sample content data - this would come from a CMS or database
 const contentData = {
   'math-lecture-1-content': {

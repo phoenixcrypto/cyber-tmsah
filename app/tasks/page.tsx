@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Clock, Calendar, Users, Target, CheckCircle, Zap, Shield, BookOpen } from 'lucide-react'
-import AnimatedIcon from '@/components/AnimatedIcon'
 
 const TasksPage = () => {
   const containerVariants = {
@@ -91,9 +90,9 @@ const TasksPage = () => {
               transition={{ duration: 0.6 }}
               className="w-24 h-24 mx-auto mb-8 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
             >
-              <AnimatedIcon variant="morph" size={48} delay={0}>
+              
                 <Target className="text-white" size={48} />
-              </AnimatedIcon>
+              
             </motion.div>
 
             <h2 className="text-4xl font-orbitron font-bold mb-6 text-cyber-neon">
@@ -122,9 +121,9 @@ const TasksPage = () => {
                   className="enhanced-card p-6 interactive-hover"
                 >
                   <div className="text-center">
-                    <AnimatedIcon variant={feature.variant} size={40} delay={index * 0.2}>
+                    
                       <feature.icon className={`${feature.color} mb-4`} size={40} />
-                    </AnimatedIcon>
+                    
                     <h3 className={`text-lg font-orbitron font-bold ${feature.color} mb-3`}>
                       {feature.title}
                     </h3>
@@ -146,9 +145,9 @@ const TasksPage = () => {
                 href="/schedule"
                 className="btn-primary text-lg px-10 py-5"
               >
-                <AnimatedIcon variant="glow" size={20} delay={0}>
+                
                   <Clock size={20} />
-                </AnimatedIcon>
+                
                 Check Our Schedule
               </Link>
             </motion.div>

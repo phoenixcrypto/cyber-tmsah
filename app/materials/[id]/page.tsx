@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, Users, Clock, Calendar, FileText, Video, Download } from 'lucide-react'
 
+
 // Material data with lectures and sessions
 const materialData = {
   'mathematics': {

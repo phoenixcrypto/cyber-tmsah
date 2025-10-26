@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Calendar, Clock, MapPin, BookOpen, Shield, Code, Database, Globe, Lock, Users, Target, Zap } from 'lucide-react'
-import AnimatedIcon from '@/components/AnimatedIcon'
 
 // Student Schedule Data Structure
 interface ScheduleItem {
@@ -590,17 +589,17 @@ const SchedulePage = () => {
         >
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
             <div className="flex items-center gap-2 sm:gap-3">
-              <AnimatedIcon variant="pulse" size={20} delay={0}>
+              
                 <Clock className="text-cyber-neon" size={20} />
-              </AnimatedIcon>
+              
               <span className="text-cyber-neon text-lg sm:text-2xl font-bold font-orbitron">
                 {currentTime}
               </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
-              <AnimatedIcon variant="bounce" size={20} delay={0.2}>
+              
                 <Calendar className="text-cyber-violet" size={20} />
-              </AnimatedIcon>
+              
               <span className="text-dark-300 text-base sm:text-lg">
                 {currentDate}
               </span>
@@ -620,9 +619,9 @@ const SchedulePage = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center justify-center gap-3 mb-4"
             >
-              <AnimatedIcon variant="glow" size={32} delay={0}>
+              
                 <Users className="text-cyber-neon" size={32} />
-              </AnimatedIcon>
+              
               <h3 className="text-2xl font-orbitron font-bold text-cyber-neon">
                 Select Your Section
               </h3>
@@ -652,9 +651,9 @@ const SchedulePage = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <AnimatedIcon variant="pulse" size={16} delay={section * 0.1}>
+                    
                       <Target size={16} />
-                    </AnimatedIcon>
+                    
                     <span>{section}</span>
                     <span className="text-xs opacity-70">(G{group})</span>
                   </div>
@@ -672,9 +671,9 @@ const SchedulePage = () => {
               className="btn-primary px-8 py-4"
               disabled={!selectedSection}
             >
-              <AnimatedIcon variant="glow" size={20} delay={0}>
+              
                 <Calendar size={20} />
-              </AnimatedIcon>
+              
               View My Schedule
             </motion.button>
           </div>
@@ -694,9 +693,9 @@ const SchedulePage = () => {
                 transition={{ duration: 0.6 }}
                 className="w-20 h-20 mx-auto mb-6 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
               >
-                <AnimatedIcon variant="rotate" size={32} delay={0}>
+                
                   <Calendar className="text-white" size={32} />
-                </AnimatedIcon>
+                
               </motion.div>
               <h3 className="text-3xl font-orbitron font-bold text-cyber-neon mb-4">
                 Your Schedule

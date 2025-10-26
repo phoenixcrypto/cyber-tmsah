@@ -4,7 +4,6 @@ import Hero from '@/components/Hero'
 import TodaySchedule from '@/components/TodaySchedule'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import AnimatedIcon from '@/components/AnimatedIcon'
 import { Calendar, Users, Target } from 'lucide-react'
 
 export default function HomePage() {
@@ -59,9 +58,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 animated-gradient rounded-full flex items-center justify-center glow-pulse magnetic-hover"
             >
-              <AnimatedIcon variant="rotate" size={32} delay={0}>
-                <Users className="text-white" size={32} />
-              </AnimatedIcon>
+              <Users className="text-white" size={32} />
             </motion.div>
             <h3 className="text-xl sm:text-2xl font-orbitron font-bold text-cyber-neon mb-3 sm:mb-4">
               Select Your Section
@@ -98,9 +95,7 @@ export default function HomePage() {
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <AnimatedIcon variant="pulse" size={16} delay={section * 0.1}>
-                      <Target size={16} />
-                    </AnimatedIcon>
+                    <Target size={16} />
                     <span>{section}</span>
                     <span className="text-xs opacity-70">(G{group})</span>
                   </div>

@@ -12,7 +12,6 @@ import BackToTop from '@/components/BackToTop'
 import SmartParticles from '@/components/SmartParticles'
 import PageTransition from '@/components/PageTransition'
 import DynamicBackground from '@/components/DynamicBackground'
-import CursorTrail from '@/components/CursorTrail'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -92,7 +91,6 @@ export default function RootLayout({
             <DynamicBackground />
             <ScrollProgress />
             <BackToTop />
-            <CursorTrail />
             
             {/* Enhanced Background Grid */}
             <div className="fixed inset-0 enhanced-grid pointer-events-none z-0" />

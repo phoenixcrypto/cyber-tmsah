@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { BookOpen, Users } from 'lucide-react'
 import { contentManager } from '@/lib/content-manager'
-import AnimatedIcon from '@/components/AnimatedIcon'
 
 const MaterialsPage = () => {
 
@@ -97,15 +96,15 @@ const MaterialsPage = () => {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2 text-dark-300">
-                          <AnimatedIcon variant="pulse" size={16} delay={0}>
+                          
                             <BookOpen size={16} />
-                          </AnimatedIcon>
+                          
                           {material.hasSessions ? 'Has Lab Sessions' : 'No Lab Sessions'}
                         </div>
                         <div className="flex items-center gap-2 text-dark-300">
-                          <AnimatedIcon variant="bounce" size={16} delay={0.5}>
+                          
                             <Users size={16} />
-                          </AnimatedIcon>
+                          
                           {material.hasSessions ? 'Practical Work' : 'Theory Only'}
                         </div>
                       </div>

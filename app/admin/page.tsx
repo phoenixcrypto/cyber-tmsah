@@ -20,7 +20,6 @@ import {
   Target,
   Zap
 } from 'lucide-react'
-import AnimatedIcon from '@/components/AnimatedIcon'
 
 // Sample data - in real app this would come from database
 const sampleContent = [
@@ -83,9 +82,9 @@ export default function AdminPage() {
                 whileHover={{ scale: 1.05 }}
                 className="flex items-center gap-4 mb-4"
               >
-                <AnimatedIcon variant="glow" size={48} delay={0}>
+                
                   <Shield className="text-cyber-neon" size={48} />
-                </AnimatedIcon>
+                
                 <h1 className="text-3xl sm:text-5xl font-orbitron font-black text-cyber-neon">
                   Admin Dashboard
                 </h1>
@@ -100,9 +99,9 @@ export default function AdminPage() {
                 href="/admin/new"
                 className="btn-primary flex items-center gap-3 px-8 py-4"
               >
-                <AnimatedIcon variant="pulse" size={20} delay={0}>
+                
                   <Plus size={20} />
-                </AnimatedIcon>
+                
                 Create New Content
               </Link>
             </motion.div>

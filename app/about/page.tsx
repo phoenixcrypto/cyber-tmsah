@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Phone, Award, Users, BookOpen, Shield, Target, Star, CheckCircle, TrendingUp, Globe, Zap } from 'lucide-react'
-import AnimatedIcon from '@/components/AnimatedIcon'
 
 const AboutPage = () => {
   const leader = {
@@ -192,9 +191,7 @@ const AboutPage = () => {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="enhanced-card text-center interactive-hover"
               >
-                <AnimatedIcon variant="glow" size={48} delay={index * 0.2}>
-                  <stat.icon className={`${stat.color} mb-4`} size={48} />
-                </AnimatedIcon>
+                <stat.icon className={`${stat.color} mb-4`} size={48} />
                 <div className={`text-4xl font-orbitron font-black ${stat.color} mb-2`}>
                   {stat.value}
                 </div>
@@ -231,9 +228,7 @@ const AboutPage = () => {
                 whileHover={{ scale: 1.02, y: -5 }}
                 className="enhanced-card text-center interactive-hover"
               >
-                <AnimatedIcon variant="morph" size={64} delay={index * 0.3}>
-                  <value.icon className={`${value.color} mb-6`} size={64} />
-                </AnimatedIcon>
+                <value.icon className={`${value.color} mb-6`} size={64} />
                 <h3 className={`text-xl font-orbitron font-bold ${value.color} mb-4`}>
                   {value.title}
                 </h3>
@@ -275,9 +270,7 @@ const AboutPage = () => {
                 👨‍💻
               </div>
               <div className="absolute -top-4 -right-4">
-                <AnimatedIcon variant="bounce" size={32} delay={0}>
-                  <Star className="text-yellow-400" size={32} />
-                </AnimatedIcon>
+                <Star className="text-yellow-400" size={32} />
               </div>
             </motion.div>
 
@@ -308,9 +301,7 @@ const AboutPage = () => {
                     transition={{ delay: 1.2 + index * 0.1 }}
                     className="flex items-center gap-3 p-3 rounded-lg bg-cyber-glow/5 border border-cyber-glow/20"
                   >
-                    <AnimatedIcon variant="pulse" size={20} delay={index * 0.2}>
-                      <CheckCircle className="text-cyber-neon" size={20} />
-                    </AnimatedIcon>
+                    <CheckCircle className="text-cyber-neon" size={20} />
                     <span className="text-dark-300 text-sm">{achievement}</span>
                   </motion.div>
                 ))}
@@ -332,9 +323,7 @@ const AboutPage = () => {
                 boxShadow: '0 0 20px rgba(37, 211, 102, 0.3)'
               }}
             >
-              <AnimatedIcon variant="rotate" size={24} delay={0}>
-                <Phone size={24} />
-              </AnimatedIcon>
+              <Phone size={24} />
               {leader.phone}
             </motion.a>
           </motion.div>
@@ -362,9 +351,7 @@ const AboutPage = () => {
               href="/materials"
               className="btn-primary text-lg px-12 py-6"
             >
-              <AnimatedIcon variant="glow" size={24} delay={0}>
-                <BookOpen size={24} />
-              </AnimatedIcon>
+              <BookOpen size={24} />
               Explore Study Materials
             </Link>
           </motion.div>
