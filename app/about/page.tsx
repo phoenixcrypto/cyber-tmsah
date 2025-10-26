@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Phone, Award, Users, BookOpen, Shield, Target, Star, CheckCircle, TrendingUp, Globe, Zap } from 'lucide-react'

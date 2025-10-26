@@ -1,17 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Orbitron } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import FloatingWhatsApp from '@/components/FloatingWhatsApp'
-import AnimatedLayout from '@/components/AnimatedLayout'
-import LoadingScreen from '@/components/LoadingScreen'
-import ParticlesBackground from '@/components/ParticlesBackground'
-import ScrollProgress from '@/components/ScrollProgress'
-import BackToTop from '@/components/BackToTop'
-import SmartParticles from '@/components/SmartParticles'
-
-import DynamicBackground from '@/components/DynamicBackground'
+import ClientLayout from '@/components/ClientLayout'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -85,40 +75,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${orbitron.variable}`}>
       <body className="font-inter bg-cyber-dark text-dark-100 overflow-x-hidden">
-            <LoadingScreen />
-            <ParticlesBackground />
-            <SmartParticles />
-            <DynamicBackground />
-            <ScrollProgress />
-            <BackToTop />
-            
-            {/* Enhanced Background Grid */}
-            <div className="fixed inset-0 enhanced-grid pointer-events-none z-0" />
-            
-            {/* Enhanced Grid with Pulse */}
-            <div className="enhanced-grid-pulse" />
-            
-            {/* Grid Pulse with Glow */}
-            <div className="grid-pulse-glow" />
-            
-            {/* Additional Grid Layers */}
-            <div className="grid-layer-1" />
-            <div className="grid-layer-2" />
-            
-            {/* Particles Overlay */}
-            <div className="particles-overlay" />
-            
-            {/* Enhanced Particles Interaction */}
-            <div className="particles-interaction" />
-        
-        <Navbar />
-        <AnimatedLayout>
-          <main className="relative z-10">
-            {children}
-          </main>
-          <Footer />
-          <FloatingWhatsApp />
-        </AnimatedLayout>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   )
