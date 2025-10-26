@@ -69,14 +69,14 @@ export default function ContactPage() {
                 <p className="text-xl text-cyber-neon mb-4">مطور ومصمم المنصة</p>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-end mb-6">
                   <div className="flex items-center gap-2 text-dark-300">
-                    <div className="w-6 h-6 bg-cyber-green/20 rounded-full flex items-center justify-center">
-                      <Code className="w-4 h-4 text-cyber-green" />
+                    <div className="w-6 h-6 bg-gradient-to-br from-cyber-green via-cyber-neon to-cyber-green rounded-full flex items-center justify-center shadow-lg shadow-cyber-green/30">
+                      <Code className="w-4 h-4 text-white" />
                     </div>
                     <span>مطور Full Stack</span>
                   </div>
                   <div className="flex items-center gap-2 text-dark-300">
-                    <div className="w-6 h-6 bg-cyber-violet/20 rounded-full flex items-center justify-center">
-                      <Award className="w-4 h-4 text-cyber-violet" />
+                    <div className="w-6 h-6 bg-gradient-to-br from-cyber-violet via-cyber-blue to-cyber-violet rounded-full flex items-center justify-center shadow-lg shadow-cyber-violet/30">
+                      <Award className="w-4 h-4 text-white" />
                     </div>
                     <span>مصمم UI/UX</span>
                   </div>
@@ -107,8 +107,8 @@ export default function ContactPage() {
                 className="enhanced-card p-6 text-center hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Icon className="w-8 h-8 text-cyber-dark" />
+                <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-neon/30">
+                  <Icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-dark-100 mb-2">
                   {info.title}
@@ -136,8 +136,8 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="text-right">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-cyber-green/20 rounded-full flex items-center justify-center">
-                    <HeadphonesIcon className="w-5 h-5 text-cyber-green" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyber-green via-cyber-neon to-cyber-green rounded-full flex items-center justify-center shadow-lg shadow-cyber-green/30">
+                    <HeadphonesIcon className="w-5 h-5 text-white" />
                   </div>
                   <h4 className="text-xl font-semibold text-dark-100">
                     الدعم الفني
@@ -151,8 +151,8 @@ export default function ContactPage() {
               
               <div className="text-right">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-cyber-violet/20 rounded-full flex items-center justify-center">
-                    <HelpCircle className="w-5 h-5 text-cyber-violet" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyber-violet via-cyber-blue to-cyber-violet rounded-full flex items-center justify-center shadow-lg shadow-cyber-violet/30">
+                    <HelpCircle className="w-5 h-5 text-white" />
                   </div>
                   <h4 className="text-xl font-semibold text-dark-100">
                     الاستفسارات العامة
@@ -166,8 +166,8 @@ export default function ContactPage() {
               
               <div className="text-right">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-cyber-blue/20 rounded-full flex items-center justify-center">
-                    <MessageSquare className="w-5 h-5 text-cyber-blue" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyber-blue via-cyber-violet to-cyber-blue rounded-full flex items-center justify-center shadow-lg shadow-cyber-blue/30">
+                    <MessageSquare className="w-5 h-5 text-white" />
                   </div>
                   <h4 className="text-xl font-semibold text-dark-100">
                     الملاحظات والاقتراحات
@@ -181,8 +181,8 @@ export default function ContactPage() {
               
               <div className="text-right">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 bg-cyber-neon/20 rounded-full flex items-center justify-center">
-                      <Users className="w-5 h-5 text-cyber-neon" />
+                    <div className="w-8 h-8 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-full flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+                      <Users className="w-5 h-5 text-white" />
                     </div>
                     <h4 className="text-xl font-semibold text-dark-100">
                       الشراكات والتعاون

@@ -140,8 +140,8 @@ export default function AboutPage() {
                   className="enhanced-card p-6 text-center hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
-                    <Icon className="w-8 h-8 text-dark-100" />
+                  <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyber-neon/30`}>
+                    <Icon className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-dark-100 mb-2">
                     {feature.title}
@@ -173,8 +173,8 @@ export default function AboutPage() {
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-6 h-6 text-cyber-dark" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyber-neon/30">
+                      <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-dark-100 mb-2">

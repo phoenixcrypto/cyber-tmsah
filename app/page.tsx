@@ -120,24 +120,24 @@ export default function HomePage() {
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto animate-slide-up">
             <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
-                <Zap className="w-8 h-8 text-cyber-dark" />
+              <div className="w-16 h-16 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-cyber-neon/30">
+                <Zap className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-dark-100 mb-2">تعلم سريع</h3>
               <p className="text-dark-300">تقنيات متقدمة للتعلم السريع والفعال</p>
             </div>
             
             <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
-                <Shield className="w-8 h-8 text-dark-100" />
+              <div className="w-16 h-16 bg-gradient-to-br from-cyber-violet via-cyber-blue to-cyber-violet rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-cyber-violet/30">
+                <Shield className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-dark-100 mb-2">آمن ومضمون</h3>
               <p className="text-dark-300">حماية كاملة لبياناتك ومعلوماتك</p>
             </div>
             
             <div className="glass-card p-6 text-center group hover:scale-105 transition-transform">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
-                <Sparkles className="w-8 h-8 text-cyber-dark" />
+              <div className="w-16 h-16 bg-gradient-to-br from-cyber-green via-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-cyber-green/30">
+                <Sparkles className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-dark-100 mb-2">تجربة مميزة</h3>
               <p className="text-dark-300">واجهة مستخدم حديثة وسهلة الاستخدام</p>
@@ -207,8 +207,8 @@ export default function HomePage() {
               {getCurrentDate()}
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
-              <div className="w-6 h-6 bg-cyber-neon/20 rounded-full flex items-center justify-center">
-                <Clock className="w-4 h-4 text-cyber-neon" />
+              <div className="w-6 h-6 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-full flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+                <Clock className="w-4 h-4 text-white" />
               </div>
               <span className="text-cyber-neon font-semibold">{getCurrentTime()}</span>
             </div>
@@ -223,8 +223,8 @@ export default function HomePage() {
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-cyber-neon/20 rounded-full flex items-center justify-center">
-                      <Clock className="w-4 h-4 text-cyber-neon" />
+                    <div className="w-6 h-6 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-full flex items-center justify-center shadow-lg shadow-cyber-neon/30">
+                      <Clock className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-cyber-neon font-semibold">{schedule.time}</span>
                   </div>
@@ -243,14 +243,14 @@ export default function HomePage() {
                 
                 <div className="space-y-2">
                       <div className="flex items-center gap-3 text-dark-300">
-                        <div className="w-6 h-6 bg-cyber-violet/20 rounded-full flex items-center justify-center">
-                          <User className="w-4 h-4 text-cyber-violet" />
+                        <div className="w-6 h-6 bg-gradient-to-br from-cyber-violet via-cyber-blue to-cyber-violet rounded-full flex items-center justify-center shadow-lg shadow-cyber-violet/30">
+                          <User className="w-4 h-4 text-white" />
                         </div>
                         <span className="text-sm">{schedule.instructor}</span>
                       </div>
                       <div className="flex items-center gap-3 text-dark-300">
-                        <div className="w-6 h-6 bg-cyber-green/20 rounded-full flex items-center justify-center">
-                          <MapPin className="w-4 h-4 text-cyber-green" />
+                        <div className="w-6 h-6 bg-gradient-to-br from-cyber-green via-cyber-neon to-cyber-green rounded-full flex items-center justify-center shadow-lg shadow-cyber-green/30">
+                          <MapPin className="w-4 h-4 text-white" />
                         </div>
                         <span className="text-sm">{schedule.room}</span>
                       </div>
