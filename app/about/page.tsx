@@ -32,11 +32,6 @@ export default function AboutPage() {
   // محاكاة حساب مدة التشغيل
   useEffect(() => {
     const calculateUptime = () => {
-      const startTime = new Date('2024-01-01') // تاريخ بداية الموقع
-      const now = new Date()
-      const diffTime = Math.abs(now.getTime() - startTime.getTime())
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      
       // محاكاة مدة تشغيل عالية
       const uptimePercentage = 99.9 + (Math.random() * 0.1)
       setUptime(`${uptimePercentage.toFixed(1)}%`)
