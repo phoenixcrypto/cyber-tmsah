@@ -7,6 +7,9 @@ import { Calendar, CheckSquare, BookOpen, ArrowRight, Sparkles, Zap, Shield, Clo
 export default function HomePage() {
   const [currentTime, setCurrentTime] = useState('')
   const [currentDate, setCurrentDate] = useState('')
+  const [selectedGroup, setSelectedGroup] = useState('')
+  const [selectedSection, setSelectedSection] = useState('')
+  const [filteredSchedule, setFilteredSchedule] = useState<any[]>([])
   const features = [
     {
       icon: Calendar,
@@ -31,30 +34,58 @@ export default function HomePage() {
     }
   ]
 
-  // جدول اليوم
-  const todaySchedule = [
-    {
-      time: '09:00 - 10:30',
-      subject: 'قواعد البيانات',
-      instructor: 'د. أحمد محمد',
-      room: 'قاعة 101',
-      type: 'محاضرة'
-    },
-    {
-      time: '11:00 - 12:30',
-      subject: 'البرمجة المتقدمة',
-      instructor: 'د. فاطمة علي',
-      room: 'معمل 205',
-      type: 'عملي'
-    },
-    {
-      time: '14:00 - 15:30',
-      subject: 'الشبكات',
-      instructor: 'د. محمد حسن',
-      room: 'قاعة 301',
-      type: 'محاضرة'
-    }
+  // جدول اليوم الكامل
+  const fullSchedule = [
+    // Group 1 Lectures
+    { time: '09:00 - 10:30', subject: 'Applied Physics', instructor: 'د. احمد بكر', room: 'قاعة 101', type: 'محاضرة', group: 'Group 1', sectionNumber: null },
+    { time: '11:00 - 12:30', subject: 'Mathematics', instructor: 'د. سييمون عزت', room: 'قاعة 102', type: 'محاضرة', group: 'Group 1', sectionNumber: null },
+    { time: '14:00 - 15:30', subject: 'Database Systems', instructor: 'د. عبير حسن', room: 'قاعة 103', type: 'محاضرة', group: 'Group 1', sectionNumber: null },
+    
+    // Group 2 Lectures
+    { time: '09:00 - 10:30', subject: 'Applied Physics', instructor: 'د. احمد بكر', room: 'قاعة 201', type: 'محاضرة', group: 'Group 2', sectionNumber: null },
+    { time: '11:00 - 12:30', subject: 'Mathematics', instructor: 'د. سييمون عزت', room: 'قاعة 202', type: 'محاضرة', group: 'Group 2', sectionNumber: null },
+    { time: '14:00 - 15:30', subject: 'Database Systems', instructor: 'د. عبير حسن', room: 'قاعة 203', type: 'محاضرة', group: 'Group 2', sectionNumber: null },
+    
+    // Sections 1-7 (Group 1)
+    { time: '08:00 - 09:30', subject: 'Applied Physics Lab', instructor: 'م. احمد نشأت', room: 'معمل 101', type: 'عملي', group: 'Group 1', sectionNumber: 1 },
+    { time: '10:00 - 11:30', subject: 'Mathematics Lab', instructor: 'م. ايهاب غلاب', room: 'معمل 102', type: 'عملي', group: 'Group 1', sectionNumber: 2 },
+    { time: '12:00 - 13:30', subject: 'Database Systems Lab', instructor: 'م. نجلاء سعيد', room: 'معمل 103', type: 'عملي', group: 'Group 1', sectionNumber: 3 },
+    { time: '15:00 - 16:30', subject: 'IT Lab', instructor: 'م. محمد عمار', room: 'معمل 104', type: 'عملي', group: 'Group 1', sectionNumber: 4 },
+    { time: '17:00 - 18:30', subject: 'English Lab', instructor: 'د. نشوي', room: 'معمل 105', type: 'عملي', group: 'Group 1', sectionNumber: 5 },
+    { time: '19:00 - 20:30', subject: 'IS Lab', instructor: 'م. محمود محمد', room: 'معمل 106', type: 'عملي', group: 'Group 1', sectionNumber: 6 },
+    { time: '21:00 - 22:30', subject: 'Entrepreneurship Lab', instructor: 'م. كريم عادل', room: 'معمل 107', type: 'عملي', group: 'Group 1', sectionNumber: 7 },
+    
+    // Sections 8-15 (Group 2)
+    { time: '08:00 - 09:30', subject: 'Applied Physics Lab', instructor: 'م. امنية ابراهيم', room: 'معمل 201', type: 'عملي', group: 'Group 2', sectionNumber: 8 },
+    { time: '10:00 - 11:30', subject: 'Mathematics Lab', instructor: 'م. احمد نشأت', room: 'معمل 202', type: 'عملي', group: 'Group 2', sectionNumber: 9 },
+    { time: '12:00 - 13:30', subject: 'Database Systems Lab', instructor: 'م. كريم عادل', room: 'معمل 203', type: 'عملي', group: 'Group 2', sectionNumber: 10 },
+    { time: '15:00 - 16:30', subject: 'IT Lab', instructor: 'م. محمد عمار', room: 'معمل 204', type: 'عملي', group: 'Group 2', sectionNumber: 11 },
+    { time: '17:00 - 18:30', subject: 'English Lab', instructor: 'د. نشوي', room: 'معمل 205', type: 'عملي', group: 'Group 2', sectionNumber: 12 },
+    { time: '19:00 - 20:30', subject: 'IS Lab', instructor: 'م. مريم اشرف', room: 'معمل 206', type: 'عملي', group: 'Group 2', sectionNumber: 13 },
+    { time: '21:00 - 22:30', subject: 'Entrepreneurship Lab', instructor: 'م. دينا علي', room: 'معمل 207', type: 'عملي', group: 'Group 2', sectionNumber: 14 },
+    { time: '23:00 - 00:30', subject: 'Physics Lab', instructor: 'م. دينا علي', room: 'معمل 208', type: 'عملي', group: 'Group 2', sectionNumber: 15 }
   ]
+
+  const sections = Array.from({ length: 15 }, (_, i) => i + 1)
+
+  // دالة البحث
+  const handleSearch = () => {
+    if (!selectedGroup || !selectedSection) return
+    
+    const filtered = fullSchedule.filter(item => 
+      item.group === selectedGroup && 
+      (item.sectionNumber === parseInt(selectedSection) || item.sectionNumber === null)
+    )
+    
+    // ترتيب حسب التوقيت
+    const sorted = filtered.sort((a, b) => {
+      const timeA = a.time.split(' - ')[0] || ''
+      const timeB = b.time.split(' - ')[0] || ''
+      return timeA.localeCompare(timeB)
+    })
+    
+    setFilteredSchedule(sorted)
+  }
 
   useEffect(() => {
     const updateTime = () => {
@@ -93,17 +124,12 @@ export default function HomePage() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-fade-in">
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-2xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-                <span className="text-white font-bold text-2xl">C</span>
-              </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-bold text-dark-100 leading-tight">
-                مرحباً بك في
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green">
-                  Cyber TMSAH
-                </span>
-              </h1>
-            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-bold text-dark-100 mb-6 leading-tight">
+              مرحباً بك في
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green">
+                Cyber TMSAH
+              </span>
+            </h1>
             
             <p className="text-lg sm:text-xl md:text-2xl text-dark-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               منصة تعليمية حديثة ومتطورة تجمع بين التكنولوجيا والتعليم لتحقيق أفضل تجربة تعلم
@@ -224,51 +250,119 @@ export default function HomePage() {
               <span className="text-cyber-neon font-semibold text-lg">{currentTime}</span>
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {todaySchedule.map((schedule, index) => (
-              <div
-                key={index}
-                className="enhanced-card p-6 hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-gradient-to-br from-cyber-neon via-cyber-green to-cyber-neon rounded-full flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-                      <Clock className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-cyber-neon font-semibold">{schedule.time}</span>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    schedule.type === 'محاضرة' 
-                      ? 'bg-cyber-violet/20 text-cyber-violet' 
-                      : 'bg-cyber-green/20 text-cyber-green'
-                  }`}>
-                    {schedule.type}
-                  </span>
+
+          {/* Search Interface */}
+          <div className="mb-8 animate-slide-up">
+            <div className="enhanced-card p-6 max-w-4xl mx-auto">
+              <h3 className="text-xl font-semibold text-dark-100 mb-4 text-center">
+                اختر مجموعتك وسكشنك لعرض جدولك اليومي
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-dark-300 mb-2">المجموعة</label>
+                  <select
+                    value={selectedGroup}
+                    onChange={(e) => setSelectedGroup(e.target.value)}
+                    className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
+                  >
+                    <option value="">اختر المجموعة</option>
+                    <option value="Group 1">المجموعة 1 (السكشن 1-7)</option>
+                    <option value="Group 2">المجموعة 2 (السكشن 8-15)</option>
+                  </select>
                 </div>
-                
-                <h3 className="text-xl font-semibold text-dark-100 mb-3">
-                  {schedule.subject}
-                </h3>
-                
-                <div className="space-y-2">
-                      <div className="flex items-center gap-3 text-dark-300">
-                        <div className="w-6 h-6 bg-gradient-to-br from-cyber-violet via-cyber-blue to-cyber-violet rounded-full flex items-center justify-center shadow-lg shadow-cyber-violet/30">
-                          <User className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="text-sm">{schedule.instructor}</span>
-                      </div>
-                      <div className="flex items-center gap-3 text-dark-300">
-                        <div className="w-6 h-6 bg-gradient-to-br from-cyber-green via-cyber-neon to-cyber-green rounded-full flex items-center justify-center shadow-lg shadow-cyber-green/30">
-                          <MapPin className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="text-sm">{schedule.room}</span>
-                      </div>
+                <div>
+                  <label className="block text-sm font-medium text-dark-300 mb-2">السكشن</label>
+                  <select
+                    value={selectedSection}
+                    onChange={(e) => setSelectedSection(e.target.value)}
+                    className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
+                  >
+                    <option value="">اختر السكشن</option>
+                    {sections.map(section => (
+                      <option key={section} value={section}>السكشن {section}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <button
+                    onClick={handleSearch}
+                    className="w-full btn-primary py-3 px-6 rounded-lg font-semibold hover:scale-105 transition-transform"
+                  >
+                    عرض الجدول
+                  </button>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
+          
+          {/* Schedule Table */}
+          {filteredSchedule.length > 0 ? (
+            <div className="mb-8 animate-slide-up">
+              <div className="enhanced-card overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
+                      <tr>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">التوقيت</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المادة</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المحاضر</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">القاعة</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">النوع</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">السكشن</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredSchedule.map((schedule, index) => (
+                        <tr key={index} className="hover:bg-cyber-neon/5 transition-colors">
+                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-cyber-neon" />
+                              <span className="font-medium">{schedule.time}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-dark-100 font-semibold border-b border-dark-200/20">
+                            {schedule.subject}
+                          </td>
+                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                            <div className="flex items-center gap-2">
+                              <User className="w-4 h-4 text-cyber-violet" />
+                              <span>{schedule.instructor}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-cyber-green" />
+                              <span>{schedule.room}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 border-b border-dark-200/20">
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              schedule.type === 'محاضرة' 
+                                ? 'bg-cyber-violet/20 text-cyber-violet' 
+                                : 'bg-cyber-green/20 text-cyber-green'
+                            }`}>
+                              {schedule.type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                            {schedule.sectionNumber ? `السكشن ${schedule.sectionNumber}` : 'محاضرة عامة'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-12 animate-slide-up">
+              <div className="w-24 h-24 bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Calendar className="w-12 h-12 text-cyber-neon" />
+              </div>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">اختر مجموعتك وسكشنك</h3>
+              <p className="text-dark-300">للعرض جدولك اليومي المخصص</p>
+            </div>
+          )}
           
           <div className="text-center animate-slide-up-delayed">
             <Link

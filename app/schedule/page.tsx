@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Clock, MapPin, User, BookOpen, Search } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Search } from 'lucide-react'
 import { useState } from 'react'
 
 export default function SchedulePage() {
@@ -253,45 +253,15 @@ export default function SchedulePage() {
   const groups = ['Group 1', 'Group 2']
   const sections = Array.from({length: 15}, (_, i) => i + 1)
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'lecture':
-        return 'bg-gradient-to-r from-cyber-neon to-cyber-green'
-      case 'lab':
-        return 'bg-gradient-to-r from-cyber-violet to-cyber-blue'
-      case 'tutorial':
-        return 'bg-gradient-to-r from-cyber-green to-cyber-neon'
-      default:
-        return 'bg-gradient-to-r from-cyber-blue to-cyber-violet'
-    }
-  }
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'lecture':
-        return BookOpen
-      case 'lab':
-        return Calendar
-      case 'tutorial':
-        return User
-      default:
-        return Calendar
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-              <span className="text-white font-bold text-xl">C</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              الجدول الأكاديمي
-            </h1>
-          </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
+            الجدول الأكاديمي
+          </h1>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
             جدول المحاضرات والمختبرات للفصل الدراسي الحالي
           </p>
@@ -349,53 +319,67 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        {/* Schedule Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(filteredSchedule.length > 0 ? filteredSchedule : scheduleData).map((item, index) => {
-            const TypeIcon = getTypeIcon(item.type)
-            return (
-              <div
-                key={item.id}
-                className="enhanced-card p-6 hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 ${getTypeColor(item.type)} rounded-xl flex items-center justify-center`}>
-                    <TypeIcon className="w-6 h-6 text-dark-100" />
-                  </div>
-                  <span className="text-xs px-2 py-1 rounded-full bg-cyber-neon/20 text-cyber-neon font-medium">
-                    {item.type === 'lecture' ? 'محاضرة' : item.type === 'lab' ? 'مختبر' : 'تطبيق'}
-                  </span>
-                </div>
-                
-                <h3 className="text-xl font-semibold text-dark-100 mb-3 line-clamp-2">
-                  {item.title}
-                </h3>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-dark-300">
-                    <Clock className="w-4 h-4 text-cyber-neon" />
-                    <span className="text-sm">{item.time}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-dark-300">
-                    <MapPin className="w-4 h-4 text-cyber-violet" />
-                    <span className="text-sm">{item.location}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-dark-300">
-                    <User className="w-4 h-4 text-cyber-green" />
-                    <span className="text-sm">{item.instructor}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-dark-300">
-                    <Calendar className="w-4 h-4 text-cyber-blue" />
-                    <span className="text-sm">{item.section}</span>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+        {/* Schedule Table */}
+        <div className="enhanced-card overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
+                <tr>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">التوقيت</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المادة</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المحاضر</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">القاعة</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">النوع</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المجموعة</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">السكشن</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(filteredSchedule.length > 0 ? filteredSchedule : scheduleData).map((item) => (
+                  <tr key={item.id} className="hover:bg-cyber-neon/5 transition-colors">
+                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-cyber-neon" />
+                        <span className="font-medium">{item.time}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-dark-100 font-semibold border-b border-dark-200/20">
+                      {item.title}
+                    </td>
+                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-cyber-violet" />
+                        <span>{item.instructor}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-cyber-green" />
+                        <span>{item.location}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 border-b border-dark-200/20">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        item.type === 'lecture' 
+                          ? 'bg-cyber-violet/20 text-cyber-violet' 
+                          : 'bg-cyber-green/20 text-cyber-green'
+                      }`}>
+                        {item.type === 'lecture' ? 'محاضرة' : item.type === 'lab' ? 'مختبر' : 'تطبيق'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                      <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
+                        {item.group}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                      {item.sectionNumber ? `السكشن ${item.sectionNumber}` : 'محاضرة عامة'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Empty State */}

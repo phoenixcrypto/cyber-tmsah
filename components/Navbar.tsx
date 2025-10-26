@@ -29,17 +29,11 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 text-cyber-neon hover:text-cyber-violet transition-colors group">
-            <div className="flex items-center space-x-3">
-              {/* Logo Icon */}
-              <div className="w-10 h-10 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30 group-hover:rotate-12 transition-transform">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-orbitron font-bold text-2xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent group-hover:from-cyber-violet group-hover:via-cyber-green group-hover:to-cyber-neon transition-all duration-300">
-                  Cyber TMSAH
-                </span>
-                <span className="text-sm text-cyber-neon/70 font-medium">منصة تعليمية متطورة</span>
-              </div>
+            <div className="flex flex-col">
+              <span className="font-orbitron font-bold text-2xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent group-hover:from-cyber-violet group-hover:via-cyber-green group-hover:to-cyber-neon transition-all duration-300">
+                Cyber TMSAH
+              </span>
+              <span className="text-sm text-cyber-neon/70 font-medium">منصة تعليمية متطورة</span>
             </div>
           </Link>
 

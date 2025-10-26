@@ -68,9 +68,6 @@ export default function AboutPage() {
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyber-neon via-cyber-violet to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-              <span className="text-white font-bold text-xl">C</span>
-            </div>
             <Info className="w-8 h-8 text-cyber-neon" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
               حول منصة Cyber TMSAH
@@ -231,7 +228,7 @@ export default function AboutPage() {
 
           {/* Database Systems & Entrepreneurship */}
           <div className="mb-8">
-            <div className="enhanced-card p-6">
+            <div className="enhanced-card p-6 bg-gradient-to-br from-cyber-green/10 to-cyber-neon/10 border border-cyber-green/20">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-xl flex items-center justify-center shadow-lg shadow-cyber-green/30">
                   <Award className="w-6 h-6 text-white" />
@@ -258,7 +255,7 @@ export default function AboutPage() {
 
           {/* Information Technology */}
           <div className="mb-8">
-            <div className="enhanced-card p-6">
+            <div className="enhanced-card p-6 bg-gradient-to-br from-cyber-blue/10 to-cyber-violet/10 border border-cyber-blue/20">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-cyber-blue to-cyber-violet rounded-xl flex items-center justify-center shadow-lg shadow-cyber-blue/30">
                   <Users className="w-6 h-6 text-white" />
