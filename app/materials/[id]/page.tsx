@@ -319,10 +319,13 @@ export default function SubjectPage() {
                 <div className="flex items-center gap-2 ml-4">
                   {lecture.status === 'published' ? (
                     <>
-                      <button className="btn-primary flex items-center gap-2">
+                      <Link 
+                        href={`/materials/${subjectId}/${lecture.id}`}
+                        className="btn-primary flex items-center gap-2"
+                      >
                         <Play className="w-4 h-4" />
-                        Watch
-                      </button>
+                        Read Article
+                      </Link>
                       <button className="btn-secondary flex items-center gap-2">
                         <Download className="w-4 h-4" />
                         Download
