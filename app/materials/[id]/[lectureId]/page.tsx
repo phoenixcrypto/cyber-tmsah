@@ -1,13 +1,34 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, Clock, Calendar, User, FileText, Download, Share2, BookOpen } from 'lucide-react'
+import { ArrowLeft, Clock, Calendar, User, FileText, Download, Share2, BookOpen, Copy, MessageCircle, Send } from 'lucide-react'
 import { useParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
 
 export default function LecturePage() {
   const params = useParams()
   const subjectId = params.id as string
   const lectureId = params.lectureId as string
+  const [showShareMenu, setShowShareMenu] = useState(false)
+  const [copySuccess, setCopySuccess] = useState(false)
+
+  // Close share menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (!target.closest('.share-menu-container')) {
+        setShowShareMenu(false)
+      }
+    }
+
+    if (showShareMenu) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showShareMenu])
 
   // Sample lecture content - this would come from a database in a real app
   const lectureContent = {
@@ -157,6 +178,53 @@ In the next lecture, we will explore:
     ]
   }
 
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : ''
+  const shareText = `Check out this lecture: ${lectureContent.title} - ${lectureContent.subject}`
+
+  const shareOptions = [
+    {
+      name: 'Copy Link',
+      icon: Copy,
+      action: () => {
+        navigator.clipboard.writeText(currentUrl)
+        setCopySuccess(true)
+        setTimeout(() => setCopySuccess(false), 2000)
+        setShowShareMenu(false)
+      },
+      color: 'text-blue-400'
+    },
+    {
+      name: 'WhatsApp',
+      icon: MessageCircle,
+      action: () => {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + currentUrl)}`
+        window.open(whatsappUrl, '_blank')
+        setShowShareMenu(false)
+      },
+      color: 'text-green-400'
+    },
+    {
+      name: 'Telegram',
+      icon: Send,
+      action: () => {
+        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareText)}`
+        window.open(telegramUrl, '_blank')
+        setShowShareMenu(false)
+      },
+      color: 'text-blue-300'
+    },
+    {
+      name: 'Messenger',
+      icon: MessageCircle,
+      action: () => {
+        const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(currentUrl)}&app_id=YOUR_APP_ID`
+        window.open(messengerUrl, '_blank')
+        setShowShareMenu(false)
+      },
+      color: 'text-blue-500'
+    }
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -195,10 +263,35 @@ In the next lecture, we will explore:
                 <Download className="w-4 h-4" />
                 Download PDF
               </button>
-              <button className="btn-secondary flex items-center gap-2">
-                <Share2 className="w-4 h-4" />
-                Share
-              </button>
+              <div className="relative share-menu-container">
+                <button 
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  className="btn-secondary flex items-center gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  {copySuccess ? 'Copied!' : 'Share'}
+                </button>
+                
+                {showShareMenu && (
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-cyber-dark border border-cyber-neon/20 rounded-lg shadow-lg z-50">
+                    <div className="p-2">
+                      {shareOptions.map((option, index) => {
+                        const Icon = option.icon
+                        return (
+                          <button
+                            key={index}
+                            onClick={option.action}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-cyber-neon/10 rounded-lg transition-colors"
+                          >
+                            <Icon className={`w-4 h-4 ${option.color}`} />
+                            <span className="text-dark-200">{option.name}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
