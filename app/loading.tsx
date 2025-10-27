@@ -7,11 +7,11 @@ export default function Loading() {
         
         {/* Loading Text */}
         <h2 className="text-2xl font-semibold text-dark-100 mb-4">
-          جاري التحميل...
+          Loading...
         </h2>
         
         <p className="text-dark-300">
-          يرجى الانتظار قليلاً
+          Please wait a moment
         </p>
         
         {/* Loading Dots */}

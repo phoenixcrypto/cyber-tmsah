@@ -27,16 +27,16 @@ export default function Error({
           
           {/* Error Message */}
           <h1 className="text-4xl sm:text-5xl font-orbitron font-bold text-red-400 mb-6">
-            خطأ في النظام
+            System Error
           </h1>
           
           <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-4">
-            حدث خطأ غير متوقع
+            An Unexpected Error Occurred
           </h2>
           
           <p className="text-lg text-dark-300 mb-8 leading-relaxed">
-            عذراً، حدث خطأ غير متوقع في النظام. 
-            يرجى المحاولة مرة أخرى أو العودة إلى الصفحة الرئيسية.
+            Sorry, an unexpected error occurred in the system. 
+            Please try again or return to the home page.
           </p>
           
           {/* Error Details (Development Only) */}
@@ -44,7 +44,7 @@ export default function Error({
             <div className="glass-card p-6 mb-8 text-right">
               <h3 className="text-lg font-semibold text-dark-100 mb-4 flex items-center gap-2">
                 <Bug className="w-5 h-5 text-cyber-neon" />
-                تفاصيل الخطأ (وضع التطوير)
+                Error Details (Development Mode)
               </h3>
               <div className="bg-cyber-dark/50 p-4 rounded-lg border border-red-500/20">
                 <p className="text-red-400 font-mono text-sm break-all">
@@ -66,7 +66,7 @@ export default function Error({
               className="btn-primary flex items-center gap-2"
             >
               <RefreshCw className="w-4 h-4" />
-              المحاولة مرة أخرى
+              Try Again
             </button>
             
             <Link
@@ -74,24 +74,24 @@ export default function Error({
               className="btn-secondary flex items-center gap-2"
             >
               <Home className="w-4 h-4" />
-              الصفحة الرئيسية
+              Home Page
             </Link>
           </div>
           
           {/* Help Section */}
           <div className="glass-card p-6 animate-slide-up">
             <h3 className="text-lg font-semibold text-dark-100 mb-4">
-              هل تحتاج مساعدة؟
+              Need Help?
             </h3>
             <p className="text-dark-300 mb-4">
-              إذا استمر الخطأ، يرجى التواصل مع فريق الدعم الفني
+              If the error persists, please contact the support team
             </p>
             <Link
               href="/contact"
               className="btn-tertiary inline-flex items-center gap-2"
             >
               <AlertTriangle className="w-4 h-4" />
-              التواصل مع الدعم
+              Contact Support
             </Link>
           </div>
         </div>

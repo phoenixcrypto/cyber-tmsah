@@ -364,7 +364,7 @@ export default function SchedulePage() {
                           ? 'bg-cyber-violet/20 text-cyber-violet' 
                           : 'bg-cyber-green/20 text-cyber-green'
                       }`}>
-                        {item.type === 'lecture' ? 'محاضرة' : item.type === 'lab' ? 'مختبر' : 'تطبيق'}
+                        {item.type === 'lecture' ? 'Lecture' : item.type === 'lab' ? 'Lab' : 'Application'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
@@ -387,10 +387,10 @@ export default function SchedulePage() {
           <div className="text-center py-20 animate-fade-in">
             <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
             <h3 className="text-2xl font-semibold text-dark-100 mb-4">
-              لا توجد محاضرات متاحة
+              No Lectures Available
             </h3>
             <p className="text-dark-300">
-              سيتم إضافة الجدول الأكاديمي قريباً. ابق متابعاً للتحديثات!
+              The academic schedule will be added soon. Stay tuned for updates!
             </p>
           </div>
         )}

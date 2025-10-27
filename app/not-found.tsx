@@ -23,12 +23,12 @@ export default function NotFound() {
           </h1>
           
           <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-4">
-            الصفحة غير موجودة
+            Page Not Found
           </h2>
           
           <p className="text-lg text-dark-300 mb-8 leading-relaxed">
-            عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها. 
-            تحقق من الرابط أو استخدم الروابط أدناه للعودة إلى الصفحة الرئيسية.
+            Sorry, the page you're looking for doesn't exist or has been moved. 
+            Please check the URL or use the links below to return to the home page.
           </p>
           
           {/* Action Buttons */}
@@ -38,7 +38,7 @@ export default function NotFound() {
               className="btn-primary flex items-center gap-2"
             >
               <Home className="w-4 h-4" />
-              الصفحة الرئيسية
+              Home Page
             </Link>
             
             <button
@@ -46,19 +46,19 @@ export default function NotFound() {
               className="btn-secondary flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
-              العودة للخلف
+              Go Back
             </button>
           </div>
           
           {/* Search Suggestion */}
           <div className="glass-card p-6 animate-slide-up">
             <h3 className="text-lg font-semibold text-dark-100 mb-4">
-              هل تبحث عن شيء معين؟
+              Looking for something specific?
             </h3>
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="ابحث في الموقع..."
+                placeholder="Search the site..."
                 className="flex-1 px-4 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 placeholder-dark-400 focus:border-cyber-neon focus:outline-none transition-colors"
               />
               <button className="btn-primary px-4 py-2">

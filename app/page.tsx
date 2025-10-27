@@ -34,41 +34,41 @@ export default function HomePage() {
     }
   ]
 
-  // جدول اليوم الكامل
+  // Full schedule for today
   const fullSchedule = [
     // Group 1 Lectures
-    { time: '09:00 - 10:30', subject: 'Applied Physics', instructor: 'د. احمد بكر', room: 'قاعة 101', type: 'محاضرة', group: 'Group 1', sectionNumber: null },
-    { time: '11:00 - 12:30', subject: 'Mathematics', instructor: 'د. سييمون عزت', room: 'قاعة 102', type: 'محاضرة', group: 'Group 1', sectionNumber: null },
-    { time: '14:00 - 15:30', subject: 'Database Systems', instructor: 'د. عبير حسن', room: 'قاعة 103', type: 'محاضرة', group: 'Group 1', sectionNumber: null },
+    { time: '09:00 - 10:30', subject: 'Applied Physics', instructor: 'Dr. Ahmed Bakr', room: 'Hall 101', type: 'Lecture', group: 'Group 1', sectionNumber: null },
+    { time: '11:00 - 12:30', subject: 'Mathematics', instructor: 'Dr. Simon Ezzat', room: 'Hall 102', type: 'Lecture', group: 'Group 1', sectionNumber: null },
+    { time: '14:00 - 15:30', subject: 'Database Systems', instructor: 'Dr. Abeer Hassan', room: 'Hall 103', type: 'Lecture', group: 'Group 1', sectionNumber: null },
     
     // Group 2 Lectures
-    { time: '09:00 - 10:30', subject: 'Applied Physics', instructor: 'د. احمد بكر', room: 'قاعة 201', type: 'محاضرة', group: 'Group 2', sectionNumber: null },
-    { time: '11:00 - 12:30', subject: 'Mathematics', instructor: 'د. سييمون عزت', room: 'قاعة 202', type: 'محاضرة', group: 'Group 2', sectionNumber: null },
-    { time: '14:00 - 15:30', subject: 'Database Systems', instructor: 'د. عبير حسن', room: 'قاعة 203', type: 'محاضرة', group: 'Group 2', sectionNumber: null },
+    { time: '09:00 - 10:30', subject: 'Applied Physics', instructor: 'Dr. Ahmed Bakr', room: 'Hall 201', type: 'Lecture', group: 'Group 2', sectionNumber: null },
+    { time: '11:00 - 12:30', subject: 'Mathematics', instructor: 'Dr. Simon Ezzat', room: 'Hall 202', type: 'Lecture', group: 'Group 2', sectionNumber: null },
+    { time: '14:00 - 15:30', subject: 'Database Systems', instructor: 'Dr. Abeer Hassan', room: 'Hall 203', type: 'Lecture', group: 'Group 2', sectionNumber: null },
     
     // Sections 1-7 (Group 1)
-    { time: '08:00 - 09:30', subject: 'Applied Physics Lab', instructor: 'م. احمد نشأت', room: 'معمل 101', type: 'عملي', group: 'Group 1', sectionNumber: 1 },
-    { time: '10:00 - 11:30', subject: 'Mathematics Lab', instructor: 'م. ايهاب غلاب', room: 'معمل 102', type: 'عملي', group: 'Group 1', sectionNumber: 2 },
-    { time: '12:00 - 13:30', subject: 'Database Systems Lab', instructor: 'م. نجلاء سعيد', room: 'معمل 103', type: 'عملي', group: 'Group 1', sectionNumber: 3 },
-    { time: '15:00 - 16:30', subject: 'IT Lab', instructor: 'م. محمد عمار', room: 'معمل 104', type: 'عملي', group: 'Group 1', sectionNumber: 4 },
-    { time: '17:00 - 18:30', subject: 'English Lab', instructor: 'د. نشوي', room: 'معمل 105', type: 'عملي', group: 'Group 1', sectionNumber: 5 },
-    { time: '19:00 - 20:30', subject: 'IS Lab', instructor: 'م. محمود محمد', room: 'معمل 106', type: 'عملي', group: 'Group 1', sectionNumber: 6 },
-    { time: '21:00 - 22:30', subject: 'Entrepreneurship Lab', instructor: 'م. كريم عادل', room: 'معمل 107', type: 'عملي', group: 'Group 1', sectionNumber: 7 },
+    { time: '08:00 - 09:30', subject: 'Applied Physics Lab', instructor: 'TA Ahmed Nashaat', room: 'Lab 101', type: 'Lab', group: 'Group 1', sectionNumber: 1 },
+    { time: '10:00 - 11:30', subject: 'Mathematics Lab', instructor: 'TA Ehab Gallab', room: 'Lab 102', type: 'Lab', group: 'Group 1', sectionNumber: 2 },
+    { time: '12:00 - 13:30', subject: 'Database Systems Lab', instructor: 'TA Nagla Saeed', room: 'Lab 103', type: 'Lab', group: 'Group 1', sectionNumber: 3 },
+    { time: '15:00 - 16:30', subject: 'IT Lab', instructor: 'TA Mohamed Ammar', room: 'Lab 104', type: 'Lab', group: 'Group 1', sectionNumber: 4 },
+    { time: '17:00 - 18:30', subject: 'English Lab', instructor: 'Dr. Nashwa', room: 'Lab 105', type: 'Lab', group: 'Group 1', sectionNumber: 5 },
+    { time: '19:00 - 20:30', subject: 'IS Lab', instructor: 'TA Mahmoud Mohamed', room: 'Lab 106', type: 'Lab', group: 'Group 1', sectionNumber: 6 },
+    { time: '21:00 - 22:30', subject: 'Entrepreneurship Lab', instructor: 'TA Kareem Adel', room: 'Lab 107', type: 'Lab', group: 'Group 1', sectionNumber: 7 },
     
     // Sections 8-15 (Group 2)
-    { time: '08:00 - 09:30', subject: 'Applied Physics Lab', instructor: 'م. امنية ابراهيم', room: 'معمل 201', type: 'عملي', group: 'Group 2', sectionNumber: 8 },
-    { time: '10:00 - 11:30', subject: 'Mathematics Lab', instructor: 'م. احمد نشأت', room: 'معمل 202', type: 'عملي', group: 'Group 2', sectionNumber: 9 },
-    { time: '12:00 - 13:30', subject: 'Database Systems Lab', instructor: 'م. كريم عادل', room: 'معمل 203', type: 'عملي', group: 'Group 2', sectionNumber: 10 },
-    { time: '15:00 - 16:30', subject: 'IT Lab', instructor: 'م. محمد عمار', room: 'معمل 204', type: 'عملي', group: 'Group 2', sectionNumber: 11 },
-    { time: '17:00 - 18:30', subject: 'English Lab', instructor: 'د. نشوي', room: 'معمل 205', type: 'عملي', group: 'Group 2', sectionNumber: 12 },
-    { time: '19:00 - 20:30', subject: 'IS Lab', instructor: 'م. مريم اشرف', room: 'معمل 206', type: 'عملي', group: 'Group 2', sectionNumber: 13 },
-    { time: '21:00 - 22:30', subject: 'Entrepreneurship Lab', instructor: 'م. دينا علي', room: 'معمل 207', type: 'عملي', group: 'Group 2', sectionNumber: 14 },
-    { time: '23:00 - 00:30', subject: 'Physics Lab', instructor: 'م. دينا علي', room: 'معمل 208', type: 'عملي', group: 'Group 2', sectionNumber: 15 }
+    { time: '08:00 - 09:30', subject: 'Applied Physics Lab', instructor: 'TA Amany Ibrahim', room: 'Lab 201', type: 'Lab', group: 'Group 2', sectionNumber: 8 },
+    { time: '10:00 - 11:30', subject: 'Mathematics Lab', instructor: 'TA Ahmed Nashaat', room: 'Lab 202', type: 'Lab', group: 'Group 2', sectionNumber: 9 },
+    { time: '12:00 - 13:30', subject: 'Database Systems Lab', instructor: 'TA Kareem Adel', room: 'Lab 203', type: 'Lab', group: 'Group 2', sectionNumber: 10 },
+    { time: '15:00 - 16:30', subject: 'IT Lab', instructor: 'TA Mohamed Ammar', room: 'Lab 204', type: 'Lab', group: 'Group 2', sectionNumber: 11 },
+    { time: '17:00 - 18:30', subject: 'English Lab', instructor: 'Dr. Nashwa', room: 'Lab 205', type: 'Lab', group: 'Group 2', sectionNumber: 12 },
+    { time: '19:00 - 20:30', subject: 'IS Lab', instructor: 'TA Mariam Ashraf', room: 'Lab 206', type: 'Lab', group: 'Group 2', sectionNumber: 13 },
+    { time: '21:00 - 22:30', subject: 'Entrepreneurship Lab', instructor: 'TA Dina Ali', room: 'Lab 207', type: 'Lab', group: 'Group 2', sectionNumber: 14 },
+    { time: '23:00 - 00:30', subject: 'Physics Lab', instructor: 'TA Dina Ali', room: 'Lab 208', type: 'Lab', group: 'Group 2', sectionNumber: 15 }
   ]
 
   const sections = Array.from({ length: 15 }, (_, i) => i + 1)
 
-  // دالة البحث
+  // Search function
   const handleSearch = () => {
     if (!selectedGroup || !selectedSection) return
     
@@ -77,7 +77,7 @@ export default function HomePage() {
       (item.sectionNumber === parseInt(selectedSection) || item.sectionNumber === null)
     )
     
-    // ترتيب حسب التوقيت
+    // Sort by time
     const sorted = filtered.sort((a, b) => {
       const timeA = a.time.split(' - ')[0] || ''
       const timeB = b.time.split(' - ')[0] || ''
@@ -337,7 +337,7 @@ export default function HomePage() {
                           </td>
                           <td className="px-6 py-4 border-b border-dark-200/20">
                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              schedule.type === 'محاضرة' 
+                              schedule.type === 'Lecture' 
                                 ? 'bg-cyber-violet/20 text-cyber-violet' 
                                 : 'bg-cyber-green/20 text-cyber-green'
                             }`}>
