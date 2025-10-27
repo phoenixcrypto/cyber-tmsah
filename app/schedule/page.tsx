@@ -250,7 +250,10 @@ export default function SchedulePage() {
     setFilteredSchedule(filtered)
   }
 
-  const groups = ['Group 1', 'Group 2']
+  const groups = [
+    { value: 'Group 1', label: 'A' },
+    { value: 'Group 2', label: 'B' }
+  ]
   const sections = Array.from({length: 15}, (_, i) => i + 1)
 
 
@@ -271,37 +274,37 @@ export default function SchedulePage() {
         <div className="mb-8 animate-slide-up">
           <div className="enhanced-card p-6">
             <h2 className="text-xl font-semibold text-dark-100 mb-4 text-center">
-              Select your group and attendance section to view your weekly schedule
+              Select your lecture group (A or B) and section number to view your weekly schedule
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  Group
+                  Lecture Group
                 </label>
                 <select
                   value={selectedGroup}
                   onChange={(e) => setSelectedGroup(e.target.value)}
                   className="w-full px-3 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
                 >
-                  <option value="">Select Group</option>
+                  <option value="">Select Lecture Group</option>
                   {groups.map(group => (
-                    <option key={group} value={group}>{group}</option>
+                    <option key={group.value} value={group.value}>{group.label}</option>
                   ))}
                 </select>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  Attendance
+                  Section Number
                 </label>
                 <select
                   value={selectedSection}
                   onChange={(e) => setSelectedSection(e.target.value)}
                   className="w-full px-3 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
                 >
-                  <option value="">Select Attendance</option>
+                  <option value="">Select Section Number</option>
                   {sections.map(section => (
-                    <option key={section} value={section}>Section {section}</option>
+                    <option key={section} value={section}>{section}</option>
                   ))}
                 </select>
               </div>
@@ -330,8 +333,8 @@ export default function SchedulePage() {
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Group</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Attendance</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Lecture Group</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section</th>
                 </tr>
               </thead>
               <tbody>
@@ -369,11 +372,11 @@ export default function SchedulePage() {
                     </td>
                     <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
                       <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
-                        {item.group}
+                        {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                      {item.sectionNumber ? `Attendance ${item.sectionNumber}` : 'General Lecture'}
+                      {item.sectionNumber ? item.sectionNumber : 'General Lecture'}
                     </td>
                   </tr>
                 ))}

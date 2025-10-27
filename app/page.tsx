@@ -255,31 +255,31 @@ export default function HomePage() {
           <div className="mb-8 animate-slide-up">
             <div className="enhanced-card p-6 max-w-4xl mx-auto">
               <h3 className="text-xl font-semibold text-dark-100 mb-4 text-center">
-                Select your group and attendance section to view your personalized schedule
+                Select your lecture group (A or B) and section number to view your personalized schedule
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-dark-300 mb-2">Group</label>
+                  <label className="block text-sm font-medium text-dark-300 mb-2">Lecture Group</label>
                   <select
                     value={selectedGroup}
                     onChange={(e) => setSelectedGroup(e.target.value)}
                     className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
-                    <option value="">Select Group</option>
-                    <option value="Group 1">Group 1 (Attendance 1-7)</option>
-                    <option value="Group 2">Group 2 (Attendance 8-15)</option>
+                    <option value="">Select Lecture Group</option>
+                    <option value="Group 1">A (Sections 1-7)</option>
+                    <option value="Group 2">B (Sections 8-15)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-dark-300 mb-2">Attendance</label>
+                  <label className="block text-sm font-medium text-dark-300 mb-2">Section Number</label>
                   <select
                     value={selectedSection}
                     onChange={(e) => setSelectedSection(e.target.value)}
                     className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
-                    <option value="">Select Attendance</option>
+                    <option value="">Select Section Number</option>
                     {sections.map(section => (
-                      <option key={section} value={section}>Attendance {section}</option>
+                      <option key={section} value={section}>{section}</option>
                     ))}
                   </select>
                 </div>
@@ -308,7 +308,7 @@ export default function HomePage() {
                         <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
                         <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Attendance</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -345,7 +345,7 @@ export default function HomePage() {
                             </span>
                           </td>
                           <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                            {schedule.sectionNumber ? `Attendance ${schedule.sectionNumber}` : 'General Lecture'}
+                            {schedule.sectionNumber ? schedule.sectionNumber : 'General Lecture'}
                           </td>
                         </tr>
                       ))}
