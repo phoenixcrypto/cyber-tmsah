@@ -334,7 +334,7 @@ export default function SchedulePage() {
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Lecture Group</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section Group</th>
                 </tr>
               </thead>
               <tbody>
