@@ -1,0 +1,111 @@
+{
+  "subjects": {
+    "applied-physics": {
+      "title": "Applied Physics",
+      "description": "Physics principles and applications in technology",
+      "instructor": "Dr. Ahmed Bakr",
+      "color": "from-blue-500 to-blue-600",
+      "lectures": [
+        {
+          "id": 1,
+          "title": "Introduction to Applied Physics",
+          "description": "Basic concepts and principles of physics in technology applications",
+          "duration": "90 minutes",
+          "date": "2024-01-15",
+          "type": "lecture",
+          "status": "published",
+          "content": "# Introduction to Applied Physics\n\n## Overview\nApplied physics is the application of physics principles to solve real-world problems and develop new technologies.\n\n## Key Concepts\n\n### 1. Fundamental Principles\n- **Newton's Laws of Motion**: The foundation of classical mechanics\n- **Conservation of Energy**: Energy cannot be created or destroyed, only transformed\n- **Wave-Particle Duality**: Matter exhibits both wave and particle properties\n\n### 2. Applications in Technology\n- **Semiconductor Physics**: Essential for electronics and computing\n- **Optics**: Used in lasers, fiber optics, and imaging systems\n- **Thermodynamics**: Applied in engines, refrigeration, and power generation\n\n## Mathematical Foundations\n\n### Basic Equations\nThe fundamental equation of motion:\n```\nF = ma\n```\n\nWhere:\n- F = Force (N)\n- m = Mass (kg)\n- a = Acceleration (m/s²)\n\n### Energy Conservation\n```\nE_total = E_kinetic + E_potential\n```\n\n## Real-World Examples\n\n### 1. Smartphone Technology\nModern smartphones rely heavily on applied physics:\n- **Touchscreen**: Capacitive sensing based on electric fields\n- **Camera**: Lens optics and image sensor physics\n- **Battery**: Electrochemical energy storage\n\n### 2. Medical Imaging\n- **MRI**: Uses magnetic resonance principles\n- **X-rays**: Electromagnetic radiation for imaging\n- **Ultrasound**: Sound wave propagation and reflection\n\n## Laboratory Applications\n\n### Safety Protocols\n1. Always wear appropriate protective equipment\n2. Follow experimental procedures carefully\n3. Report any accidents immediately\n4. Keep laboratory areas clean and organized\n\n### Common Equipment\n- **Oscilloscope**: For measuring electrical signals\n- **Multimeter**: For measuring voltage, current, and resistance\n- **Power Supply**: For providing controlled electrical power\n- **Function Generator**: For creating various waveforms\n\n## Practice Problems\n\n### Problem 1\nA car with a mass of 1500 kg accelerates from rest to 20 m/s in 10 seconds. Calculate the force required.\n\n**Solution:**\nUsing F = ma:\n- a = (20 m/s - 0 m/s) / 10 s = 2 m/s²\n- F = 1500 kg × 2 m/s² = 3000 N\n\n### Problem 2\nA ball is dropped from a height of 20 meters. Calculate its velocity just before hitting the ground.\n\n**Solution:**\nUsing energy conservation:\n- Potential energy = Kinetic energy\n- mgh = ½mv²\n- v = √(2gh) = √(2 × 9.8 × 20) = 19.8 m/s\n\n## Summary\nApplied physics provides the foundation for understanding and developing modern technology. By combining theoretical knowledge with practical applications, we can solve complex problems and create innovative solutions.\n\n## Next Steps\n- Review the practice problems\n- Complete the assigned exercises\n- Prepare for the laboratory session\n- Read the next chapter on Mechanics and Motion",
+          "attachments": [
+            {
+              "name": "Lecture Slides",
+              "type": "PDF",
+              "size": "2.4 MB",
+              "url": "#"
+            },
+            {
+              "name": "Practice Problems",
+              "type": "PDF",
+              "size": "1.8 MB",
+              "url": "#"
+            },
+            {
+              "name": "Lab Manual",
+              "type": "PDF",
+              "size": "3.2 MB",
+              "url": "#"
+            }
+          ],
+          "relatedLectures": [
+            {
+              "id": 2,
+              "title": "Mechanics and Motion",
+              "date": "2024-01-22"
+            },
+            {
+              "id": 3,
+              "title": "Thermodynamics",
+              "date": "2024-01-29"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Mechanics and Motion",
+          "description": "Understanding motion, forces, and mechanical systems",
+          "duration": "90 minutes",
+          "date": "2024-01-22",
+          "type": "lecture",
+          "status": "published",
+          "content": "# Mechanics and Motion\n\n## Introduction\nMechanics is the branch of physics that deals with the motion of objects and the forces that cause this motion.\n\n## Types of Motion\n\n### 1. Linear Motion\nMotion in a straight line\n- **Uniform Motion**: Constant velocity\n- **Accelerated Motion**: Changing velocity\n\n### 2. Circular Motion\nMotion along a circular path\n- **Centripetal Force**: Force directed toward the center\n- **Angular Velocity**: Rate of rotation\n\n### 3. Projectile Motion\nMotion under the influence of gravity\n- **Horizontal Component**: Constant velocity\n- **Vertical Component**: Accelerated motion\n\n## Newton's Laws\n\n### First Law (Law of Inertia)\nAn object at rest stays at rest, and an object in motion stays in motion, unless acted upon by an external force.\n\n### Second Law (F = ma)\nThe acceleration of an object is directly proportional to the net force and inversely proportional to its mass.\n\n### Third Law (Action-Reaction)\nFor every action, there is an equal and opposite reaction.\n\n## Applications\n\n### Transportation\n- **Cars**: Friction, air resistance, engine power\n- **Airplanes**: Lift, drag, thrust, weight\n- **Rockets**: Thrust, gravity, orbital mechanics\n\n### Sports\n- **Baseball**: Projectile motion, air resistance\n- **Swimming**: Fluid dynamics, drag forces\n- **Cycling**: Friction, aerodynamics\n\n## Practice Problems\n\n### Problem 1\nA 2 kg object is pushed with a force of 10 N. What is its acceleration?\n\n**Solution:**\nF = ma\n10 N = 2 kg × a\na = 5 m/s²\n\n### Problem 2\nA car traveling at 30 m/s applies brakes and stops in 5 seconds. What is the deceleration?\n\n**Solution:**\na = (v_f - v_i) / t\na = (0 - 30) / 5 = -6 m/s²",
+          "attachments": [
+            {
+              "name": "Motion Diagrams",
+              "type": "PDF",
+              "size": "1.5 MB",
+              "url": "#"
+            }
+          ],
+          "relatedLectures": [
+            {
+              "id": 1,
+              "title": "Introduction to Applied Physics",
+              "date": "2024-01-15"
+            },
+            {
+              "id": 3,
+              "title": "Thermodynamics",
+              "date": "2024-01-29"
+            }
+          ]
+        }
+      ]
+    },
+    "mathematics": {
+      "title": "Mathematics",
+      "description": "Mathematical foundations and problem solving",
+      "instructor": "Dr. Simon Ezzat",
+      "color": "from-green-500 to-green-600",
+      "lectures": [
+        {
+          "id": 1,
+          "title": "Calculus Fundamentals",
+          "description": "Introduction to differential and integral calculus",
+          "duration": "90 minutes",
+          "date": "2024-01-16",
+          "type": "lecture",
+          "status": "published",
+          "content": "# Calculus Fundamentals\n\n## Introduction\nCalculus is the mathematical study of continuous change, similar to how geometry is the study of shape and algebra is the study of operations.\n\n## Key Concepts\n\n### 1. Limits\nA limit describes the behavior of a function as its input approaches a particular value.\n\n### 2. Derivatives\nA derivative measures how a function changes as its input changes.\n\n### 3. Integrals\nAn integral represents the area under a curve or the accumulation of quantities.\n\n## Applications\n\n### In Physics\n- **Velocity**: Derivative of position\n- **Acceleration**: Derivative of velocity\n- **Work**: Integral of force\n\n### In Engineering\n- **Optimization**: Finding maximum/minimum values\n- **Rate of Change**: Analyzing system behavior\n- **Area Calculations**: Designing components\n\n## Practice Problems\n\n### Problem 1\nFind the derivative of f(x) = x² + 3x + 2\n\n**Solution:**\nf'(x) = 2x + 3\n\n### Problem 2\nFind the integral of ∫(2x + 3)dx\n\n**Solution:**\n∫(2x + 3)dx = x² + 3x + C",
+          "attachments": [
+            {
+              "name": "Calculus Formulas",
+              "type": "PDF",
+              "size": "1.2 MB",
+              "url": "#"
+            }
+          ],
+          "relatedLectures": []
+        }
+      ]
+    }
+  }
+}
