@@ -15,209 +15,49 @@ export default function SubjectPage() {
       description: 'Physics principles and applications in technology',
       instructor: 'Dr. Ahmed Bakr',
       color: 'from-blue-500 to-blue-600',
-      lectures: [
-        {
-          id: 1,
-          title: 'Introduction to Applied Physics',
-          description: 'Basic concepts and principles of physics in technology applications',
-          duration: '90 minutes',
-          date: '2024-01-15',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 2,
-          title: 'Mechanics and Motion',
-          description: 'Understanding motion, forces, and mechanical systems',
-          duration: '90 minutes',
-          date: '2024-01-22',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 3,
-          title: 'Thermodynamics',
-          description: 'Heat, energy, and thermodynamic processes',
-          duration: '90 minutes',
-          date: '2024-01-29',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 4,
-          title: 'Electricity and Magnetism',
-          description: 'Fundamentals of electrical and magnetic phenomena',
-          duration: '90 minutes',
-          date: '2024-02-05',
-          type: 'lecture',
-          status: 'coming-soon'
-        }
-      ]
+      lectures: []
     },
     'mathematics': {
       title: 'Mathematics',
       description: 'Mathematical foundations and problem solving',
       instructor: 'Dr. Simon Ezzat',
       color: 'from-green-500 to-green-600',
-      lectures: [
-        {
-          id: 1,
-          title: 'Calculus Fundamentals',
-          description: 'Introduction to differential and integral calculus',
-          duration: '90 minutes',
-          date: '2024-01-16',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 2,
-          title: 'Linear Algebra',
-          description: 'Vectors, matrices, and linear transformations',
-          duration: '90 minutes',
-          date: '2024-01-23',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 3,
-          title: 'Probability and Statistics',
-          description: 'Basic probability theory and statistical analysis',
-          duration: '90 minutes',
-          date: '2024-01-30',
-          type: 'lecture',
-          status: 'published'
-        }
-      ]
+      lectures: []
     },
     'entrepreneurship': {
       title: 'Entrepreneurship & Creative Thinking',
       description: 'Business innovation and creative problem solving',
       instructor: 'Dr. Abeer Hassan',
       color: 'from-purple-500 to-purple-600',
-      lectures: [
-        {
-          id: 1,
-          title: 'Introduction to Entrepreneurship',
-          description: 'Understanding entrepreneurship and business opportunities',
-          duration: '90 minutes',
-          date: '2024-01-17',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 2,
-          title: 'Creative Problem Solving',
-          description: 'Techniques for innovative thinking and problem solving',
-          duration: '90 minutes',
-          date: '2024-01-24',
-          type: 'lecture',
-          status: 'published'
-        }
-      ]
+      lectures: []
     },
     'information-technology': {
       title: 'Information Technology',
       description: 'IT fundamentals and modern technologies',
       instructor: 'Dr. Shaima Ahmed',
       color: 'from-cyan-500 to-cyan-600',
-      lectures: [
-        {
-          id: 1,
-          title: 'IT Fundamentals',
-          description: 'Introduction to information technology concepts',
-          duration: '90 minutes',
-          date: '2024-01-18',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 2,
-          title: 'Computer Networks',
-          description: 'Network protocols, architecture, and security',
-          duration: '90 minutes',
-          date: '2024-01-25',
-          type: 'lecture',
-          status: 'published'
-        }
-      ]
+      lectures: []
     },
     'database-systems': {
       title: 'Database Systems',
       description: 'Database design, implementation and management',
       instructor: 'Dr. Abeer Hassan',
       color: 'from-orange-500 to-orange-600',
-      lectures: [
-        {
-          id: 1,
-          title: 'Database Design Principles',
-          description: 'Entity-relationship modeling and database design',
-          duration: '90 minutes',
-          date: '2024-01-19',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 2,
-          title: 'SQL Fundamentals',
-          description: 'Structured Query Language basics and advanced queries',
-          duration: '90 minutes',
-          date: '2024-01-26',
-          type: 'lecture',
-          status: 'published'
-        }
-      ]
+      lectures: []
     },
     'english-language': {
       title: 'English Language',
       description: 'English communication and technical writing',
       instructor: 'Dr. Nashwa',
       color: 'from-red-500 to-red-600',
-      lectures: [
-        {
-          id: 1,
-          title: 'Technical Writing',
-          description: 'Professional writing skills for technical documentation',
-          duration: '90 minutes',
-          date: '2024-01-20',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 2,
-          title: 'Communication Skills',
-          description: 'Effective communication in professional environments',
-          duration: '90 minutes',
-          date: '2024-01-27',
-          type: 'lecture',
-          status: 'published'
-        }
-      ]
+      lectures: []
     },
     'information-systems': {
       title: 'Information Systems',
       description: 'IS analysis, design and implementation',
       instructor: 'Dr. Hind Ziada',
       color: 'from-indigo-500 to-indigo-600',
-      lectures: [
-        {
-          id: 1,
-          title: 'Systems Analysis',
-          description: 'Analyzing business requirements and system specifications',
-          duration: '90 minutes',
-          date: '2024-01-21',
-          type: 'lecture',
-          status: 'published'
-        },
-        {
-          id: 2,
-          title: 'System Design',
-          description: 'Designing efficient and scalable information systems',
-          duration: '90 minutes',
-          date: '2024-01-28',
-          type: 'lecture',
-          status: 'published'
-        }
-      ]
+      lectures: []
     }
   }
 
@@ -275,7 +115,7 @@ export default function SubjectPage() {
 
         {/* Lectures List */}
         <div className="space-y-4">
-          {subject.lectures.map((lecture, index) => (
+          {subject.lectures.length > 0 ? (subject.lectures as any[]).map((lecture, index) => (
             <div 
               key={lecture.id}
               className="enhanced-card p-6 hover:scale-[1.02] transition-all duration-300 animate-slide-up-delayed"
@@ -340,7 +180,23 @@ export default function SubjectPage() {
                 </div>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="text-center py-12">
+              <BookOpen className="w-16 h-16 text-dark-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-dark-200 mb-2">
+                No lectures available
+              </h3>
+              <p className="text-dark-400 mb-6">
+                Lectures for this subject will be published soon.
+              </p>
+              <Link
+                href="/admin/content"
+                className="btn-primary"
+              >
+                Manage Content
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Coming Soon Notice */}

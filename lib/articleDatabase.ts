@@ -12,11 +12,16 @@ interface Article {
   duration: string
   date: string
   type: 'lecture' | 'lab' | 'assignment'
-  status: 'published' | 'draft' | 'archived'
+  status: 'published' | 'draft' | 'archived' | 'scheduled'
   publishedAt: string
   lastModified: string
   views: number
   likes: number
+  tags: string[]
+  featured: boolean
+  scheduledFor?: string
+  imageUrl?: string
+  excerpt: string
 }
 
 // In-memory storage (in production, use a real database)
@@ -36,7 +41,10 @@ let articles: Article[] = [
     publishedAt: '2024-01-15T10:00:00Z',
     lastModified: '2024-01-15T10:00:00Z',
     views: 156,
-    likes: 23
+    likes: 23,
+    tags: ['physics', 'mechanics', 'energy'],
+    featured: true,
+    excerpt: 'Learn the fundamental concepts of applied physics and their applications in modern technology.'
   },
   {
     id: '2',
@@ -53,7 +61,10 @@ let articles: Article[] = [
     publishedAt: '2024-01-16T10:00:00Z',
     lastModified: '2024-01-16T10:00:00Z',
     views: 89,
-    likes: 15
+    likes: 15,
+    tags: ['calculus', 'mathematics', 'derivatives'],
+    featured: false,
+    excerpt: 'Master the essential concepts of differential and integral calculus.'
   }
 ]
 
@@ -92,7 +103,10 @@ export const articleDatabase = {
       publishedAt: new Date().toISOString(),
       lastModified: new Date().toISOString(),
       views: 0,
-      likes: 0
+      likes: 0,
+      tags: article.tags || [],
+      featured: article.featured || false,
+      excerpt: article.excerpt || article.description?.substring(0, 150) || ''
     }
     articles.push(newArticle)
     return newArticle
