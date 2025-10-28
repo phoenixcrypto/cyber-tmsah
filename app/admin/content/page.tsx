@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock, Upload, CheckCircle } from 'lucide-react'
+import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock, Upload, CheckCircle, Search, Eye, BarChart3, Archive, RefreshCw, X } from 'lucide-react'
 
 interface Lecture {
   id: number
@@ -12,6 +12,24 @@ interface Lecture {
   date: string
   type: 'lecture' | 'lab' | 'assignment'
   status: 'published' | 'draft' | 'coming-soon'
+}
+
+interface Article {
+  id: string
+  title: string
+  description: string
+  content: string
+  subjectId: string
+  subjectName: string
+  instructor: string
+  duration: string
+  date: string
+  type: 'lecture' | 'lab' | 'assignment'
+  status: 'published' | 'draft' | 'archived'
+  publishedAt: string
+  lastModified: string
+  views: number
+  likes: number
 }
 
 export default function ContentManagementPage() {
@@ -35,6 +53,16 @@ export default function ContentManagementPage() {
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishStatus, setPublishStatus] = useState<{ [key: number]: 'idle' | 'publishing' | 'success' | 'error' }>({})
   const [selectedSubject, setSelectedSubject] = useState('applied-physics')
+  
+  // Published articles state
+  const [articles, setArticles] = useState<Article[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterSubject, setFilterSubject] = useState('all')
+  const [filterStatus, setFilterStatus] = useState('all')
+  const [filterType, setFilterType] = useState('all')
+  const [showStats, setShowStats] = useState(false)
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
+  const [showArticleModal, setShowArticleModal] = useState(false)
   const [formData, setFormData] = useState<Partial<Lecture>>({
     title: '',
     description: '',
@@ -60,8 +88,22 @@ export default function ContentManagementPage() {
     const savedAuth = localStorage.getItem('admin-authenticated')
     if (savedAuth === 'true') {
       setIsAuthenticated(true)
+      loadArticles()
     }
   }, [])
+
+  // Load published articles
+  const loadArticles = async () => {
+    try {
+      const response = await fetch('/api/articles')
+      if (response.ok) {
+        const data = await response.json()
+        setArticles(data)
+      }
+    } catch (error) {
+      console.error('Error loading articles:', error)
+    }
+  }
 
   const handleLogin = () => {
     // Simple password protection - change this password
@@ -114,6 +156,49 @@ export default function ContentManagementPage() {
     setLectures(lectures.filter(lecture => lecture.id !== id))
   }
 
+  const handleDeleteArticle = async (id: string) => {
+    if (confirm('Are you sure you want to delete this article?')) {
+      try {
+        const response = await fetch(`/api/articles?id=${id}`, {
+          method: 'DELETE'
+        })
+        
+        if (response.ok) {
+          setArticles(articles.filter(article => article.id !== id))
+          alert('Article deleted successfully!')
+        } else {
+          alert('Failed to delete article')
+        }
+      } catch (error) {
+        alert('Error deleting article: ' + error)
+      }
+    }
+  }
+
+  const handleUpdateArticle = async (id: string, updates: Partial<Article>) => {
+    try {
+      const response = await fetch('/api/articles', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, ...updates })
+      })
+      
+      if (response.ok) {
+        const updatedArticle = await response.json()
+        setArticles(articles.map(article => 
+          article.id === id ? updatedArticle : article
+        ))
+        alert('Article updated successfully!')
+      } else {
+        alert('Failed to update article')
+      }
+    } catch (error) {
+      alert('Error updating article: ' + error)
+    }
+  }
+
   const handlePublish = async (lecture: Lecture) => {
     setIsPublishing(true)
     setPublishStatus(prev => ({ ...prev, [lecture.id]: 'publishing' }))
@@ -141,6 +226,27 @@ export default function ContentManagementPage() {
           l.id === lecture.id ? { ...l, status: 'published' as const } : l
         ))
         
+        // Add to published articles
+        const newArticle: Article = {
+          id: lecture.id.toString(),
+          title: lecture.title,
+          description: lecture.description,
+          content: lecture.content,
+          subjectId: selectedSubject,
+          subjectName: subjects.find(s => s.id === selectedSubject)?.name || selectedSubject,
+          instructor: 'Dr. Instructor',
+          duration: lecture.duration,
+          date: lecture.date,
+          type: lecture.type,
+          status: 'published',
+          publishedAt: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          views: 0,
+          likes: 0
+        }
+        
+        setArticles(prev => [newArticle, ...prev])
+        
         // Reset status after 3 seconds
         setTimeout(() => {
           setPublishStatus(prev => ({ ...prev, [lecture.id]: 'idle' }))
@@ -156,6 +262,20 @@ export default function ContentManagementPage() {
       setIsPublishing(false)
     }
   }
+
+  // Filter articles based on search and filters
+  const filteredArticles = articles.filter(article => {
+    const matchesSearch = searchQuery === '' || 
+      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      article.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      article.subjectName.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    const matchesSubject = filterSubject === 'all' || article.subjectId === filterSubject
+    const matchesStatus = filterStatus === 'all' || article.status === filterStatus
+    const matchesType = filterType === 'all' || article.type === filterType
+    
+    return matchesSearch && matchesSubject && matchesStatus && matchesType
+  })
 
   const generateCode = () => {
     const lecturesCode = lectures.map(lecture => `        {
@@ -426,10 +546,202 @@ ${lecturesCode}
           </div>
         )}
 
+        {/* Published Articles Management */}
+        <div className="enhanced-card p-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-semibold text-dark-100">
+              Published Articles ({filteredArticles.length})
+            </h2>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowStats(!showStats)}
+                className="btn-tertiary flex items-center gap-2"
+              >
+                <BarChart3 className="w-4 h-4" />
+                Stats
+              </button>
+              <button
+                onClick={loadArticles}
+                className="btn-tertiary flex items-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          {/* Search and Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-dark-400" />
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+              />
+            </div>
+            
+            <select
+              value={filterSubject}
+              onChange={(e) => setFilterSubject(e.target.value)}
+              className="px-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+            >
+              <option value="all">All Subjects</option>
+              {subjects.map(subject => (
+                <option key={subject.id} value={subject.id}>{subject.name}</option>
+              ))}
+            </select>
+            
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+            >
+              <option value="all">All Status</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+              <option value="archived">Archived</option>
+            </select>
+            
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="px-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+            >
+              <option value="all">All Types</option>
+              <option value="lecture">Lecture</option>
+              <option value="lab">Lab</option>
+              <option value="assignment">Assignment</option>
+            </select>
+          </div>
+
+          {/* Statistics */}
+          {showStats && (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6 p-4 bg-cyber-dark/50 rounded-lg">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-cyber-neon">{articles.length}</div>
+                <div className="text-sm text-dark-300">Total Articles</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-400">{articles.filter(a => a.status === 'published').length}</div>
+                <div className="text-sm text-dark-300">Published</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-yellow-400">{articles.filter(a => a.status === 'draft').length}</div>
+                <div className="text-sm text-dark-300">Drafts</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-400">{articles.reduce((sum, a) => sum + a.views, 0)}</div>
+                <div className="text-sm text-dark-300">Total Views</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-400">{articles.reduce((sum, a) => sum + a.likes, 0)}</div>
+                <div className="text-sm text-dark-300">Total Likes</div>
+              </div>
+            </div>
+          )}
+
+          {/* Articles List */}
+          <div className="space-y-4">
+            {filteredArticles.map((article) => (
+              <div key={article.id} className="flex items-center justify-between p-4 bg-cyber-dark/50 rounded-lg hover:bg-cyber-dark/70 transition-colors">
+                <div className="flex-1">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-dark-100">
+                      {article.title}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        article.status === 'published' ? 'bg-green-400/20 text-green-400' :
+                        article.status === 'draft' ? 'bg-yellow-400/20 text-yellow-400' :
+                        'bg-gray-400/20 text-gray-400'
+                      }`}>
+                        {article.status}
+                      </span>
+                      <span className="px-2 py-1 bg-cyber-neon/20 text-cyber-neon rounded-full text-xs">
+                        {article.type}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-dark-300 text-sm mb-2">
+                    {article.description}
+                  </p>
+                  
+                  <div className="flex items-center gap-4 text-xs text-dark-400">
+                    <span className="flex items-center gap-1">
+                      <FileText className="w-3 h-3" />
+                      {article.subjectName}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {article.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {new Date(article.publishedAt).toLocaleDateString()}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {article.views} views
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 ml-4">
+                  <button
+                    onClick={() => {
+                      setSelectedArticle(article)
+                      setShowArticleModal(true)
+                    }}
+                    className="btn-tertiary p-2"
+                    title="View Details"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </button>
+                  
+                  <button
+                    onClick={() => handleUpdateArticle(article.id, { 
+                      status: article.status === 'published' ? 'archived' : 'published' 
+                    })}
+                    className="btn-tertiary p-2"
+                    title={article.status === 'published' ? 'Archive' : 'Publish'}
+                  >
+                    <Archive className="w-4 h-4" />
+                  </button>
+                  
+                  <button
+                    onClick={() => handleDeleteArticle(article.id)}
+                    className="btn-tertiary p-2 text-red-400 hover:bg-red-400/20"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+            
+            {filteredArticles.length === 0 && (
+              <div className="text-center py-12">
+                <FileText className="w-12 h-12 text-dark-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-dark-200 mb-2">No articles found</h3>
+                <p className="text-dark-400 mb-4">
+                  {searchQuery || filterSubject !== 'all' || filterStatus !== 'all' || filterType !== 'all'
+                    ? 'Try adjusting your search or filters' 
+                    : 'Start by publishing your first article'
+                  }
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Lectures List */}
         <div className="enhanced-card p-6">
           <h2 className="text-2xl font-semibold text-dark-100 mb-6">
-            Current Lectures
+            Draft Lectures
           </h2>
           
           <div className="space-y-4">
@@ -527,6 +839,122 @@ ${lecturesCode}
             Copy Code
           </button>
         </div>
+
+        {/* Article Details Modal */}
+        {showArticleModal && selectedArticle && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="enhanced-card max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-semibold text-dark-100">
+                  Article Details
+                </h2>
+                <button
+                  onClick={() => setShowArticleModal(false)}
+                  className="btn-tertiary p-2"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-dark-100 mb-2">
+                    {selectedArticle.title}
+                  </h3>
+                  <p className="text-dark-300 mb-4">
+                    {selectedArticle.description}
+                  </p>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-dark-400">Subject:</span>
+                      <div className="text-dark-200">{selectedArticle.subjectName}</div>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">Type:</span>
+                      <div className="text-dark-200 capitalize">{selectedArticle.type}</div>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">Duration:</span>
+                      <div className="text-dark-200">{selectedArticle.duration}</div>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">Status:</span>
+                      <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                        selectedArticle.status === 'published' ? 'bg-green-400/20 text-green-400' :
+                        selectedArticle.status === 'draft' ? 'bg-yellow-400/20 text-yellow-400' :
+                        'bg-gray-400/20 text-gray-400'
+                      }`}>
+                        {selectedArticle.status}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">Published:</span>
+                      <div className="text-dark-200">
+                        {new Date(selectedArticle.publishedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">Last Modified:</span>
+                      <div className="text-dark-200">
+                        {new Date(selectedArticle.lastModified).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">Views:</span>
+                      <div className="text-dark-200">{selectedArticle.views}</div>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">Likes:</span>
+                      <div className="text-dark-200">{selectedArticle.likes}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold text-dark-100 mb-3">Content Preview</h4>
+                  <div className="bg-cyber-dark/50 p-4 rounded-lg max-h-60 overflow-y-auto">
+                    <pre className="text-sm text-dark-200 whitespace-pre-wrap">
+                      {selectedArticle.content.substring(0, 500)}
+                      {selectedArticle.content.length > 500 && '...'}
+                    </pre>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => {
+                      // Navigate to article page
+                      window.open(`/materials/${selectedArticle.subjectId}/${selectedArticle.id}`, '_blank')
+                    }}
+                    className="btn-primary flex items-center gap-2"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View Article
+                  </button>
+                  
+                  <button
+                    onClick={() => handleUpdateArticle(selectedArticle.id, { 
+                      status: selectedArticle.status === 'published' ? 'archived' : 'published' 
+                    })}
+                    className="btn-secondary flex items-center gap-2"
+                  >
+                    <Archive className="w-4 h-4" />
+                    {selectedArticle.status === 'published' ? 'Archive' : 'Publish'}
+                  </button>
+                  
+                  <button
+                    onClick={() => handleDeleteArticle(selectedArticle.id)}
+                    className="btn-tertiary text-red-400 hover:bg-red-400/20 flex items-center gap-2"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
