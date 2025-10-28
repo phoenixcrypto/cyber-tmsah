@@ -277,21 +277,6 @@ export default function ContentManagementPage() {
     return matchesSearch && matchesSubject && matchesStatus && matchesType
   })
 
-  const generateCode = () => {
-    const lecturesCode = lectures.map(lecture => `        {
-          id: ${lecture.id},
-          title: '${lecture.title}',
-          description: '${lecture.description}',
-          duration: '${lecture.duration}',
-          date: '${lecture.date}',
-          type: '${lecture.type}',
-          status: '${lecture.status}'
-        }`).join(',\n')
-
-    return `lectures: [
-${lecturesCode}
-      ]`
-  }
 
   // Login form if not authenticated
   if (!isAuthenticated) {
@@ -816,29 +801,6 @@ ${lecturesCode}
           </div>
         </div>
 
-        {/* Code Generation */}
-        <div className="mt-8 enhanced-card p-6">
-          <h2 className="text-2xl font-semibold text-dark-100 mb-4">
-            Generated Code
-          </h2>
-          <p className="text-dark-300 mb-4">
-            Copy this code and paste it into your subject page file:
-          </p>
-          
-          <div className="bg-cyber-dark/80 p-4 rounded-lg overflow-x-auto">
-            <pre className="text-sm text-cyber-neon font-mono">
-              <code>{generateCode()}</code>
-            </pre>
-          </div>
-          
-          <button
-            onClick={() => navigator.clipboard.writeText(generateCode())}
-            className="btn-secondary mt-4 flex items-center gap-2"
-          >
-            <FileText className="w-4 h-4" />
-            Copy Code
-          </button>
-        </div>
 
         {/* Article Details Modal */}
         {showArticleModal && selectedArticle && (
