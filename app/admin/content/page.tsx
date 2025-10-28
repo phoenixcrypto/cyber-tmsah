@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock } from 'lucide-react'
+import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock, Upload, CheckCircle } from 'lucide-react'
 
 interface Lecture {
   id: number
@@ -32,6 +32,9 @@ export default function ContentManagementPage() {
 
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
+  const [isPublishing, setIsPublishing] = useState(false)
+  const [publishStatus, setPublishStatus] = useState<{ [key: number]: 'idle' | 'publishing' | 'success' | 'error' }>({})
+  const [selectedSubject, setSelectedSubject] = useState('applied-physics')
   const [formData, setFormData] = useState<Partial<Lecture>>({
     title: '',
     description: '',
@@ -41,6 +44,16 @@ export default function ContentManagementPage() {
     type: 'lecture',
     status: 'draft'
   })
+
+  const subjects = [
+    { id: 'applied-physics', name: 'Applied Physics', color: 'from-blue-500 to-blue-600' },
+    { id: 'mathematics', name: 'Mathematics', color: 'from-green-500 to-green-600' },
+    { id: 'entrepreneurship', name: 'Entrepreneurship', color: 'from-purple-500 to-purple-600' },
+    { id: 'information-technology', name: 'Information Technology', color: 'from-cyan-500 to-cyan-600' },
+    { id: 'database-systems', name: 'Database Systems', color: 'from-orange-500 to-orange-600' },
+    { id: 'english-language', name: 'English Language', color: 'from-red-500 to-red-600' },
+    { id: 'information-systems', name: 'Information Systems', color: 'from-indigo-500 to-indigo-600' }
+  ]
 
   // Check authentication on component mount
   useEffect(() => {
@@ -99,6 +112,49 @@ export default function ContentManagementPage() {
 
   const handleDelete = (id: number) => {
     setLectures(lectures.filter(lecture => lecture.id !== id))
+  }
+
+  const handlePublish = async (lecture: Lecture) => {
+    setIsPublishing(true)
+    setPublishStatus(prev => ({ ...prev, [lecture.id]: 'publishing' }))
+
+    try {
+      const response = await fetch('/api/publish', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'publish_lecture',
+          subjectId: selectedSubject,
+          lectureData: lecture
+        })
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setPublishStatus(prev => ({ ...prev, [lecture.id]: 'success' }))
+        
+        // Update lecture status to published
+        setLectures(lectures.map(l => 
+          l.id === lecture.id ? { ...l, status: 'published' as const } : l
+        ))
+        
+        // Reset status after 3 seconds
+        setTimeout(() => {
+          setPublishStatus(prev => ({ ...prev, [lecture.id]: 'idle' }))
+        }, 3000)
+      } else {
+        setPublishStatus(prev => ({ ...prev, [lecture.id]: 'error' }))
+        alert('Failed to publish lecture: ' + result.message)
+      }
+    } catch (error) {
+      setPublishStatus(prev => ({ ...prev, [lecture.id]: 'error' }))
+      alert('Error publishing lecture: ' + error)
+    } finally {
+      setIsPublishing(false)
+    }
   }
 
   const generateCode = () => {
@@ -212,6 +268,21 @@ ${lecturesCode}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
+                  Subject
+                </label>
+                <select
+                  value={selectedSubject}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                  className="w-full px-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+                >
+                  {subjects.map(subject => (
+                    <option key={subject.id} value={subject.id}>{subject.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-dark-200 mb-2">
                   Title
                 </label>
                 <input
@@ -314,6 +385,25 @@ ${lecturesCode}
                 {editingId ? 'Update Lecture' : 'Save Lecture'}
               </button>
               
+              {!editingId && (
+                <button
+                  onClick={async () => {
+                    await handleSave()
+                    if (formData.title && formData.description && formData.content) {
+                      const newLecture: Lecture = {
+                        id: Math.max(...lectures.map(l => l.id)) + 1,
+                        ...formData
+                      } as Lecture
+                      await handlePublish(newLecture)
+                    }
+                  }}
+                  className="btn-secondary flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                >
+                  <Upload className="w-4 h-4" />
+                  Save & Publish
+                </button>
+              )}
+              
               <button
                 onClick={() => {
                   setIsAddingNew(false)
@@ -328,7 +418,7 @@ ${lecturesCode}
                     status: 'draft'
                   })
                 }}
-                className="btn-secondary"
+                className="btn-tertiary"
               >
                 Cancel
               </button>
@@ -372,6 +462,27 @@ ${lecturesCode}
                 </div>
                 
                 <div className="flex items-center gap-2">
+                  {lecture.status !== 'published' && (
+                    <button
+                      onClick={() => handlePublish(lecture)}
+                      disabled={isPublishing || publishStatus[lecture.id] === 'publishing'}
+                      className={`btn-primary p-2 flex items-center gap-1 ${
+                        publishStatus[lecture.id] === 'success' ? 'bg-green-600' : ''
+                      } ${
+                        publishStatus[lecture.id] === 'error' ? 'bg-red-600' : ''
+                      }`}
+                      title="Publish Lecture"
+                    >
+                      {publishStatus[lecture.id] === 'publishing' ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : publishStatus[lecture.id] === 'success' ? (
+                        <CheckCircle className="w-4 h-4" />
+                      ) : (
+                        <Upload className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
+                  
                   <button
                     onClick={() => handleEdit(lecture)}
                     className="btn-tertiary p-2"
