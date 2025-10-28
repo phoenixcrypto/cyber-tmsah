@@ -3,10 +3,54 @@
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, Clock, User, Calendar, FileText, Download, Play } from 'lucide-react'
 import { useParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+
+interface Article {
+  id: string
+  title: string
+  description: string
+  content: string
+  subjectId: string
+  subjectName: string
+  instructor: string
+  duration: string
+  date: string
+  type: 'lecture' | 'lab' | 'assignment'
+  status: 'published' | 'draft' | 'archived' | 'scheduled'
+  publishedAt: string
+  lastModified: string
+  views: number
+  likes: number
+  tags: string[]
+  featured: boolean
+  excerpt: string
+}
 
 export default function SubjectPage() {
   const params = useParams()
   const subjectId = params.id as string
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Load articles for this subject
+  useEffect(() => {
+    const loadArticles = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/articles/by-subject?subjectId=${subjectId}&status=published`)
+        if (response.ok) {
+          const data = await response.json()
+          setArticles(data)
+        }
+      } catch (error) {
+        console.error('Error loading articles:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadArticles()
+  }, [subjectId])
 
   // Subject data mapping
   const subjectData = {
@@ -108,16 +152,21 @@ export default function SubjectPage() {
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span>{subject.lectures.length} lectures</span>
+              <span>{loading ? 'Loading...' : `${articles.length} lectures`}</span>
             </div>
           </div>
         </div>
 
         {/* Lectures List */}
         <div className="space-y-4">
-          {subject.lectures.length > 0 ? (subject.lectures as any[]).map((lecture, index) => (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="w-8 h-8 border-2 border-cyber-neon border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-dark-300">Loading lectures...</p>
+            </div>
+          ) : articles.length > 0 ? articles.map((article, index) => (
             <div 
-              key={lecture.id}
+              key={article.id}
               className="enhanced-card p-6 hover:scale-[1.02] transition-all duration-300 animate-slide-up-delayed"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -125,42 +174,57 @@ export default function SubjectPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-xl font-semibold text-dark-100">
-                      {lecture.title}
+                      {article.title}
                     </h3>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      lecture.status === 'published' 
+                      article.status === 'published' 
                         ? 'bg-green-500/20 text-green-400' 
                         : 'bg-yellow-500/20 text-yellow-400'
                     }`}>
-                      {lecture.status === 'published' ? 'Available' : 'Coming Soon'}
+                      {article.status === 'published' ? 'Available' : 'Coming Soon'}
                     </span>
                   </div>
                   
                   <p className="text-dark-300 mb-4">
-                    {lecture.description}
+                    {article.excerpt || article.description}
                   </p>
                   
                   <div className="flex items-center gap-6 text-sm text-dark-400">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>{lecture.duration}</span>
+                      <span>{article.duration}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{lecture.date}</span>
+                      <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-4" />
-                      <span className="capitalize">{lecture.type}</span>
+                      <span className="capitalize">{article.type}</span>
                     </div>
                   </div>
+
+                  {article.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {article.tags.slice(0, 3).map((tag, tagIndex) => (
+                        <span key={tagIndex} className="px-2 py-1 bg-cyber-dark/50 text-cyber-neon text-xs rounded">
+                          #{tag}
+                        </span>
+                      ))}
+                      {article.tags.length > 3 && (
+                        <span className="px-2 py-1 bg-cyber-dark/50 text-dark-400 text-xs rounded">
+                          +{article.tags.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex items-center gap-2 ml-4">
-                  {lecture.status === 'published' ? (
+                  {article.status === 'published' ? (
                     <>
                       <Link 
-                        href={`/materials/${subjectId}/${lecture.id}`}
+                        href={`/materials/${subjectId}/${article.id}`}
                         className="btn-primary flex items-center gap-2"
                       >
                         <Play className="w-4 h-4" />
