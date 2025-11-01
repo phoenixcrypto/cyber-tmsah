@@ -1,0 +1,212 @@
+{
+  "meta": {
+    "description": "Mock data mirroring Strapi JSON structure for development and fallback",
+    "schema_version": "1.0.0"
+  },
+  "materials": [
+    {
+      "id": 1,
+      "attributes": {
+        "name": "Applied Physics",
+        "slug": "applied-physics",
+        "description": "Physics principles and applications in technology",
+        "instructor": "Dr. Ahmed Bakr",
+        "icon": "atom",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 2,
+      "attributes": {
+        "name": "Mathematics",
+        "slug": "mathematics",
+        "description": "Mathematical foundations and problem-solving",
+        "instructor": "Dr. Mohamed Ali",
+        "icon": "calculator",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 3,
+      "attributes": {
+        "name": "Entrepreneurship",
+        "slug": "entrepreneurship",
+        "description": "Building and scaling innovative ventures",
+        "instructor": "Dr. Sara Ahmed",
+        "icon": "briefcase",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 4,
+      "attributes": {
+        "name": "Information Technology",
+        "slug": "information-technology",
+        "description": "Modern IT systems and infrastructure",
+        "instructor": "Dr. Khaled Hassan",
+        "icon": "server",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 5,
+      "attributes": {
+        "name": "Database Systems",
+        "slug": "database-systems",
+        "description": "Design and management of database systems",
+        "instructor": "Dr. Omar Farid",
+        "icon": "database",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 6,
+      "attributes": {
+        "name": "English Language",
+        "slug": "english-language",
+        "description": "Advanced English communication skills",
+        "instructor": "Dr. Nour Ibrahim",
+        "icon": "languages",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 7,
+      "attributes": {
+        "name": "Information Systems",
+        "slug": "information-systems",
+        "description": "Enterprise information systems and management",
+        "instructor": "Dr. Youssef Taha",
+        "icon": "network",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    }
+  ],
+  "articles": [
+    {
+      "id": 1,
+      "attributes": {
+        "title": "Introduction to Applied Physics",
+        "description": "Basic concepts and principles of physics in technology applications",
+        "content": "# Introduction to Applied Physics\n\n## Overview\n\nApplied physics is the application of physics principles to solve real-world problems and develop new technologies.\n\n## Key Concepts\n\n### 1. Fundamental Principles\n\n- **Newton's Laws of Motion**: The foundation of classical mechanics\n- **Conservation of Energy**: Energy cannot be created or destroyed, only transformed\n- **Wave-Particle Duality**: Matter exhibits both wave and particle properties\n\n### 2. Applications\n\n- **Medical Technology**: MRI, X-rays, ultrasound\n- **Communication**: Radio waves, fiber optics\n- **Energy**: Solar panels, wind turbines\n\n## Conclusion\n\nUnderstanding applied physics is crucial for modern technological innovation.",
+        "slug": "introduction-to-applied-physics",
+        "type": "lecture",
+        "status": "published",
+        "duration": "90 minutes",
+        "excerpt": "Learn the fundamental concepts of applied physics and their applications in modern technology.",
+        "views": 156,
+        "likes": 23,
+        "featured": true,
+        "tags": ["physics", "mechanics", "energy"],
+        "instructor": "Dr. Ahmed Bakr",
+        "createdAt": "2024-01-15T10:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z",
+        "publishedAt": "2024-01-15T10:00:00.000Z"
+      }
+    },
+    {
+      "id": 2,
+      "attributes": {
+        "title": "Calculus Fundamentals",
+        "description": "Introduction to differential and integral calculus",
+        "content": "# Calculus Fundamentals\n\n## Overview\n\nCalculus is the mathematical study of continuous change.\n\n## Topics Covered\n\n1. Limits and Continuity\n2. Derivatives\n3. Integrals\n4. Applications",
+        "slug": "calculus-fundamentals",
+        "type": "lecture",
+        "status": "published",
+        "duration": "120 minutes",
+        "excerpt": "Master the fundamentals of calculus for advanced problem-solving.",
+        "views": 89,
+        "likes": 15,
+        "featured": false,
+        "tags": ["calculus", "mathematics", "derivatives"],
+        "instructor": "Dr. Mohamed Ali",
+        "createdAt": "2024-01-16T10:00:00.000Z",
+        "updatedAt": "2024-01-16T10:00:00.000Z",
+        "publishedAt": "2024-01-16T10:00:00.000Z"
+      }
+    },
+    {
+      "id": 3,
+      "attributes": {
+        "title": "Database Design Principles",
+        "description": "Learn how to design efficient and scalable databases",
+        "content": "# Database Design Principles\n\n## ER Modeling\n\nEntity-Relationship diagrams help visualize database structure.\n\n## Normalization\n\nFirst, Second, Third Normal Forms reduce redundancy.\n\n## Performance Optimization\n\nIndexes, query optimization, and caching strategies.",
+        "slug": "database-design-principles",
+        "type": "lecture",
+        "status": "draft",
+        "duration": "90 minutes",
+        "excerpt": "Essential principles for designing robust database systems.",
+        "views": 0,
+        "likes": 0,
+        "featured": false,
+        "tags": ["databases", "design", "normalization"],
+        "instructor": "Dr. Omar Farid",
+        "createdAt": "2024-01-17T10:00:00.000Z",
+        "updatedAt": "2024-01-17T10:00:00.000Z",
+        "publishedAt": null
+      }
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "attributes": {
+        "title": "Welcome to Cyber TMSAH Platform",
+        "content": "# Welcome!\n\nWe're excited to launch our new educational platform.\n\n## Features\n\n- Comprehensive course materials\n- Interactive learning tools\n- Expert instructors\n- Real-world projects",
+        "slug": "welcome-to-cyber-tmsah",
+        "excerpt": "Announcing the launch of our advanced educational platform.",
+        "author": "ZEYAD MOHAMED",
+        "published": true,
+        "tags": ["announcement", "welcome"],
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z",
+        "publishedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 2,
+      "attributes": {
+        "title": "New Features Coming Soon",
+        "content": "# New Features\n\nWe're working on exciting new features:\n\n- Advanced analytics\n- Social learning tools\n- Mobile app\n- AI-powered recommendations",
+        "slug": "new-features-coming-soon",
+        "excerpt": "Sneak peek at upcoming platform features.",
+        "author": "ZEYAD MOHAMED",
+        "published": true,
+        "tags": ["features", "updates"],
+        "createdAt": "2024-01-05T00:00:00.000Z",
+        "updatedAt": "2024-01-05T00:00:00.000Z",
+        "publishedAt": "2024-01-05T00:00:00.000Z"
+      }
+    },
+    {
+      "id": 3,
+      "attributes": {
+        "title": "Best Practices for Online Learning",
+        "content": "# Best Practices\n\n1. **Consistent Schedule**: Set regular study times\n2. **Active Participation**: Engage with materials\n3. **Take Notes**: Write down key concepts\n4. **Review Regularly**: Reinforce learning\n5. **Ask Questions**: Seek help when needed",
+        "slug": "best-practices-online-learning",
+        "excerpt": "Tips for successful online learning experiences.",
+        "author": "ZEYAD MOHAMED",
+        "published": true,
+        "tags": ["learning", "tips"],
+        "createdAt": "2024-01-10T00:00:00.000Z",
+        "updatedAt": "2024-01-10T00:00:00.000Z",
+        "publishedAt": "2024-01-10T00:00:00.000Z"
+      }
+    }
+  ]
+}
+
