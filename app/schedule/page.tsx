@@ -16,7 +16,7 @@ export default function SchedulePage() {
     {
       id: '1',
       title: 'English',
-      time: '11:20 - 12:20',
+      time: '11:20 AM - 12:20 PM',
       location: 'Hall G 205',
       instructor: 'Dr. Nashwa',
       type: 'lecture',
@@ -29,7 +29,7 @@ export default function SchedulePage() {
     {
       id: '2',
       title: 'Information Systems',
-      time: '09:00 - 10:00',
+      time: '09:00 AM - 10:00 AM',
       location: 'Hall G 250',
       instructor: 'Dr. Hind Ziada',
       type: 'lecture',
@@ -41,7 +41,7 @@ export default function SchedulePage() {
     {
       id: '3',
       title: 'Information Technology',
-      time: '16:00 - 17:00',
+      time: '04:00 PM - 05:00 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Shaima Ahmed',
       type: 'lecture',
@@ -54,7 +54,7 @@ export default function SchedulePage() {
     {
       id: '4',
       title: 'Entrepreneurship and Creative Thinking Skills',
-      time: '09:00 - 10:00',
+      time: '09:00 AM - 10:00 AM',
       location: 'Auditorium A',
       instructor: 'Dr. Abeer Hassan',
       type: 'lecture',
@@ -66,7 +66,7 @@ export default function SchedulePage() {
     {
       id: '5',
       title: 'Database Systems',
-      time: '11:20 - 12:20',
+      time: '11:20 AM - 12:20 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Abeer Hassan',
       type: 'lecture',
@@ -78,7 +78,7 @@ export default function SchedulePage() {
     {
       id: '6',
       title: 'Mathematics',
-      time: '13:40 - 14:40',
+      time: '01:40 PM - 02:40 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Simon Ezzat',
       type: 'lecture',
@@ -91,7 +91,7 @@ export default function SchedulePage() {
     {
       id: '7',
       title: 'Applied Physics',
-      time: '16:00 - 17:00',
+      time: '04:00 PM - 05:00 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Ahmed Bakr',
       type: 'lecture',
@@ -106,7 +106,7 @@ export default function SchedulePage() {
     {
       id: '8',
       title: 'English',
-      time: '12:30 - 13:30',
+      time: '12:30 PM - 01:30 PM',
       location: 'Hall G 205',
       instructor: 'Dr. Nashwa',
       type: 'lecture',
@@ -119,7 +119,7 @@ export default function SchedulePage() {
     {
       id: '9',
       title: 'Information Systems',
-      time: '10:10 - 11:10',
+      time: '10:10 AM - 11:10 AM',
       location: 'Hall G 205',
       instructor: 'Dr. Hind Ziada',
       type: 'lecture',
@@ -131,7 +131,7 @@ export default function SchedulePage() {
     {
       id: '10',
       title: 'Information Technology',
-      time: '14:50 - 15:50',
+      time: '02:50 PM - 03:50 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Shaima Ahmed',
       type: 'lecture',
@@ -144,7 +144,7 @@ export default function SchedulePage() {
     {
       id: '11',
       title: 'Entrepreneurship and Creative Thinking Skills',
-      time: '10:10 - 11:10',
+      time: '10:10 AM - 11:10 AM',
       location: 'Auditorium A',
       instructor: 'Dr. Abeer Hassan',
       type: 'lecture',
@@ -156,7 +156,7 @@ export default function SchedulePage() {
     {
       id: '12',
       title: 'Database Systems',
-      time: '12:30 - 13:30',
+      time: '12:30 PM - 01:30 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Abeer Hassan',
       type: 'lecture',
@@ -168,7 +168,7 @@ export default function SchedulePage() {
     {
       id: '13',
       title: 'Mathematics',
-      time: '14:50 - 15:50',
+      time: '02:50 PM - 03:50 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Simon Ezzat',
       type: 'lecture',
@@ -181,7 +181,7 @@ export default function SchedulePage() {
     {
       id: '14',
       title: 'Applied Physics',
-      time: '17:10 - 18:10',
+      time: '05:10 PM - 06:10 PM',
       location: 'Auditorium A',
       instructor: 'Dr. Ahmed Bakr',
       type: 'lecture',
