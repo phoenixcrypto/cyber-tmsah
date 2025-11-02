@@ -31,20 +31,22 @@ export default function ThemeToggle() {
         className={`absolute inset-0 rounded-full transition-all duration-300 ${
           theme === 'dark'
             ? 'bg-gradient-to-r from-cyber-violet/50 to-cyber-neon/50 shadow-lg shadow-cyber-neon/30'
-            : 'bg-gradient-to-r from-yellow-400/50 to-orange-400/50 shadow-lg shadow-yellow-400/30'
+            : 'bg-gradient-to-r from-amber-400/60 via-orange-400/60 to-amber-500/60 shadow-lg shadow-amber-400/25'
         }`}
       />
       
       {/* Toggle Circle */}
       <div
-        className={`absolute top-0.5 left-0.5 w-8 h-8 bg-white rounded-full shadow-xl transform transition-transform duration-300 flex items-center justify-center ${
-          theme === 'dark' ? 'translate-x-0' : 'translate-x-7'
+        className={`absolute top-0.5 left-0.5 w-8 h-8 rounded-full shadow-xl transform transition-transform duration-300 flex items-center justify-center ${
+          theme === 'dark' 
+            ? 'bg-white translate-x-0' 
+            : 'bg-gradient-to-br from-amber-50 to-white translate-x-7'
         }`}
       >
         {theme === 'dark' ? (
           <Moon className="w-4 h-4 text-cyber-dark" />
         ) : (
-          <Sun className="w-4 h-4 text-yellow-500" />
+          <Sun className="w-4 h-4 text-amber-600" />
         )}
       </div>
       
