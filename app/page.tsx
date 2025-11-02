@@ -79,20 +79,20 @@ export default function HomePage() {
     { time: '12:30 PM - 01:30 PM', subject: 'IT', instructor: 'TA Mohamed Ammar', room: 'Hall D 101', type: 'Lab', group: 'Group 1', sectionNumber: 1, day: 'Tuesday' },
     { time: '09:00 AM - 10:00 AM', subject: 'Physics', instructor: 'TA Ahmed Nashaat', room: 'Hall G 203', type: 'Lab', group: 'Group 1', sectionNumber: 1, day: 'Wednesday' },
     { time: '10:10 AM - 11:10 AM', subject: 'IS', instructor: 'TA Mahmoud Mohamed', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 1, day: 'Wednesday' },
-    { time: '11:20 AM - 12:20 PM', subject: 'Database', instructor: 'TA Kareem Adel', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 1, day: 'Wednesday' },
+    { time: '11:20 AM - 12:20 PM', subject: 'DataBase', instructor: 'TA Kareem Adel', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 1, day: 'Wednesday' },
     
     // Section 2
     { time: '12:30 PM - 01:30 PM', subject: 'Physics', instructor: 'TA Mohamed Mostafa', room: 'Hall G 206', type: 'Lab', group: 'Group 1', sectionNumber: 2, day: 'Saturday' },
     { time: '10:10 AM - 11:10 AM', subject: 'IT', instructor: 'TA Mohamed Ammar', room: 'Hall D 101', type: 'Lab', group: 'Group 1', sectionNumber: 2, day: 'Tuesday' },
     { time: '02:50 PM - 03:50 PM', subject: 'Mathematics', instructor: 'TA Yasmin Ibrahim', room: 'Hall F 209', type: 'Lab', group: 'Group 1', sectionNumber: 2, day: 'Tuesday' },
     { time: '09:00 AM - 10:00 AM', subject: 'IS', instructor: 'TA Mahmoud Mohamed', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 2, day: 'Wednesday' },
-    { time: '10:00 AM - 11:10 AM', subject: 'Database', instructor: 'TA Kareem Adel', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 2, day: 'Wednesday' },
+    { time: '10:10 AM - 11:10 AM', subject: 'DataBase', instructor: 'TA Kareem Adel', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 2, day: 'Wednesday' },
     
     // Section 3
     { time: '01:40 PM - 02:40 PM', subject: 'Physics', instructor: 'TA Mohamed Mostafa', room: 'Hall G 206', type: 'Lab', group: 'Group 1', sectionNumber: 3, day: 'Saturday' },
     { time: '02:50 PM - 03:50 PM', subject: 'IT', instructor: 'TA Mohamed Ammar', room: 'Hall D 101', type: 'Lab', group: 'Group 1', sectionNumber: 3, day: 'Tuesday' },
     { time: '04:00 PM - 05:00 PM', subject: 'Mathematics', instructor: 'TA Yasmin Ibrahim', room: 'Hall F 209', type: 'Lab', group: 'Group 1', sectionNumber: 3, day: 'Tuesday' },
-    { time: '09:00 AM - 10:00 AM', subject: 'Database', instructor: 'TA Kareem Adel', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 3, day: 'Wednesday' },
+    { time: '09:00 AM - 10:00 AM', subject: 'DataBase', instructor: 'TA Kareem Adel', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 3, day: 'Wednesday' },
     { time: '12:30 PM - 01:30 PM', subject: 'IS', instructor: 'TA Mahmoud Mohamed', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 3, day: 'Wednesday' },
     
     // Section 4
