@@ -162,6 +162,8 @@ export default function HomePage() {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date()
+      const dayName = now.toLocaleDateString('en-US', { weekday: 'long' })
+      
       setCurrentTime(now.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
         minute: '2-digit',
@@ -174,24 +176,35 @@ export default function HomePage() {
         month: 'long',
         day: 'numeric'
       }))
-      // Get today's day name (Saturday, Sunday, Monday, etc.)
-      const dayName = now.toLocaleDateString('en-US', { weekday: 'long' })
-      setCurrentDay(dayName)
       
-      // Auto-update schedule when day changes (if group and section are selected)
-      if (selectedGroup && selectedSection && currentDay !== dayName) {
-        // Day changed, trigger search
-        setTimeout(() => {
-          handleSearch()
-        }, 100)
-      }
+      // Update day if it changed
+      setCurrentDay(prevDay => {
+        if (prevDay && prevDay !== dayName && selectedGroup && selectedSection) {
+          // Day changed and we have selections, auto-refresh schedule
+          setTimeout(() => {
+            const filtered = fullSchedule.filter(item => {
+              const matchesDay = item.day === dayName
+              const matchesGroup = item.group === selectedGroup
+              const matchesSection = item.sectionNumber === parseInt(selectedSection) || item.sectionNumber === null
+              return matchesDay && matchesGroup && matchesSection
+            })
+            const sorted = filtered.sort((a, b) => {
+              const timeA = a.time.split(' - ')[0] || ''
+              const timeB = b.time.split(' - ')[0] || ''
+              return timeA.localeCompare(timeB)
+            })
+            setFilteredSchedule(sorted)
+          }, 100)
+        }
+        return dayName
+      })
     }
 
     updateTime()
     const interval = setInterval(updateTime, 1000)
 
     return () => clearInterval(interval)
-  }, [selectedGroup, selectedSection, currentDay])
+  }, [selectedGroup, selectedSection])
 
   return (
     <div className="min-h-screen">
