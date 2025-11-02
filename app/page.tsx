@@ -7,6 +7,7 @@ import { Calendar, CheckSquare, BookOpen, ArrowRight, Sparkles, Zap, Shield, Clo
 export default function HomePage() {
   const [currentTime, setCurrentTime] = useState('')
   const [currentDate, setCurrentDate] = useState('')
+  const [currentDay, setCurrentDay] = useState('') // Today's day name (Saturday, Monday, etc.)
   const [selectedGroup, setSelectedGroup] = useState('')
   const [selectedSection, setSelectedSection] = useState('')
   const [filteredSchedule, setFilteredSchedule] = useState<any[]>([])
@@ -92,7 +93,7 @@ export default function HomePage() {
     return ''
   }
 
-  // Search function
+  // Search function - Filter for TODAY only
   const handleSearch = () => {
     if (!selectedGroup || !selectedSection) {
       setValidationError('Please select both Lecture Group and Section Number.')
@@ -111,10 +112,17 @@ export default function HomePage() {
     // Clear error if validation passes
     setValidationError('')
     
-    const filtered = fullSchedule.filter(item => 
-      item.group === selectedGroup && 
-      (item.sectionNumber === parseInt(selectedSection) || item.sectionNumber === null)
-    )
+    // Filter by:
+    // 1. Today's day (currentDay)
+    // 2. Selected group
+    // 3. Selected section (or null for lectures)
+    const filtered = fullSchedule.filter(item => {
+      const matchesDay = item.day === currentDay
+      const matchesGroup = item.group === selectedGroup
+      const matchesSection = item.sectionNumber === parseInt(selectedSection) || item.sectionNumber === null
+      
+      return matchesDay && matchesGroup && matchesSection
+    })
     
     // Sort by time
     const sorted = filtered.sort((a, b) => {
@@ -141,6 +149,8 @@ export default function HomePage() {
         month: 'long',
         day: 'numeric'
       }))
+      // Get today's day name (Saturday, Sunday, Monday, etc.)
+      setCurrentDay(now.toLocaleDateString('en-US', { weekday: 'long' }))
     }
 
     updateTime()
@@ -349,10 +359,21 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Schedule Table */}
+          {/* Today's Schedule Table */}
           {filteredSchedule.length > 0 ? (
             <div className="mb-8 animate-slide-up">
               <div className="enhanced-card overflow-hidden">
+                <div className="bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 px-6 py-4 border-b border-cyber-neon/30">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-cyber-neon" />
+                    <h3 className="text-xl font-bold text-dark-100">
+                      Today's Schedule - {currentDay}
+                    </h3>
+                    <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
+                      {filteredSchedule.length} {filteredSchedule.length === 1 ? 'Class' : 'Classes'}
+                    </span>
+                  </div>
+                </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
@@ -399,7 +420,15 @@ export default function HomePage() {
                             </span>
                           </td>
                           <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                            {schedule.sectionNumber ? schedule.sectionNumber : 'General Lecture'}
+                            {schedule.sectionNumber ? (
+                              <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
+                                {schedule.sectionNumber}
+                              </span>
+                            ) : (
+                              <span className="px-2 py-1 bg-cyber-violet/10 text-cyber-violet rounded text-xs font-medium">
+                                {schedule.group === 'Group 1' ? 'A' : 'B'}
+                              </span>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -408,13 +437,26 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          ) : selectedGroup && selectedSection && !validationError ? (
+            <div className="mb-8 animate-slide-up">
+              <div className="enhanced-card p-8 text-center">
+                <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4 opacity-50" />
+                <h3 className="text-xl font-semibold text-dark-200 mb-2">
+                  No Classes Today
+                </h3>
+                <p className="text-dark-400">
+                  You don't have any classes scheduled for {currentDay}.
+                  {currentDay === 'Sunday' || currentDay === 'Thursday' || currentDay === 'Friday' ? ' It\'s a holiday!' : ''}
+                </p>
+              </div>
+            </div>
           ) : (
             <div className="text-center py-12 animate-slide-up">
               <div className="w-24 h-24 bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Calendar className="w-12 h-12 text-cyber-neon" />
               </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">Select your group and attendance</h3>
-              <p className="text-dark-300">to view your personalized daily schedule</p>
+              <h3 className="text-xl font-semibold text-dark-100 mb-2">Select your group and section number</h3>
+              <p className="text-dark-300">to view your personalized daily schedule for today</p>
             </div>
           )}
           
