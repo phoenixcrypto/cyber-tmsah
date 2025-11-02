@@ -375,7 +375,7 @@ export default function HomePage() {
 
           {/* Check if today is a holiday */}
           {currentDay === 'Sunday' || currentDay === 'Thursday' || currentDay === 'Friday' ? (
-            /* Holiday Message - Hide all schedule options */
+            // Holiday Message - Hide all schedule options
             <div className="mb-8 animate-slide-up">
               <div className="enhanced-card p-12 max-w-4xl mx-auto text-center">
                 <div className="text-8xl mb-6">🎉</div>
@@ -398,7 +398,7 @@ export default function HomePage() {
               </div>
             </div>
           ) : (
-            /* Normal Day - Show Schedule Options */
+            // Normal Day - Show Schedule Options
             <>
               {/* Search Interface */}
               <div className="mb-8 animate-slide-up">
@@ -483,114 +483,116 @@ export default function HomePage() {
               
               {/* Today's Schedule Table */}
               {filteredSchedule.length > 0 ? (
-            <div className="mb-8 animate-slide-up">
-              <div className="enhanced-card overflow-hidden">
-                <div className="bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 px-6 py-4 border-b border-cyber-neon/30">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-cyber-neon" />
-                    <h3 className="text-xl font-bold text-dark-100">
-                      Today's Schedule - {currentDay}
-                    </h3>
-                    <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
-                      {filteredSchedule.length} {filteredSchedule.length === 1 ? 'Class' : 'Classes'}
-                    </span>
+                <div className="mb-8 animate-slide-up">
+                  <div className="enhanced-card overflow-hidden">
+                    <div className="bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 px-6 py-4 border-b border-cyber-neon/30">
+                      <div className="flex items-center gap-3">
+                        <Calendar className="w-5 h-5 text-cyber-neon" />
+                        <h3 className="text-xl font-bold text-dark-100">
+                          Today's Schedule - {currentDay}
+                        </h3>
+                        <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
+                          {filteredSchedule.length} {filteredSchedule.length === 1 ? 'Class' : 'Classes'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
+                          <tr>
+                            <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
+                            <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
+                            <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
+                            <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
+                            <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
+                            <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section Group</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredSchedule.map((schedule, index) => (
+                            <tr key={index} className="hover:bg-cyber-neon/5 transition-colors">
+                              <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="w-4 h-4 text-cyber-neon" />
+                                  <span className="font-medium">{schedule.time}</span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 text-dark-100 font-semibold border-b border-dark-200/20">
+                                {schedule.subject}
+                              </td>
+                              <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                                <div className="flex items-center gap-2">
+                                  <User className="w-4 h-4 text-cyber-violet" />
+                                  <span>{schedule.instructor}</span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                                <div className="flex items-center gap-2">
+                                  <MapPin className="w-4 h-4 text-cyber-green" />
+                                  <span>{schedule.room}</span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 border-b border-dark-200/20">
+                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                  schedule.type === 'Lecture' 
+                                    ? 'bg-cyber-violet/20 text-cyber-violet' 
+                                    : 'bg-cyber-green/20 text-cyber-green'
+                                }`}>
+                                  {schedule.type}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
+                                {schedule.sectionNumber ? (
+                                  <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
+                                    {schedule.sectionNumber}
+                                  </span>
+                                ) : (
+                                  <span className="px-2 py-1 bg-cyber-violet/10 text-cyber-violet rounded text-xs font-medium">
+                                    {schedule.group === 'Group 1' ? 'A' : 'B'}
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
-                      <tr>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
-                        <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section Group</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredSchedule.map((schedule, index) => (
-                        <tr key={index} className="hover:bg-cyber-neon/5 transition-colors">
-                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-4 h-4 text-cyber-neon" />
-                              <span className="font-medium">{schedule.time}</span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-dark-100 font-semibold border-b border-dark-200/20">
-                            {schedule.subject}
-                          </td>
-                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                            <div className="flex items-center gap-2">
-                              <User className="w-4 h-4 text-cyber-violet" />
-                              <span>{schedule.instructor}</span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                            <div className="flex items-center gap-2">
-                              <MapPin className="w-4 h-4 text-cyber-green" />
-                              <span>{schedule.room}</span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 border-b border-dark-200/20">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              schedule.type === 'Lecture' 
-                                ? 'bg-cyber-violet/20 text-cyber-violet' 
-                                : 'bg-cyber-green/20 text-cyber-green'
-                            }`}>
-                              {schedule.type}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                            {schedule.sectionNumber ? (
-                              <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
-                                {schedule.sectionNumber}
-                              </span>
-                            ) : (
-                              <span className="px-2 py-1 bg-cyber-violet/10 text-cyber-violet rounded text-xs font-medium">
-                                {schedule.group === 'Group 1' ? 'A' : 'B'}
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              ) : selectedGroup && selectedSection && !validationError ? (
+                <div className="mb-8 animate-slide-up">
+                  <div className="enhanced-card p-8 text-center">
+                    <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4 opacity-50" />
+                    <h3 className="text-xl font-semibold text-dark-200 mb-2">
+                      No Classes Today
+                    </h3>
+                    <p className="text-dark-400">
+                      You don't have any classes scheduled for {currentDay}.
+                    </p>
+                  </div>
                 </div>
+              ) : (
+                <div className="text-center py-12 animate-slide-up">
+                  <div className="w-24 h-24 bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Calendar className="w-12 h-12 text-cyber-neon" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-dark-100 mb-2">Select your group and section number</h3>
+                  <p className="text-dark-300">to view your personalized daily schedule for today</p>
+                </div>
+              )}
+              
+              {/* View Full Schedule Link - Only show on non-holidays */}
+              <div className="text-center animate-slide-up-delayed">
+                <Link
+                  href="/schedule"
+                  className="btn-primary inline-flex items-center gap-2"
+                >
+                  View Full Schedule
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
-            </div>
-          ) : selectedGroup && selectedSection && !validationError ? (
-            <div className="mb-8 animate-slide-up">
-              <div className="enhanced-card p-8 text-center">
-                <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-semibold text-dark-200 mb-2">
-                  No Classes Today
-                </h3>
-                <p className="text-dark-400">
-                  You don't have any classes scheduled for {currentDay}.
-                  {currentDay === 'Sunday' || currentDay === 'Thursday' || currentDay === 'Friday' ? ' It\'s a holiday!' : ''}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center py-12 animate-slide-up">
-              <div className="w-24 h-24 bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-12 h-12 text-cyber-neon" />
-              </div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-2">Select your group and section number</h3>
-              <p className="text-dark-300">to view your personalized daily schedule for today</p>
-            </div>
+            </>
           )}
-          
-          <div className="text-center animate-slide-up-delayed">
-            <Link
-              href="/schedule"
-              className="btn-primary inline-flex items-center gap-2"
-            >
-              View Full Schedule
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
         </div>
       </section>
     </div>
