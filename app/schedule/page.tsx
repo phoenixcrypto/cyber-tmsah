@@ -238,7 +238,34 @@ export default function SchedulePage() {
       const matchesSection = !selectedSection || item.sectionNumber === parseInt(selectedSection)
       return matchesGroup && matchesSection
     })
+    
+    // Sort by day order and then by time
+    const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    filtered.sort((a, b) => {
+      const dayA = dayOrder.indexOf(a.day || '')
+      const dayB = dayOrder.indexOf(b.day || '')
+      if (dayA !== dayB) return dayA - dayB
+      
+      // If same day, sort by time
+      const timeA = a.time.split(' - ')[0] || ''
+      const timeB = b.time.split(' - ')[0] || ''
+      return timeA.localeCompare(timeB)
+    })
+    
     setFilteredSchedule(filtered)
+  }
+
+  // Group schedule by day
+  const groupByDay = (items: any[]) => {
+    const grouped: { [key: string]: any[] } = {}
+    items.forEach(item => {
+      const day = item.day || 'Other'
+      if (!grouped[day]) {
+        grouped[day] = []
+      }
+      grouped[day].push(item)
+    })
+    return grouped
   }
 
   const groups = [
@@ -328,70 +355,95 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        {/* Schedule Table */}
-        <div className="enhanced-card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Day</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Location</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Lecture Group</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(filteredSchedule.length > 0 ? filteredSchedule : scheduleData).map((item) => (
-                  <tr key={item.id} className="hover:bg-cyber-neon/5 transition-colors">
-                    <td className="px-6 py-4 text-dark-200 font-semibold border-b border-dark-200/20">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-cyber-violet" />
-                        <span>{item.day || 'N/A'}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-cyber-neon" />
-                        <span className="font-medium">{item.time}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-dark-100 font-semibold border-b border-dark-200/20">
-                      {item.title}
-                    </td>
-                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-cyber-violet" />
-                        <span>{item.instructor}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-cyber-green" />
-                        <span>{item.location}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 border-b border-dark-200/20">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        item.type === 'lecture' 
-                          ? 'bg-cyber-violet/20 text-cyber-violet' 
-                          : 'bg-cyber-green/20 text-cyber-green'
-                      }`}>
-                        {item.type === 'lecture' ? 'Lecture' : item.type === 'lab' ? 'Lab' : 'Application'}
+        {/* Schedule - Organized by Day */}
+        <div className="space-y-6">
+          {(() => {
+            const scheduleToShow = filteredSchedule.length > 0 ? filteredSchedule : scheduleData
+            const groupedByDay = groupByDay(scheduleToShow)
+            const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+            
+            return dayOrder.map(day => {
+              const dayLectures = groupedByDay[day] || []
+              if (dayLectures.length === 0) return null
+              
+              return (
+                <div key={day} className="enhanced-card overflow-hidden">
+                  {/* Day Header */}
+                  <div className="bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 px-6 py-4 border-b border-cyber-neon/30">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="w-5 h-5 text-cyber-neon" />
+                      <h3 className="text-xl font-bold text-dark-100">{day}</h3>
+                      <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
+                        {dayLectures.length} {dayLectures.length === 1 ? 'Lecture' : 'Lectures'}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                      <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
-                        {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </div>
+                  
+                  {/* Day Lectures Table */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-cyber-dark/50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
+                          <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
+                          <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
+                          <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Location</th>
+                          <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
+                          <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Group</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dayLectures.map((item, index) => (
+                          <tr 
+                            key={item.id || index} 
+                            className={`hover:bg-cyber-neon/5 transition-colors ${
+                              index < dayLectures.length - 1 ? 'border-b border-dark-200/10' : ''
+                            }`}
+                          >
+                            <td className="px-6 py-4 text-dark-300">
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4 text-cyber-neon" />
+                                <span className="font-medium">{item.time}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-dark-100 font-semibold">
+                              {item.title}
+                            </td>
+                            <td className="px-6 py-4 text-dark-300">
+                              <div className="flex items-center gap-2">
+                                <User className="w-4 h-4 text-cyber-violet" />
+                                <span>{item.instructor}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-dark-300">
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4 text-cyber-green" />
+                                <span>{item.location}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                item.type === 'lecture' 
+                                  ? 'bg-cyber-violet/20 text-cyber-violet' 
+                                  : 'bg-cyber-green/20 text-cyber-green'
+                              }`}>
+                                {item.type === 'lecture' ? 'Lecture' : item.type === 'lab' ? 'Lab' : 'Application'}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-dark-300">
+                              <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
+                                {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )
+            }).filter(Boolean)
+          })()}
         </div>
 
         {/* Empty State */}
