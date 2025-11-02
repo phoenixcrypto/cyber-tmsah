@@ -290,7 +290,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cyber-dark">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
         

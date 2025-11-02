@@ -45,7 +45,7 @@ export default function FloatingThemeToggle() {
         </div>
         
         {/* Tooltip */}
-        <div className="absolute bottom-full right-0 mb-3 px-3 py-1.5 bg-cyber-dark/95 backdrop-blur-md border border-cyber-neon/30 rounded-lg text-xs font-semibold text-cyber-neon whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-xl">
+        <div className="absolute bottom-full right-0 mb-3 px-3 py-1.5 bg-cyber-dark/95 backdrop-blur-md border border-cyber-neon/30 rounded-lg text-xs font-semibold text-cyber-neon whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-xl z-50">
           {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
           <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-cyber-neon/30" />
         </div>
