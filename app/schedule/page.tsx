@@ -54,6 +54,7 @@ export default function SchedulePage() {
     
     // Section 7
     { id: 's7-1', title: 'Mathematics', time: '12:30 PM - 01:30 PM', location: 'Hall G 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Saturday' },
+    { id: 's7-1b', title: 'Mathematics', time: '04:00 PM - 05:00 PM', location: 'Hall G 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Saturday' },
     { id: 's7-2', title: 'Database', time: '10:10 AM - 11:10 AM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Monday' },
     { id: 's7-3', title: 'IT', time: '01:40 PM - 02:40 PM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Monday' },
     { id: 's7-4', title: 'IS', time: '01:40 PM - 02:40 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Wednesday' },
@@ -85,6 +86,7 @@ export default function SchedulePage() {
     { id: 's11-5', title: 'IS', time: '01:40 PM - 02:40 PM', location: 'Hall D 102', instructor: 'TA Dina Ali', type: 'lab', group: 'Group 2', sectionNumber: 11, day: 'Wednesday' },
     
     // Section 12
+    { id: 's12-0', title: 'Mathematics', time: '04:00 PM - 05:00 PM', location: 'Hall G 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Saturday' },
     { id: 's12-1', title: 'Database', time: '09:00 AM - 10:00 AM', location: 'Hall D 101', instructor: 'TA Nagla Saeed', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
     { id: 's12-2', title: 'IT', time: '12:30 PM - 01:30 PM', location: 'Hall D 102', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
     { id: 's12-3', title: 'Mathematics', time: '04:00 PM - 05:00 PM', location: 'Hall F 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },

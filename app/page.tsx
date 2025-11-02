@@ -116,6 +116,7 @@ export default function HomePage() {
     
     // Section 7
     { time: '12:30 PM - 01:30 PM', subject: 'Mathematics', instructor: 'TA Ehab Mohamed', room: 'Hall G 207', type: 'Lab', group: 'Group 1', sectionNumber: 7, day: 'Saturday' },
+    { time: '04:00 PM - 05:00 PM', subject: 'Mathematics', instructor: 'TA Ehab Mohamed', room: 'Hall G 207', type: 'Lab', group: 'Group 1', sectionNumber: 7, day: 'Saturday' },
     { time: '10:10 AM - 11:10 AM', subject: 'Database', instructor: 'TA Kareem Adel', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 7, day: 'Monday' },
     { time: '01:40 PM - 02:40 PM', subject: 'IT', instructor: 'TA Mohamed Ammar', room: 'Hall D 101', type: 'Lab', group: 'Group 1', sectionNumber: 7, day: 'Monday' },
     { time: '01:40 PM - 02:40 PM', subject: 'IS', instructor: 'TA Mahmoud Mohamed', room: 'Hall D 103', type: 'Lab', group: 'Group 1', sectionNumber: 7, day: 'Wednesday' },
@@ -147,6 +148,7 @@ export default function HomePage() {
     { time: '01:40 PM - 02:40 PM', subject: 'IS', instructor: 'TA Dina Ali', room: 'Hall D 102', type: 'Lab', group: 'Group 2', sectionNumber: 11, day: 'Wednesday' },
     
     // Section 12
+    { time: '04:00 PM - 05:00 PM', subject: 'Mathematics', instructor: 'TA Ehab Mohamed', room: 'Hall G 207', type: 'Lab', group: 'Group 2', sectionNumber: 12, day: 'Saturday' },
     { time: '09:00 AM - 10:00 AM', subject: 'Database', instructor: 'TA Nagla Saeed', room: 'Hall D 101', type: 'Lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
     { time: '12:30 PM - 01:30 PM', subject: 'IT', instructor: 'TA Mohamed Mostafa', room: 'Hall D 102', type: 'Lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
     { time: '04:00 PM - 05:00 PM', subject: 'Mathematics', instructor: 'TA Ehab Mohamed', room: 'Hall F 207', type: 'Lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
