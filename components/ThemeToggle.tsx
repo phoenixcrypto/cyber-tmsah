@@ -9,30 +9,36 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex items-center justify-center w-14 h-8 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 focus:ring-offset-dark-900"
+      className="relative flex items-center justify-center w-16 h-9 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 hover:scale-110 active:scale-95"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {/* Background */}
       <div
         className={`absolute inset-0 rounded-full transition-all duration-300 ${
           theme === 'dark'
-            ? 'bg-gradient-to-r from-cyber-violet/40 to-cyber-neon/40'
-            : 'bg-gradient-to-r from-yellow-400/40 to-orange-400/40'
+            ? 'bg-gradient-to-r from-cyber-violet/50 to-cyber-neon/50 shadow-lg shadow-cyber-neon/30'
+            : 'bg-gradient-to-r from-yellow-400/50 to-orange-400/50 shadow-lg shadow-yellow-400/30'
         }`}
       />
       
       {/* Toggle Circle */}
       <div
-        className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow-lg transform transition-transform duration-300 flex items-center justify-center ${
-          theme === 'dark' ? 'translate-x-0' : 'translate-x-6'
+        className={`absolute top-0.5 left-0.5 w-8 h-8 bg-white rounded-full shadow-xl transform transition-transform duration-300 flex items-center justify-center ${
+          theme === 'dark' ? 'translate-x-0' : 'translate-x-7'
         }`}
       >
         {theme === 'dark' ? (
-          <Moon className="w-3.5 h-3.5 text-cyber-dark" />
+          <Moon className="w-4 h-4 text-cyber-dark" />
         ) : (
-          <Sun className="w-3.5 h-3.5 text-yellow-500" />
+          <Sun className="w-4 h-4 text-yellow-500" />
         )}
       </div>
+      
+      {/* Status Indicator */}
+      <span className="ml-2 text-xs font-semibold text-cyber-neon hidden sm:block">
+        {theme === 'dark' ? 'Dark' : 'Light'}
+      </span>
     </button>
   )
 }

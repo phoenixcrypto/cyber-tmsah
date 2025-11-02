@@ -54,7 +54,7 @@ export default function Navbar() {
                 </Link>
               )
             })}
-            <div className="ml-4 pl-4 border-l border-cyber-neon/20">
+            <div className="ml-6 pl-6 border-l-2 border-cyber-neon/30 flex items-center">
               <ThemeToggle />
             </div>
           </div>
