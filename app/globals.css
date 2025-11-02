@@ -28,29 +28,36 @@
   --shadow-green: rgba(16, 185, 129, 0.2);
 }
 
-/* Light Mode - Color Inversion & Slightly Lighter Tones */
+/* Light Mode - Enhanced Color Harmony */
 :root[data-theme="light"] {
+  /* Background Colors - Softer whites */
   --cyber-dark: #ffffff;
-  --cyber-neon: #00cc70;
-  --cyber-violet: #7c3aed;
-  --cyber-green: #059669;
-  --cyber-blue: #2563eb;
-  --cyber-glow: #00cc70;
-  --dark-100: #0a0a0a;
-  --dark-200: #1a1a1a;
-  --dark-300: #4b5563;
-  --dark-400: #6b7280;
-  --dark-500: #9ca3af;
   --bg-primary: #ffffff;
-  --bg-secondary: rgba(255, 255, 255, 0.95);
-  --bg-tertiary: rgba(250, 250, 250, 0.9);
-  --text-primary: #0a0a0a;
-  --text-secondary: #1a1a1a;
-  --text-tertiary: #4b5563;
-  --shadow-color: rgba(0, 0, 0, 0.08);
-  --shadow-neon: rgba(0, 204, 112, 0.12);
-  --shadow-violet: rgba(124, 58, 237, 0.12);
-  --shadow-green: rgba(5, 150, 105, 0.12);
+  --bg-secondary: rgba(249, 250, 251, 0.98);
+  --bg-tertiary: rgba(243, 244, 246, 0.95);
+  
+  /* Primary Brand Colors - More vibrant but harmonious */
+  --cyber-neon: #00a862;
+  --cyber-violet: #6366f1;
+  --cyber-green: #10b981;
+  --cyber-blue: #3b82f6;
+  --cyber-glow: #00a862;
+  
+  /* Text Colors - Better contrast and readability */
+  --dark-100: #111827;
+  --dark-200: #1f2937;
+  --dark-300: #374151;
+  --dark-400: #4b5563;
+  --dark-500: #6b7280;
+  --text-primary: #111827;
+  --text-secondary: #1f2937;
+  --text-tertiary: #374151;
+  
+  /* Shadows - Softer and more natural */
+  --shadow-color: rgba(0, 0, 0, 0.06);
+  --shadow-neon: rgba(0, 168, 98, 0.15);
+  --shadow-violet: rgba(99, 102, 241, 0.15);
+  --shadow-green: rgba(16, 185, 129, 0.15);
 }
 
 /* Base Styles */
@@ -107,8 +114,9 @@ body {
 
 :root[data-theme="light"] .bg-grid-pattern {
   background-image: 
-    linear-gradient(rgba(0, 204, 112, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 204, 112, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(0, 168, 98, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 168, 98, 0.05) 1px, transparent 1px);
+  opacity: 0.6;
 }
 
 /* Glass Card Effect */
@@ -122,8 +130,9 @@ body {
 }
 
 :root[data-theme="light"] .glass-card {
-  border-color: rgba(0, 204, 112, 0.2);
+  border-color: rgba(0, 168, 98, 0.15);
   background: var(--bg-tertiary);
+  box-shadow: 0 4px 16px var(--shadow-color), 0 0 0 1px rgba(0, 168, 98, 0.05);
 }
 
 /* Enhanced Card Effect */
@@ -137,8 +146,9 @@ body {
 }
 
 :root[data-theme="light"] .enhanced-card {
-  border-color: rgba(0, 204, 112, 0.3);
+  border-color: rgba(0, 168, 98, 0.2);
   background: var(--bg-secondary);
+  box-shadow: 0 8px 24px var(--shadow-color), 0 0 0 1px rgba(0, 168, 98, 0.08);
 }
 
 /* Button Styles */
@@ -168,6 +178,10 @@ body {
   box-shadow: 0 8px 25px var(--shadow-neon);
 }
 
+:root[data-theme="light"] .btn-primary:hover {
+  box-shadow: 0 8px 25px var(--shadow-neon), 0 4px 12px rgba(0, 168, 98, 0.2);
+}
+
 .btn-secondary {
   background: transparent;
   color: var(--cyber-neon);
@@ -188,11 +202,13 @@ body {
   background: var(--cyber-neon);
   color: var(--bg-primary);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-neon);
 }
 
 /* Light mode secondary button hover */
 :root[data-theme="light"] .btn-secondary:hover {
   color: #ffffff;
+  box-shadow: 0 4px 12px var(--shadow-neon);
 }
 
 .btn-tertiary {
@@ -215,11 +231,13 @@ body {
   background: var(--cyber-violet);
   color: var(--bg-primary);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-violet);
 }
 
 /* Light mode tertiary button hover */
 :root[data-theme="light"] .btn-tertiary:hover {
   color: #ffffff;
+  box-shadow: 0 4px 12px var(--shadow-violet);
 }
 
 /* Animated Gradient Background */
@@ -369,10 +387,19 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--cyber-neon);
   border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--cyber-green);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 168, 98, 0.6);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 168, 98, 0.8);
 }
 
 /* Select Dropdown Styles */
@@ -393,6 +420,13 @@ select option:focus,
 select option:checked {
   background-color: var(--cyber-neon) !important;
   color: var(--bg-primary) !important;
+}
+
+:root[data-theme="light"] select option:hover,
+:root[data-theme="light"] select option:focus,
+:root[data-theme="light"] select option:checked {
+  background-color: var(--cyber-neon) !important;
+  color: #ffffff !important;
 }
 
 /* Focus Styles */

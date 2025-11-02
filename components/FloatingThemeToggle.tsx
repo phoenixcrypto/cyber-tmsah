@@ -27,7 +27,7 @@ export default function FloatingThemeToggle() {
       <div className="absolute inset-0 rounded-full bg-cyber-neon/20 blur-xl group-hover:bg-cyber-neon/30 transition-all duration-300 animate-pulse" />
       
       {/* Button Container */}
-      <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/90 backdrop-blur-md border-2 border-cyber-neon/50 shadow-2xl group-hover:border-cyber-neon transition-all duration-300 group-hover:scale-110 group-active:scale-95">
+      <div className="relative w-14 h-14 rounded-full bg-cyber-dark backdrop-blur-md border-2 border-cyber-neon/50 shadow-2xl group-hover:border-cyber-neon transition-all duration-300 group-hover:scale-110 group-active:scale-95">
         {/* Inner Glow */}
         <div className={`absolute inset-2 rounded-full transition-all duration-300 ${
           theme === 'dark'
