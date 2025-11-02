@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Calendar, CheckSquare, BookOpen, ArrowRight, Sparkles, Zap, Shield, Clock, MapPin, User } from 'lucide-react'
-import { convertTo12Hour } from '@/lib/timeUtils'
 
 export default function HomePage() {
   const [currentTime, setCurrentTime] = useState('')
