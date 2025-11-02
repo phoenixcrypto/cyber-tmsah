@@ -373,89 +373,116 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Search Interface */}
-          <div className="mb-8 animate-slide-up">
-            <div className="enhanced-card p-6 max-w-4xl mx-auto">
-              <h3 className="text-xl font-semibold text-dark-100 mb-4 text-center">
-                Select your lecture group (A or B) and section number to view your personalized schedule
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-dark-300 mb-2">Lecture Group</label>
-                  <select
-                    value={selectedGroup}
-                    onChange={(e) => {
-                      setSelectedGroup(e.target.value)
-                      // Auto-search when selection changes
-                      if (e.target.value && selectedSection) {
-                        setTimeout(() => {
-                          const error = validateGroupAndSection(e.target.value, selectedSection)
-                          if (!error) {
-                            handleSearch()
-                          }
-                        }, 100)
-                      }
-                    }}
-                    className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
+          {/* Check if today is a holiday */}
+          {currentDay === 'Sunday' || currentDay === 'Thursday' || currentDay === 'Friday' ? (
+            /* Holiday Message - Hide all schedule options */
+            <div className="mb-8 animate-slide-up">
+              <div className="enhanced-card p-12 max-w-4xl mx-auto text-center">
+                <div className="text-8xl mb-6">🎉</div>
+                <h3 className="text-3xl font-bold text-yellow-400 mb-4">Holiday Today!</h3>
+                <p className="text-xl text-dark-200 mb-2">
+                  Today is {currentDay} - No classes scheduled
+                </p>
+                <p className="text-dark-400 mb-6">
+                  Enjoy your holiday! Check back tomorrow for your schedule.
+                </p>
+                <div className="mt-8">
+                  <Link
+                    href="/schedule"
+                    className="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform"
                   >
-                    <option value="">Select Lecture Group</option>
-                    <option value="Group 1">A (Sections 1-7)</option>
-                    <option value="Group 2">B (Sections 8-15)</option>
-                  </select>
+                    View Full Weekly Schedule
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-dark-300 mb-2">Section Number</label>
-                  <select
-                    value={selectedSection}
-                    onChange={(e) => {
-                      setSelectedSection(e.target.value)
-                      // Auto-search when selection changes
-                      if (selectedGroup && e.target.value) {
-                        setTimeout(() => {
-                          const error = validateGroupAndSection(selectedGroup, e.target.value)
-                          if (!error) {
-                            handleSearch()
+              </div>
+            </div>
+          ) : (
+            /* Normal Day - Show Schedule Options */
+            <>
+              {/* Search Interface */}
+              <div className="mb-8 animate-slide-up">
+                <div className="enhanced-card p-6 max-w-4xl mx-auto">
+                  <h3 className="text-xl font-semibold text-dark-100 mb-4 text-center">
+                    Select your lecture group (A or B) and section number to view your personalized schedule
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-dark-300 mb-2">Lecture Group</label>
+                      <select
+                        value={selectedGroup}
+                        onChange={(e) => {
+                          setSelectedGroup(e.target.value)
+                          // Auto-search when selection changes
+                          if (e.target.value && selectedSection) {
+                            setTimeout(() => {
+                              const error = validateGroupAndSection(e.target.value, selectedSection)
+                              if (!error) {
+                                handleSearch()
+                              }
+                            }, 100)
                           }
-                        }, 100)
-                      }
-                    }}
-                    className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
-                  >
-                    <option value="">Select Section Number</option>
-                    {sections.map(section => (
-                      <option key={section} value={section}>{section}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex items-end">
-                  <button
-                    onClick={handleSearch}
-                    className="w-full btn-primary py-3 px-6 rounded-lg font-semibold hover:scale-105 transition-transform"
-                  >
-                    View Schedule
-                  </button>
+                        }}
+                        className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
+                      >
+                        <option value="">Select Lecture Group</option>
+                        <option value="Group 1">A (Sections 1-7)</option>
+                        <option value="Group 2">B (Sections 8-15)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-dark-300 mb-2">Section Number</label>
+                      <select
+                        value={selectedSection}
+                        onChange={(e) => {
+                          setSelectedSection(e.target.value)
+                          // Auto-search when selection changes
+                          if (selectedGroup && e.target.value) {
+                            setTimeout(() => {
+                              const error = validateGroupAndSection(selectedGroup, e.target.value)
+                              if (!error) {
+                                handleSearch()
+                              }
+                            }, 100)
+                          }
+                        }}
+                        className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
+                      >
+                        <option value="">Select Section Number</option>
+                        {sections.map(section => (
+                          <option key={section} value={section}>{section}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-end">
+                      <button
+                        onClick={handleSearch}
+                        className="w-full btn-primary py-3 px-6 rounded-lg font-semibold hover:scale-105 transition-transform"
+                      >
+                        View Schedule
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {validationError && (
+                    <div className="col-span-full mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <div className="text-red-400 font-bold text-lg">⚠</div>
+                        <div>
+                          <h4 className="text-red-400 font-semibold mb-1">Invalid Selection</h4>
+                          <p className="text-red-300 text-sm">{validationError}</p>
+                          <p className="text-dark-300 text-xs mt-2">
+                            <strong>Group A:</strong> Sections 1-7 | <strong>Group B:</strong> Sections 8-15
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
-              {validationError && (
-                <div className="col-span-full mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <div className="text-red-400 font-bold text-lg">⚠</div>
-                    <div>
-                      <h4 className="text-red-400 font-semibold mb-1">Invalid Selection</h4>
-                      <p className="text-red-300 text-sm">{validationError}</p>
-                      <p className="text-dark-300 text-xs mt-2">
-                        <strong>Group A:</strong> Sections 1-7 | <strong>Group B:</strong> Sections 8-15
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Today's Schedule Table */}
-          {filteredSchedule.length > 0 ? (
+              {/* Today's Schedule Table */}
+              {filteredSchedule.length > 0 ? (
             <div className="mb-8 animate-slide-up">
               <div className="enhanced-card overflow-hidden">
                 <div className="bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 px-6 py-4 border-b border-cyber-neon/30">
