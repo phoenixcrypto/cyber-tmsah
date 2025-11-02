@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock, Search, Eye, BarChart3, RefreshCw, X, Zap, SortAsc, SortDesc } from 'lucide-react'
-import RichTextEditor from '@/components/RichTextEditor'
+import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock, Search, Eye, BarChart3, RefreshCw, X, Zap, SortAsc, SortDesc, TrendingUp, Sparkles } from 'lucide-react'
+import EnhancedRichTextEditor from '@/components/EnhancedRichTextEditor'
 
 interface Article {
   id: string
@@ -21,10 +21,10 @@ interface Article {
   views: number
   likes: number
   tags: string[]
-  featured: boolean
   scheduledFor?: string
   imageUrl?: string
   excerpt: string
+  youtubeUrl?: string
 }
 
 export default function ContentManagement() {
@@ -60,9 +60,12 @@ export default function ContentManagement() {
     type: 'lecture',
     status: 'draft',
     tags: [],
-    featured: false,
-    excerpt: ''
+    excerpt: '',
+    youtubeUrl: ''
   })
+  const [showSEOPreview, setShowSEOPreview] = useState(false)
+  const [scheduledDate, setScheduledDate] = useState('')
+  const [scheduledTime, setScheduledTime] = useState('')
 
   const subjects = [
     { id: 'applied-physics', name: 'Applied Physics', color: 'from-blue-500 to-blue-600' },
@@ -76,11 +79,38 @@ export default function ContentManagement() {
 
   // Check authentication
   useEffect(() => {
-    const savedAuth = localStorage.getItem('admin-authenticated')
-    if (savedAuth === 'true') {
-      setIsAuthenticated(true)
-      loadArticles()
+    const checkAuth = async () => {
+      const savedAuth = localStorage.getItem('admin-authenticated')
+      const token = localStorage.getItem('admin-token')
+      
+      if (savedAuth === 'true' && token) {
+        // Verify token with server
+        try {
+          const response = await fetch('/api/auth')
+          if (response.ok) {
+            const data = await response.json()
+            if (data.authenticated) {
+              setIsAuthenticated(true)
+              loadArticles()
+            } else {
+              // Token invalid, clear auth
+              localStorage.removeItem('admin-authenticated')
+              localStorage.removeItem('admin-token')
+            }
+          } else {
+            // Auth check failed, clear auth
+            localStorage.removeItem('admin-authenticated')
+            localStorage.removeItem('admin-token')
+          }
+        } catch (error) {
+          // Network error, clear auth
+          localStorage.removeItem('admin-authenticated')
+          localStorage.removeItem('admin-token')
+        }
+      }
     }
+    
+    checkAuth()
   }, [])
 
   // Load articles
@@ -89,26 +119,78 @@ export default function ContentManagement() {
       const response = await fetch('/api/articles')
       if (response.ok) {
         const data = await response.json()
+        
+        // Check if response is an error message
+        if (data.error) {
+          alert(`Strapi Error: ${data.error}\n\nPlease configure Strapi:\n1. Set NEXT_PUBLIC_STRAPI_URL in .env.local\n2. Set STRAPI_API_TOKEN in .env.local\n3. Make sure Strapi is running`)
+          setArticles([])
+          return
+        }
+        
         setArticles(data)
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        alert(`Failed to load articles: ${errorData.error || response.statusText}\n\nPlease check your Strapi configuration.`)
+        setArticles([])
       }
     } catch (error) {
       console.error('Error loading articles:', error)
+      alert(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease make sure Strapi is running and configured.`)
+      setArticles([])
     }
   }
 
-  const handleLogin = () => {
-    if (password === 'cyber2024') {
-      setIsAuthenticated(true)
-      localStorage.setItem('admin-authenticated', 'true')
-      loadArticles()
-    } else {
-      alert('Incorrect password!')
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.success) {
+          setIsAuthenticated(true)
+          localStorage.setItem('admin-authenticated', 'true')
+          localStorage.setItem('admin-token', data.token || '')
+          loadArticles()
+        } else {
+          const errorMsg = data.error || 'Incorrect password!'
+          if (data.remainingTime) {
+            const minutes = Math.ceil(data.remainingTime / 60)
+            alert(`${errorMsg}\n\nToo many failed attempts. Please wait ${minutes} minutes before trying again.`)
+          } else {
+            alert(errorMsg)
+          }
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Authentication failed' }))
+        const errorMsg = errorData.error || 'Authentication failed'
+        if (errorData.remainingTime) {
+          const minutes = Math.ceil(errorData.remainingTime / 60)
+          alert(`${errorMsg}\n\nToo many failed attempts. Please wait ${minutes} minutes before trying again.`)
+        } else {
+          alert(`Authentication failed: ${errorMsg}`)
+        }
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      alert('Error during authentication. Please try again.')
     }
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsAuthenticated(false)
     localStorage.removeItem('admin-authenticated')
+    localStorage.removeItem('admin-token')
+    
+    // Clear server-side cookie
+    try {
+      await fetch('/api/auth', { method: 'DELETE' }).catch(() => {})
+    } catch (error) {
+      // Ignore errors on logout
+    }
   }
 
   // Filter and sort articles
@@ -166,23 +248,33 @@ export default function ContentManagement() {
         views: 0,
         likes: 0,
         tags: formData.tags || [],
-        featured: formData.featured || false,
-        excerpt: formData.excerpt || formData.description?.substring(0, 150) || ''
+        excerpt: formData.excerpt || formData.description?.substring(0, 150) || '',
+        youtubeUrl: formData.youtubeUrl || ''
       }
 
+      const token = localStorage.getItem('admin-token')
       const response = await fetch('/api/articles', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify(newArticle)
       })
 
       if (response.ok) {
-        setArticles([newArticle, ...articles])
-        setIsCreating(false)
-        resetForm()
-        alert('Article created successfully!')
+        const createdArticle = await response.json()
+        if (createdArticle.error) {
+          alert(`Error: ${createdArticle.error}`)
+        } else {
+          setArticles([createdArticle, ...articles])
+          setIsCreating(false)
+          resetForm()
+          alert('Article created successfully in Strapi!')
+        }
       } else {
-        alert('Failed to create article')
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        alert(`Failed to create article: ${errorData.error || response.statusText}`)
       }
     } catch (error) {
       alert('Error creating article: ' + error)
@@ -191,20 +283,29 @@ export default function ContentManagement() {
 
   const handleUpdateArticle = async (id: string, updates: Partial<Article>) => {
     try {
+      const token = localStorage.getItem('admin-token')
       const response = await fetch('/api/articles', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({ id, ...updates })
       })
       
       if (response.ok) {
         const updatedArticle = await response.json()
-        setArticles(articles.map(article => 
-          article.id === id ? updatedArticle : article
-        ))
-        alert('Article updated successfully!')
+        if (updatedArticle.error) {
+          alert(`Error: ${updatedArticle.error}`)
+        } else {
+          setArticles(articles.map(article => 
+            article.id === id ? updatedArticle : article
+          ))
+          alert('Article updated successfully in Strapi!')
+        }
       } else {
-        alert('Failed to update article')
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        alert(`Failed to update article: ${errorData.error || response.statusText}`)
       }
     } catch (error) {
       alert('Error updating article: ' + error)
@@ -214,16 +315,26 @@ export default function ContentManagement() {
   const handleDeleteArticle = async (id: string) => {
     if (confirm('Are you sure you want to delete this article?')) {
       try {
+        const token = localStorage.getItem('admin-token')
         const response = await fetch(`/api/articles?id=${id}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          headers: {
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+          }
         })
         
-        if (response.ok) {
-          setArticles(articles.filter(article => article.id !== id))
-          alert('Article deleted successfully!')
+      if (response.ok) {
+        const result = await response.json()
+        if (result.error) {
+          alert(`Error: ${result.error}`)
         } else {
-          alert('Failed to delete article')
+          setArticles(articles.filter(article => article.id !== id))
+          alert('Article deleted successfully from Strapi!')
         }
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        alert(`Failed to delete article: ${errorData.error || response.statusText}`)
+      }
       } catch (error) {
         alert('Error deleting article: ' + error)
       }
@@ -242,7 +353,6 @@ export default function ContentManagement() {
       type: 'lecture',
       status: 'draft',
       tags: [],
-      featured: false,
       excerpt: ''
     })
   }
@@ -486,11 +596,6 @@ export default function ContentManagement() {
                   }`}>
                     {article.status}
                   </span>
-                  {article.featured && (
-                    <span className="px-2 py-1 bg-cyber-neon/20 text-cyber-neon rounded-full text-xs">
-                      Featured
-                    </span>
-                  )}
                 </div>
               </div>
               
@@ -740,18 +845,21 @@ export default function ContentManagement() {
                   />
                 </div>
 
-                {/* Featured */}
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="featured"
-                    checked={formData.featured || false}
-                    onChange={(e) => setFormData({...formData, featured: e.target.checked})}
-                    className="w-4 h-4 text-cyber-neon bg-cyber-dark border-cyber-neon/20 rounded focus:ring-cyber-neon"
-                  />
-                  <label htmlFor="featured" className="text-sm text-dark-200">
-                    Featured Article
+                {/* YouTube Link */}
+                <div>
+                  <label className="block text-sm font-medium text-dark-200 mb-2">
+                    YouTube Video Link (Optional)
                   </label>
+                  <input
+                    type="url"
+                    value={formData.youtubeUrl || ''}
+                    onChange={(e) => setFormData({...formData, youtubeUrl: e.target.value})}
+                    className="w-full px-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+                    placeholder="https://www.youtube.com/watch?v=..."
+                  />
+                  <p className="text-xs text-dark-400 mt-1">
+                    Add your YouTube video link for this lecture explanation
+                  </p>
                 </div>
 
                 {/* Content Editor */}
@@ -759,15 +867,98 @@ export default function ContentManagement() {
                   <label className="block text-sm font-medium text-dark-200 mb-2">
                     Article Content *
                   </label>
-                  <RichTextEditor
+                  <EnhancedRichTextEditor
                     content={formData.content || ''}
                     onChange={(content) => setFormData({...formData, content})}
-                    placeholder="Write your article content here..."
+                    onAutoSave={(content) => {
+                      // Auto-save to localStorage as draft
+                      localStorage.setItem(`draft-article-${editingArticle?.id || 'new'}`, JSON.stringify({
+                        ...formData,
+                        content,
+                        autoSavedAt: new Date().toISOString()
+                      }))
+                    }}
+                    placeholder="Start writing your article... Use keyboard shortcuts (Ctrl+B, Ctrl+I, etc.)"
+                    minHeight={600}
                   />
                 </div>
 
+                {/* SEO Preview */}
+                <div className="border-t border-cyber-neon/20 pt-6">
+                  <button
+                    onClick={() => setShowSEOPreview(!showSEOPreview)}
+                    className="flex items-center gap-2 text-sm text-cyber-neon hover:text-cyber-green mb-4"
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    {showSEOPreview ? 'Hide' : 'Show'} SEO Preview
+                  </button>
+                  
+                  {showSEOPreview && (
+                    <div className="bg-cyber-dark/50 p-4 rounded-lg space-y-3">
+                      <div>
+                        <div className="text-xs text-dark-400 mb-1">Search Result Preview</div>
+                        <div className="border border-cyber-neon/20 rounded p-3 bg-white/5">
+                          <div className="text-blue-400 text-sm mb-1">
+                            {typeof window !== 'undefined' ? window.location.origin : 'https://cyber-tmsah.vercel.app'}/materials/{formData.subjectId}/{formData.title?.toLowerCase().replace(/\s+/g, '-') || 'article'}
+                          </div>
+                          <div className="text-cyber-neon text-lg font-semibold mb-1">
+                            {formData.title || 'Article Title'}
+                          </div>
+                          <div className="text-dark-300 text-sm">
+                            {formData.description || formData.excerpt || 'Article description will appear here...'}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="text-dark-400">Title Length: </span>
+                          <span className={formData.title && formData.title.length > 60 ? 'text-yellow-400' : 'text-green-400'}>
+                            {formData.title?.length || 0}/60
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-dark-400">Description Length: </span>
+                          <span className={formData.description && formData.description.length > 160 ? 'text-yellow-400' : 'text-green-400'}>
+                            {formData.description?.length || 0}/160
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Schedule Publishing */}
+                {formData.status === 'scheduled' && (
+                  <div className="border-t border-cyber-neon/20 pt-6">
+                    <label className="block text-sm font-medium text-dark-200 mb-4">
+                      Schedule Publishing
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs text-dark-400 mb-2">Date</label>
+                        <input
+                          type="date"
+                          value={scheduledDate}
+                          onChange={(e) => setScheduledDate(e.target.value)}
+                          className="w-full px-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-dark-400 mb-2">Time</label>
+                        <input
+                          type="time"
+                          value={scheduledTime}
+                          onChange={(e) => setScheduledTime(e.target.value)}
+                          className="w-full px-4 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Actions */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 border-t border-cyber-neon/20 pt-6">
                   <button
                     onClick={isCreating ? handleCreateArticle : saveEdit}
                     className="btn-primary flex items-center gap-2"
@@ -775,6 +966,23 @@ export default function ContentManagement() {
                     <Save className="w-4 h-4" />
                     {isCreating ? 'Create Article' : 'Save Changes'}
                   </button>
+                  
+                  {formData.status === 'draft' && (
+                    <button
+                      onClick={() => {
+                        setFormData({...formData, status: 'published'})
+                        if (isCreating) {
+                          handleCreateArticle()
+                        } else if (editingArticle) {
+                          handleUpdateArticle(editingArticle.id, { status: 'published' })
+                        }
+                      }}
+                      className="btn-secondary flex items-center gap-2 bg-green-500/20 hover:bg-green-500/30 text-green-400"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      Publish Now
+                    </button>
+                  )}
                   
                   <button
                     onClick={() => {
@@ -850,7 +1058,7 @@ export default function ContentManagement() {
                   <div className="bg-cyber-dark/50 p-4 rounded-lg max-h-60 overflow-y-auto">
                     <div 
                       className="prose prose-invert max-w-none"
-                      dangerouslySetInnerHTML={{ __html: selectedArticle.content.substring(0, 500) + (selectedArticle.content.length > 500 ? '...' : '') }}
+                      dangerouslySetInnerHTML={{ __html: (selectedArticle.content.substring(0, 500) + (selectedArticle.content.length > 500 ? '...' : '')) }}
                     />
                   </div>
                 </div>

@@ -61,7 +61,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="text-center">
           <div className="text-dark-300 text-sm">
-            © 2024 Cyber TMSAH. All rights reserved.
+            © 2025-2026 Cyber TMSAH. All rights reserved.
           </div>
           <div className="text-cyber-neon text-sm mt-2 font-medium">
             Created by ZEYAD MOHAMED

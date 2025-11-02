@@ -202,15 +202,17 @@ export default function AboutPage() {
                 <h3 className="text-2xl font-semibold text-dark-100">Teaching Assistants</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="text-dark-300">Ehab Gallab</div>
-                <div className="text-dark-300">Ahmed Nashaat</div>
-                <div className="text-dark-300">Nagla Saeed</div>
-                <div className="text-dark-300">Kareem Adel</div>
-                <div className="text-dark-300">Mohamed Ammar</div>
-                <div className="text-dark-300">Mahmoud Mohamed</div>
-                <div className="text-dark-300">Mariam Ashraf</div>
-                <div className="text-dark-300">Dina Ali</div>
-                <div className="text-dark-300">Amany Ibrahim</div>
+                <div className="text-dark-300 font-medium">Mohamed Mostafa</div>
+                <div className="text-dark-300 font-medium">Ehab Mohamed</div>
+                <div className="text-dark-300 font-medium">Kareem Adel</div>
+                <div className="text-dark-300 font-medium">Mahmoud Mohamed</div>
+                <div className="text-dark-300 font-medium">Mariam Ashraf</div>
+                <div className="text-dark-300 font-medium">Nagla Saeed</div>
+                <div className="text-dark-300 font-medium">Omnia Ibrahim</div>
+                <div className="text-dark-300 font-medium">Yasmin Ibrahim</div>
+                <div className="text-dark-300 font-medium">Ahmed Nashaat</div>
+                <div className="text-dark-300 font-medium">Mohamed Ammar</div>
+                <div className="text-dark-300 font-medium">Dina Ali</div>
               </div>
             </div>
           </div>

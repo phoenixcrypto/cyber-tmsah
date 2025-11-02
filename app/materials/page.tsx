@@ -2,73 +2,182 @@
 
 import Link from 'next/link'
 import { BookOpen, Calculator, Atom, Database, Globe, Users, FileText, ArrowRight } from 'lucide-react'
+import { useState, useEffect } from 'react'
+
+interface Subject {
+  id: string
+  title: string
+  description: string
+  icon: any
+  color: string
+  articlesCount: number
+  lastUpdated: string
+}
 
 export default function MaterialsPage() {
-  const subjects = [
+  const [subjects, setSubjects] = useState<Subject[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const subjectConfig = [
     {
       id: 'applied-physics',
       title: 'Applied Physics',
       description: 'Physics principles and applications in technology',
       icon: Atom,
-      color: 'from-blue-500 to-blue-600',
-      lectures: 12,
-      lastUpdated: '2 days ago'
+      color: 'from-blue-500 to-blue-600'
     },
     {
       id: 'mathematics',
       title: 'Mathematics',
       description: 'Mathematical foundations and problem solving',
       icon: Calculator,
-      color: 'from-green-500 to-green-600',
-      lectures: 15,
-      lastUpdated: '1 day ago'
+      color: 'from-green-500 to-green-600'
     },
     {
       id: 'entrepreneurship',
       title: 'Entrepreneurship & Creative Thinking',
       description: 'Business innovation and creative problem solving',
       icon: Users,
-      color: 'from-purple-500 to-purple-600',
-      lectures: 10,
-      lastUpdated: '3 days ago'
+      color: 'from-purple-500 to-purple-600'
     },
     {
       id: 'information-technology',
       title: 'Information Technology',
       description: 'IT fundamentals and modern technologies',
       icon: Globe,
-      color: 'from-cyan-500 to-cyan-600',
-      lectures: 14,
-      lastUpdated: '1 day ago'
+      color: 'from-cyan-500 to-cyan-600'
     },
     {
       id: 'database-systems',
       title: 'Database Systems',
       description: 'Database design, implementation and management',
       icon: Database,
-      color: 'from-orange-500 to-orange-600',
-      lectures: 13,
-      lastUpdated: '2 days ago'
+      color: 'from-orange-500 to-orange-600'
     },
     {
       id: 'english-language',
       title: 'English Language',
       description: 'English communication and technical writing',
       icon: FileText,
-      color: 'from-red-500 to-red-600',
-      lectures: 8,
-      lastUpdated: '4 days ago'
+      color: 'from-red-500 to-red-600'
     },
     {
       id: 'information-systems',
       title: 'Information Systems',
       description: 'IS analysis, design and implementation',
       icon: BookOpen,
-      color: 'from-indigo-500 to-indigo-600',
-      lectures: 11,
-      lastUpdated: '1 day ago'
+      color: 'from-indigo-500 to-indigo-600'
     }
   ]
+
+  // Load articles count for each subject
+  useEffect(() => {
+    const loadArticlesCount = async () => {
+      try {
+        setLoading(true)
+        
+        // Fetch articles count for all subjects
+        const subjectsWithCounts = await Promise.all(
+          subjectConfig.map(async (subject) => {
+            try {
+              const response = await fetch(`/api/articles/by-subject?subjectId=${subject.id}&status=published`, {
+                cache: 'no-store'
+              })
+              
+              if (response.ok) {
+                const data = await response.json()
+                
+                // Debug: Log what we received
+                if (process.env.NODE_ENV === 'development') {
+                  console.log(`[Materials] ${subject.id}: Received`, data)
+                }
+                
+                // Ensure articles is an array
+                const articlesArray = Array.isArray(data) ? data : []
+                
+                // Filter out any error objects or invalid articles
+                const validArticles = articlesArray.filter((article: any) => {
+                  return article && !article.error && article.id
+                })
+                
+                const articlesCount = validArticles.length
+                
+                // Debug: Log count
+                if (process.env.NODE_ENV === 'development') {
+                  console.log(`[Materials] ${subject.id}: Count = ${articlesCount}`)
+                }
+                
+                // Calculate last updated date
+                let lastUpdated = 'No articles yet'
+                if (articlesCount > 0 && validArticles.length > 0) {
+                  const sortedArticles = [...validArticles].sort(
+                    (a: any, b: any) => {
+                      const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0
+                      const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0
+                      return dateB - dateA
+                    }
+                  )
+                  const latestArticle = sortedArticles[0]
+                  if (latestArticle && latestArticle.publishedAt) {
+                    const publishedDate = new Date(latestArticle.publishedAt)
+                    const now = new Date()
+                    const diffTime = Math.abs(now.getTime() - publishedDate.getTime())
+                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+                    
+                    if (diffDays === 0) {
+                      lastUpdated = 'Today'
+                    } else if (diffDays === 1) {
+                      lastUpdated = '1 day ago'
+                    } else {
+                      lastUpdated = `${diffDays} days ago`
+                    }
+                  }
+                }
+                
+                return {
+                  ...subject,
+                  articlesCount,
+                  lastUpdated
+                }
+              } else {
+                // If response is not ok, return 0 articles
+                const errorData = await response.json().catch(() => ({}))
+                console.warn(`Failed to fetch articles for ${subject.id}:`, response.status, errorData)
+                return {
+                  ...subject,
+                  articlesCount: 0,
+                  lastUpdated: 'No articles yet'
+                }
+              }
+            } catch (error) {
+              console.error(`Error loading articles for ${subject.id}:`, error)
+              return {
+                ...subject,
+                articlesCount: 0,
+                lastUpdated: 'No articles yet'
+              }
+            }
+          })
+        )
+        
+        setSubjects(subjectsWithCounts)
+      } catch (error) {
+        console.error('Error loading articles count:', error)
+        // Fallback to default values
+        setSubjects(
+          subjectConfig.map(subject => ({
+            ...subject,
+            articlesCount: 0,
+            lastUpdated: 'No articles yet'
+          }))
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadArticlesCount()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
@@ -116,8 +225,18 @@ export default function MaterialsPage() {
                   </p>
                   
                   <div className="flex items-center justify-between text-sm text-dark-400">
-                    <span>{subject.lectures} lectures</span>
-                    <span>Updated {subject.lastUpdated}</span>
+                    <span>
+                      {loading ? (
+                        <span className="text-cyber-neon">Loading...</span>
+                      ) : (
+                        <>
+                          {subject.articlesCount} {subject.articlesCount === 1 ? 'article' : 'articles'}
+                        </>
+                      )}
+                    </span>
+                    <span>
+                      {loading ? '' : subject.lastUpdated !== 'No articles yet' ? `Updated ${subject.lastUpdated}` : 'No articles yet'}
+                    </span>
                   </div>
                 </div>
               </Link>

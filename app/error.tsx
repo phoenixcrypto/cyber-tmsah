@@ -84,14 +84,14 @@ export default function Error({
               Need Help?
             </h3>
             <p className="text-dark-300 mb-4">
-              If the error persists, please contact the support team
+              If the error persists, please try refreshing the page or return to the home page
             </p>
             <Link
-              href="/contact"
+              href="/"
               className="btn-tertiary inline-flex items-center gap-2"
             >
-              <AlertTriangle className="w-4 h-4" />
-              Contact Support
+              <Home className="w-4 h-4" />
+              Go to Home
             </Link>
           </div>
         </div>

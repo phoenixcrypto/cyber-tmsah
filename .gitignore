@@ -85,3 +85,13 @@ jspm_packages/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# Empty directories (removed - kept here for reference)
+# app/admin/new/
+# app/admin/professional-cms/
+# app/contact/
+# app/materials/[id]/[type]/[contentId]/
+
+# Strapi CMS (optional - keep if part of project, remove if separate)
+# Uncomment to ignore Strapi folder if it's in a separate repo
+# cyber-tmsah-cms/

@@ -22,8 +22,8 @@ interface Article {
   views: number
   likes: number
   tags: string[]
-  featured: boolean
   excerpt: string
+  youtubeUrl?: string
 }
 
 export default function SubjectPage() {
@@ -253,12 +253,6 @@ export default function SubjectPage() {
               <p className="text-dark-400 mb-6">
                 Lectures for this subject will be published soon.
               </p>
-              <Link
-                href="/admin/content"
-                className="btn-primary"
-              >
-                Manage Content
-              </Link>
             </div>
           )}
         </div>
