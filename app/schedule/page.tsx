@@ -9,6 +9,107 @@ export default function SchedulePage() {
   const [validationError, setValidationError] = useState('')
   const [scheduleView, setScheduleView] = useState<'A' | 'B'>('A') // Toggle between Group A and B
   
+  // Sections Data - All 15 Sections with their lab schedules
+  const sectionsData = [
+    // ========== SECTIONS 1-7 (GROUP A - Group 1) ==========
+    // Section 1
+    { id: 's1-1', title: 'Mathematics', time: '05:10 PM - 06:10 PM', location: 'Hall F 209', instructor: 'TA Yasmin Ibrahim', type: 'lab', group: 'Group 1', sectionNumber: 1, day: 'Monday' },
+    { id: 's1-2', title: 'IT', time: '12:30 PM - 01:30 PM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 1, day: 'Tuesday' },
+    { id: 's1-3', title: 'Physics', time: '09:00 AM - 10:00 AM', location: 'Hall G 203', instructor: 'TA Ahmed Nashaat', type: 'lab', group: 'Group 1', sectionNumber: 1, day: 'Wednesday' },
+    { id: 's1-4', title: 'IS', time: '10:10 AM - 11:10 AM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 1, day: 'Wednesday' },
+    { id: 's1-5', title: 'Database', time: '11:20 AM - 12:20 PM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 1, day: 'Wednesday' },
+    
+    // Section 2
+    { id: 's2-1', title: 'Physics', time: '12:30 PM - 01:30 PM', location: 'Hall G 206', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 1', sectionNumber: 2, day: 'Saturday' },
+    { id: 's2-2', title: 'IT', time: '10:10 AM - 11:10 AM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 2, day: 'Tuesday' },
+    { id: 's2-3', title: 'Mathematics', time: '02:50 PM - 03:50 PM', location: 'Hall F 209', instructor: 'TA Yasmin Ibrahim', type: 'lab', group: 'Group 1', sectionNumber: 2, day: 'Tuesday' },
+    { id: 's2-4', title: 'IS', time: '09:00 AM - 10:00 AM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 2, day: 'Wednesday' },
+    { id: 's2-5', title: 'Database', time: '10:00 AM - 11:10 AM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 2, day: 'Wednesday' },
+    
+    // Section 3
+    { id: 's3-1', title: 'Physics', time: '01:40 PM - 02:40 PM', location: 'Hall G 206', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 1', sectionNumber: 3, day: 'Saturday' },
+    { id: 's3-2', title: 'IT', time: '02:50 PM - 03:50 PM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 3, day: 'Tuesday' },
+    { id: 's3-3', title: 'Mathematics', time: '04:00 PM - 05:00 PM', location: 'Hall F 209', instructor: 'TA Yasmin Ibrahim', type: 'lab', group: 'Group 1', sectionNumber: 3, day: 'Tuesday' },
+    { id: 's3-4', title: 'Database', time: '09:00 AM - 10:00 AM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 3, day: 'Wednesday' },
+    { id: 's3-5', title: 'IS', time: '12:30 PM - 01:30 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 3, day: 'Wednesday' },
+    
+    // Section 4
+    { id: 's4-1', title: 'Physics', time: '02:50 PM - 03:50 PM', location: 'Hall G 206', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 1', sectionNumber: 4, day: 'Saturday' },
+    { id: 's4-2', title: 'IT', time: '12:30 PM - 01:30 PM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 4, day: 'Monday' },
+    { id: 's4-3', title: 'Mathematics', time: '01:40 PM - 02:40 PM', location: 'Hall G 105', instructor: 'TA Ahmed Nashaat', type: 'lab', group: 'Group 1', sectionNumber: 4, day: 'Monday' },
+    { id: 's4-4', title: 'IS', time: '11:20 AM - 12:20 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 4, day: 'Wednesday' },
+    { id: 's4-5', title: 'Database', time: '12:30 PM - 01:30 PM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 4, day: 'Wednesday' },
+    
+    // Section 5
+    { id: 's5-1', title: 'IS', time: '10:10 AM - 11:10 AM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 5, day: 'Monday' },
+    { id: 's5-2', title: 'Mathematics', time: '02:50 PM - 03:50 PM', location: 'Hall G 105', instructor: 'TA Ahmed Nashaat', type: 'lab', group: 'Group 1', sectionNumber: 5, day: 'Monday' },
+    { id: 's5-3', title: 'IT', time: '04:00 PM - 05:00 PM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 5, day: 'Tuesday' },
+    { id: 's5-4', title: 'Database', time: '01:40 PM - 02:40 PM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 5, day: 'Wednesday' },
+    
+    // Section 6
+    { id: 's6-1', title: 'IT', time: '10:10 AM - 11:10 AM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 6, day: 'Monday' },
+    { id: 's6-2', title: 'Database', time: '02:50 PM - 03:50 PM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 6, day: 'Monday' },
+    { id: 's6-3', title: 'Mathematics', time: '05:10 PM - 06:10 PM', location: 'Hall G 105', instructor: 'TA Ahmed Nashaat', type: 'lab', group: 'Group 1', sectionNumber: 6, day: 'Monday' },
+    { id: 's6-4', title: 'IS', time: '02:50 PM - 03:50 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 6, day: 'Wednesday' },
+    
+    // Section 7
+    { id: 's7-1', title: 'Mathematics', time: '12:30 PM - 01:30 PM', location: 'Hall G 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Saturday' },
+    { id: 's7-2', title: 'Database', time: '10:10 AM - 11:10 AM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Monday' },
+    { id: 's7-3', title: 'IT', time: '01:40 PM - 02:40 PM', location: 'Hall D 101', instructor: 'TA Mohamed Ammar', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Monday' },
+    { id: 's7-4', title: 'IS', time: '01:40 PM - 02:40 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 1', sectionNumber: 7, day: 'Wednesday' },
+
+    // ========== SECTIONS 8-15 (GROUP B - Group 2) ==========
+    // Section 8
+    { id: 's8-1', title: 'IT', time: '09:00 AM - 10:00 AM', location: 'Hall D 102', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 2', sectionNumber: 8, day: 'Saturday' },
+    { id: 's8-2', title: 'Mathematics', time: '01:40 PM - 02:40 PM', location: 'Hall G 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 8, day: 'Saturday' },
+    { id: 's8-3', title: 'Database', time: '09:00 AM - 10:00 AM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 2', sectionNumber: 8, day: 'Monday' },
+    { id: 's8-4', title: 'IS', time: '11:20 AM - 12:20 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 8, day: 'Monday' },
+    
+    // Section 9
+    { id: 's9-1', title: 'IT', time: '10:10 AM - 11:10 AM', location: 'Hall D 102', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 2', sectionNumber: 9, day: 'Saturday' },
+    { id: 's9-2', title: 'Mathematics', time: '02:50 PM - 03:50 PM', location: 'Hall G 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 9, day: 'Saturday' },
+    { id: 's9-3', title: 'IS', time: '12:30 PM - 01:30 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 9, day: 'Monday' },
+    { id: 's9-4', title: 'Database', time: '01:40 PM - 02:40 PM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 2', sectionNumber: 9, day: 'Monday' },
+    
+    // Section 10
+    { id: 's10-1', title: 'IT', time: '11:20 AM - 12:20 PM', location: 'Hall D 102', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 2', sectionNumber: 10, day: 'Saturday' },
+    { id: 's10-2', title: 'Database', time: '11:20 AM - 12:20 PM', location: 'Hall D 103', instructor: 'TA Kareem Adel', type: 'lab', group: 'Group 2', sectionNumber: 10, day: 'Monday' },
+    { id: 's10-3', title: 'IS', time: '01:40 PM - 02:40 PM', location: 'Hall D 103', instructor: 'TA Mahmoud Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 10, day: 'Monday' },
+    { id: 's10-4', title: 'Physics', time: '05:10 PM - 06:10 PM', location: 'Hall F 205', instructor: 'TA Omnia Ibrahim', type: 'lab', group: 'Group 2', sectionNumber: 10, day: 'Monday' },
+    
+    // Section 11
+    { id: 's11-1', title: 'Mathematics', time: '05:10 PM - 06:10 PM', location: 'Hall G 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 11, day: 'Saturday' },
+    { id: 's11-2', title: 'IT', time: '09:00 AM - 10:00 AM', location: 'Hall D 102', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 2', sectionNumber: 11, day: 'Monday' },
+    { id: 's11-3', title: 'Database', time: '11:20 AM - 12:20 PM', location: 'Hall D 101', instructor: 'TA Nagla Saeed', type: 'lab', group: 'Group 2', sectionNumber: 11, day: 'Monday' },
+    { id: 's11-4', title: 'Physics', time: '04:00 PM - 05:00 PM', location: 'Hall F 205', instructor: 'TA Omnia Ibrahim', type: 'lab', group: 'Group 2', sectionNumber: 11, day: 'Tuesday' },
+    { id: 's11-5', title: 'IS', time: '01:40 PM - 02:40 PM', location: 'Hall D 102', instructor: 'TA Dina Ali', type: 'lab', group: 'Group 2', sectionNumber: 11, day: 'Wednesday' },
+    
+    // Section 12
+    { id: 's12-1', title: 'Database', time: '09:00 AM - 10:00 AM', location: 'Hall D 101', instructor: 'TA Nagla Saeed', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
+    { id: 's12-2', title: 'IT', time: '12:30 PM - 01:30 PM', location: 'Hall D 102', instructor: 'TA Mohamed Mostafa', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
+    { id: 's12-3', title: 'Mathematics', time: '04:00 PM - 05:00 PM', location: 'Hall F 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Monday' },
+    { id: 's12-4', title: 'Physics', time: '05:10 PM - 06:10 PM', location: 'Hall F 205', instructor: 'TA Omnia Ibrahim', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Tuesday' },
+    { id: 's12-5', title: 'IS', time: '12:30 PM - 01:30 PM', location: 'Hall D 101', instructor: 'TA Mariam Ashraf', type: 'lab', group: 'Group 2', sectionNumber: 12, day: 'Wednesday' },
+    
+    // Section 13
+    { id: 's13-1', title: 'Physics', time: '04:00 PM - 05:00 PM', location: 'Hall F 205', instructor: 'TA Omnia Ibrahim', type: 'lab', group: 'Group 2', sectionNumber: 13, day: 'Monday' },
+    { id: 's13-2', title: 'Mathematics', time: '05:10 PM - 06:10 PM', location: 'Hall F 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 13, day: 'Monday' },
+    { id: 's13-3', title: 'Database', time: '04:00 PM - 05:00 PM', location: 'Hall D 102', instructor: 'TA Nagla Saeed', type: 'lab', group: 'Group 2', sectionNumber: 13, day: 'Tuesday' },
+    { id: 's13-4', title: 'IS', time: '09:00 AM - 10:00 AM', location: 'Hall D 101', instructor: 'TA Mariam Ashraf', type: 'lab', group: 'Group 2', sectionNumber: 13, day: 'Wednesday' },
+    
+    // Section 14
+    { id: 's14-1', title: 'Physics', time: '01:40 PM - 02:40 PM', location: 'Hall F 108', instructor: 'TA Omnia Ibrahim', type: 'lab', group: 'Group 2', sectionNumber: 14, day: 'Monday' },
+    { id: 's14-2', title: 'Database', time: '05:10 PM - 06:10 PM', location: 'Hall D 102', instructor: 'TA Nagla Saeed', type: 'lab', group: 'Group 2', sectionNumber: 14, day: 'Monday' },
+    { id: 's14-3', title: 'IS', time: '11:20 AM - 12:20 PM', location: 'Hall D 101', instructor: 'TA Mariam Ashraf', type: 'lab', group: 'Group 2', sectionNumber: 14, day: 'Wednesday' },
+    { id: 's14-4', title: 'Mathematics', time: '02:50 PM - 03:50 PM', location: 'Hall F 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 14, day: 'Wednesday' },
+    
+    // Section 15
+    { id: 's15-1', title: 'Database', time: '04:00 PM - 05:00 PM', location: 'Hall D 101', instructor: 'TA Nagla Saeed', type: 'lab', group: 'Group 2', sectionNumber: 15, day: 'Monday' },
+    { id: 's15-2', title: 'Physics', time: '01:40 PM - 02:40 PM', location: 'Hall F 108', instructor: 'TA Omnia Ibrahim', type: 'lab', group: 'Group 2', sectionNumber: 15, day: 'Tuesday' },
+    { id: 's15-3', title: 'IS', time: '10:10 AM - 11:10 AM', location: 'Hall D 101', instructor: 'TA Mariam Ashraf', type: 'lab', group: 'Group 2', sectionNumber: 15, day: 'Wednesday' },
+    { id: 's15-4', title: 'Mathematics', time: '04:00 PM - 05:00 PM', location: 'Hall F 207', instructor: 'TA Ehab Mohamed', type: 'lab', group: 'Group 2', sectionNumber: 15, day: 'Wednesday' }
+  ]
+
   // Updated Schedule Data - Group A (Group 1) and Group B (Group 2) Lectures
   const scheduleData = [
     // ========== GROUP A (Group 1) LECTURES ==========
@@ -232,7 +333,10 @@ export default function SchedulePage() {
     // Clear error if validation passes
     setValidationError('')
     
-    let filtered = scheduleData.filter(item => {
+    // Combine lectures and sections data
+    const allScheduleData = [...scheduleData, ...sectionsData]
+    
+    let filtered = allScheduleData.filter(item => {
       const matchesGroup = item.group === groupFilter
       const matchesSection = !selectedSection || item.sectionNumber === parseInt(selectedSection)
       return matchesGroup && matchesSection
@@ -386,9 +490,10 @@ export default function SchedulePage() {
           {(() => {
             // Filter by selected group from toggle
             const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2'
+            const allScheduleData = [...scheduleData, ...sectionsData]
             const scheduleToShow = filteredSchedule.length > 0 
               ? filteredSchedule.filter(item => item.group === groupFilter)
-              : scheduleData.filter(item => item.group === groupFilter)
+              : allScheduleData.filter(item => item.group === groupFilter)
             
             const groupedByDay = groupByDay(scheduleToShow)
             const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -415,7 +520,7 @@ export default function SchedulePage() {
                         </span>
                       ) : (
                         <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
-                          {dayLectures.length} {dayLectures.length === 1 ? 'Lecture' : 'Lectures'}
+                          {dayLectures.length} {dayLectures.length === 1 ? 'Class' : 'Classes'}
                         </span>
                       )}
                     </div>
@@ -438,7 +543,7 @@ export default function SchedulePage() {
                             <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Location</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Group</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -457,6 +562,11 @@ export default function SchedulePage() {
                               </td>
                               <td className="px-6 py-4 text-dark-100 font-semibold">
                                 {item.title}
+                                {item.sectionNumber && (
+                                  <span className="ml-2 text-xs text-cyber-neon font-normal">
+                                    (Section {item.sectionNumber})
+                                  </span>
+                                )}
                               </td>
                               <td className="px-6 py-4 text-dark-300">
                                 <div className="flex items-center gap-2">
@@ -480,9 +590,15 @@ export default function SchedulePage() {
                                 </span>
                               </td>
                               <td className="px-6 py-4 text-dark-300">
-                                <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
-                                  {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
-                                </span>
+                                {item.sectionNumber ? (
+                                  <span className="px-2 py-1 bg-cyber-green/20 text-cyber-green rounded text-xs font-medium">
+                                    Section {item.sectionNumber}
+                                  </span>
+                                ) : (
+                                  <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
+                                    {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
+                                  </span>
+                                )}
                               </td>
                             </tr>
                           ))}
