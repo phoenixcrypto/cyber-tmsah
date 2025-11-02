@@ -101,22 +101,11 @@ body {
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 8px var(--shadow-secondary);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px var(--shadow-secondary);
-}
-
-/* Light mode button text color fix */
-:root[data-theme="light"] .btn-primary {
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 168, 104, 0.25);
-}
-
-:root[data-theme="light"] .btn-primary:hover {
-  box-shadow: 0 8px 25px rgba(0, 168, 104, 0.35);
+  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
 }
 
 .btn-secondary {
