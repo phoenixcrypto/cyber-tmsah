@@ -186,7 +186,7 @@ export default function AboutPage() {
                 <div className="text-dark-300">Dr. Ahmed Bakr - Applied Physics</div>
                 <div className="text-dark-300">Dr. Abeer Hassan - Database Systems & Entrepreneurship</div>
                 <div className="text-dark-300">Dr. Shaima Ahmed - Information Technology</div>
-                <div className="text-dark-300">Dr. Nashwa - English Language</div>
+                <div className="text-dark-300">Dr. Sabreen - English Language</div>
                 <div className="text-dark-300">Dr. Hind Ziada - Information Systems</div>
               </div>
             </div>

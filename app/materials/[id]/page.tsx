@@ -92,7 +92,7 @@ export default function SubjectPage() {
     'english-language': {
       title: 'English Language',
       description: 'English communication and technical writing',
-      instructor: 'Dr. Nashwa',
+      instructor: 'Dr. Sabreen',
       color: 'from-red-500 to-red-600',
       lectures: []
     },

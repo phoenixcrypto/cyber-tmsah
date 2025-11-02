@@ -49,7 +49,7 @@ export default function HomePage() {
   }> = [
     // ========== GROUP A (Group 1) LECTURES ==========
     // Saturday - Group A
-    { time: '11:20 AM - 12:20 PM', subject: 'English', instructor: 'Dr. Nashwa', room: 'Hall G 205', type: 'Lecture', group: 'Group 1', sectionNumber: null, day: 'Saturday' },
+    { time: '11:20 AM - 12:20 PM', subject: 'English', instructor: 'Dr. Sabreen', room: 'Hall G 205', type: 'Lecture', group: 'Group 1', sectionNumber: null, day: 'Saturday' },
     // Monday - Group A
     { time: '09:00 AM - 10:00 AM', subject: 'Information Systems', instructor: 'Dr. Hind Ziada', room: 'Hall G 205', type: 'Lecture', group: 'Group 1', sectionNumber: null, day: 'Monday' },
     { time: '04:00 PM - 05:00 PM', subject: 'Information Technology', instructor: 'Dr. Shaima Ahmed', room: 'Auditorium A', type: 'Lecture', group: 'Group 1', sectionNumber: null, day: 'Monday' },
@@ -62,7 +62,7 @@ export default function HomePage() {
 
     // ========== GROUP B (Group 2) LECTURES ==========
     // Saturday - Group B
-    { time: '12:30 PM - 01:30 PM', subject: 'English', instructor: 'Dr. Nashwa', room: 'Hall G 205', type: 'Lecture', group: 'Group 2', sectionNumber: null, day: 'Saturday' },
+    { time: '12:30 PM - 01:30 PM', subject: 'English', instructor: 'Dr. Sabreen', room: 'Hall G 205', type: 'Lecture', group: 'Group 2', sectionNumber: null, day: 'Saturday' },
     // Monday - Group B
     { time: '10:10 AM - 11:10 AM', subject: 'Information Systems', instructor: 'Dr. Hind Ziada', room: 'Hall G 205', type: 'Lecture', group: 'Group 2', sectionNumber: null, day: 'Monday' },
     { time: '02:50 PM - 03:50 PM', subject: 'Information Technology', instructor: 'Dr. Shaima Ahmed', room: 'Auditorium A', type: 'Lecture', group: 'Group 2', sectionNumber: null, day: 'Monday' },
