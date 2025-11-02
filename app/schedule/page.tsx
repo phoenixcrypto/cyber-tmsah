@@ -644,14 +644,14 @@ export default function SchedulePage() {
                         <table className="w-full border-collapse">
                           <thead>
                             <tr>
-                              <th className="px-4 py-3 bg-cyber-dark/50 text-cyber-neon font-semibold text-sm border border-cyber-neon/20 sticky left-0 z-10">
+                              <th className="px-4 py-3 bg-cyber-dark/70 text-cyber-neon font-bold text-sm border-2 border-cyber-neon/30 sticky left-0 z-10 shadow-lg">
                                 Section
                               </th>
                               {periods.map(period => (
-                                <th key={period.number} className="px-3 py-3 bg-cyber-dark/50 text-cyber-neon font-semibold text-xs border border-cyber-neon/20 min-w-[140px]">
-                                  <div className="flex flex-col items-center">
-                                    <span className="font-bold">P{period.number}</span>
-                                    <span className="text-[10px] mt-1 opacity-80">{period.start}</span>
+                                <th key={period.number} className="px-3 py-3 bg-cyber-dark/70 text-cyber-neon font-semibold text-xs border-2 border-cyber-neon/30 min-w-[120px]">
+                                  <div className="flex flex-col items-center gap-1">
+                                    <span className="font-bold text-base">P{period.number}</span>
+                                    <span className="text-[11px] opacity-90 font-mono">{period.start}</span>
                                   </div>
                                 </th>
                               ))}
@@ -660,34 +660,36 @@ export default function SchedulePage() {
                           <tbody>
                             {sectionsToShow.map(sectionNum => (
                               <tr key={sectionNum} className="hover:bg-cyber-neon/5 transition-colors">
-                                <td className="px-4 py-3 bg-cyber-dark/30 text-cyber-neon font-bold text-sm border border-cyber-neon/20 sticky left-0 z-10">
-                                  <span className="px-2 py-1 bg-cyber-neon/20 rounded">S{sectionNum}</span>
+                                <td className="px-4 py-3 bg-cyber-dark/50 text-cyber-neon font-bold text-base border-2 border-cyber-neon/30 sticky left-0 z-10 shadow-lg">
+                                  <span className="px-3 py-1.5 bg-cyber-neon/30 rounded-lg font-extrabold">S{sectionNum}</span>
                                 </td>
                                 {periods.map(period => {
-                                  const cellData = matrix[sectionNum]?.[period.number]
+                                  const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
                                   return (
-                                    <td key={period.number} className="px-2 py-2 border border-dark-200/20 align-top min-w-[140px]">
+                                    <td key={period.number} className="px-2 py-2 border border-dark-200/20 align-middle min-w-[120px] h-20">
                                       {cellData ? (
-                                        <div className={`p-2 rounded text-xs ${
-                                          cellData.isLecture || !cellData.sectionNumber
-                                            ? 'bg-cyber-violet/20 border border-cyber-violet/30'
-                                            : 'bg-cyber-green/20 border border-cyber-green/30'
-                                        }`}>
-                                          <div className="font-semibold text-dark-100 mb-1">{cellData.title}</div>
-                                          <div className="text-dark-300 text-[10px] mb-1">{cellData.instructor}</div>
-                                          <div className="text-dark-400 text-[10px]">{cellData.location}</div>
-                                          <div className="mt-1">
-                                            <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium ${
+                                        <div 
+                                          className={`p-2 rounded-lg text-xs cursor-pointer hover:scale-105 transition-transform ${
+                                            cellData.isLecture || !cellData.sectionNumber
+                                              ? 'bg-gradient-to-br from-cyber-violet/30 to-cyber-violet/10 border-2 border-cyber-violet/50'
+                                              : 'bg-gradient-to-br from-cyber-green/30 to-cyber-green/10 border-2 border-cyber-green/50'
+                                          }`}
+                                          title={`${cellData.title} - ${cellData.instructor} - ${cellData.location}`}
+                                        >
+                                          <div className="font-bold text-dark-100 mb-1 text-sm">{cellData.title}</div>
+                                          <div className="text-dark-300 text-[10px] opacity-80">{cellData.instructor.split(' ').slice(-2).join(' ')}</div>
+                                          <div className="mt-1.5">
+                                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold ${
                                               cellData.isLecture || !cellData.sectionNumber
-                                                ? 'bg-cyber-violet/30 text-cyber-violet'
-                                                : 'bg-cyber-green/30 text-cyber-green'
+                                                ? 'bg-cyber-violet/40 text-cyber-violet'
+                                                : 'bg-cyber-green/40 text-cyber-green'
                                             }`}>
-                                              {cellData.isLecture || !cellData.sectionNumber ? 'Lec' : 'Lab'}
+                                              {cellData.isLecture || !cellData.sectionNumber ? '📚 Lecture' : '🔬 Lab'}
                                             </span>
                                           </div>
                                         </div>
                                       ) : (
-                                        <div className="p-2 text-center text-dark-500 text-xs opacity-30">—</div>
+                                        <div className="p-2 text-center text-dark-500/20 text-xs">—</div>
                                       )}
                                     </td>
                                   )
