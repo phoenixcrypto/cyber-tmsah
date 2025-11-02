@@ -13,8 +13,12 @@ export function convertTo12Hour(time24: string): string {
   
   // Handle time range (e.g., "09:00 - 10:00")
   if (time24.includes(' - ')) {
-    const [start, end] = time24.split(' - ')
-    return `${convertTo12Hour(start)} - ${convertTo12Hour(end)}`
+    const parts = time24.split(' - ')
+    const start = parts[0] || ''
+    const end = parts[1] || ''
+    if (start && end) {
+      return `${convertTo12Hour(start)} - ${convertTo12Hour(end)}`
+    }
   }
   
   // Handle single time (e.g., "09:00")
