@@ -8,237 +8,187 @@ export default function SchedulePage() {
   const [selectedSection, setSelectedSection] = useState('')
   const [filteredSchedule, setFilteredSchedule] = useState<any[]>([])
   const [validationError, setValidationError] = useState('')
+  
+  // Updated Schedule Data - Group A (Group 1) and Group B (Group 2) Lectures
   const scheduleData = [
+    // ========== GROUP A (Group 1) LECTURES ==========
+    // Saturday - Group A
     {
       id: '1',
-      title: 'Applied Physics',
-      time: '09:00 - 10:30',
-      location: 'Main Hall A',
-      instructor: 'Dr. Ahmed Mohamed',
+      title: 'English',
+      time: '11:20 - 12:20',
+      location: 'Hall G 205',
+      instructor: 'Dr. Nashwa',
       type: 'lecture',
-      section: 'Group A (350 students)',
+      section: 'Group A',
       group: 'Group 1',
-      sectionNumber: null
+      sectionNumber: null,
+      day: 'Saturday'
     },
+    // Monday - Group A
     {
       id: '2',
-      title: 'Applied Physics',
-      time: '11:00 - 12:30',
-      location: 'Main Hall B',
-      instructor: 'Dr. Ahmed Mohamed',
+      title: 'Information Systems',
+      time: '09:00 - 10:00',
+      location: 'Hall G 250',
+      instructor: 'Dr. Hind Ziada',
       type: 'lecture',
-      section: 'Group B (350 students)',
-      group: 'Group 2',
-      sectionNumber: null
+      section: 'Group A',
+      group: 'Group 1',
+      sectionNumber: null,
+      day: 'Monday'
     },
     {
       id: '3',
-      title: 'Mathematics',
-      time: '14:00 - 15:30',
-      location: 'Main Hall A',
-      instructor: 'Dr. Sara Ahmed',
+      title: 'Information Technology',
+      time: '16:00 - 17:00',
+      location: 'Auditorium A',
+      instructor: 'Dr. Shaima Ahmed',
       type: 'lecture',
-      section: 'Group A (350 students)',
+      section: 'Group A',
       group: 'Group 1',
-      sectionNumber: null
+      sectionNumber: null,
+      day: 'Monday'
     },
+    // Tuesday - Group A
     {
       id: '4',
-      title: 'Mathematics',
-      time: '16:00 - 17:30',
-      location: 'Main Hall B',
-      instructor: 'Dr. Sara Ahmed',
+      title: 'Entrepreneurship and Creative Thinking Skills',
+      time: '09:00 - 10:00',
+      location: 'Auditorium A',
+      instructor: 'Dr. Abeer Hassan',
       type: 'lecture',
-      section: 'Group B (350 students)',
-      group: 'Group 2',
-      sectionNumber: null
+      section: 'Group A',
+      group: 'Group 1',
+      sectionNumber: null,
+      day: 'Tuesday'
     },
     {
       id: '5',
-      title: 'Entrepreneurship and Creative Thinking Skills',
-      time: '18:00 - 19:30',
-      location: 'Main Hall A',
-      instructor: 'Dr. Mohamed Ali',
+      title: 'Database Systems',
+      time: '11:20 - 12:20',
+      location: 'Auditorium A',
+      instructor: 'Dr. Abeer Hassan',
       type: 'lecture',
-      section: 'Group A (350 students)',
+      section: 'Group A',
       group: 'Group 1',
-      sectionNumber: null
+      sectionNumber: null,
+      day: 'Tuesday'
     },
     {
       id: '6',
-      title: 'Entrepreneurship and Creative Thinking Skills',
-      time: '08:00 - 09:30',
-      location: 'Main Hall B',
-      instructor: 'Dr. Mohamed Ali',
+      title: 'Mathematics',
+      time: '13:40 - 14:40',
+      location: 'Auditorium A',
+      instructor: 'Dr. Simon Ezzat',
       type: 'lecture',
-      section: 'Group B (350 students)',
-      group: 'Group 2',
-      sectionNumber: null
+      section: 'Group A',
+      group: 'Group 1',
+      sectionNumber: null,
+      day: 'Tuesday'
     },
+    // Wednesday - Group A
     {
       id: '7',
-      title: 'Information Technology',
-      time: '10:00 - 11:30',
-      location: 'Computer Lab 1',
-      instructor: 'Dr. Fatma Hassan',
-      type: 'lab',
-      section: 'Section 1 (47 students)',
+      title: 'Applied Physics',
+      time: '16:00 - 17:00',
+      location: 'Auditorium A',
+      instructor: 'Dr. Ahmed Bakr',
+      type: 'lecture',
+      section: 'Group A',
       group: 'Group 1',
-      sectionNumber: 1
+      sectionNumber: null,
+      day: 'Wednesday'
     },
+
+    // ========== GROUP B (Group 2) LECTURES ==========
+    // Saturday - Group B
     {
       id: '8',
-      title: 'Information Technology',
-      time: '12:00 - 13:30',
-      location: 'Computer Lab 2',
-      instructor: 'Dr. Fatma Hassan',
-      type: 'lab',
-      section: 'Section 2 (47 students)',
-      group: 'Group 1',
-      sectionNumber: 2
+      title: 'English',
+      time: '12:30 - 13:30',
+      location: 'Hall G 205',
+      instructor: 'Dr. Nashwa',
+      type: 'lecture',
+      section: 'Group B',
+      group: 'Group 2',
+      sectionNumber: null,
+      day: 'Saturday'
     },
+    // Monday - Group B
     {
       id: '9',
-      title: 'Information Technology',
-      time: '14:00 - 15:30',
-      location: 'Computer Lab 3',
-      instructor: 'Dr. Fatma Hassan',
-      type: 'lab',
-      section: 'Section 3 (47 students)',
-      group: 'Group 1',
-      sectionNumber: 3
+      title: 'Information Systems',
+      time: '10:10 - 11:10',
+      location: 'Hall G 205',
+      instructor: 'Dr. Hind Ziada',
+      type: 'lecture',
+      section: 'Group B',
+      group: 'Group 2',
+      sectionNumber: null,
+      day: 'Monday'
     },
     {
       id: '10',
-      title: 'Database Systems',
-      time: '16:00 - 17:30',
-      location: 'Computer Lab 1',
-      instructor: 'Eng. Ali Mahmoud',
-      type: 'lab',
-      section: 'Section 4 (47 students)',
-      group: 'Group 1',
-      sectionNumber: 4
+      title: 'Information Technology',
+      time: '14:50 - 15:50',
+      location: 'Auditorium A',
+      instructor: 'Dr. Shaima Ahmed',
+      type: 'lecture',
+      section: 'Group B',
+      group: 'Group 2',
+      sectionNumber: null,
+      day: 'Monday'
     },
+    // Tuesday - Group B
     {
       id: '11',
-      title: 'Database Systems',
-      time: '18:00 - 19:30',
-      location: 'Computer Lab 2',
-      instructor: 'Eng. Ali Mahmoud',
-      type: 'lab',
-      section: 'Section 5 (47 students)',
-      group: 'Group 1',
-      sectionNumber: 5
+      title: 'Entrepreneurship and Creative Thinking Skills',
+      time: '10:10 - 11:10',
+      location: 'Auditorium A',
+      instructor: 'Dr. Abeer Hassan',
+      type: 'lecture',
+      section: 'Group B',
+      group: 'Group 2',
+      sectionNumber: null,
+      day: 'Tuesday'
     },
     {
       id: '12',
       title: 'Database Systems',
-      time: '08:00 - 09:30',
-      location: 'Computer Lab 3',
-      instructor: 'Eng. Ali Mahmoud',
-      type: 'lab',
-      section: 'Section 6 (47 students)',
-      group: 'Group 1',
-      sectionNumber: 6
+      time: '12:30 - 13:30',
+      location: 'Auditorium A',
+      instructor: 'Dr. Abeer Hassan',
+      type: 'lecture',
+      section: 'Group B',
+      group: 'Group 2',
+      sectionNumber: null,
+      day: 'Tuesday'
     },
     {
       id: '13',
-      title: 'English',
-      time: '10:00 - 11:30',
-      location: 'Language Lab 1',
-      instructor: 'Dr. Nour El-Din',
-      type: 'lab',
-      section: 'Section 7 (47 students)',
-      group: 'Group 1',
-      sectionNumber: 7
+      title: 'Mathematics',
+      time: '14:50 - 15:50',
+      location: 'Auditorium A',
+      instructor: 'Dr. Simon Ezzat',
+      type: 'lecture',
+      section: 'Group B',
+      group: 'Group 2',
+      sectionNumber: null,
+      day: 'Tuesday'
     },
+    // Wednesday - Group B
     {
       id: '14',
-      title: 'English',
-      time: '12:00 - 13:30',
-      location: 'Language Lab 2',
-      instructor: 'Dr. Nour El-Din',
-      type: 'lab',
-      section: 'Section 8 (47 students)',
+      title: 'Applied Physics',
+      time: '17:10 - 18:10',
+      location: 'Auditorium A',
+      instructor: 'Dr. Ahmed Bakr',
+      type: 'lecture',
+      section: 'Group B',
       group: 'Group 2',
-      sectionNumber: 8
-    },
-    {
-      id: '15',
-      title: 'English',
-      time: '14:00 - 15:30',
-      location: 'Language Lab 3',
-      instructor: 'Dr. Nour El-Din',
-      type: 'lab',
-      section: 'Section 9 (47 students)',
-      group: 'Group 2',
-      sectionNumber: 9
-    },
-    {
-      id: '16',
-      title: 'Information System',
-      time: '16:00 - 17:30',
-      location: 'Computer Lab 4',
-      instructor: 'Eng. Mariam Ahmed',
-      type: 'lab',
-      section: 'Section 10 (47 students)',
-      group: 'Group 2',
-      sectionNumber: 10
-    },
-    {
-      id: '17',
-      title: 'Information System',
-      time: '18:00 - 19:30',
-      location: 'Computer Lab 5',
-      instructor: 'Eng. Mariam Ahmed',
-      type: 'lab',
-      section: 'Section 11 (47 students)',
-      group: 'Group 2',
-      sectionNumber: 11
-    },
-    {
-      id: '18',
-      title: 'Information System',
-      time: '08:00 - 09:30',
-      location: 'Computer Lab 6',
-      instructor: 'Eng. Mariam Ahmed',
-      type: 'lab',
-      section: 'Section 12 (47 students)',
-      group: 'Group 2',
-      sectionNumber: 12
-    },
-    {
-      id: '19',
-      title: 'Information Technology',
-      time: '10:00 - 11:30',
-      location: 'Computer Lab 7',
-      instructor: 'Dr. Fatma Hassan',
-      type: 'lab',
-      section: 'Section 13 (47 students)',
-      group: 'Group 2',
-      sectionNumber: 13
-    },
-    {
-      id: '20',
-      title: 'Database Systems',
-      time: '12:00 - 13:30',
-      location: 'Computer Lab 8',
-      instructor: 'Eng. Ali Mahmoud',
-      type: 'lab',
-      section: 'Section 14 (47 students)',
-      group: 'Group 2',
-      sectionNumber: 14
-    },
-    {
-      id: '21',
-      title: 'Information System',
-      time: '14:00 - 15:30',
-      location: 'Computer Lab 9',
-      instructor: 'Eng. Mariam Ahmed',
-      type: 'lab',
-      section: 'Section 15 (47 students)',
-      group: 'Group 2',
-      sectionNumber: 15
+      sectionNumber: null,
+      day: 'Wednesday'
     }
   ]
 
@@ -384,18 +334,24 @@ export default function SchedulePage() {
             <table className="w-full">
               <thead className="bg-gradient-to-r from-cyber-neon/10 to-cyber-violet/10">
                 <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Day</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Room</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Location</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Lecture Group</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section Group</th>
                 </tr>
               </thead>
               <tbody>
                 {(filteredSchedule.length > 0 ? filteredSchedule : scheduleData).map((item) => (
                   <tr key={item.id} className="hover:bg-cyber-neon/5 transition-colors">
+                    <td className="px-6 py-4 text-dark-200 font-semibold border-b border-dark-200/20">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-cyber-violet" />
+                        <span>{item.day || 'N/A'}</span>
+                      </div>
+                    </td>
                     <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-cyber-neon" />
@@ -430,9 +386,6 @@ export default function SchedulePage() {
                       <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
                         {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-dark-300 border-b border-dark-200/20">
-                      {item.sectionNumber ? item.sectionNumber : 'General Lecture'}
                     </td>
                   </tr>
                 ))}
