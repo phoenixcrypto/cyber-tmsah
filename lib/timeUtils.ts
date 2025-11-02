@@ -22,9 +22,11 @@ export function convertTo12Hour(time24: string): string {
   }
   
   // Handle single time (e.g., "09:00")
-  const [hours, minutes] = time24.split(':')
+  const parts = time24.split(':')
+  const hours = parts[0] || '00'
+  const minutes = parts[1] || '00'
   const hour = parseInt(hours, 10)
-  const minute = minutes || '00'
+  const minute = minutes
   
   if (hour === 0) {
     return `12:${minute} AM`
