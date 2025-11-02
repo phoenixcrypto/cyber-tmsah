@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock, Search, Eye, BarChart3, RefreshCw, X, Zap, SortAsc, SortDesc, TrendingUp, Sparkles } from 'lucide-react'
 import EnhancedRichTextEditor from '@/components/EnhancedRichTextEditor'
+import { sanitizeHTML } from '@/lib/security'
 
 interface Article {
   id: string
@@ -1058,7 +1059,7 @@ export default function ContentManagement() {
                   <div className="bg-cyber-dark/50 p-4 rounded-lg max-h-60 overflow-y-auto">
                     <div 
                       className="prose prose-invert max-w-none"
-                      dangerouslySetInnerHTML={{ __html: (selectedArticle.content.substring(0, 500) + (selectedArticle.content.length > 500 ? '...' : '')) }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHTML(selectedArticle.content.substring(0, 500) + (selectedArticle.content.length > 500 ? '...' : '')) }}
                     />
                   </div>
                 </div>
