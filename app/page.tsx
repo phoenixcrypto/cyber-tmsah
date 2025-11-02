@@ -175,14 +175,23 @@ export default function HomePage() {
         day: 'numeric'
       }))
       // Get today's day name (Saturday, Sunday, Monday, etc.)
-      setCurrentDay(now.toLocaleDateString('en-US', { weekday: 'long' }))
+      const dayName = now.toLocaleDateString('en-US', { weekday: 'long' })
+      setCurrentDay(dayName)
+      
+      // Auto-update schedule when day changes (if group and section are selected)
+      if (selectedGroup && selectedSection && currentDay !== dayName) {
+        // Day changed, trigger search
+        setTimeout(() => {
+          handleSearch()
+        }, 100)
+      }
     }
 
     updateTime()
     const interval = setInterval(updateTime, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [selectedGroup, selectedSection, currentDay])
 
   return (
     <div className="min-h-screen">
@@ -325,6 +334,32 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Today's Info Card */}
+          <div className="mb-6 animate-slide-up">
+            <div className="enhanced-card p-6 max-w-4xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 rounded-full flex items-center justify-center">
+                    <Calendar className="w-8 h-8 text-cyber-neon" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-dark-100">{currentDay}</h3>
+                    <p className="text-dark-300">{currentDate}</p>
+                    <p className="text-sm text-dark-400 mt-1">Current Time: <span className="text-cyber-neon font-mono">{currentTime}</span></p>
+                  </div>
+                </div>
+                {(currentDay === 'Sunday' || currentDay === 'Thursday' || currentDay === 'Friday') && (
+                  <div className="px-6 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🎉</span>
+                      <span className="text-lg font-semibold text-yellow-400">Holiday Today!</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Search Interface */}
           <div className="mb-8 animate-slide-up">
             <div className="enhanced-card p-6 max-w-4xl mx-auto">
@@ -336,7 +371,18 @@ export default function HomePage() {
                   <label className="block text-sm font-medium text-dark-300 mb-2">Lecture Group</label>
                   <select
                     value={selectedGroup}
-                    onChange={(e) => setSelectedGroup(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedGroup(e.target.value)
+                      // Auto-search when selection changes
+                      if (e.target.value && selectedSection) {
+                        setTimeout(() => {
+                          const error = validateGroupAndSection(e.target.value, selectedSection)
+                          if (!error) {
+                            handleSearch()
+                          }
+                        }, 100)
+                      }
+                    }}
                     className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
                     <option value="">Select Lecture Group</option>
@@ -348,7 +394,18 @@ export default function HomePage() {
                   <label className="block text-sm font-medium text-dark-300 mb-2">Section Number</label>
                   <select
                     value={selectedSection}
-                    onChange={(e) => setSelectedSection(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedSection(e.target.value)
+                      // Auto-search when selection changes
+                      if (selectedGroup && e.target.value) {
+                        setTimeout(() => {
+                          const error = validateGroupAndSection(selectedGroup, e.target.value)
+                          if (!error) {
+                            handleSearch()
+                          }
+                        }, 100)
+                      }
+                    }}
                     className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
                     <option value="">Select Section Number</option>
