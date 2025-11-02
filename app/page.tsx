@@ -263,7 +263,7 @@ export default function HomePage() {
                   <select
                     value={selectedGroup}
                     onChange={(e) => setSelectedGroup(e.target.value)}
-                    className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
+                    className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
                     <option value="">Select Lecture Group</option>
                     <option value="Group 1">A (Sections 1-7)</option>
@@ -275,7 +275,7 @@ export default function HomePage() {
                   <select
                     value={selectedSection}
                     onChange={(e) => setSelectedSection(e.target.value)}
-                    className="w-full p-3 bg-dark-200 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
+                    className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
                   >
                     <option value="">Select Section Number</option>
                     {sections.map(section => (

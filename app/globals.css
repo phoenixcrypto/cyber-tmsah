@@ -360,6 +360,25 @@ body {
   background: var(--cyber-green);
 }
 
+/* Select Dropdown Styles */
+select {
+  background-color: var(--cyber-dark) !important;
+  color: var(--dark-100) !important;
+}
+
+select option {
+  background-color: var(--cyber-dark) !important;
+  color: var(--dark-100) !important;
+  padding: 8px 12px;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: rgba(0, 255, 136, 0.2) !important;
+  color: var(--cyber-neon) !important;
+}
+
 /* Focus Styles */
 button:focus,
 input:focus,
