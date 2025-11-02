@@ -7,6 +7,7 @@ export default function SchedulePage() {
   const [selectedGroup, setSelectedGroup] = useState('')
   const [selectedSection, setSelectedSection] = useState('')
   const [filteredSchedule, setFilteredSchedule] = useState<any[]>([])
+  const [validationError, setValidationError] = useState('')
   const scheduleData = [
     {
       id: '1',
@@ -241,7 +242,47 @@ export default function SchedulePage() {
     }
   ]
 
+  // Validation function
+  const validateGroupAndSection = (group: string, section: string): string => {
+    if (!group || !section) return ''
+    
+    const sectionNum = parseInt(section)
+    
+    // Group A (Group 1) → Sections 1-7 only
+    if (group === 'Group 1') {
+      if (sectionNum < 1 || sectionNum > 7) {
+        return 'Group A only includes Sections 1-7. Please select a valid section number.'
+      }
+    }
+    
+    // Group B (Group 2) → Sections 8-15 only
+    if (group === 'Group 2') {
+      if (sectionNum < 8 || sectionNum > 15) {
+        return 'Group B only includes Sections 8-15. Please select a valid section number.'
+      }
+    }
+    
+    return ''
+  }
+
   const handleSearch = () => {
+    if (!selectedGroup || !selectedSection) {
+      setValidationError('Please select both Lecture Group and Section Number.')
+      setFilteredSchedule([])
+      return
+    }
+    
+    // Validate group and section match
+    const error = validateGroupAndSection(selectedGroup, selectedSection)
+    if (error) {
+      setValidationError(error)
+      setFilteredSchedule([])
+      return
+    }
+    
+    // Clear error if validation passes
+    setValidationError('')
+    
     let filtered = scheduleData.filter(item => {
       const matchesGroup = !selectedGroup || item.group === selectedGroup
       const matchesSection = !selectedSection || item.sectionNumber === parseInt(selectedSection)
@@ -319,6 +360,21 @@ export default function SchedulePage() {
                 </button>
               </div>
             </div>
+            
+            {validationError && (
+              <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="text-red-400 font-bold text-lg">⚠</div>
+                  <div>
+                    <h4 className="text-red-400 font-semibold mb-1">Invalid Selection</h4>
+                    <p className="text-red-300 text-sm">{validationError}</p>
+                    <p className="text-dark-300 text-xs mt-2">
+                      <strong>Group A:</strong> Sections 1-7 | <strong>Group B:</strong> Sections 8-15
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
