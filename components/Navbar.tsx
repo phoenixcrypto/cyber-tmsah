@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Menu, X, Home, Calendar, Info, CheckSquare, BookOpen, Languages } from 'lucide-react'
-import ThemeToggle from '@/components/ThemeToggle'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -54,15 +53,10 @@ export default function Navbar() {
                 </Link>
               )
             })}
-            <div className="ml-6 pl-6 border-l-2 border-cyber-neon/30 flex items-center">
-              <ThemeToggle />
-            </div>
           </div>
 
-          {/* Mobile Navigation - Theme Toggle & Menu */}
-          <div className="md:hidden flex items-center gap-3">
-            <ThemeToggle />
-            <button
+          {/* Mobile Menu Button */}
+          <button
               onClick={toggleMenu}
               className="p-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300"
               aria-label="Toggle menu"
