@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { ThemeProvider } from '@/contexts/ThemeContext'
+import FloatingThemeToggle from '@/components/FloatingThemeToggle'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -93,16 +95,19 @@ export default function RootLayout({
         <meta name="theme-color" content="#0a0a0a" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
-      <body className={`${inter.className} bg-cyber-dark text-dark-100 antialiased`}>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <Analytics />
-        <SpeedInsights />
+      <body className={`${inter.className} bg-cyber-dark text-dark-100 antialiased`} suppressHydrationWarning>
+        <ThemeProvider>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <FloatingThemeToggle />
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   )
