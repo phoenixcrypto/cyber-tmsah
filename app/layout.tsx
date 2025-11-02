@@ -87,26 +87,26 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" dir="ltr" className={`${inter.variable} ${orbitron.variable}`}>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0a0a0a" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
-            <body className={`${inter.className} bg-cyber-dark text-dark-100 antialiased`} suppressHydrationWarning>
-              <ThemeProvider>
-                <div className="min-h-screen flex flex-col">
-                  <Navbar />
-                  <main className="flex-1">
-                    {children}
-                  </main>
-                  <Footer />
-                </div>
-                <Analytics />
-                <SpeedInsights />
-              </ThemeProvider>
-            </body>
+      <body className={`${inter.className} bg-cyber-dark text-dark-100 antialiased`} suppressHydrationWarning>
+        <ThemeProvider>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

@@ -2,9 +2,22 @@
 
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useEffect, useState } from 'react'
 
 export default function ThemeToggle() {
+  const [mounted, setMounted] = useState(false)
   const { theme, toggleTheme } = useTheme()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Don't render until mounted (prevents hydration mismatch)
+  if (!mounted) {
+    return (
+      <div className="w-16 h-9 rounded-full bg-cyber-dark-secondary border border-cyber-neon/20 animate-pulse" />
+    )
+  }
 
   return (
     <button

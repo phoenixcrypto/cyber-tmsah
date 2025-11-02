@@ -20,25 +20,37 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     
     // Get theme from localStorage or default to dark
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') as Theme
-      if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
-        setTheme(savedTheme)
-        document.documentElement.setAttribute('data-theme', savedTheme)
-      } else {
-        // Check system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        const initialTheme = prefersDark ? 'dark' : 'light'
-        setTheme(initialTheme)
-        document.documentElement.setAttribute('data-theme', initialTheme)
-        localStorage.setItem('theme', initialTheme)
+      try {
+        const savedTheme = localStorage.getItem('theme') as Theme
+        if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
+          setTheme(savedTheme)
+          document.documentElement.setAttribute('data-theme', savedTheme)
+        } else {
+          // Check system preference
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const initialTheme = prefersDark ? 'dark' : 'light'
+          setTheme(initialTheme)
+          document.documentElement.setAttribute('data-theme', initialTheme)
+          localStorage.setItem('theme', initialTheme)
+        }
+      } catch (error) {
+        // Fallback to dark if there's any error
+        setTheme('dark')
+        if (typeof document !== 'undefined') {
+          document.documentElement.setAttribute('data-theme', 'dark')
+        }
       }
     }
   }, [])
 
   useEffect(() => {
-    if (mounted && typeof window !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', theme)
-      localStorage.setItem('theme', theme)
+    if (mounted && typeof window !== 'undefined' && typeof document !== 'undefined') {
+      try {
+        document.documentElement.setAttribute('data-theme', theme)
+        localStorage.setItem('theme', theme)
+      } catch (error) {
+        // Silently fail if localStorage is not available
+      }
     }
   }, [theme, mounted])
 
@@ -46,11 +58,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark')
   }
 
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return <>{children}</>
-  }
-
+  // Always provide context, even during SSR
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
