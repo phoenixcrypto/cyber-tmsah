@@ -419,6 +419,10 @@ export default function SchedulePage() {
   // View mode state: 'list' or 'matrix'
   const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list')
   
+  // Matrix view options
+  const [showLecturesInMatrix, setShowLecturesInMatrix] = useState(true)
+  const [showEmptyPeriods, setShowEmptyPeriods] = useState(true)
+  
   // Build matrix schedule for a specific day
   const buildMatrixSchedule = (day: string): { [section: number]: { [period: number]: any } } => {
     const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2'
@@ -600,6 +604,37 @@ export default function SchedulePage() {
                 </div>
               </div>
 
+        {/* Matrix View Options */}
+        {viewMode === 'matrix' && (
+          <div className="mb-6 animate-slide-up">
+            <div className="enhanced-card p-4">
+              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                <h3 className="text-lg font-semibold text-dark-100">Matrix View Options</h3>
+                <div className="flex flex-wrap gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showLecturesInMatrix}
+                      onChange={(e) => setShowLecturesInMatrix(e.target.checked)}
+                      className="w-4 h-4 rounded border-cyber-neon/30 bg-cyber-dark text-cyber-neon focus:ring-2 focus:ring-cyber-neon"
+                    />
+                    <span className="text-sm text-dark-300">Show Lectures</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={showEmptyPeriods}
+                      onChange={(e) => setShowEmptyPeriods(e.target.checked)}
+                      className="w-4 h-4 rounded border-cyber-neon/30 bg-cyber-dark text-cyber-neon focus:ring-2 focus:ring-cyber-neon"
+                    />
+                    <span className="text-sm text-dark-300">Show Empty Periods</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Matrix Schedule View */}
         {viewMode === 'matrix' && (
           <div className="space-y-6 mb-8">
@@ -611,18 +646,39 @@ export default function SchedulePage() {
                 const isHoliday = holidayDays.includes(day)
                 const matrix = buildMatrixSchedule(day)
                 const groupSections = scheduleView === 'A' ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14, 15]
-                const sectionsToShow = selectedSection ? [parseInt(selectedSection)] : groupSections
+                let sectionsToShow = selectedSection ? [parseInt(selectedSection)] : groupSections
+                
+                // Filter and sort sections: only show sections that have data for this day, sorted ascending
+                sectionsToShow = sectionsToShow
+                  .filter(sectionNum => {
+                    // Check if section has any data in the matrix for this day
+                    const sectionMatrix = matrix[sectionNum]
+                    if (!sectionMatrix) return false
+                    return Object.keys(sectionMatrix).length > 0
+                  })
+                  .sort((a, b) => a - b) // Sort ascending: 1, 3, 7, 9...
+                
+                // Filter periods based on options (periods are already sorted ascending 1-8)
+                const filteredPeriods = showEmptyPeriods 
+                  ? periods 
+                  : periods.filter(period => {
+                      return sectionsToShow.some(sectionNum => {
+                        const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
+                        return cellData && (!cellData.isLecture || showLecturesInMatrix)
+                      })
+                    })
+                // filteredPeriods remains sorted since it's filtered from already-sorted periods array
                 
                 return (
                   <div key={day} className="enhanced-card overflow-hidden">
-                    <div className={`px-6 py-4 border-b ${
+                    <div className={`px-4 sm:px-6 py-4 border-b ${
                       isHoliday 
                         ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/30' 
                         : 'bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 border-cyber-neon/30'
                     }`}>
                       <div className="flex items-center gap-3">
                         <Calendar className={`w-5 h-5 ${isHoliday ? 'text-yellow-400' : 'text-cyber-neon'}`} />
-                        <h3 className="text-xl font-bold text-dark-100">{day}</h3>
+                        <h3 className="text-lg sm:text-xl font-bold text-dark-100">{day}</h3>
                         {isHoliday && (
                           <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold">
                             🎉 Holiday
@@ -632,71 +688,185 @@ export default function SchedulePage() {
                     </div>
                     
                     {isHoliday ? (
-                      <div className="p-12 text-center">
+                      <div className="p-8 sm:p-12 text-center">
                         <div className="text-6xl mb-4">🎉</div>
                         <h4 className="text-2xl font-semibold text-dark-200 mb-2">Holiday</h4>
                         <p className="text-dark-400">No classes scheduled for this day.</p>
                       </div>
                     ) : (
-                      <div className="overflow-x-auto p-6">
-                        <table className="w-full border-collapse">
-                          <thead>
-                            <tr>
-                              <th className="px-4 py-3 bg-cyber-dark/70 text-cyber-neon font-bold text-sm border-2 border-cyber-neon/30 sticky left-0 z-10 shadow-lg">
-                                Section
-                              </th>
-                              {periods.map(period => (
-                                <th key={period.number} className="px-3 py-3 bg-cyber-dark/70 text-cyber-neon font-semibold text-xs border-2 border-cyber-neon/30 min-w-[120px]">
-                                  <div className="flex flex-col items-center gap-1">
-                                    <span className="font-bold text-base">P{period.number}</span>
-                                    <span className="text-[11px] opacity-90 font-mono">{period.start}</span>
-                                  </div>
-                                </th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {sectionsToShow.map(sectionNum => (
-                              <tr key={sectionNum} className="hover:bg-cyber-neon/5 transition-colors">
-                                <td className="px-4 py-3 bg-cyber-dark/50 text-cyber-neon font-bold text-base border-2 border-cyber-neon/30 sticky left-0 z-10 shadow-lg">
-                                  <span className="px-3 py-1.5 bg-cyber-neon/30 rounded-lg font-extrabold">S{sectionNum}</span>
-                                </td>
-                                {periods.map(period => {
-                                  const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
-                                  return (
-                                    <td key={period.number} className="px-2 py-2 border border-dark-200/20 align-middle min-w-[120px] h-20">
-                                      {cellData ? (
-                                        <div 
-                                          className={`p-2 rounded-lg text-xs cursor-pointer hover:scale-105 transition-transform ${
-                                            cellData.isLecture || !cellData.sectionNumber
-                                              ? 'bg-gradient-to-br from-cyber-violet/30 to-cyber-violet/10 border-2 border-cyber-violet/50'
-                                              : 'bg-gradient-to-br from-cyber-green/30 to-cyber-green/10 border-2 border-cyber-green/50'
-                                          }`}
-                                          title={`${cellData.title} - ${cellData.instructor} - ${cellData.location}`}
-                                        >
-                                          <div className="font-bold text-dark-100 mb-1 text-sm">{cellData.title}</div>
-                                          <div className="text-dark-300 text-[10px] opacity-80">{cellData.instructor.split(' ').slice(-2).join(' ')}</div>
-                                          <div className="mt-1.5">
-                                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold ${
-                                              cellData.isLecture || !cellData.sectionNumber
-                                                ? 'bg-cyber-violet/40 text-cyber-violet'
-                                                : 'bg-cyber-green/40 text-cyber-green'
-                                            }`}>
-                                              {cellData.isLecture || !cellData.sectionNumber ? '📚 Lecture' : '🔬 Lab'}
-                                            </span>
-                                          </div>
-                                        </div>
-                                      ) : (
-                                        <div className="p-2 text-center text-dark-500/20 text-xs">—</div>
-                                      )}
+                      <>
+                        {/* Desktop Matrix View */}
+                        <div className="hidden lg:block overflow-x-auto p-4 sm:p-6">
+                          <div className="inline-block min-w-full">
+                            <table className="w-full border-collapse">
+                              <thead>
+                                <tr>
+                                  <th className="px-4 py-4 bg-gradient-to-br from-cyber-dark/95 via-cyber-dark/90 to-cyber-dark/85 text-cyber-neon font-bold text-sm border-2 border-cyber-neon/50 sticky left-0 z-20 shadow-2xl backdrop-blur-md">
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-2 h-2 rounded-full bg-cyber-neon animate-pulse"></div>
+                                      <span className="text-cyber-neon tracking-wide">SECTION</span>
+                                    </div>
+                                  </th>
+                                  {filteredPeriods.map(period => (
+                                    <th key={period.number} className="px-3 py-4 bg-gradient-to-br from-cyber-dark/95 via-cyber-dark/90 to-cyber-dark/85 text-cyber-neon font-semibold text-xs border-2 border-cyber-neon/50 min-w-[140px] relative overflow-hidden">
+                                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyber-neon/5 to-transparent animate-shimmer"></div>
+                                      <div className="flex flex-col items-center gap-1.5 relative z-10">
+                                        <span className="font-bold text-base bg-gradient-to-r from-cyber-neon to-cyber-green bg-clip-text text-transparent">P{period.number}</span>
+                                        <span className="text-[11px] opacity-90 font-mono text-cyber-neon/80">{period.start}</span>
+                                      </div>
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {sectionsToShow.map(sectionNum => (
+                                  <tr key={sectionNum} className="hover:bg-cyber-neon/5 transition-all duration-300 group">
+                                    <td className="px-4 py-4 bg-gradient-to-r from-cyber-dark/70 via-cyber-dark/60 to-cyber-dark/50 text-cyber-neon font-bold text-base border-2 border-cyber-neon/50 sticky left-0 z-10 shadow-2xl backdrop-blur-md group-hover:from-cyber-neon/25 group-hover:via-cyber-neon/20 group-hover:to-cyber-neon/15 transition-all duration-300">
+                                      <span className="px-4 py-2 bg-gradient-to-r from-cyber-neon/50 via-cyber-neon/40 to-cyber-neon/30 rounded-lg font-extrabold text-sm shadow-lg shadow-cyber-neon/20 hover:shadow-xl hover:shadow-cyber-neon/30 transition-all duration-300 inline-block">
+                                        S{sectionNum}
+                                      </span>
                                     </td>
-                                  )
-                                })}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                                    {filteredPeriods.map(period => {
+                                      const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
+                                      const isLecture = cellData && (cellData.isLecture || !cellData.sectionNumber)
+                                      
+                                      if (!cellData) {
+                                        return (
+                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[140px] h-24 bg-gradient-to-br from-cyber-dark/30 to-cyber-dark/20 group/empty hover:from-cyber-dark/40 hover:to-cyber-dark/30 transition-all duration-300">
+                                            {showEmptyPeriods && (
+                                              <div className="p-2 text-center text-dark-500/15 text-xs font-light">—</div>
+                                            )}
+                                          </td>
+                                        )
+                                      }
+                                      
+                                      if (isLecture && !showLecturesInMatrix) {
+                                        return (
+                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[140px] h-24 bg-cyber-dark/25">
+                                            <div className="p-2 text-center text-dark-500/20 text-xs">—</div>
+                                          </td>
+                                        )
+                                      }
+                                      
+                                      return (
+                                        <td key={period.number} className="px-2 py-2.5 border border-dark-200/30 align-middle min-w-[140px] h-24">
+                                          <div 
+                                            className={`h-full p-2.5 rounded-xl text-xs cursor-pointer hover:scale-[1.03] transition-all duration-300 shadow-xl hover:shadow-2xl relative overflow-hidden group/cell ${
+                                              isLecture
+                                                ? 'bg-gradient-to-br from-cyber-violet/50 via-cyber-violet/35 to-cyber-violet/25 border-2 border-cyber-violet/70 hover:border-cyber-violet hover:shadow-cyber-violet/30'
+                                                : 'bg-gradient-to-br from-cyber-green/50 via-cyber-green/35 to-cyber-green/25 border-2 border-cyber-green/70 hover:border-cyber-green hover:shadow-cyber-green/30'
+                                            }`}
+                                            title={`${cellData.title || cellData.subject} | ${cellData.instructor} | ${cellData.location || cellData.room} | ${cellData.time}`}
+                                          >
+                                            {/* Animated background shimmer */}
+                                            <div className={`absolute inset-0 opacity-0 group-hover/cell:opacity-100 transition-opacity duration-500 ${
+                                              isLecture 
+                                                ? 'bg-gradient-to-r from-transparent via-cyber-violet/20 to-transparent' 
+                                                : 'bg-gradient-to-r from-transparent via-cyber-green/20 to-transparent'
+                                            } animate-shimmer`}></div>
+                                            
+                                            <div className="relative z-10">
+                                              <div className="font-bold text-dark-100 mb-1.5 text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300">
+                                                {cellData.title || cellData.subject}
+                                              </div>
+                                              <div className="text-dark-300 text-[10px] opacity-90 mb-2 truncate flex items-center gap-1">
+                                                <User className="w-3 h-3 text-cyber-neon/60" />
+                                                <span>{cellData.instructor.split(' ').slice(-2).join(' ')}</span>
+                                              </div>
+                                              <div className="flex items-center justify-between gap-2">
+                                                <span className={`px-2.5 py-1 rounded-full text-[9px] font-bold shadow-lg ${
+                                                  isLecture
+                                                    ? 'bg-gradient-to-r from-cyber-violet/60 to-cyber-violet/50 text-white border border-cyber-violet/40'
+                                                    : 'bg-gradient-to-r from-cyber-green/60 to-cyber-green/50 text-white border border-cyber-green/40'
+                                                }`}>
+                                                  {isLecture ? '📚 Lecture' : '🔬 Lab'}
+                                                </span>
+                                                {(cellData.location || cellData.room) && (
+                                                  <div className="flex items-center gap-1 text-[9px] text-dark-400 truncate max-w-[60px]">
+                                                    <MapPin className="w-3 h-3 text-cyber-green/70 flex-shrink-0" />
+                                                    <span className="truncate">{cellData.location || cellData.room}</span>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </td>
+                                      )
+                                    })}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        
+                        {/* Mobile Card View */}
+                        <div className="lg:hidden p-4 space-y-3">
+                          {sectionsToShow.map(sectionNum => {
+                            const sectionData = filteredPeriods
+                              .map(period => {
+                                const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
+                                if (!cellData) return null
+                                const isLecture = cellData.isLecture || !cellData.sectionNumber
+                                if (isLecture && !showLecturesInMatrix) return null
+                                return { period, cellData, isLecture }
+                              })
+                              .filter((item): item is { period: typeof periods[0], cellData: any, isLecture: boolean } => item !== null)
+                              .sort((a, b) => a.period.number - b.period.number) // Sort by period number ascending
+                            
+                            if (sectionData.length === 0) return null
+                            
+                            return (
+                              <div key={sectionNum} className="enhanced-card p-4">
+                                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-cyber-neon/20">
+                                  <span className="px-3 py-1.5 bg-gradient-to-r from-cyber-neon/40 to-cyber-neon/30 rounded-lg font-bold text-sm text-cyber-neon">Section {sectionNum}</span>
+                                </div>
+                                <div className="space-y-2">
+                                  {sectionData.map(({ period, cellData, isLecture }) => (
+                                    <div
+                                      key={period.number}
+                                      className={`p-3 rounded-lg border-2 transition-all ${
+                                        isLecture
+                                          ? 'bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-cyber-violet/50'
+                                          : 'bg-gradient-to-r from-cyber-green/30 to-cyber-green/20 border-cyber-green/50'
+                                      }`}
+                                    >
+                                      <div className="flex items-start justify-between gap-2 mb-2">
+                                        <div className="flex-1">
+                                          <div className="font-bold text-dark-100 text-sm mb-1">{cellData.title || cellData.subject}</div>
+                                          <div className="text-xs text-dark-300">{cellData.instructor}</div>
+                                        </div>
+                                        <div className="flex flex-col items-end gap-1">
+                                          <span className="px-2 py-1 rounded-full text-[10px] font-semibold bg-cyber-dark/50 text-cyber-neon">
+                                            P{period.number}
+                                          </span>
+                                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold ${
+                                            isLecture
+                                              ? 'bg-cyber-violet/40 text-cyber-violet'
+                                              : 'bg-cyber-green/40 text-cyber-green'
+                                          }`}>
+                                            {isLecture ? '📚 Lecture' : '🔬 Lab'}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center justify-between text-xs text-dark-400">
+                                        <div className="flex items-center gap-1">
+                                          <Clock className="w-3 h-3 text-cyber-neon" />
+                                          <span>{cellData.time}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                          <MapPin className="w-3 h-3 text-cyber-green" />
+                                          <span>{cellData.location || cellData.room}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </>
                     )}
                   </div>
                 )
@@ -758,8 +928,30 @@ export default function SchedulePage() {
                       <div>
                         {/* Lectures - Stacked Cards */}
                         {(() => {
-                          const lectures = dayLectures.filter(item => item.type === 'lecture')
-                          const labs = dayLectures.filter(item => item.type !== 'lecture')
+                          // Filter and sort lectures by time
+                          const lectures = dayLectures
+                            .filter(item => item.type === 'lecture')
+                            .sort((a, b) => {
+                              const periodA = getPeriodFromTime(a.time)
+                              const periodB = getPeriodFromTime(b.time)
+                              return periodA - periodB // Sort by period ascending
+                            })
+                          
+                          // Filter and sort labs: first by section number ascending, then by time
+                          const labs = dayLectures
+                            .filter(item => item.type !== 'lecture')
+                            .sort((a, b) => {
+                              // First sort by section number (ascending)
+                              const sectionA = a.sectionNumber || 0
+                              const sectionB = b.sectionNumber || 0
+                              if (sectionA !== sectionB) {
+                                return sectionA - sectionB
+                              }
+                              // If same section, sort by time (period)
+                              const periodA = getPeriodFromTime(a.time)
+                              const periodB = getPeriodFromTime(b.time)
+                              return periodA - periodB
+                            })
                           
                           return (
                             <>
