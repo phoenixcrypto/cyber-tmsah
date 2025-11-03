@@ -358,11 +358,17 @@ export default function SchedulePage() {
     setFilteredSchedule(filtered)
   }
 
-  // Auto-filter when scheduleView changes
+  // Auto-filter when scheduleView or selectedSection changes
   useEffect(() => {
-    handleSearch()
+    if (selectedSection) {
+      handleSearch()
+    } else {
+      // If no section selected, clear filtered schedule to show all
+      setFilteredSchedule([])
+      setValidationError('')
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleView])
+  }, [scheduleView, selectedSection])
 
   // Group schedule by day
   const groupByDay = (items: any[]) => {
@@ -426,8 +432,11 @@ export default function SchedulePage() {
   // Build matrix schedule for a specific day
   const buildMatrixSchedule = (day: string): { [section: number]: { [period: number]: any } } => {
     const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2'
-    const allScheduleData = [...scheduleData, ...sectionsData]
-    const dayData = allScheduleData.filter(item => 
+    // Use filteredSchedule if available (when filter is active), otherwise use all data
+    const dataSource = filteredSchedule.length > 0 && selectedSection 
+      ? filteredSchedule 
+      : [...scheduleData, ...sectionsData]
+    const dayData = dataSource.filter(item => 
       item.day === day && 
       item.group === groupFilter &&
       (!selectedSection || item.sectionNumber === parseInt(selectedSection))
@@ -550,11 +559,18 @@ export default function SchedulePage() {
                 
               <div>
                 <button
-                  onClick={handleSearch}
+                  onClick={() => {
+                    if (selectedSection) {
+                      handleSearch()
+                    } else {
+                      setFilteredSchedule([])
+                      setValidationError('')
+                    }
+                  }}
                   className="w-full bg-gradient-to-r from-cyber-neon to-cyber-green hover:from-cyber-green hover:to-cyber-neon text-dark-100 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
                 >
                   <Search className="w-4 h-4" />
-                  Filter
+                  {selectedSection ? 'Filter' : 'Clear'}
                 </button>
               </div>
                 </div>
@@ -646,7 +662,8 @@ export default function SchedulePage() {
                 const isHoliday = holidayDays.includes(day)
                 const matrix = buildMatrixSchedule(day)
                 const groupSections = scheduleView === 'A' ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14, 15]
-                let sectionsToShow = selectedSection ? [parseInt(selectedSection)] : groupSections
+                // Show selected section if filter is active, otherwise show all group sections
+                let sectionsToShow = (selectedSection && filteredSchedule.length > 0) ? [parseInt(selectedSection)] : groupSections
                 
                 // Filter and sort sections: only show sections that have data for this day, sorted ascending
                 sectionsToShow = sectionsToShow
