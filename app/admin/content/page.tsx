@@ -1,8 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { Plus, Save, Edit, Trash2, FileText, Calendar, Clock, Lock, Search, Eye, BarChart3, RefreshCw, X, Zap, SortAsc, SortDesc, TrendingUp, Sparkles } from 'lucide-react'
-import EnhancedRichTextEditor from '@/components/EnhancedRichTextEditor'
+// Defer heavy editor until needed to improve FCP/LCP
+const EnhancedRichTextEditor = dynamic(
+  () => import('@/components/EnhancedRichTextEditor'),
+  { ssr: false, loading: () => <div className="text-dark-300">Loading editor...</div> }
+)
 import { sanitizeHTML } from '@/lib/security'
 
 interface Article {

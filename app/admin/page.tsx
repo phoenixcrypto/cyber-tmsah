@@ -63,6 +63,7 @@ export default function AdminPage() {
               <Link
                 key={feature.href}
                 href={feature.href}
+                prefetch={false}
                 className="group block"
               >
                 <div className="enhanced-card p-6 text-center h-full hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
@@ -90,6 +91,7 @@ export default function AdminPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/admin/content"
+              prefetch={false}
               className="btn-primary flex items-center gap-2"
             >
               <BookOpen className="w-4 h-4" />
