@@ -338,8 +338,15 @@ export default function SchedulePage() {
     
     let filtered = allScheduleData.filter(item => {
       const matchesGroup = item.group === groupFilter
-      const matchesSection = !selectedSection || item.sectionNumber === parseInt(selectedSection)
-      return matchesGroup && matchesSection
+      // If section is selected: show that section's labs AND all group lectures
+      // If no section selected: show all sections and lectures
+      if (selectedSection) {
+        // Include: labs for the selected section OR lectures (no sectionNumber)
+        return matchesGroup && (item.sectionNumber === parseInt(selectedSection) || !item.sectionNumber)
+      } else {
+        // Include: all items in the group
+        return matchesGroup
+      }
     })
     
     // Sort by day order and then by time
@@ -463,11 +470,15 @@ export default function SchedulePage() {
     
     // Add lectures (which don't have sectionNumber, but apply to all sections in the group)
     const groupSections = scheduleView === 'A' ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14, 15]
+    // If a section is filtered, only add lectures to that section, otherwise add to all group sections
+    const sectionsToAddLectures = selectedSection && filteredSchedule.length > 0 
+      ? [parseInt(selectedSection)] 
+      : groupSections
     dayData.forEach(item => {
       if (!item.sectionNumber && item.type === 'lecture') {
         const period = getPeriodFromTime(item.time)
         if (period > 0) {
-          groupSections.forEach(section => {
+          sectionsToAddLectures.forEach(section => {
             if (matrix[section] && !matrix[section][period]) {
               matrix[section][period] = { ...item, isLecture: true }
             }
@@ -525,7 +536,7 @@ export default function SchedulePage() {
                 <span className={`text-lg font-semibold transition-colors ${scheduleView === 'B' ? 'text-cyber-violet' : 'text-dark-400'}`}>
                   Group B
                 </span>
-              </div>
+        </div>
 
               <p className="text-sm text-dark-400 text-center">
                 Currently viewing: <span className="text-cyber-neon font-semibold">Group {scheduleView}</span>
@@ -554,7 +565,7 @@ export default function SchedulePage() {
                   {sections.map(section => (
                     <option key={section} value={section}>{section}</option>
                   ))}
-                </select>
+          </select>
                 </div>
                 
               <div>
@@ -699,7 +710,7 @@ export default function SchedulePage() {
                         {isHoliday && (
                           <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold">
                             🎉 Holiday
-                          </span>
+                </span>
                         )}
                       </div>
                     </div>
@@ -741,7 +752,7 @@ export default function SchedulePage() {
                                     <td className="px-4 py-4 bg-gradient-to-r from-cyber-dark/70 via-cyber-dark/60 to-cyber-dark/50 text-cyber-neon font-bold text-base border-2 border-cyber-neon/50 sticky left-0 z-10 shadow-2xl backdrop-blur-md group-hover:from-cyber-neon/25 group-hover:via-cyber-neon/20 group-hover:to-cyber-neon/15 transition-all duration-300">
                                       <span className="px-4 py-2 bg-gradient-to-r from-cyber-neon/50 via-cyber-neon/40 to-cyber-neon/30 rounded-lg font-extrabold text-sm shadow-lg shadow-cyber-neon/20 hover:shadow-xl hover:shadow-cyber-neon/30 transition-all duration-300 inline-block">
                                         S{sectionNum}
-                                      </span>
+                </span>
                                     </td>
                                     {filteredPeriods.map(period => {
                                       const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
@@ -792,8 +803,8 @@ export default function SchedulePage() {
                                               <div className="text-dark-300 text-[10px] opacity-90 flex items-center gap-1 truncate">
                                                 <User className="w-3 h-3 text-cyber-neon/60 flex-shrink-0" />
                                                 <span className="truncate">{cellData.instructor}</span>
-                                              </div>
-                                              
+              </div>
+
                                               {/* 3. الموعد (Time) */}
                                               <div className="flex items-center gap-1 text-[9px] text-dark-300">
                                                 <Clock className="w-3 h-3 text-cyber-neon/70 flex-shrink-0" />
@@ -826,8 +837,8 @@ export default function SchedulePage() {
                               </tbody>
                             </table>
                           </div>
-                        </div>
-                        
+                </div>
+                
                         {/* Mobile Card View */}
                         <div className="lg:hidden p-4 space-y-3">
                           {sectionsToShow.map(sectionNum => {
@@ -862,14 +873,14 @@ export default function SchedulePage() {
                                       {/* 1. المادة (Subject) */}
                                       <div className="font-bold text-dark-100 text-base mb-2">
                                         {cellData.title || cellData.subject}
-                                      </div>
-                                      
+                </div>
+
                                       {/* 2. صاحب المادة (Instructor) */}
                                       <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
                                         <User className="w-4 h-4 text-cyber-neon/70" />
                                         <span>{cellData.instructor}</span>
-                                      </div>
-                                      
+                </div>
+
                                       {/* 3. الموعد (Time) & 4. مكان الحضور (Location) */}
                                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 text-xs">
                                         <div className="flex items-center gap-2 text-dark-300">
@@ -879,9 +890,9 @@ export default function SchedulePage() {
                                         <div className="flex items-center gap-2 text-dark-300">
                                           <MapPin className="w-4 h-4 text-cyber-green" />
                                           <span>{cellData.location || cellData.room}</span>
-                                        </div>
-                                      </div>
-                                      
+                </div>
+              </div>
+
                                       {/* Period & Type Badge */}
                                       <div className="flex items-center justify-between pt-2 border-t border-dark-200/20">
                                         <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-cyber-dark/50 text-cyber-neon">
@@ -1078,7 +1089,7 @@ export default function SchedulePage() {
                                             <div className="flex items-center gap-2">
                                               <MapPin className="w-4 h-4 text-cyber-green" />
                                               <span>{item.location || item.room}</span>
-                                            </div>
+              </div>
                                           </td>
                                           <td className="px-6 py-4">
                                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
