@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Clock, MapPin, User, Search } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Search, BookOpen } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 export default function SchedulePage() {
@@ -755,76 +755,131 @@ export default function SchedulePage() {
                         <p className="text-dark-400">No lectures scheduled for this day.</p>
                       </div>
                     ) : dayLectures.length > 0 ? (
-                      <div className="overflow-x-auto">
-                        <table className="w-full">
-                          <thead className="bg-cyber-dark/50">
-                            <tr>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Location</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
-                              <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {dayLectures.map((item, index) => (
-                              <tr 
-                                key={item.id || index} 
-                                className={`hover:bg-cyber-neon/5 transition-colors ${
-                                  index < dayLectures.length - 1 ? 'border-b border-dark-200/10' : ''
-                                }`}
-                              >
-                                <td className="px-6 py-4 text-dark-300">
-                                  <div className="flex items-center gap-2">
-                                    <Clock className="w-4 h-4 text-cyber-neon" />
-                                    <span className="font-medium">{item.time}</span>
-                                  </div>
-                                </td>
-                                <td className="px-6 py-4 text-dark-100 font-semibold">
-                                  {item.title}
-                                  {item.sectionNumber && (
-                                    <span className="ml-2 text-xs text-cyber-neon font-normal">
-                                      (Section {item.sectionNumber})
-                                    </span>
-                                  )}
-                                </td>
-                                <td className="px-6 py-4 text-dark-300">
-                                  <div className="flex items-center gap-2">
-                                    <User className="w-4 h-4 text-cyber-violet" />
-                                    <span>{item.instructor}</span>
-                                  </div>
-                                </td>
-                                <td className="px-6 py-4 text-dark-300">
-                                  <div className="flex items-center gap-2">
-                                    <MapPin className="w-4 h-4 text-cyber-green" />
-                                    <span>{item.location}</span>
-              </div>
-                                </td>
-                                <td className="px-6 py-4">
-                                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                    item.type === 'lecture' 
-                                      ? 'bg-cyber-violet/20 text-cyber-violet' 
-                                      : 'bg-cyber-green/20 text-cyber-green'
-                                  }`}>
-                                    {item.type === 'lecture' ? 'Lecture' : item.type === 'lab' ? 'Lab' : 'Application'}
-                                  </span>
-                                </td>
-                                <td className="px-6 py-4 text-dark-300">
-                                  {item.sectionNumber ? (
-                                    <span className="px-2 py-1 bg-cyber-green/20 text-cyber-green rounded text-xs font-medium">
-                                      Section {item.sectionNumber}
-                                    </span>
-                                  ) : (
-                                    <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
-                                      {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
-                                    </span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                      <div>
+                        {/* Lectures - Stacked Cards */}
+                        {(() => {
+                          const lectures = dayLectures.filter(item => item.type === 'lecture')
+                          const labs = dayLectures.filter(item => item.type !== 'lecture')
+                          
+                          return (
+                            <>
+                              {lectures.length > 0 && (
+                                <div className="overflow-hidden rounded-lg">
+                                  {lectures.map((item, index) => (
+                                    <div
+                                      key={item.id || `lecture-${index}`}
+                                      className={`px-6 py-4 bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-l-4 border-cyber-violet hover:from-cyber-violet/40 hover:to-cyber-violet/30 transition-all ${
+                                        index < lectures.length - 1 ? 'border-b border-cyber-violet/20' : ''
+                                      }`}
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex-1">
+                                          <h4 className="text-lg font-bold text-dark-100 mb-1">{item.title || item.subject}</h4>
+                                          <p className="text-sm text-dark-300">{item.instructor}</p>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                          <div className="flex items-center gap-2 text-dark-300">
+                                            <Clock className="w-4 h-4 text-cyber-neon" />
+                                            <span className="text-sm">{item.time}</span>
+                                          </div>
+                                          <div className="flex items-center gap-2 text-dark-300">
+                                            <MapPin className="w-4 h-4 text-cyber-green" />
+                                            <span className="text-sm">{item.location || item.room}</span>
+                                          </div>
+                                          <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-cyber-violet/40 text-cyber-violet flex items-center gap-1.5">
+                                            <BookOpen className="w-3 h-3" />
+                                            Lecture
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              
+                              {/* Labs - Table Format */}
+                              {labs.length > 0 && (
+                                <div className={`${lectures.length > 0 ? 'mt-6 pt-6 border-t border-cyber-neon/20' : ''} overflow-x-auto`}>
+                                  <table className="w-full">
+                                    <thead className="bg-cyber-dark/50">
+                                      <tr>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Time</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Subject</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Instructor</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Location</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Type</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">Section</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {labs.map((item, index) => (
+                                        <tr 
+                                          key={item.id || index} 
+                                          className={`hover:bg-cyber-neon/5 transition-colors ${
+                                            index < labs.length - 1 ? 'border-b border-dark-200/10' : ''
+                                          }`}
+                                        >
+                                          <td className="px-6 py-4 text-dark-300">
+                                            <div className="flex items-center gap-2">
+                                              <Clock className="w-4 h-4 text-cyber-neon" />
+                                              <span className="font-medium">{item.time}</span>
+                                            </div>
+                                          </td>
+                                          <td className="px-6 py-4 text-dark-100 font-semibold">
+                                            {item.title || item.subject}
+                                            {item.sectionNumber && (
+                                              <span className="ml-2 text-xs text-cyber-neon font-normal">
+                                                (Section {item.sectionNumber})
+                                              </span>
+                                            )}
+                                          </td>
+                                          <td className="px-6 py-4 text-dark-300">
+                                            <div className="flex items-center gap-2">
+                                              <User className="w-4 h-4 text-cyber-violet" />
+                                              <span>{item.instructor}</span>
+                                            </div>
+                                          </td>
+                                          <td className="px-6 py-4 text-dark-300">
+                                            <div className="flex items-center gap-2">
+                                              <MapPin className="w-4 h-4 text-cyber-green" />
+                                              <span>{item.location || item.room}</span>
+                                            </div>
+                                          </td>
+                                          <td className="px-6 py-4">
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                              item.type === 'lecture' 
+                                                ? 'bg-cyber-violet/20 text-cyber-violet' 
+                                                : 'bg-cyber-green/20 text-cyber-green'
+                                            }`}>
+                                              {item.type === 'lecture' ? 'Lecture' : item.type === 'lab' ? 'Lab' : 'Application'}
+                                            </span>
+                                          </td>
+                                          <td className="px-6 py-4 text-dark-300">
+                                            {item.sectionNumber ? (
+                                              <span className="px-2 py-1 bg-cyber-green/20 text-cyber-green rounded text-xs font-medium">
+                                                Section {item.sectionNumber}
+                                              </span>
+                                            ) : (
+                                              <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
+                                                {item.group === 'Group 1' ? 'A' : item.group === 'Group 2' ? 'B' : item.group}
+                                              </span>
+                                            )}
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              )}
+                              
+                              {lectures.length === 0 && labs.length === 0 && (
+                                <div className="p-8 text-center">
+                                  <p className="text-dark-400">No classes scheduled for this day.</p>
+                                </div>
+                              )}
+                            </>
+                          )
+                        })()}
                       </div>
                     ) : (
                       <div className="p-8 text-center">
