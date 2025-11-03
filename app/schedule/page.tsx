@@ -708,7 +708,7 @@ export default function SchedulePage() {
                                     </div>
                                   </th>
                                   {filteredPeriods.map(period => (
-                                    <th key={period.number} className="px-3 py-4 bg-gradient-to-br from-cyber-dark/95 via-cyber-dark/90 to-cyber-dark/85 text-cyber-neon font-semibold text-xs border-2 border-cyber-neon/50 min-w-[140px] relative overflow-hidden">
+                                    <th key={period.number} className="px-3 py-4 bg-gradient-to-br from-cyber-dark/95 via-cyber-dark/90 to-cyber-dark/85 text-cyber-neon font-semibold text-xs border-2 border-cyber-neon/50 min-w-[160px] relative overflow-hidden">
                                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyber-neon/5 to-transparent animate-shimmer"></div>
                                       <div className="flex flex-col items-center gap-1.5 relative z-10">
                                         <span className="font-bold text-base bg-gradient-to-r from-cyber-neon to-cyber-green bg-clip-text text-transparent">P{period.number}</span>
@@ -732,7 +732,7 @@ export default function SchedulePage() {
                                       
                                       if (!cellData) {
                                         return (
-                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[140px] h-24 bg-gradient-to-br from-cyber-dark/30 to-cyber-dark/20 group/empty hover:from-cyber-dark/40 hover:to-cyber-dark/30 transition-all duration-300">
+                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[160px] h-28 bg-gradient-to-br from-cyber-dark/30 to-cyber-dark/20 group/empty hover:from-cyber-dark/40 hover:to-cyber-dark/30 transition-all duration-300">
                                             {showEmptyPeriods && (
                                               <div className="p-2 text-center text-dark-500/15 text-xs font-light">—</div>
                                             )}
@@ -742,14 +742,14 @@ export default function SchedulePage() {
                                       
                                       if (isLecture && !showLecturesInMatrix) {
                                         return (
-                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[140px] h-24 bg-cyber-dark/25">
+                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[160px] h-28 bg-cyber-dark/25">
                                             <div className="p-2 text-center text-dark-500/20 text-xs">—</div>
                                           </td>
                                         )
                                       }
                                       
                                       return (
-                                        <td key={period.number} className="px-2 py-2.5 border border-dark-200/30 align-middle min-w-[140px] h-24">
+                                        <td key={period.number} className="px-2 py-2.5 border border-dark-200/30 align-middle min-w-[160px] h-32">
                                           <div 
                                             className={`h-full p-2.5 rounded-xl text-xs cursor-pointer hover:scale-[1.03] transition-all duration-300 shadow-xl hover:shadow-2xl relative overflow-hidden group/cell ${
                                               isLecture
@@ -765,28 +765,39 @@ export default function SchedulePage() {
                                                 : 'bg-gradient-to-r from-transparent via-cyber-green/20 to-transparent'
                                             } animate-shimmer`}></div>
                                             
-                                            <div className="relative z-10">
-                                              <div className="font-bold text-dark-100 mb-1.5 text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300">
+                                            <div className="relative z-10 space-y-1.5">
+                                              {/* 1. المادة (Subject) */}
+                                              <div className="font-bold text-dark-100 text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300">
                                                 {cellData.title || cellData.subject}
                                               </div>
-                                              <div className="text-dark-300 text-[10px] opacity-90 mb-2 truncate flex items-center gap-1">
-                                                <User className="w-3 h-3 text-cyber-neon/60" />
-                                                <span>{cellData.instructor.split(' ').slice(-2).join(' ')}</span>
+                                              
+                                              {/* 2. صاحب المادة (Instructor) */}
+                                              <div className="text-dark-300 text-[10px] opacity-90 flex items-center gap-1 truncate">
+                                                <User className="w-3 h-3 text-cyber-neon/60 flex-shrink-0" />
+                                                <span className="truncate">{cellData.instructor}</span>
                                               </div>
-                                              <div className="flex items-center justify-between gap-2">
-                                                <span className={`px-2.5 py-1 rounded-full text-[9px] font-bold shadow-lg ${
-                                                  isLecture
-                                                    ? 'bg-gradient-to-r from-cyber-violet/60 to-cyber-violet/50 text-white border border-cyber-violet/40'
-                                                    : 'bg-gradient-to-r from-cyber-green/60 to-cyber-green/50 text-white border border-cyber-green/40'
-                                                }`}>
-                                                  {isLecture ? '📚 Lecture' : '🔬 Lab'}
-                                                </span>
+                                              
+                                              {/* 3. الموعد (Time) */}
+                                              <div className="flex items-center gap-1 text-[9px] text-dark-300">
+                                                <Clock className="w-3 h-3 text-cyber-neon/70 flex-shrink-0" />
+                                                <span className="font-medium">{cellData.time}</span>
+                                              </div>
+                                              
+                                              {/* 4. مكان الحضور (Location) & Type */}
+                                              <div className="flex items-center justify-between gap-2 pt-0.5">
                                                 {(cellData.location || cellData.room) && (
-                                                  <div className="flex items-center gap-1 text-[9px] text-dark-400 truncate max-w-[60px]">
+                                                  <div className="flex items-center gap-1 text-[9px] text-dark-300 truncate flex-1">
                                                     <MapPin className="w-3 h-3 text-cyber-green/70 flex-shrink-0" />
                                                     <span className="truncate">{cellData.location || cellData.room}</span>
                                                   </div>
                                                 )}
+                                                <span className={`px-2 py-0.5 rounded-full text-[8px] font-bold shadow-md flex-shrink-0 ${
+                                                  isLecture
+                                                    ? 'bg-gradient-to-r from-cyber-violet/60 to-cyber-violet/50 text-white border border-cyber-violet/40'
+                                                    : 'bg-gradient-to-r from-cyber-green/60 to-cyber-green/50 text-white border border-cyber-green/40'
+                                                }`}>
+                                                  {isLecture ? '📚' : '🔬'}
+                                                </span>
                                               </div>
                                             </div>
                                           </div>
@@ -825,39 +836,47 @@ export default function SchedulePage() {
                                   {sectionData.map(({ period, cellData, isLecture }) => (
                                     <div
                                       key={period.number}
-                                      className={`p-3 rounded-lg border-2 transition-all ${
+                                      className={`p-4 rounded-lg border-2 transition-all ${
                                         isLecture
                                           ? 'bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-cyber-violet/50'
                                           : 'bg-gradient-to-r from-cyber-green/30 to-cyber-green/20 border-cyber-green/50'
                                       }`}
                                     >
-                                      <div className="flex items-start justify-between gap-2 mb-2">
-                                        <div className="flex-1">
-                                          <div className="font-bold text-dark-100 text-sm mb-1">{cellData.title || cellData.subject}</div>
-                                          <div className="text-xs text-dark-300">{cellData.instructor}</div>
-                                        </div>
-                                        <div className="flex flex-col items-end gap-1">
-                                          <span className="px-2 py-1 rounded-full text-[10px] font-semibold bg-cyber-dark/50 text-cyber-neon">
-                                            P{period.number}
-                                          </span>
-                                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold ${
-                                            isLecture
-                                              ? 'bg-cyber-violet/40 text-cyber-violet'
-                                              : 'bg-cyber-green/40 text-cyber-green'
-                                          }`}>
-                                            {isLecture ? '📚 Lecture' : '🔬 Lab'}
-                                          </span>
-                                        </div>
+                                      {/* 1. المادة (Subject) */}
+                                      <div className="font-bold text-dark-100 text-base mb-2">
+                                        {cellData.title || cellData.subject}
                                       </div>
-                                      <div className="flex items-center justify-between text-xs text-dark-400">
-                                        <div className="flex items-center gap-1">
-                                          <Clock className="w-3 h-3 text-cyber-neon" />
-                                          <span>{cellData.time}</span>
+                                      
+                                      {/* 2. صاحب المادة (Instructor) */}
+                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
+                                        <User className="w-4 h-4 text-cyber-neon/70" />
+                                        <span>{cellData.instructor}</span>
+                                      </div>
+                                      
+                                      {/* 3. الموعد (Time) & 4. مكان الحضور (Location) */}
+                                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 text-xs">
+                                        <div className="flex items-center gap-2 text-dark-300">
+                                          <Clock className="w-4 h-4 text-cyber-neon" />
+                                          <span className="font-medium">{cellData.time}</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                          <MapPin className="w-3 h-3 text-cyber-green" />
+                                        <div className="flex items-center gap-2 text-dark-300">
+                                          <MapPin className="w-4 h-4 text-cyber-green" />
                                           <span>{cellData.location || cellData.room}</span>
                                         </div>
+                                      </div>
+                                      
+                                      {/* Period & Type Badge */}
+                                      <div className="flex items-center justify-between pt-2 border-t border-dark-200/20">
+                                        <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-cyber-dark/50 text-cyber-neon">
+                                          Period {period.number}
+                                        </span>
+                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                          isLecture
+                                            ? 'bg-cyber-violet/40 text-cyber-violet'
+                                            : 'bg-cyber-green/40 text-cyber-green'
+                                        }`}>
+                                          {isLecture ? '📚 Lecture' : '🔬 Lab'}
+                                        </span>
                                       </div>
                                     </div>
                                   ))}
@@ -960,23 +979,30 @@ export default function SchedulePage() {
                                   {lectures.map((item, index) => (
                                     <div
                                       key={item.id || `lecture-${index}`}
-                                      className={`px-6 py-4 bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-l-4 border-cyber-violet hover:from-cyber-violet/40 hover:to-cyber-violet/30 transition-all ${
+                                      className={`px-6 py-5 bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-l-4 border-cyber-violet hover:from-cyber-violet/40 hover:to-cyber-violet/30 transition-all ${
                                         index < lectures.length - 1 ? 'border-b border-cyber-violet/20' : ''
                                       }`}
                                     >
-                                      <div className="flex items-center justify-between">
-                                        <div className="flex-1">
-                                          <h4 className="text-lg font-bold text-dark-100 mb-1">{item.title || item.subject}</h4>
-                                          <p className="text-sm text-dark-300">{item.instructor}</p>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                          <div className="flex items-center gap-2 text-dark-300">
-                                            <Clock className="w-4 h-4 text-cyber-neon" />
-                                            <span className="text-sm">{item.time}</span>
+                                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                        <div className="flex-1 space-y-2">
+                                          {/* 1. المادة (Subject) */}
+                                          <h4 className="text-lg font-bold text-dark-100">{item.title || item.subject}</h4>
+                                          {/* 2. صاحب المادة (Instructor) */}
+                                          <div className="flex items-center gap-2 text-sm text-dark-300">
+                                            <User className="w-4 h-4 text-cyber-neon/70" />
+                                            <span>{item.instructor}</span>
                                           </div>
-                                          <div className="flex items-center gap-2 text-dark-300">
+                                        </div>
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                          {/* 3. الموعد (Time) */}
+                                          <div className="flex items-center gap-2 text-sm text-dark-300 bg-cyber-dark/30 px-3 py-2 rounded-lg">
+                                            <Clock className="w-4 h-4 text-cyber-neon" />
+                                            <span className="font-medium">{item.time}</span>
+                                          </div>
+                                          {/* 4. مكان الحضور (Location) */}
+                                          <div className="flex items-center gap-2 text-sm text-dark-300 bg-cyber-dark/30 px-3 py-2 rounded-lg">
                                             <MapPin className="w-4 h-4 text-cyber-green" />
-                                            <span className="text-sm">{item.location || item.room}</span>
+                                            <span>{item.location || item.room}</span>
                                           </div>
                                           <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-cyber-violet/40 text-cyber-violet flex items-center gap-1.5">
                                             <BookOpen className="w-3 h-3" />
