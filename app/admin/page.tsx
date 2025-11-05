@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, BarChart3, Shield } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -30,29 +30,7 @@ export default function AdminPage() {
 
         {/* Quick Stats - Will be populated from Strapi later */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 animate-slide-up">
-          <div className="glass-card p-6 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-8 h-8 text-dark-100" />
-            </div>
-            <h3 className="text-2xl font-bold text-cyber-violet mb-2">7</h3>
-            <p className="text-dark-300">Subjects</p>
-          </div>
-          
-          <div className="glass-card p-6 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <BarChart3 className="w-8 h-8 text-cyber-dark" />
-            </div>
-            <h3 className="text-2xl font-bold text-cyber-green mb-2">-</h3>
-            <p className="text-dark-300">Published Articles</p>
-          </div>
-          
-          <div className="glass-card p-6 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-cyber-blue to-cyber-violet rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-8 h-8 text-dark-100" />
-            </div>
-            <h3 className="text-2xl font-bold text-cyber-blue mb-2">100%</h3>
-            <p className="text-dark-300">Uptime</p>
-          </div>
+          {/* Stats will be added here */}
         </div>
 
         {/* Admin Features Grid */}

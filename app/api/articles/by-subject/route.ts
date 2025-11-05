@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getArticles, transformStrapiArticle, isStrapiConfigured } from '@/lib/api'
 
-// Force dynamic rendering
+// Revalidate every 30 minutes
+export const revalidate = 1800
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
@@ -48,7 +49,12 @@ export async function GET(request: NextRequest) {
       return dateB - dateA
     })
 
-    return NextResponse.json(articles)
+    // Return with cache headers
+    return NextResponse.json(articles, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+      },
+    })
   } catch (error) {
     console.error('Error fetching articles from Strapi:', error)
     return NextResponse.json(

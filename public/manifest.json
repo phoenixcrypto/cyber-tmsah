@@ -1,16 +1,39 @@
 {
-  "name": "Cyber Tmsah",
-  "short_name": "CyberTmsah",
-  "description": "Your Cyber Fortress for the Future - Cybersecurity Learning Platform",
+  "name": "Cyber TMSAH - Academic Learning Platform",
+  "short_name": "CyberTMSAH",
+  "description": "Advanced Academic Learning Platform - Schedule, Materials, and More",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0a0a0a",
   "theme_color": "#00ff88",
+  "categories": ["education", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "any",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Schedule",
+      "short_name": "Schedule",
+      "description": "View your class schedule",
+      "url": "/schedule",
+      "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
+    },
+    {
+      "name": "Materials",
+      "short_name": "Materials",
+      "description": "Access learning materials",
+      "url": "/materials",
+      "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
     }
   ]
 }

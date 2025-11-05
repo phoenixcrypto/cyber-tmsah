@@ -95,3 +95,10 @@ jspm_packages/
 # Strapi CMS (optional - keep if part of project, remove if separate)
 # Uncomment to ignore Strapi folder if it's in a separate repo
 # cyber-tmsah-cms/
+
+# PWA files
+public/sw.js
+public/workbox-*.js
+public/sw.js.map
+public/workbox-*.js.map
+public/fallback-*.js
