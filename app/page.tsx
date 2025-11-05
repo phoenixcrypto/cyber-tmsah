@@ -178,7 +178,12 @@ export default function HomePage() {
   const validateGroupAndSection = (group: string, section: string): string => {
     if (!group || !section) return ''
     
-    const sectionNum = parseInt(section)
+    const sectionNum = parseInt(section, 10)
+    
+    // Check if section is a valid number
+    if (isNaN(sectionNum) || sectionNum < 1 || sectionNum > 15) {
+      return 'Please select a valid section number (1-15).'
+    }
     
     // Group A (Group 1) → Sections 1-7 only
     if (group === 'Group 1') {
@@ -236,6 +241,10 @@ export default function HomePage() {
 
   // Search function - Filter for TODAY only
   const handleSearch = () => {
+    // Clear previous error first
+    setValidationError('')
+    
+    // Check if both selections are made
     if (!selectedGroup || !selectedSection) {
       setValidationError('Please select both Lecture Group and Section Number.')
       setFilteredSchedule([])
@@ -250,7 +259,7 @@ export default function HomePage() {
       return
     }
     
-    // Clear error if validation passes
+    // If we reach here, validation passed - ensure error is cleared
     setValidationError('')
     
     // Filter by:
@@ -275,6 +284,22 @@ export default function HomePage() {
     
     setFilteredSchedule(sorted)
   }
+
+  // Clear validation error when selections change
+  useEffect(() => {
+    if (selectedGroup && selectedSection) {
+      // Only validate if both are selected, otherwise clear error
+      const error = validateGroupAndSection(selectedGroup, selectedSection)
+      if (error) {
+        setValidationError(error)
+      } else {
+        setValidationError('')
+      }
+    } else {
+      // Clear error if one or both selections are empty
+      setValidationError('')
+    }
+  }, [selectedGroup, selectedSection])
 
   useEffect(() => {
     const updateTime = () => {
@@ -530,7 +555,7 @@ export default function HomePage() {
                         value={selectedGroup}
                         onChange={(e) => {
                           setSelectedGroup(e.target.value)
-                          // Auto-search when selection changes
+                          // Auto-search when selection changes (only if both are selected and valid)
                           if (e.target.value && selectedSection) {
                             setTimeout(() => {
                               const error = validateGroupAndSection(e.target.value, selectedSection)
@@ -538,6 +563,9 @@ export default function HomePage() {
                                 handleSearch()
                               }
                             }, 100)
+                          } else {
+                            // Clear schedule if selection is cleared
+                            setFilteredSchedule([])
                           }
                         }}
                         className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
@@ -553,7 +581,7 @@ export default function HomePage() {
                         value={selectedSection}
                         onChange={(e) => {
                           setSelectedSection(e.target.value)
-                          // Auto-search when selection changes
+                          // Auto-search when selection changes (only if both are selected and valid)
                           if (selectedGroup && e.target.value) {
                             setTimeout(() => {
                               const error = validateGroupAndSection(selectedGroup, e.target.value)
@@ -561,6 +589,9 @@ export default function HomePage() {
                                 handleSearch()
                               }
                             }, 100)
+                          } else {
+                            // Clear schedule if selection is cleared
+                            setFilteredSchedule([])
                           }
                         }}
                         className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50 transition-colors"
