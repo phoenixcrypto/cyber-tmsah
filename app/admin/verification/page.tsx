@@ -1,21 +1,60 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Upload, FileSpreadsheet, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { parseExcelFile, type StudentRow } from '@/lib/utils/excelParser'
 
 export default function VerificationUploadPage() {
+  const router = useRouter()
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [parsing, setParsing] = useState(false)
   const [parsedData, setParsedData] = useState<StudentRow[]>([])
   const [errors, setErrors] = useState<string[]>([])
   const [success, setSuccess] = useState('')
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
   const [uploadResult, setUploadResult] = useState<{
     success: number
     failed: number
     errors: string[]
   } | null>(null)
+
+  // التحقق من أن المستخدم admin عند تحميل الصفحة
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        // محاولة الحصول على access_token من cookies
+        const cookies = document.cookie.split(';')
+        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
+        const accessToken = accessTokenCookie?.split('=')[1]
+
+        if (!accessToken) {
+          router.push('/login?redirect=/admin/verification')
+          return
+        }
+
+        // فك تشفير JWT للتحقق من الـ role
+        try {
+          const payload = JSON.parse(atob(accessToken.split('.')[1] || ''))
+          if (payload.role === 'admin') {
+            setIsAdmin(true)
+          } else {
+            setErrors(['Admin access required. Please log in as an administrator.'])
+            setIsAdmin(false)
+          }
+        } catch (e) {
+          setErrors(['Invalid token. Please log in again.'])
+          setIsAdmin(false)
+        }
+      } catch (err) {
+        setErrors(['Failed to verify admin access. Please log in again.'])
+        setIsAdmin(false)
+      }
+    }
+
+    checkAdmin()
+  }, [router])
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -69,6 +108,7 @@ export default function VerificationUploadPage() {
       const response = await fetch('/api/admin/verification/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // إرسال cookies (access_token) تلقائياً
         body: JSON.stringify({ students: parsedData }),
       })
 
@@ -95,6 +135,36 @@ export default function VerificationUploadPage() {
     } finally {
       setUploading(false)
     }
+  }
+
+  // إخفاء المحتوى حتى يتم التحقق من صلاحيات admin
+  if (isAdmin === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-cyber-neon mx-auto mb-4" />
+          <p className="text-dark-300">جاري التحقق من الصلاحيات...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (isAdmin === false) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-dark-100 mb-2">غير مصرح بالوصول</h2>
+          <p className="text-dark-300 mb-4">يجب تسجيل الدخول كمسؤول للوصول إلى هذه الصفحة.</p>
+          <button
+            onClick={() => router.push('/login?redirect=/admin/verification')}
+            className="px-6 py-2 bg-cyber-neon text-cyber-dark rounded-lg font-semibold hover:bg-cyber-neon/80 transition-colors"
+          >
+            تسجيل الدخول
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
