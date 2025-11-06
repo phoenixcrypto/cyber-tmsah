@@ -51,22 +51,36 @@ export default function LecturePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Load article from Strapi
+  // Load article from Supabase
   useEffect(() => {
     const loadArticle = async () => {
       try {
         setLoading(true)
         setError(null)
         
-        // Fetch article by ID from Strapi
-        const response = await fetch(`/api/articles/by-subject?subjectId=${subjectId}&status=published`)
+        // Get access token from cookies
+        const cookies = document.cookie.split(';')
+        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
+        const accessToken = accessTokenCookie?.split('=')[1]
+        
+        // Fetch article by ID from Supabase
+        const response = await fetch(`/api/articles/${lectureId}`, {
+          credentials: 'include',
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+        })
         
         if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Article not found')
+          }
+          if (response.status === 403) {
+            throw new Error('Access denied')
+          }
           throw new Error('Failed to load article')
         }
         
-        const articles = await response.json()
-        const article = articles.find((a: Article) => a.id === lectureId)
+        const data = await response.json()
+        const article = data.article
         
         if (!article) {
           throw new Error('Article not found')
@@ -76,15 +90,29 @@ export default function LecturePage() {
         setLectureContent({
           id: article.id,
           title: article.title,
-          subject: article.subjectName || subjectId,
-          instructor: article.instructor,
-          duration: article.duration,
-          date: article.date,
+          subject: article.subject_id || subjectId,
+          instructor: article.created_by || 'Instructor',
+          duration: 'N/A',
+          date: article.published_at ? new Date(article.published_at).toLocaleDateString() : new Date(article.created_at).toLocaleDateString(),
           content: article.content,
-          attachments: [],
+          attachments: article.files ? article.files.map((file: string) => ({
+            name: file.split('/').pop() || 'File',
+            type: file.split('.').pop() || 'file',
+            size: 'N/A',
+            url: file
+          })) : [],
           relatedLectures: [],
-          youtubeUrl: (article as any).youtubeUrl || ''
+          youtubeUrl: ''
         })
+        
+        // Track view
+        if (accessToken) {
+          fetch(`/api/materials/${article.id}/view`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+          }).catch(() => {}) // Ignore errors
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load article')
       } finally {

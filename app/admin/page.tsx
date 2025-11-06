@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen } from 'lucide-react'
+import { BookOpen, Users, Settings, FileSpreadsheet } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -7,11 +7,32 @@ export const revalidate = 0
 export default function AdminPage() {
   const adminFeatures = [
     {
+      icon: FileSpreadsheet,
+      title: 'Upload Verification List',
+      description: 'Upload student verification data',
+      href: '/admin/verification',
+      color: 'from-cyber-neon to-cyber-green'
+    },
+    {
       icon: BookOpen,
-      title: 'Content Management',
-      description: 'Manage articles and learning materials',
-      href: '/admin/content',
+      title: 'Publish Content',
+      description: 'Publish articles and tasks',
+      href: '/admin/content/publish',
       color: 'from-cyber-violet to-cyber-blue'
+    },
+    {
+      icon: Users,
+      title: 'Students List',
+      description: 'View all registered students',
+      href: '/admin/students',
+      color: 'from-cyber-blue to-cyber-purple'
+    },
+    {
+      icon: Settings,
+      title: 'Settings',
+      description: 'Manage admin account settings',
+      href: '/admin/settings',
+      color: 'from-cyber-purple to-cyber-pink'
     }
   ]
 
@@ -28,13 +49,8 @@ export default function AdminPage() {
           </p>
         </div>
 
-        {/* Quick Stats - Will be populated from Strapi later */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 animate-slide-up">
-          {/* Stats will be added here */}
-        </div>
-
         {/* Admin Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {adminFeatures.map((feature, index) => {
             const Icon = feature.icon
             return (
@@ -68,12 +84,36 @@ export default function AdminPage() {
           </h2>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
-              href="/admin/content"
+              href="/admin/verification"
+              prefetch={false}
+              className="btn-primary flex items-center gap-2"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              Upload Students
+            </Link>
+            <Link
+              href="/admin/content/publish"
               prefetch={false}
               className="btn-primary flex items-center gap-2"
             >
               <BookOpen className="w-4 h-4" />
-              Manage Content
+              Publish Content
+            </Link>
+            <Link
+              href="/admin/students"
+              prefetch={false}
+              className="btn-primary flex items-center gap-2"
+            >
+              <Users className="w-4 h-4" />
+              View Students
+            </Link>
+            <Link
+              href="/admin/settings"
+              prefetch={false}
+              className="btn-primary flex items-center gap-2"
+            >
+              <Settings className="w-4 h-4" />
+              Settings
             </Link>
           </div>
         </div>

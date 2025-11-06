@@ -4,6 +4,7 @@ import { verifyToken } from '@/lib/security/jwt'
 import { rateLimit } from '@/lib/security/rateLimit'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {

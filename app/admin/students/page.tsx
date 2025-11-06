@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Users, Search, Download, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { Users, Search, Download, Loader2, AlertCircle } from 'lucide-react'
 
 interface Student {
   id: string
