@@ -37,9 +37,12 @@ export async function POST(request: NextRequest) {
     }
 
     const { username, password } = validationResult.data
+    const trimmedUsername = username.trim().toLowerCase()
+
+    console.log('[Login] Attempt for:', trimmedUsername)
 
     // Check account lockout
-    const lockoutCheck = checkAccountLockout(username)
+    const lockoutCheck = checkAccountLockout(trimmedUsername)
     if (lockoutCheck.locked) {
       const remainingTime = Math.ceil((lockoutCheck.lockUntil! - Date.now()) / 1000 / 60)
       return NextResponse.json(
@@ -52,15 +55,40 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient()
 
-    // Find user by username or email
-    const { data: user, error: userError } = await supabase
+    // Find user by username first, then by email
+    let user = null
+    let userError = null
+
+    // Try username first
+    const { data: userByUsername, error: errorByUsername } = await supabase
       .from('users')
       .select('*')
-      .or(`username.eq.${username},email.eq.${username}`)
+      .eq('username', trimmedUsername)
       .single()
 
+    if (userByUsername && !errorByUsername) {
+      user = userByUsername
+      console.log('[Login] User found by username:', user.username)
+    } else {
+      // Try email
+      const { data: userByEmail, error: errorByEmail } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', trimmedUsername)
+        .single()
+
+      if (userByEmail && !errorByEmail) {
+        user = userByEmail
+        console.log('[Login] User found by email:', user.email)
+      } else {
+        userError = errorByEmail || errorByUsername
+        console.log('[Login] User not found. Username error:', errorByUsername?.message, 'Email error:', errorByEmail?.message)
+      }
+    }
+
     if (userError || !user) {
-      recordFailedAttempt(username)
+      recordFailedAttempt(trimmedUsername)
+      console.log('[Login] User not found, recording failed attempt')
       return NextResponse.json(
         { error: 'Invalid username or password.' },
         { status: 401 }
@@ -69,6 +97,7 @@ export async function POST(request: NextRequest) {
 
     // Check if account is active
     if (!user.is_active) {
+      console.log('[Login] Account is inactive')
       return NextResponse.json(
         { error: 'Account is deactivated. Please contact administrator.' },
         { status: 403 }
@@ -76,9 +105,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify password
+    console.log('[Login] Verifying password for user:', user.username)
     const passwordValid = await verifyPassword(password, user.password_hash)
+    console.log('[Login] Password valid:', passwordValid)
+    
     if (!passwordValid) {
-      recordFailedAttempt(username)
+      recordFailedAttempt(trimmedUsername)
+      console.log('[Login] Password invalid, recording failed attempt')
       return NextResponse.json(
         { error: 'Invalid username or password.' },
         { status: 401 }
@@ -86,7 +119,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Clear failed attempts
-    clearFailedAttempts(username)
+    clearFailedAttempts(trimmedUsername)
 
     // Update last login
     await supabase
