@@ -44,7 +44,12 @@ export default function DashboardPage() {
 
     // Decode token to get user info (simple decode, not verification - for display only)
     try {
-      const payload = JSON.parse(atob(accessToken.split('.')[1]))
+      const tokenPart = accessToken?.split('.')?.[1]
+      if (!tokenPart) {
+        router.push('/login')
+        return
+      }
+      const payload = JSON.parse(atob(tokenPart))
       setUser({
         id: payload.userId,
         username: payload.username,

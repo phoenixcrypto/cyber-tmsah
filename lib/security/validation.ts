@@ -28,10 +28,7 @@ export const sectionNumberSchema = z
   .max(15, 'Section number must be between 1 and 15')
 
 // Group validation
-export const groupSchema = z
-  .enum(['Group 1', 'Group 2'], {
-    errorMap: () => ({ message: 'Group must be Group 1 or Group 2' }),
-  })
+export const groupSchema = z.enum(['Group 1', 'Group 2'])
 
 // Registration validation schema
 export const registrationSchema = z.object({

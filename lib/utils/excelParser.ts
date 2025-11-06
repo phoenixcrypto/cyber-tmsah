@@ -28,8 +28,8 @@ export function parseExcelFile(file: File): Promise<ParseResult> {
         const workbook = XLSX.read(data, { type: 'array' })
 
         // Get first sheet
-        const firstSheetName = workbook.SheetNames[0]
-        const worksheet = workbook.Sheets[firstSheetName]
+        const firstSheetName = workbook.SheetNames[0] as string
+        const worksheet = workbook.Sheets[firstSheetName as keyof typeof workbook.Sheets] as XLSX.WorkSheet
 
         // Convert to JSON
         const jsonData = XLSX.utils.sheet_to_json(worksheet, {
@@ -47,7 +47,7 @@ export function parseExcelFile(file: File): Promise<ParseResult> {
         }
 
         // Find header row (usually first row)
-        const headerRow = jsonData[0].map((cell: any) =>
+        const headerRow = (jsonData[0] || []).map((cell: any) =>
           String(cell).toLowerCase().trim()
         )
 
@@ -143,13 +143,18 @@ export function parseExcelFile(file: File): Promise<ParseResult> {
             continue
           }
 
-          students.push({
+          const student: StudentRow = {
             fullName,
             sectionNumber,
             groupName,
-            studentId: studentId || undefined,
-            email: email || undefined,
-          })
+          }
+          if (studentId) {
+            student.studentId = studentId
+          }
+          if (email) {
+            student.email = email
+          }
+          students.push(student)
         }
 
         resolve({
@@ -183,7 +188,7 @@ export function parseExcelFile(file: File): Promise<ParseResult> {
  */
 function findColumnIndex(headerRow: string[], possibleNames: string[]): number {
   for (let i = 0; i < headerRow.length; i++) {
-    const cell = headerRow[i]
+    const cell = headerRow[i] || ''
     for (const name of possibleNames) {
       if (cell.includes(name) || name.includes(cell)) {
         return i
