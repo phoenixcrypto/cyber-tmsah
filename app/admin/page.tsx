@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import { BookOpen, Users, Settings, FileSpreadsheet } from 'lucide-react'
+import { requireAdmin } from '@/lib/auth/admin'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  // Server-side admin verification - redirects if not admin
+  await requireAdmin()
   const adminFeatures = [
     {
       icon: FileSpreadsheet,
