@@ -26,18 +26,35 @@
 
 ---
 
-### ✅ **الخطوة 2: تدوير Supabase Service Role Key** (3 دقائق)
+### ✅ **الخطوة 2: تدوير Supabase Service Role Key** (5 دقائق)
 
+**⚠️ ملاحظة مهمة**: في Supabase، قد لا يكون هناك زر "Reset" مباشر. اتبع هذه الخطوات:
+
+#### **الطريقة أ: إذا كان هناك زر Reset**
 1. اذهب إلى: https://supabase.com/dashboard
 2. اختر مشروعك
-3. Settings → API
-4. ابحث عن "service_role" key
-5. اضغط "Reset" أو "Regenerate"
-6. انسخ المفتاح الجديد
-7. اذهب إلى Vercel → Environment Variables
-8. ابحث عن `SUPABASE_SERVICE_ROLE_KEY`
-9. استبدل القيمة القديمة بالقيمة الجديدة
-10. Save
+3. **Settings** → **API**
+4. ابحث عن **"service_role" secret key**
+5. اضغط **"Reveal"** لإظهار المفتاح الحالي
+6. ابحث عن زر **"Reset"** أو **"Regenerate"** (قد يكون بجانب Reveal)
+7. إذا وجدته، اضغط عليه
+8. انسخ المفتاح الجديد فوراً
+
+#### **الطريقة ب: إذا لم تجد زر Reset (الأكثر شيوعاً)**
+1. اذهب إلى: **Settings** → **API**
+2. ابحث عن قسم **"JWT Settings"** أو **"JWT Secret"**
+3. اضغط **"Generate new JWT secret"** أو **"Reset JWT Secret"**
+4. ⚠️ **تحذير**: هذا سيعيد تعيين **جميع** المفاتيح (anon + service_role)
+5. انسخ المفاتيح الجديدة فوراً:
+   - `anon` key (لـ NEXT_PUBLIC_SUPABASE_ANON_KEY)
+   - `service_role` key (لـ SUPABASE_SERVICE_ROLE_KEY)
+
+#### **بعد الحصول على المفاتيح الجديدة:**
+6. اذهب إلى **Vercel** → **Settings** → **Environment Variables**
+7. حدّث **`NEXT_PUBLIC_SUPABASE_ANON_KEY`** بالقيمة الجديدة
+8. حدّث **`SUPABASE_SERVICE_ROLE_KEY`** بالقيمة الجديدة
+9. **Save**
+10. **Redeploy** الموقع
 
 ---
 
