@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Upload, FileSpreadsheet, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react'
+import { Upload, FileSpreadsheet, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { parseExcelFile, type StudentRow } from '@/lib/utils/excelParser'
 
 export default function VerificationUploadPage() {
