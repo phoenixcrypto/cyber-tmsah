@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { hashPassword, validatePasswordStrength } from '@/lib/security/password'
 import { registrationSchema, validateSectionGroupMatch } from '@/lib/security/validation'
-import { rateLimit, checkAccountLockout, recordFailedAttempt, clearFailedAttempts } from '@/lib/security/rateLimit'
+import { rateLimit, recordFailedAttempt, clearFailedAttempts } from '@/lib/security/rateLimit'
 import { generateAccessToken, generateRefreshToken } from '@/lib/security/jwt'
 
 export const dynamic = 'force-dynamic'

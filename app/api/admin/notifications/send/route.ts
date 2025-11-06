@@ -73,13 +73,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Filter by notification settings
-    const { data: notificationSettings } = await supabase
-      .from('notification_settings')
-      .select('user_id, email_notifications')
-      .in('user_id', recipients.map((_, i) => i.toString())) // This is simplified - should get actual user IDs
+    // TODO: Filter by notification_settings
+    // const { data: notificationSettings } = await supabase
+    //   .from('notification_settings')
+    //   .select('user_id, email_notifications')
+    //   .in('user_id', recipients.map((_, i) => i.toString())) // This is simplified - should get actual user IDs
 
     // For now, send to all recipients
-    // TODO: Filter by notification_settings
 
     // Send notifications
     if (sendNow) {

@@ -107,8 +107,6 @@ export default function PublishContentPage() {
         targetGroups: formData.isGeneral ? null : formData.targetGroups,
         sendNotification: formData.sendNotification,
         notificationTiming: formData.notificationTiming,
-        scheduledDate: formData.notificationTiming === 'scheduled' ? formData.scheduledDate : null,
-        scheduledTime: formData.notificationTiming === 'scheduled' ? formData.scheduledTime : null,
       }
 
       if (contentType === 'task') {
