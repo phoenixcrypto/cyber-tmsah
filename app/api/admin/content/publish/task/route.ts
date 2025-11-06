@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
     const {
       title,
       description,
-      content,
       subjectId,
       isGeneral,
       targetSections,
