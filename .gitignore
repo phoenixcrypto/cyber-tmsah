@@ -16,6 +16,9 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.vercel.local
+# Never commit real secrets - even in example files!
+# If you accidentally commit secrets, rotate them IMMEDIATELY
 
 # IDE
 .vscode/
