@@ -4,6 +4,7 @@ import { verifyToken } from '@/lib/security/jwt'
 import { sendArticleNotification, sendTaskNotification } from '@/lib/notifications/email'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
   try {

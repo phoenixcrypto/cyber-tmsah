@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, Loader2, CheckCircle2, AlertCircle, Upload, X } from 'lucide-react'
+import { Plus, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react'
 
 export default function PublishContentPage() {
   const router = useRouter()

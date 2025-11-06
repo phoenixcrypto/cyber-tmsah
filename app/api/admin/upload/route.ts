@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyToken } from '@/lib/security/jwt'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024 // 4MB
 

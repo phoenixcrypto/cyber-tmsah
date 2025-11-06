@@ -4,6 +4,7 @@ import { validateStudentData, type StudentRow } from '@/lib/utils/excelParser'
 import { verifyToken } from '@/lib/security/jwt'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
   try {
