@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       .from('articles')
       .insert({
         title,
-        content: description, // Use description as content for now
+        content: content || description, // prefer provided content; fallback to description
         subject_id: subjectId || null,
         target_sections: isGeneral ? null : (targetSections || []),
         target_groups: isGeneral ? null : (targetGroups || []),
