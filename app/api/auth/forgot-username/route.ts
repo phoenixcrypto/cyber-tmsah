@@ -79,20 +79,6 @@ export async function POST(request: NextRequest) {
             </p>
           </div>
         `,
-        text: `
-          Username Recovery
-
-          Hello ${user.full_name},
-
-          You requested to retrieve your username. Here it is:
-
-          Username: ${user.username}
-
-          If you didn't request this, please ignore this email.
-
-          Best regards,
-          Cyber TMSAH Platform
-        `,
       })
 
       if (!emailSent) {
