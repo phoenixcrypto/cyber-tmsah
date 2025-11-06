@@ -105,9 +105,16 @@ export default function VerificationUploadPage() {
     setUploadResult(null)
 
     try {
+      // قراءة access_token من الكوكيز لإرساله أيضاً في Authorization كحل احتياطي
+      const accessTokenCookie = document.cookie.split(';').find(c => c.trim().startsWith('access_token='))
+      const accessToken = accessTokenCookie?.split('=')[1]
+
       const response = await fetch('/api/admin/verification/upload', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         credentials: 'include', // إرسال cookies (access_token) تلقائياً
         body: JSON.stringify({ students: parsedData }),
       })
