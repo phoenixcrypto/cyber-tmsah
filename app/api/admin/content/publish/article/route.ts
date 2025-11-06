@@ -40,8 +40,6 @@ export async function POST(request: NextRequest) {
       files,
       sendNotification,
       notificationTiming,
-      scheduledDate,
-      scheduledTime,
     } = body
 
     // Validate
