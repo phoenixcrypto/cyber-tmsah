@@ -131,6 +131,12 @@ export default function LoginPage() {
                 />
                 <span className="text-sm text-dark-300">Remember me</span>
               </label>
+              <Link
+                href="/forgot-username"
+                className="text-sm text-cyber-neon hover:text-cyber-green transition-colors"
+              >
+                Forgot username?
+              </Link>
             </div>
 
             {error && (
