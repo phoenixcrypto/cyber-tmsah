@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, Users, Settings, FileSpreadsheet } from 'lucide-react'
+import { BookOpen, Users, Settings, FileSpreadsheet, Database } from 'lucide-react'
 import { requireAdmin } from '@/lib/auth/admin'
 
 export const dynamic = 'force-dynamic'
@@ -15,6 +15,13 @@ export default async function AdminPage() {
       description: 'Upload student verification data',
       href: '/admin/verification',
       color: 'from-cyber-neon to-cyber-green'
+    },
+    {
+      icon: Database,
+      title: 'Manage Verification List',
+      description: 'View and edit all 703 students data',
+      href: '/admin/verification-list',
+      color: 'from-cyber-green to-cyber-neon'
     },
     {
       icon: BookOpen,
@@ -53,7 +60,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Admin Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {adminFeatures.map((feature, index) => {
             const Icon = feature.icon
             return (
@@ -93,6 +100,14 @@ export default async function AdminPage() {
             >
               <FileSpreadsheet className="w-4 h-4" />
               Upload Students
+            </Link>
+            <Link
+              href="/admin/verification-list"
+              prefetch={false}
+              className="btn-primary flex items-center gap-2"
+            >
+              <Database className="w-4 h-4" />
+              Manage List
             </Link>
             <Link
               href="/admin/content/publish"
