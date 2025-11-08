@@ -8,12 +8,24 @@ interface Student {
   id: string
   username: string
   email: string
+  password_hash: string
   full_name: string
   section_number: number
   group_name: string
+  university_email: string | null
+  role: string
   is_active: boolean
   created_at: string
+  updated_at: string
   last_login: string | null
+}
+
+interface Statistics {
+  total: number
+  active: number
+  inactive: number
+  bySection: Record<number, number>
+  byGroup: Record<string, number>
 }
 
 export default function StudentsPage() {
@@ -22,10 +34,12 @@ export default function StudentsPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
   const [students, setStudents] = useState<Student[]>([])
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([])
+  const [statistics, setStatistics] = useState<Statistics | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [sectionFilter, setSectionFilter] = useState<string>('all')
   const [groupFilter, setGroupFilter] = useState<string>('all')
   const [showInactive, setShowInactive] = useState(false)
+  const [showPasswordHash, setShowPasswordHash] = useState(false)
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -72,6 +86,7 @@ export default function StudentsPage() {
         const data = await response.json()
         setStudents(data.students || [])
         setFilteredStudents(data.students || [])
+        setStatistics(data.statistics || null)
       }
     } catch (err) {
       console.error('Error fetching students:', err)
@@ -111,16 +126,19 @@ export default function StudentsPage() {
   }, [searchTerm, sectionFilter, groupFilter, showInactive, students])
 
   const exportToCSV = () => {
-    const headers = ['Full Name', 'Username', 'Email', 'Section', 'Group', 'Status', 'Registered', 'Last Login']
+    const headers = ['Full Name', 'Username', 'Email', 'Password Hash', 'Section', 'Group', 'University Email', 'Status', 'Registered', 'Last Login', 'Updated At']
     const rows = filteredStudents.map((s) => [
       s.full_name,
       s.username,
       s.email,
+      s.password_hash,
       s.section_number,
       s.group_name,
+      s.university_email || '',
       s.is_active ? 'Active' : 'Inactive',
       new Date(s.created_at).toLocaleDateString('ar-EG'),
       s.last_login ? new Date(s.last_login).toLocaleDateString('ar-EG') : 'Never',
+      new Date(s.updated_at).toLocaleDateString('ar-EG'),
     ])
 
     const csvContent = [
@@ -189,7 +207,7 @@ export default function StudentsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="enhanced-card p-6">
             <div className="text-3xl font-bold text-cyber-neon mb-1">{stats.total}</div>
-            <div className="text-dark-300">إجمالي الطلاب</div>
+            <div className="text-dark-300">إجمالي الطلاب المسجلين</div>
           </div>
           <div className="enhanced-card p-6">
             <div className="text-3xl font-bold text-green-400 mb-1">{stats.active}</div>
@@ -200,6 +218,36 @@ export default function StudentsPage() {
             <div className="text-dark-300">غير نشط</div>
           </div>
         </div>
+
+        {/* Detailed Statistics */}
+        {statistics && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="enhanced-card p-6">
+              <h3 className="text-lg font-semibold text-dark-100 mb-4">التوزيع حسب القسم</h3>
+              <div className="grid grid-cols-3 gap-2">
+                {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => (
+                  <div key={section} className="text-center p-2 bg-cyber-dark/50 rounded">
+                    <div className="text-xl font-bold text-cyber-neon">{statistics.bySection[section] || 0}</div>
+                    <div className="text-xs text-dark-300">قسم {section}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="enhanced-card p-6">
+              <h3 className="text-lg font-semibold text-dark-100 mb-4">التوزيع حسب المجموعة</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-4 bg-cyber-dark/50 rounded">
+                  <div className="text-2xl font-bold text-cyber-neon">{statistics.byGroup['Group 1'] || 0}</div>
+                  <div className="text-sm text-dark-300">Group 1 (A)</div>
+                </div>
+                <div className="text-center p-4 bg-cyber-dark/50 rounded">
+                  <div className="text-2xl font-bold text-cyber-neon">{statistics.byGroup['Group 2'] || 0}</div>
+                  <div className="text-sm text-dark-300">Group 2 (B)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="enhanced-card p-6 mb-6">
@@ -252,21 +300,42 @@ export default function StudentsPage() {
             </div>
           </div>
 
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="showPasswordHash"
+                checked={showPasswordHash}
+                onChange={(e) => setShowPasswordHash(e.target.checked)}
+                className="w-4 h-4"
+              />
+              <label htmlFor="showPasswordHash" className="text-dark-300 cursor-pointer">
+                إظهار Password Hash
+              </label>
+            </div>
             <button
               onClick={exportToCSV}
               className="px-4 py-2 bg-cyber-neon text-cyber-dark rounded-lg font-semibold hover:bg-cyber-neon/80 transition-colors flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
-              تصدير CSV
+              تصدير CSV (مع Password Hash)
             </button>
           </div>
         </div>
 
         {/* Students Table */}
         <div className="enhanced-card p-6">
-          <div className="mb-4 text-dark-300">
-            عرض {filteredStudents.length} من {students.length} طالب
+          <div className="mb-4 flex justify-between items-center">
+            <div className="text-dark-300">
+              عرض {filteredStudents.length} من {students.length} طالب مسجل
+            </div>
+            {statistics && (
+              <div className="text-sm text-dark-400">
+                إجمالي المسجلين: <span className="text-cyber-neon font-bold">{statistics.total}</span> | 
+                نشط: <span className="text-green-400 font-bold">{statistics.active}</span> | 
+                غير نشط: <span className="text-red-400 font-bold">{statistics.inactive}</span>
+              </div>
+            )}
           </div>
 
           <div className="overflow-x-auto">
@@ -276,17 +345,22 @@ export default function StudentsPage() {
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">الاسم الكامل</th>
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">اسم المستخدم</th>
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">البريد الإلكتروني</th>
+                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">البريد الجامعي</th>
+                  {showPasswordHash && (
+                    <th className="text-right py-3 px-4 text-dark-300 font-semibold">Password Hash</th>
+                  )}
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">السكشن</th>
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">المجموعة</th>
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">الحالة</th>
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">تاريخ التسجيل</th>
+                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">آخر تحديث</th>
                   <th className="text-right py-3 px-4 text-dark-300 font-semibold">آخر دخول</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="text-center py-8 text-dark-400">
+                    <td colSpan={showPasswordHash ? 11 : 10} className="text-center py-8 text-dark-400">
                       لا توجد نتائج
                     </td>
                   </tr>
@@ -296,9 +370,15 @@ export default function StudentsPage() {
                       key={student.id}
                       className="border-b border-cyber-neon/10 hover:bg-cyber-dark/50 transition-colors"
                     >
-                      <td className="py-3 px-4 text-dark-100">{student.full_name}</td>
+                      <td className="py-3 px-4 text-dark-100 font-medium">{student.full_name}</td>
                       <td className="py-3 px-4 text-dark-200">{student.username}</td>
                       <td className="py-3 px-4 text-dark-200">{student.email}</td>
+                      <td className="py-3 px-4 text-dark-200">{student.university_email || '-'}</td>
+                      {showPasswordHash && (
+                        <td className="py-3 px-4 text-dark-400 text-xs font-mono break-all max-w-xs">
+                          {student.password_hash}
+                        </td>
+                      )}
                       <td className="py-3 px-4 text-dark-200 text-center">{student.section_number}</td>
                       <td className="py-3 px-4 text-dark-200">{student.group_name}</td>
                       <td className="py-3 px-4">
@@ -314,6 +394,9 @@ export default function StudentsPage() {
                       </td>
                       <td className="py-3 px-4 text-dark-300 text-sm">
                         {new Date(student.created_at).toLocaleDateString('ar-EG')}
+                      </td>
+                      <td className="py-3 px-4 text-dark-300 text-sm">
+                        {new Date(student.updated_at).toLocaleDateString('ar-EG')}
                       </td>
                       <td className="py-3 px-4 text-dark-300 text-sm">
                         {student.last_login

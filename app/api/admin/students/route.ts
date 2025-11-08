@@ -59,10 +59,10 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Get all students (role = 'student')
+    // Get all students (role = 'student') with ALL data including password_hash
     const { data: students, error: studentsError } = await supabase
       .from('users')
-      .select('id, username, email, full_name, section_number, group_name, is_active, created_at, last_login')
+      .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
       .eq('role', 'student')
       .order('created_at', { ascending: false })
 
@@ -74,9 +74,37 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Get statistics
+    const totalCount = students?.length || 0
+    const activeCount = students?.filter(s => s.is_active).length || 0
+    const inactiveCount = totalCount - activeCount
+
+    // Count by section
+    const sectionCounts: Record<number, number> = {}
+    students?.forEach(s => {
+      if (s.section_number) {
+        sectionCounts[s.section_number] = (sectionCounts[s.section_number] || 0) + 1
+      }
+    })
+
+    // Count by group
+    const groupCounts: Record<string, number> = {}
+    students?.forEach(s => {
+      if (s.group_name) {
+        groupCounts[s.group_name] = (groupCounts[s.group_name] || 0) + 1
+      }
+    })
+
     return NextResponse.json({
       success: true,
       students: students || [],
+      statistics: {
+        total: totalCount,
+        active: activeCount,
+        inactive: inactiveCount,
+        bySection: sectionCounts,
+        byGroup: groupCounts,
+      },
     })
   } catch (error) {
     console.error('Students fetch error:', error)
