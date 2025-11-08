@@ -27,7 +27,20 @@ export default function LoginPage() {
       ?.split('=')[1]
 
     if (accessToken) {
-      router.push(redirect)
+      // Decode JWT to get user role
+      try {
+        const parts = accessToken.split('.')
+        if (parts.length === 3 && parts[1]) {
+          const payload = JSON.parse(atob(parts[1]))
+          const targetRoute = payload.role === 'admin' ? '/admin' : '/dashboard'
+          router.push(targetRoute)
+        } else {
+          router.push(redirect)
+        }
+      } catch {
+        // If token is invalid, redirect to default
+        router.push(redirect)
+      }
     }
   }, [router, redirect])
 
@@ -55,8 +68,10 @@ export default function LoginPage() {
           document.cookie = `access_token=${data.accessToken}; path=/; max-age=${maxAge}; SameSite=Strict`
         }
 
-        // Redirect to dashboard or requested page
-        router.push(redirect)
+        // Redirect based on user role
+        // Admin → /admin, Student → /dashboard
+        const targetRoute = data.user?.role === 'admin' ? '/admin' : '/dashboard'
+        router.push(targetRoute)
       } else {
         setError(data.error || 'Login failed. Please check your credentials.')
       }
