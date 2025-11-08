@@ -1,14 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { LogIn, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/dashboard'
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -19,30 +17,32 @@ export default function LoginPage() {
   })
   const [showPassword, setShowPassword] = useState(false)
 
-  useEffect(() => {
-    // Check if already logged in
-    const accessToken = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('access_token='))
-      ?.split('=')[1]
+  // Disabled auto-login redirect - user must manually log in
+  // تعطيل تسجيل الدخول التلقائي - يجب على المستخدم تسجيل الدخول يدوياً
+  // useEffect(() => {
+  //   // Check if already logged in
+  //   const accessToken = document.cookie
+  //     .split('; ')
+  //     .find((row) => row.startsWith('access_token='))
+  //     ?.split('=')[1]
 
-    if (accessToken) {
-      // Decode JWT to get user role
-      try {
-        const parts = accessToken.split('.')
-        if (parts.length === 3 && parts[1]) {
-          const payload = JSON.parse(atob(parts[1]))
-          const targetRoute = payload.role === 'admin' ? '/admin' : '/dashboard'
-          router.push(targetRoute)
-        } else {
-          router.push(redirect)
-        }
-      } catch {
-        // If token is invalid, redirect to default
-        router.push(redirect)
-      }
-    }
-  }, [router, redirect])
+  //   if (accessToken) {
+  //     // Decode JWT to get user role
+  //     try {
+  //       const parts = accessToken.split('.')
+  //       if (parts.length === 3 && parts[1]) {
+  //         const payload = JSON.parse(atob(parts[1]))
+  //         const targetRoute = payload.role === 'admin' ? '/admin' : '/dashboard'
+  //         router.push(targetRoute)
+  //       } else {
+  //         router.push(redirect)
+  //       }
+  //     } catch {
+  //       // If token is invalid, redirect to default
+  //       router.push(redirect)
+  //     }
+  //   }
+  // }, [router, redirect])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

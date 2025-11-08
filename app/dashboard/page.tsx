@@ -171,11 +171,22 @@ export default function DashboardPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
-      document.cookie = 'access_token=; path=/; max-age=0'
+      await fetch('/api/auth/logout', { 
+        method: 'POST',
+        credentials: 'include',
+      })
+      // Clear all cookies client-side
+      document.cookie = 'access_token=; path=/; max-age=0; SameSite=Lax'
+      document.cookie = 'refresh_token=; path=/; max-age=0; SameSite=Strict'
+      document.cookie = 'admin-token=; path=/; max-age=0; SameSite=Strict'
       router.push('/login')
     } catch (err) {
       console.error('Logout error:', err)
+      // Even if API fails, clear cookies and redirect
+      document.cookie = 'access_token=; path=/; max-age=0; SameSite=Lax'
+      document.cookie = 'refresh_token=; path=/; max-age=0; SameSite=Strict'
+      document.cookie = 'admin-token=; path=/; max-age=0; SameSite=Strict'
+      router.push('/login')
     }
   }
 

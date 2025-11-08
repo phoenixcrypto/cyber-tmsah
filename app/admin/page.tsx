@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { BookOpen, Users, Settings, FileSpreadsheet, Database } from 'lucide-react'
 import { requireAdmin } from '@/lib/auth/admin'
+import LogoutButton from './components/LogoutButton'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -50,13 +51,21 @@ export default async function AdminPage() {
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            Admin Panel
-          </h1>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            Comprehensive management for the academic platform
-          </p>
+        <div className="mb-12 animate-fade-in">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div className="flex-1"></div>
+            <div className="flex-1 text-center">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-2">
+                Admin Panel
+              </h1>
+              <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
+                Comprehensive management for the academic platform
+              </p>
+            </div>
+            <div className="flex-1 flex justify-end">
+              <LogoutButton />
+            </div>
+          </div>
         </div>
 
         {/* Admin Features Grid */}
