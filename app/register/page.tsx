@@ -170,13 +170,12 @@ export default function RegisterPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        // Store access token
-        if (data.accessToken) {
-          document.cookie = `access_token=${data.accessToken}; path=/; max-age=900; SameSite=Strict` // 15 minutes
-        }
+        // Access token is now set in cookie by server-side
+        // No need to set it client-side anymore
 
         setSuccess('Registration successful! Redirecting to dashboard...')
         
+        // Redirect based on user role (though students register, not admins)
         // Redirect to dashboard after 1 second
         setTimeout(() => {
           router.push('/dashboard')

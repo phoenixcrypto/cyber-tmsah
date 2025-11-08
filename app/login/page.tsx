@@ -62,11 +62,8 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        // Store access token
-        if (data.accessToken) {
-          const maxAge = formData.rememberMe ? 60 * 60 * 24 * 7 : 900 // 7 days or 15 minutes
-          document.cookie = `access_token=${data.accessToken}; path=/; max-age=${maxAge}; SameSite=Strict`
-        }
+        // Access token is now set in cookie by server-side
+        // No need to set it client-side anymore
 
         // Redirect based on user role
         // Admin → /admin, Student → /dashboard

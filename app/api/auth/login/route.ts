@@ -172,6 +172,16 @@ export async function POST(request: NextRequest) {
       path: '/',
     })
 
+    // Also set access_token in cookie for server-side access
+    // This is read by server-side code (requireAdmin, etc.)
+    response.cookies.set('access_token', accessToken, {
+      httpOnly: false, // Allow client-side access for dashboard
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax', // Changed to 'lax' for better cross-site compatibility
+      maxAge: 60 * 60 * 24, // 24 hours
+      path: '/',
+    })
+
     return response
   } catch (error) {
     console.error('Login error:', error)
