@@ -95,7 +95,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-dark-300 mb-2">
-                Username or Email
+                Username, Email, or Full Name
               </label>
               <input
                 type="text"
@@ -103,9 +103,12 @@ export default function LoginPage() {
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50"
-                placeholder="Enter your username or email"
+                placeholder="Username, Email, or Full Name"
                 autoComplete="username"
               />
+              <p className="mt-1 text-xs text-dark-400">
+                You can log in with your username, email, or full name from the official list
+              </p>
             </div>
 
             <div>
