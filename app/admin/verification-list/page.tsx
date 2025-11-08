@@ -37,12 +37,28 @@ export default function VerificationListPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
+        // Check if token exists first
+        const cookies = document.cookie.split(';')
+        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
+        const accessToken = accessTokenCookie?.split('=')[1]
+
+        if (!accessToken) {
+          setMessage({ type: 'error', text: 'No authentication token found. Please log in.' })
+          setIsAdmin(false)
+          setLoading(false)
+          setTimeout(() => {
+            router.push('/login?redirect=/admin/verification-list')
+          }, 1500)
+          return
+        }
+
         // Use server-side verification for secure admin check
         const response = await fetch('/api/admin/verify', {
           method: 'GET',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
           },
         })
 
@@ -50,10 +66,20 @@ export default function VerificationListPage() {
 
         if (response.ok && data.isAdmin === true) {
           setIsAdmin(true)
+          setMessage(null) // Clear any previous errors
           // Load students after admin verification
           await loadStudents()
         } else {
-          setMessage({ type: 'error', text: data.error || 'Admin access required. Please log in as administrator.' })
+          // More specific error messages
+          let errorMessage = data.error || 'Admin access required. Please log in as administrator.'
+          
+          if (response.status === 401) {
+            errorMessage = 'Your session has expired. Please log in again.'
+          } else if (response.status === 403) {
+            errorMessage = data.error || 'You do not have admin privileges. Please log in as administrator.'
+          }
+          
+          setMessage({ type: 'error', text: errorMessage })
           setIsAdmin(false)
           // Redirect to login after a short delay
           setTimeout(() => {
@@ -62,7 +88,7 @@ export default function VerificationListPage() {
         }
       } catch (err) {
         console.error('Admin check error:', err)
-        setMessage({ type: 'error', text: 'Failed to verify admin access. Please try again.' })
+        setMessage({ type: 'error', text: 'Failed to verify admin access. Please check your connection and try again.' })
         setIsAdmin(false)
         setTimeout(() => {
           router.push('/login?redirect=/admin/verification-list')

@@ -41,7 +41,16 @@ export async function GET(request: NextRequest) {
 
     // Verify token
     const payload = verifyToken(accessToken)
-    if (!payload || payload.role !== 'admin') {
+    if (!payload) {
+      console.error('Token verification failed - invalid token')
+      return NextResponse.json(
+        { isAdmin: false, error: 'Invalid or expired token. Please log in again.' },
+        { status: 401 }
+      )
+    }
+
+    if (payload.role !== 'admin') {
+      console.error('Token verification failed - not admin role:', payload.role)
       return NextResponse.json(
         { isAdmin: false, error: 'Admin access required' },
         { status: 403 }
@@ -58,9 +67,18 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
       .single()
 
-    if (error || !user) {
+    if (error) {
+      console.error('Database error checking admin:', error)
       return NextResponse.json(
-        { isAdmin: false, error: 'Admin account not found or inactive' },
+        { isAdmin: false, error: 'Error verifying admin account' },
+        { status: 500 }
+      )
+    }
+
+    if (!user) {
+      console.error('Admin not found or inactive:', payload.userId)
+      return NextResponse.json(
+        { isAdmin: false, error: 'Admin account not found or inactive. Please contact support.' },
         { status: 403 }
       )
     }
