@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Home, Calendar, Info, CheckSquare, BookOpen } from 'lucide-react'
+import { Menu, X, Home, Info } from 'lucide-react'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -17,9 +17,6 @@ export default function Navbar() {
 
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/schedule', label: 'Schedule', icon: Calendar },
-    { href: '/tasks', label: 'Assignments', icon: CheckSquare },
-    { href: '/materials', label: 'Materials', icon: BookOpen },
     { href: '/about', label: 'About', icon: Info },
   ]
 
