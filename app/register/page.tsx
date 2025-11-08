@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { UserPlus, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react'
@@ -29,6 +29,8 @@ export default function RegisterPage() {
     valid: boolean
     message: string
   }>({ checked: false, valid: false, message: '' })
+  const [emailVerified, setEmailVerified] = useState(false)
+  const [sendingCode, setSendingCode] = useState(false)
 
   // Verify student data before registration
   const handleVerify = async () => {
@@ -80,6 +82,51 @@ export default function RegisterPage() {
     }
   }
 
+  // Check if email is verified from URL params
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const verified = searchParams.get('verified') === 'true'
+    const emailParam = searchParams.get('email')
+    
+    if (verified && emailParam && emailParam === formData.email.toLowerCase().trim()) {
+      setEmailVerified(true)
+    }
+  }, [formData.email])
+
+  // Send verification code
+  const handleSendVerificationCode = async () => {
+    if (!formData.email) {
+      setError('Please enter your email address first')
+      return
+    }
+
+    setSendingCode(true)
+    setError('')
+
+    try {
+      const response = await fetch('/api/auth/send-verification-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email.toLowerCase().trim(),
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        // Redirect to verification page
+        router.push(`/verify-code?email=${encodeURIComponent(formData.email.toLowerCase().trim())}`)
+      } else {
+        setError(data.error || 'Failed to send verification code. Please try again.')
+      }
+    } catch (err) {
+      setError('Failed to send verification code. Please try again.')
+    } finally {
+      setSendingCode(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -94,6 +141,12 @@ export default function RegisterPage() {
     // Check if verified
     if (!verificationStatus.checked || !verificationStatus.valid) {
       setError('Please verify your information first')
+      return
+    }
+
+    // Check if email is verified
+    if (!emailVerified) {
+      setError('Please verify your email address first by clicking "Send Verification Code"')
       return
     }
 
@@ -256,19 +309,52 @@ export default function RegisterPage() {
                   maxLength={30}
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-dark-300 mb-2">
-                  Email *
-                </label>
+            <div>
+              <label className="block text-sm font-medium text-dark-300 mb-2">
+                Email *
+              </label>
+              <div className="flex gap-2">
                 <input
                   type="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50"
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value })
+                    setEmailVerified(false)
+                  }}
+                  className="flex-1 p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50"
                   placeholder="your@email.com"
                 />
+                <button
+                  type="button"
+                  onClick={handleSendVerificationCode}
+                  disabled={sendingCode || !formData.email || emailVerified}
+                  className="px-4 py-3 bg-cyber-neon/20 border border-cyber-neon/50 rounded-lg text-cyber-neon hover:bg-cyber-neon/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold whitespace-nowrap"
+                >
+                  {emailVerified ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 inline mr-1" />
+                      Verified
+                    </>
+                  ) : sendingCode ? (
+                    'Sending...'
+                  ) : (
+                    'Send Code'
+                  )}
+                </button>
               </div>
+              {emailVerified && (
+                <p className="text-xs text-cyber-green mt-1 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" />
+                  Email verified successfully
+                </p>
+              )}
+              {!emailVerified && formData.email && (
+                <p className="text-xs text-dark-400 mt-1">
+                  Click "Send Code" to receive a verification code
+                </p>
+              )}
+            </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

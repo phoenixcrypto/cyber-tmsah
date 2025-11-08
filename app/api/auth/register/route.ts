@@ -38,6 +38,15 @@ export async function POST(request: NextRequest) {
 
     const { username, email, password, fullName, sectionNumber, groupName, universityEmail } = validationResult.data
 
+    // Verify email was verified through verification code
+    const { isEmailVerified, removeVerificationCode } = await import('@/lib/security/verification')
+    if (!isEmailVerified(email.toLowerCase().trim())) {
+      return NextResponse.json(
+        { error: 'Email verification required. Please verify your email address first.' },
+        { status: 403 }
+      )
+    }
+
     // Validate password strength
     const passwordValidation = validatePasswordStrength(password)
     if (!passwordValidation.valid) {
@@ -143,6 +152,9 @@ export async function POST(request: NextRequest) {
         registered_by: newUser.id,
       })
       .eq('id', verificationData.id)
+
+    // Remove verification code after successful registration
+    removeVerificationCode(email.toLowerCase().trim())
 
     // Clear failed attempts
     clearFailedAttempts(`${username}_${email}`)
