@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyToken } from '@/lib/security/jwt'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { rateLimit } from '@/lib/security/rateLimit'
 
-export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
+/**
+ * GET /api/admin/verify
+ * Verify if current user has admin access
+ * This endpoint performs full server-side verification
+ */
 export async function GET(request: NextRequest) {
   try {
     // Rate limiting
@@ -17,11 +22,11 @@ export async function GET(request: NextRequest) {
     if (!rateLimitResult.success) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
-        { status: 429 }
+        { status: 429, headers: { 'Retry-After': String(Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)) } }
       )
     }
 
-    // Check authentication
+    // Get access token from cookie or header
     const authHeader = request.headers.get('authorization')
     const accessToken = authHeader?.startsWith('Bearer ')
       ? authHeader.substring(7)
@@ -29,59 +34,51 @@ export async function GET(request: NextRequest) {
 
     if (!accessToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { isAdmin: false, error: 'Authentication required' },
         { status: 401 }
       )
     }
 
+    // Verify token
     const payload = verifyToken(accessToken)
     if (!payload || payload.role !== 'admin') {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { isAdmin: false, error: 'Admin access required' },
         { status: 403 }
       )
     }
 
     // Verify admin is active in database
     const supabase = createAdminClient()
-    const { data: adminUser, error: adminError } = await supabase
+    const { data: user, error } = await supabase
       .from('users')
-      .select('id, role, is_active')
+      .select('id, username, email, full_name, role, is_active')
       .eq('id', payload.userId)
       .eq('role', 'admin')
       .eq('is_active', true)
       .single()
 
-    if (adminError || !adminUser) {
+    if (error || !user) {
       return NextResponse.json(
-        { error: 'Admin account not found or inactive' },
+        { isAdmin: false, error: 'Admin account not found or inactive' },
         { status: 403 }
       )
     }
 
-    // Get all students (role = 'student')
-    const { data: students, error: studentsError } = await supabase
-      .from('users')
-      .select('id, username, email, full_name, section_number, group_name, is_active, created_at, last_login')
-      .eq('role', 'student')
-      .order('created_at', { ascending: false })
-
-    if (studentsError) {
-      console.error('Error fetching students:', studentsError)
-      return NextResponse.json(
-        { error: 'Failed to fetch students' },
-        { status: 500 }
-      )
-    }
-
     return NextResponse.json({
-      success: true,
-      students: students || [],
+      isAdmin: true,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        fullName: user.full_name,
+        role: user.role,
+      },
     })
   } catch (error) {
-    console.error('Students fetch error:', error)
+    console.error('Admin verification error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { isAdmin: false, error: 'Internal server error' },
       { status: 500 }
     )
   }

@@ -43,10 +43,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Verify admin is active in database
+    const supabase = createAdminClient()
+    const { data: adminUser, error: adminError } = await supabase
+      .from('users')
+      .select('id, role, is_active')
+      .eq('id', payload.userId)
+      .eq('role', 'admin')
+      .eq('is_active', true)
+      .single()
+
+    if (adminError || !adminUser) {
+      return NextResponse.json(
+        { error: 'Admin account not found or inactive' },
+        { status: 403 }
+      )
+    }
+
     const body = await request.json()
     const { fullName, email, username, currentPassword, newPassword } = body
-
-    const supabase = createAdminClient()
 
     // Get current user
     const { data: currentUser, error: userError } = await supabase

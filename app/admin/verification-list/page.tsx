@@ -37,36 +37,36 @@ export default function VerificationListPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const cookies = document.cookie.split(';')
-        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-        const accessToken = accessTokenCookie?.split('=')[1]
+        // Use server-side verification for secure admin check
+        const response = await fetch('/api/admin/verify', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
 
-        if (!accessToken) {
-          router.push('/login?redirect=/admin/verification-list')
-          return
-        }
+        const data = await response.json()
 
-        try {
-          const payload = JSON.parse(atob(accessToken.split('.')[1] || ''))
-          if (payload.role !== 'admin') {
-            setMessage({ type: 'error', text: 'Admin access required' })
-            setIsAdmin(false)
-            setLoading(false)
-            return
-          }
-
+        if (response.ok && data.isAdmin === true) {
           setIsAdmin(true)
           // Load students after admin verification
           await loadStudents()
-        } catch (e) {
-          console.error('Token decode error:', e)
-          setMessage({ type: 'error', text: 'Invalid token. Please log in again.' })
+        } else {
+          setMessage({ type: 'error', text: data.error || 'Admin access required. Please log in as administrator.' })
           setIsAdmin(false)
+          // Redirect to login after a short delay
+          setTimeout(() => {
+            router.push('/login?redirect=/admin/verification-list')
+          }, 2000)
         }
       } catch (err) {
         console.error('Admin check error:', err)
-        setMessage({ type: 'error', text: 'Failed to verify admin access.' })
+        setMessage({ type: 'error', text: 'Failed to verify admin access. Please try again.' })
         setIsAdmin(false)
+        setTimeout(() => {
+          router.push('/login?redirect=/admin/verification-list')
+        }, 2000)
       } finally {
         setLoading(false)
       }
