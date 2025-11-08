@@ -32,6 +32,56 @@ export default function RegisterPage() {
   const [emailVerified, setEmailVerified] = useState(false)
   const [sendingCode, setSendingCode] = useState(false)
 
+  // Check name as user types (debounced)
+  const [nameCheckStatus, setNameCheckStatus] = useState<{
+    checking: boolean
+    exists: boolean
+    suggestions?: string[]
+    message?: string
+  }>({ checking: false, exists: false })
+
+  // Debounced name check
+  useEffect(() => {
+    if (!formData.fullName || formData.fullName.trim().length < 3) {
+      setNameCheckStatus({ checking: false, exists: false })
+      return
+    }
+
+    const timeoutId = setTimeout(async () => {
+      setNameCheckStatus({ checking: true, exists: false })
+      try {
+        const response = await fetch('/api/auth/check-name', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName: formData.fullName.trim() }),
+        })
+
+        const data = await response.json()
+
+        if (data.exists && data.exactMatch) {
+          setNameCheckStatus({
+            checking: false,
+            exists: true,
+            message: data.isRegistered 
+              ? 'This name is already registered. Please log in instead.'
+              : 'Name found in our records!',
+          })
+        } else {
+          setNameCheckStatus({
+            checking: false,
+            exists: false,
+            suggestions: data.suggestions,
+            message: data.message || 'Name not found. Please verify your spelling.',
+          })
+        }
+      } catch (err) {
+        setNameCheckStatus({ checking: false, exists: false })
+      }
+    }, 500) // 500ms debounce
+
+    return () => clearTimeout(timeoutId)
+  }, [formData.fullName])
+
   // Verify student data before registration
   const handleVerify = async () => {
     if (!formData.fullName || !formData.sectionNumber || !formData.groupName) {
@@ -63,12 +113,23 @@ export default function RegisterPage() {
         })
         setSuccess('Your information has been verified. Please complete the form below.')
       } else {
+        // Enhanced error messages with suggestions
+        let errorMessage = data.error || 'Verification failed. Please check your information.'
+        
+        if (data.suggestions && data.suggestions.length > 0) {
+          errorMessage += `\n\nDid you mean: ${data.suggestions.join(', ')}?`
+        }
+        
+        if (data.foundName) {
+          errorMessage += `\n\nFound name: ${data.foundName} (Section ${data.foundSection}, ${data.foundGroup})`
+        }
+
         setVerificationStatus({
           checked: true,
           valid: false,
-          message: data.error || 'Verification failed. Please check your information.',
+          message: errorMessage,
         })
-        setError(data.error || 'Your information does not match our records.')
+        setError(errorMessage)
       }
     } catch (err) {
       setError('Failed to verify. Please try again.')
@@ -213,16 +274,61 @@ export default function RegisterPage() {
                 <label className="block text-sm font-medium text-dark-300 mb-2">
                   Full Name
                 </label>
-                <input
-                  type="text"
-                  value={formData.fullName}
-                  onChange={(e) => {
-                    setFormData({ ...formData, fullName: e.target.value })
-                    setVerificationStatus({ checked: false, valid: false, message: '' })
-                  }}
-                  className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50"
-                  placeholder="Enter your full name"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={formData.fullName}
+                    onChange={(e) => {
+                      setFormData({ ...formData, fullName: e.target.value })
+                      setVerificationStatus({ checked: false, valid: false, message: '' })
+                    }}
+                    className={`w-full p-3 bg-cyber-dark border rounded-lg text-dark-100 focus:ring-1 focus:ring-cyber-neon/50 ${
+                      nameCheckStatus.checking
+                        ? 'border-cyber-neon/50'
+                        : nameCheckStatus.exists
+                        ? 'border-cyber-green/50'
+                        : formData.fullName && formData.fullName.length >= 3 && !nameCheckStatus.exists
+                        ? 'border-red-500/50'
+                        : 'border-cyber-neon/30'
+                    } focus:border-cyber-neon`}
+                    placeholder="Enter your full name as it appears in the official list"
+                  />
+                  {nameCheckStatus.checking && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <Loader2 className="w-4 h-4 text-cyber-neon animate-spin" />
+                    </div>
+                  )}
+                  {!nameCheckStatus.checking && formData.fullName && formData.fullName.length >= 3 && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      {nameCheckStatus.exists ? (
+                        <CheckCircle2 className="w-4 h-4 text-cyber-green" />
+                      ) : (
+                        <AlertCircle className="w-4 h-4 text-red-400" />
+                      )}
+                    </div>
+                  )}
+                </div>
+                {nameCheckStatus.message && (
+                  <p className={`mt-1 text-xs ${
+                    nameCheckStatus.exists ? 'text-cyber-green' : 'text-red-400'
+                  }`}>
+                    {nameCheckStatus.message}
+                  </p>
+                )}
+                {nameCheckStatus.suggestions && nameCheckStatus.suggestions.length > 0 && (
+                  <div className="mt-2 p-2 bg-cyber-dark/50 rounded border border-cyber-neon/20">
+                    <p className="text-xs text-dark-300 mb-1">Did you mean:</p>
+                    <ul className="text-xs text-cyber-neon space-y-1">
+                      {nameCheckStatus.suggestions.map((suggestion, idx) => (
+                        <li key={idx} className="cursor-pointer hover:text-cyber-green" onClick={() => {
+                          setFormData({ ...formData, fullName: suggestion })
+                        }}>
+                          • {suggestion}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-dark-300 mb-2">

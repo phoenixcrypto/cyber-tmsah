@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient()
 
-    // Find user by username first, then by email
+    // Find user by username, email, or full name
     let user = null
     let userError = null
 
@@ -81,8 +81,20 @@ export async function POST(request: NextRequest) {
         user = userByEmail
         console.log('[Login] User found by email:', user.email)
       } else {
-        userError = errorByEmail || errorByUsername
-        console.log('[Login] User not found. Username error:', errorByUsername?.message, 'Email error:', errorByEmail?.message)
+        // Try full name (case-insensitive, exact match)
+        const { data: userByName, error: errorByName } = await supabase
+          .from('users')
+          .select('*')
+          .ilike('full_name', trimmedUsername)
+          .single()
+
+        if (userByName && !errorByName) {
+          user = userByName
+          console.log('[Login] User found by full name:', user.full_name)
+        } else {
+          userError = errorByName || errorByEmail || errorByUsername
+          console.log('[Login] User not found. Username error:', errorByUsername?.message, 'Email error:', errorByEmail?.message, 'Name error:', errorByName?.message)
+        }
       }
     }
 
