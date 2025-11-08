@@ -153,7 +153,7 @@ export default function PublishContentPage() {
         })
         
         setTimeout(() => {
-          router.push('/admin/content')
+          router.push('/admin')
         }, 2000)
       } else {
         setError(data.error || 'Failed to publish content')
