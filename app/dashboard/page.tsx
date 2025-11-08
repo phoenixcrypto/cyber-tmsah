@@ -50,6 +50,14 @@ export default function DashboardPage() {
         return
       }
       const payload = JSON.parse(atob(tokenPart))
+      const userRole = payload.role || 'student'
+      
+      // If user is admin, redirect to admin page
+      if (userRole === 'admin') {
+        router.push('/admin')
+        return
+      }
+      
       setUser({
         id: payload.userId,
         username: payload.username,
@@ -57,7 +65,7 @@ export default function DashboardPage() {
         fullName: payload.fullName || '',
         sectionNumber: payload.sectionNumber || null,
         groupName: payload.groupName || null,
-        role: payload.role || 'student',
+        role: userRole,
       })
     } catch (err) {
       console.error('Error decoding token:', err)

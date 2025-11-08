@@ -27,15 +27,36 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Public routes (login, register) - redirect to dashboard if already logged in
+  // Public routes (login, register) - redirect based on user role if already logged in
   if (pathname === '/login' || pathname === '/register') {
-    // If any token exists, redirect to dashboard (verification is done server-side when needed)
-    const hasToken = Boolean(
-      request.headers.get('authorization')?.startsWith('Bearer ') ||
-      request.cookies.get('access_token')?.value
-    )
-    if (hasToken) {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+    const accessToken = 
+      request.headers.get('authorization')?.startsWith('Bearer ')
+        ? request.headers.get('authorization')!.substring(7)
+        : request.cookies.get('access_token')?.value
+    
+    if (accessToken) {
+      try {
+        // Decode JWT to get user role (no signature verification needed for role check)
+        const parts = accessToken.split('.')
+        if (parts.length === 3 && parts[1]) {
+          // Base64URL decode
+          const base64Url = parts[1]
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+          const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
+          
+          // Decode base64 to string (Edge Runtime compatible)
+          const jsonPayload = atob(padded)
+          const payload = JSON.parse(jsonPayload)
+          const userRole = payload.role || 'student'
+          
+          // Redirect admin to /admin, student to /dashboard
+          const targetRoute = userRole === 'admin' ? '/admin' : '/dashboard'
+          return NextResponse.redirect(new URL(targetRoute, request.url))
+        }
+      } catch (error) {
+        // If token is invalid, let the request proceed (user will see login page)
+        // Silently fail - user will see login page
+      }
     }
   }
 
