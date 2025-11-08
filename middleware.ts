@@ -24,6 +24,43 @@ export function middleware(request: NextRequest) {
       if (pathname.startsWith('/admin')) {
         return NextResponse.redirect(new URL('/login?redirect=/admin', request.url))
       }
+    } else {
+      // Check user role to prevent unauthorized access
+      // Admin should not access /dashboard, Students should not access /admin
+      const accessToken = 
+        request.headers.get('authorization')?.startsWith('Bearer ')
+          ? request.headers.get('authorization')!.substring(7)
+          : request.cookies.get('access_token')?.value
+      
+      if (accessToken) {
+        try {
+          // Decode JWT to get user role (no signature verification needed for role check)
+          const parts = accessToken.split('.')
+          if (parts.length === 3 && parts[1]) {
+            // Base64URL decode
+            const base64Url = parts[1]
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+            const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
+            
+            // Decode base64 to string (Edge Runtime compatible)
+            const jsonPayload = atob(padded)
+            const payload = JSON.parse(jsonPayload)
+            const userRole = payload.role || 'student'
+            
+            // Prevent admin from accessing student dashboard
+            if (userRole === 'admin' && pathname.startsWith('/dashboard')) {
+              return NextResponse.redirect(new URL('/admin', request.url))
+            }
+            
+            // Prevent students from accessing admin routes
+            if (userRole === 'student' && pathname.startsWith('/admin')) {
+              return NextResponse.redirect(new URL('/dashboard', request.url))
+            }
+          }
+        } catch (error) {
+          // If token is invalid, let the request proceed (will be handled by API routes)
+        }
+      }
     }
   }
 

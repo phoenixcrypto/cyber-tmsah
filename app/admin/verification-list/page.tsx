@@ -51,16 +51,20 @@ export default function VerificationListPage() {
           if (payload.role !== 'admin') {
             setMessage({ type: 'error', text: 'Admin access required' })
             setIsAdmin(false)
+            setLoading(false)
             return
           }
 
           setIsAdmin(true)
+          // Load students after admin verification
           await loadStudents()
         } catch (e) {
+          console.error('Token decode error:', e)
           setMessage({ type: 'error', text: 'Invalid token. Please log in again.' })
           setIsAdmin(false)
         }
       } catch (err) {
+        console.error('Admin check error:', err)
         setMessage({ type: 'error', text: 'Failed to verify admin access.' })
         setIsAdmin(false)
       } finally {
@@ -100,23 +104,39 @@ export default function VerificationListPage() {
 
   const loadStudents = async () => {
     try {
+      setMessage(null) // Clear previous messages
       const cookies = document.cookie.split(';')
       const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
       const accessToken = accessTokenCookie?.split('=')[1]
 
+      if (!accessToken) {
+        setMessage({ type: 'error', text: 'Authentication required. Please log in again.' })
+        return
+      }
+
       const response = await fetch('/api/admin/verification/list', {
+        method: 'GET',
         credentials: 'include',
-        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
       })
 
-      if (response.ok) {
-        const data = await response.json()
+      const data = await response.json()
+
+      if (response.ok && data.success) {
         setStudents(data.students || [])
+        if (data.students && data.students.length === 0) {
+          setMessage({ type: 'error', text: 'No students found in verification list. Please upload students first.' })
+        }
       } else {
-        setMessage({ type: 'error', text: 'Failed to load students' })
+        console.error('Failed to load students:', data.error || 'Unknown error')
+        setMessage({ type: 'error', text: data.error || 'Failed to load students. Please try again.' })
       }
     } catch (err) {
-      setMessage({ type: 'error', text: 'Error loading students' })
+      console.error('Error loading students:', err)
+      setMessage({ type: 'error', text: `Error loading students: ${err instanceof Error ? err.message : 'Unknown error'}` })
     }
   }
 
