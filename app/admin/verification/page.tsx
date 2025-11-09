@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Upload, FileSpreadsheet, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import { parseExcelFile, type StudentRow } from '@/lib/utils/excelParser'
+import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
 export default function VerificationUploadPage() {
   const router = useRouter()
@@ -20,36 +21,24 @@ export default function VerificationUploadPage() {
     errors: string[]
   } | null>(null)
 
-  // التحقق من أن المستخدم admin عند تحميل الصفحة
+  // Verify admin access on page load
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        // محاولة الحصول على access_token من cookies
-        const cookies = document.cookie.split(';')
-        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-        const accessToken = accessTokenCookie?.split('=')[1]
-
-        if (!accessToken) {
-          router.push('/login?redirect=/admin/verification')
-          return
-        }
-
-        // فك تشفير JWT للتحقق من الـ role
-        try {
-          const payload = JSON.parse(atob(accessToken.split('.')[1] || ''))
-          if (payload.role === 'admin') {
-            setIsAdmin(true)
-          } else {
-            setErrors(['Admin access required. Please log in as an administrator.'])
-            setIsAdmin(false)
-          }
-        } catch (e) {
-          setErrors(['Invalid token. Please log in again.'])
+        const result = await verifyAdminAccess()
+        if (result.isAdmin) {
+          setIsAdmin(true)
+          setErrors([])
+        } else {
+          setErrors([result.error || 'Admin access required. Please log in as an administrator.'])
           setIsAdmin(false)
+          router.push('/login?redirect=/admin/verification')
         }
       } catch (err) {
+        console.error('Admin verification error:', err)
         setErrors(['Failed to verify admin access. Please log in again.'])
         setIsAdmin(false)
+        router.push('/login?redirect=/admin/verification')
       }
     }
 

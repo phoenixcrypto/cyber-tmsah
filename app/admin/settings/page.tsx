@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Save, Lock, User, Mail, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
 export default function AdminSettingsPage() {
   const router = useRouter()
@@ -27,26 +28,16 @@ export default function AdminSettingsPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const cookies = document.cookie.split(';')
-        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-        const accessToken = accessTokenCookie?.split('=')[1]
-
-        if (!accessToken) {
-          router.push('/login?redirect=/admin/settings')
-          return
-        }
-
-        try {
-          const payload = JSON.parse(atob(accessToken.split('.')[1] || ''))
-          if (payload.role !== 'admin') {
-            setMessage({ type: 'error', text: 'Admin access required' })
-            setIsAdmin(false)
-            return
-          }
-
+        const result = await verifyAdminAccess()
+        if (result.isAdmin) {
           setIsAdmin(true)
+          setMessage(null)
           
           // Fetch current admin data
+          const cookies = document.cookie.split(';')
+          const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
+          const accessToken = accessTokenCookie?.split('=')[1]
+          
           const response = await fetch('/api/admin/profile', {
             credentials: 'include',
             headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
@@ -55,22 +46,24 @@ export default function AdminSettingsPage() {
           if (response.ok) {
             const data = await response.json()
             setFormData({
-            fullName: data.user.full_name || '',
-            email: data.user.email || '',
-            username: data.user.username || '',
-            currentPassword: '',
-            newPassword: '',
-            confirmPassword: '',
-          })
-          // Note: currentUser state removed as it's not used in UI
+              fullName: data.user.full_name || '',
+              email: data.user.email || '',
+              username: data.user.username || '',
+              currentPassword: '',
+              newPassword: '',
+              confirmPassword: '',
+            })
           }
-        } catch (e) {
-          setMessage({ type: 'error', text: 'Invalid token. Please log in again.' })
+        } else {
+          setMessage({ type: 'error', text: result.error || 'Admin access required' })
           setIsAdmin(false)
+          router.push('/login?redirect=/admin/settings')
         }
       } catch (err) {
-        setMessage({ type: 'error', text: 'Failed to verify admin access.' })
+        console.error('Admin verification error:', err)
+        setMessage({ type: 'error', text: 'Failed to verify admin access. Please log in again.' })
         setIsAdmin(false)
+        router.push('/login?redirect=/admin/settings')
       } finally {
         setLoading(false)
       }

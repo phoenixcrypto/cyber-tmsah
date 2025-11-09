@@ -1,7 +1,51 @@
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { NextRequest } from 'next/server'
 import { verifyToken } from '@/lib/security/jwt'
 import { createAdminClient } from '@/lib/supabase/admin'
+
+/**
+ * Verify admin access from API request
+ * Returns admin user data or null if not admin
+ * Use this in API routes for consistent admin verification
+ */
+export async function verifyAdminFromRequest(request: NextRequest): Promise<{ user: any; payload: any } | null> {
+  try {
+    // Get token from cookie or header
+    const authHeader = request.headers.get('authorization')
+    const accessToken = authHeader?.startsWith('Bearer ')
+      ? authHeader.substring(7)
+      : request.cookies.get('access_token')?.value
+
+    if (!accessToken) {
+      return null
+    }
+
+    // Verify token
+    const payload = verifyToken(accessToken)
+    if (!payload || payload.role !== 'admin') {
+      return null
+    }
+
+    // Verify admin is active in database
+    const supabase = createAdminClient()
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('id, username, email, full_name, role, is_active')
+      .eq('id', payload.userId)
+      .eq('role', 'admin')
+      .eq('is_active', true)
+      .single()
+
+    if (error || !user) {
+      return null
+    }
+
+    return { user, payload }
+  } catch {
+    return null
+  }
+}
 
 /**
  * Server-side admin verification
