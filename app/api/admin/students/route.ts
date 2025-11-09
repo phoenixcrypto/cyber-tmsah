@@ -59,6 +59,23 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // First, let's check all users to debug
+    const { data: allUsers } = await supabase
+      .from('users')
+      .select('id, username, email, role, is_active, full_name')
+      .limit(10)
+    
+    console.log('[Admin Students API] All users (first 10):', allUsers?.length || 0)
+    if (allUsers && allUsers.length > 0) {
+      console.log('[Admin Students API] Sample users:', allUsers.map(u => ({
+        id: u.id,
+        username: u.username,
+        role: u.role,
+        is_active: u.is_active,
+        full_name: u.full_name
+      })))
+    }
+
     // Get all students (role = 'student') with ALL data including password_hash
     // Using service role key bypasses RLS, so we can fetch all students
     const { data: students, error: studentsError } = await supabase
@@ -84,19 +101,35 @@ export async function GET(request: NextRequest) {
     
     // Debug: Check if students array is empty
     if (!students || students.length === 0) {
-      console.warn('[Admin Students API] No students found in database')
+      console.warn('[Admin Students API] No students found with role="student"')
       
-      // Try to fetch any users to verify connection
-      const { data: allUsers, error: allUsersError } = await supabase
+      // Check what roles exist
+      const { data: rolesCheck, error: rolesError } = await supabase
         .from('users')
-        .select('id, username, email, role, is_active')
-        .limit(5)
+        .select('role')
       
-      console.log('[Admin Students API] All users (for debugging):', allUsers?.length || 0)
+      if (rolesCheck) {
+        const roleCounts: Record<string, number> = {}
+        rolesCheck.forEach(u => {
+          roleCounts[u.role] = (roleCounts[u.role] || 0) + 1
+        })
+        console.log('[Admin Students API] Users by role:', roleCounts)
+      }
+      
+      // Check if there are users with different role values
+      const { data: allUsersCheck, error: allUsersError } = await supabase
+        .from('users')
+        .select('id, username, email, role, is_active, full_name')
+        .limit(10)
+      
+      console.log('[Admin Students API] All users (for debugging):', allUsersCheck?.length || 0)
       if (allUsersError) {
         console.error('[Admin Students API] Error fetching all users:', allUsersError)
-      } else {
-        console.log('[Admin Students API] Sample users:', allUsers)
+      } else if (allUsersCheck && allUsersCheck.length > 0) {
+        console.log('[Admin Students API] Sample users with their roles:')
+        allUsersCheck.forEach(u => {
+          console.log(`  - ${u.username} (${u.email}): role="${u.role}", is_active=${u.is_active}`)
+        })
       }
     }
 
