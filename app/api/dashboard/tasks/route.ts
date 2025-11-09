@@ -67,7 +67,13 @@ export async function GET(request: NextRequest) {
 
     const tasks = tasksResult.data || []
     const submissions = submissionsResult.data || []
-    const submittedTaskIds = new Set((submissions || []).map((s: any) => s.task_id))
+    const submittedTaskIds = new Set((submissions || []).map((s: any) => {
+      try {
+        return s?.task_id
+      } catch {
+        return null
+      }
+    }).filter(Boolean))
 
     // Filter tasks by section/group efficiently
     const userSection = user?.section_number
@@ -75,23 +81,48 @@ export async function GET(request: NextRequest) {
     
     const tasksWithStatus = (tasks || [])
       .filter((task: any) => {
-        if (!task) return false
-        if (task.is_general) return true
-        
-        // Handle target_sections - can be array or null
-        const targetSections = Array.isArray(task.target_sections) ? task.target_sections : []
-        const matchesSection = targetSections.length === 0 || (userSection && targetSections.includes(userSection))
-        
-        // Handle target_groups - can be array or null
-        const targetGroups = Array.isArray(task.target_groups) ? task.target_groups : []
-        const matchesGroup = targetGroups.length === 0 || (userGroup && targetGroups.includes(userGroup))
-        
-        return matchesSection && matchesGroup
+        try {
+          if (!task || typeof task !== 'object') return false
+          if (task.is_general === true) return true
+          
+          // Handle target_sections - can be array, null, or undefined
+          let targetSections: number[] = []
+          if (task.target_sections) {
+            if (Array.isArray(task.target_sections)) {
+              targetSections = task.target_sections.filter((s: any) => typeof s === 'number')
+            }
+          }
+          const matchesSection = targetSections.length === 0 || (userSection && targetSections.includes(userSection))
+          
+          // Handle target_groups - can be array, null, or undefined
+          let targetGroups: string[] = []
+          if (task.target_groups) {
+            if (Array.isArray(task.target_groups)) {
+              targetGroups = task.target_groups.filter((g: any) => typeof g === 'string')
+            }
+          }
+          const matchesGroup = targetGroups.length === 0 || (userGroup && targetGroups.includes(userGroup))
+          
+          return matchesSection && matchesGroup
+        } catch (err) {
+          console.error('[Dashboard Tasks] Error filtering task:', task?.id, err)
+          return false
+        }
       })
-      .map((task: any) => ({
-        ...task,
-        submitted: submittedTaskIds.has(task.id),
-      }))
+      .map((task: any) => {
+        try {
+          return {
+            ...task,
+            submitted: submittedTaskIds.has(task.id),
+          }
+        } catch (err) {
+          console.error('[Dashboard Tasks] Error mapping task:', task?.id, err)
+          return {
+            ...task,
+            submitted: false,
+          }
+        }
+      })
 
     return NextResponse.json({
       success: true,

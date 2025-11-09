@@ -67,7 +67,13 @@ export async function GET(request: NextRequest) {
 
     const articles = articlesResult.data || []
     const views = viewsResult.data || []
-    const viewedArticleIds = new Set((views || []).map((v: any) => v.article_id))
+    const viewedArticleIds = new Set((views || []).map((v: any) => {
+      try {
+        return v?.article_id
+      } catch {
+        return null
+      }
+    }).filter(Boolean))
 
     // Filter articles by section/group efficiently
     const userSection = user?.section_number
@@ -75,23 +81,48 @@ export async function GET(request: NextRequest) {
     
     const articlesWithStatus = (articles || [])
       .filter((article: any) => {
-        if (!article) return false
-        if (article.is_general) return true
-        
-        // Handle target_sections - can be array or null
-        const targetSections = Array.isArray(article.target_sections) ? article.target_sections : []
-        const matchesSection = targetSections.length === 0 || (userSection && targetSections.includes(userSection))
-        
-        // Handle target_groups - can be array or null
-        const targetGroups = Array.isArray(article.target_groups) ? article.target_groups : []
-        const matchesGroup = targetGroups.length === 0 || (userGroup && targetGroups.includes(userGroup))
-        
-        return matchesSection && matchesGroup
+        try {
+          if (!article || typeof article !== 'object') return false
+          if (article.is_general === true) return true
+          
+          // Handle target_sections - can be array, null, or undefined
+          let targetSections: number[] = []
+          if (article.target_sections) {
+            if (Array.isArray(article.target_sections)) {
+              targetSections = article.target_sections.filter((s: any) => typeof s === 'number')
+            }
+          }
+          const matchesSection = targetSections.length === 0 || (userSection && targetSections.includes(userSection))
+          
+          // Handle target_groups - can be array, null, or undefined
+          let targetGroups: string[] = []
+          if (article.target_groups) {
+            if (Array.isArray(article.target_groups)) {
+              targetGroups = article.target_groups.filter((g: any) => typeof g === 'string')
+            }
+          }
+          const matchesGroup = targetGroups.length === 0 || (userGroup && targetGroups.includes(userGroup))
+          
+          return matchesSection && matchesGroup
+        } catch (err) {
+          console.error('[Dashboard Materials] Error filtering article:', article?.id, err)
+          return false
+        }
       })
-      .map((article: any) => ({
-        ...article,
-        viewed: viewedArticleIds.has(article.id),
-      }))
+      .map((article: any) => {
+        try {
+          return {
+            ...article,
+            viewed: viewedArticleIds.has(article.id),
+          }
+        } catch (err) {
+          console.error('[Dashboard Materials] Error mapping article:', article?.id, err)
+          return {
+            ...article,
+            viewed: false,
+          }
+        }
+      })
 
     return NextResponse.json({
       success: true,
