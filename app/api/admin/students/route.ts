@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all students (role = 'student') with ALL data including password_hash
+    // Using service role key bypasses RLS, so we can fetch all students
     const { data: students, error: studentsError } = await supabase
       .from('users')
       .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
@@ -68,14 +69,36 @@ export async function GET(request: NextRequest) {
 
     if (studentsError) {
       console.error('[Admin Students API] Error fetching students:', studentsError)
+      console.error('[Admin Students API] Error details:', JSON.stringify(studentsError, null, 2))
       return NextResponse.json(
-        { error: 'Failed to fetch students' },
+        { 
+          error: 'Failed to fetch students',
+          details: studentsError.message || 'Unknown error'
+        },
         { status: 500 }
       )
     }
 
     console.log('[Admin Students API] Fetched students:', students?.length || 0)
     console.log('[Admin Students API] Sample student:', students?.[0])
+    
+    // Debug: Check if students array is empty
+    if (!students || students.length === 0) {
+      console.warn('[Admin Students API] No students found in database')
+      
+      // Try to fetch any users to verify connection
+      const { data: allUsers, error: allUsersError } = await supabase
+        .from('users')
+        .select('id, username, email, role, is_active')
+        .limit(5)
+      
+      console.log('[Admin Students API] All users (for debugging):', allUsers?.length || 0)
+      if (allUsersError) {
+        console.error('[Admin Students API] Error fetching all users:', allUsersError)
+      } else {
+        console.log('[Admin Students API] Sample users:', allUsers)
+      }
+    }
 
     // Get statistics
     const totalCount = students?.length || 0

@@ -84,15 +84,30 @@ export default function StudentsPage() {
 
       if (response.ok) {
         const data = await response.json()
+        console.log('[Admin Students] Response status:', response.status)
+        console.log('[Admin Students] Response data:', data)
         console.log('[Admin Students] Fetched students:', data.students?.length || 0)
         console.log('[Admin Students] Statistics:', data.statistics)
         console.log('[Admin Students] Sample student:', data.students?.[0])
-        setStudents(data.students || [])
-        setFilteredStudents(data.students || [])
-        setStatistics(data.statistics || null)
+        
+        if (data.success !== false) {
+          // Accept response even if success field is not explicitly true
+          setStudents(data.students || [])
+          setFilteredStudents(data.students || [])
+          setStatistics(data.statistics || null)
+        } else {
+          console.error('[Admin Students] API returned success=false:', data.error)
+          // Still try to set data if students array exists
+          if (data.students) {
+            setStudents(data.students || [])
+            setFilteredStudents(data.students || [])
+            setStatistics(data.statistics || null)
+          }
+        }
       } else {
         const errorData = await response.json().catch(() => ({}))
         console.error('[Admin Students] Failed to fetch:', response.status, errorData)
+        console.error('[Admin Students] Response text:', await response.text().catch(() => 'Could not read response'))
       }
     } catch (err) {
       console.error('[Admin Students] Error fetching students:', err)
