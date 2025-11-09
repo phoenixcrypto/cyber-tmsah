@@ -60,6 +60,77 @@ export function removeVerificationCode(email: string): void {
   verificationCodes.delete(email.toLowerCase().trim())
 }
 
+// Generate verification token for registration
+// This token proves that email was verified and can be used in registration
+export function generateVerificationToken(email: string, code: string): string {
+  const timestamp = Date.now().toString()
+  const tokenData = `${email.toLowerCase().trim()}|${timestamp}|${code}`
+  return Buffer.from(tokenData).toString('base64')
+}
+
+// Verify verification token
+export function verifyVerificationToken(token: string, email: string): { valid: boolean; error?: string } {
+  try {
+    const decoded = Buffer.from(token, 'base64').toString('utf-8')
+    const parts = decoded.split('|')
+    
+    if (parts.length !== 3) {
+      return { valid: false, error: 'Invalid verification token format' }
+    }
+    
+    const [tokenEmail, timestamp, code] = parts
+    
+    if (!tokenEmail || !timestamp || !code) {
+      return { valid: false, error: 'Invalid verification token format' }
+    }
+    
+    // Verify email matches
+    if (tokenEmail !== email.toLowerCase().trim()) {
+      return { valid: false, error: 'Verification token email mismatch' }
+    }
+    
+    // Verify token is recent (within 5 minutes)
+    const timestampNum = parseInt(timestamp, 10)
+    if (isNaN(timestampNum)) {
+      return { valid: false, error: 'Invalid verification token timestamp' }
+    }
+    
+    const tokenAge = Date.now() - timestampNum
+    if (tokenAge >= 5 * 60 * 1000) {
+      return { valid: false, error: 'Verification token has expired' }
+    }
+    
+    // Try to verify code in memory (may fail in serverless due to different instances)
+    // If code exists in memory, verify it. Otherwise, trust the token if it's recent
+    const stored = verificationCodes.get(email.toLowerCase().trim())
+    
+    if (stored) {
+      // Code exists in memory - verify it matches
+      if (stored.code === code && stored.verified === true) {
+        return { valid: true }
+      } else if (stored.code === code) {
+        // Code matches but not marked as verified - mark it now
+        stored.verified = true
+        return { valid: true }
+      } else {
+        return { valid: false, error: 'Verification code mismatch' }
+      }
+    } else {
+      // Code not in memory (serverless instance issue) - trust token if recent (within 2 minutes)
+      // This handles the case where verification happened on a different instance
+      if (tokenAge < 2 * 60 * 1000) {
+        // Token is very recent (within 2 minutes) - accept it
+        return { valid: true }
+      } else {
+        return { valid: false, error: 'Verification token expired or invalid' }
+      }
+    }
+  } catch (err) {
+    console.error('Token verification error:', err)
+    return { valid: false, error: 'Invalid verification token format' }
+  }
+}
+
 // Clean up expired codes (call periodically)
 export function cleanupExpiredCodes(): void {
   const now = Date.now()

@@ -131,16 +131,30 @@ export default function VerifyCodePage() {
           return
         }
 
+        if (!verifyData.verificationToken) {
+          setError('Verification token not received. Please try again.')
+          setLoading(false)
+          return
+        }
+
         setCreatingAccount(true)
         setSuccess(true)
 
         try {
           const registrationData = JSON.parse(pendingRegistration)
           
+          // Add verification token to registration data
+          const registrationPayload = {
+            ...registrationData,
+            verificationToken: verifyData.verificationToken,
+          }
+          
+          console.log('Creating account with verification token...')
+          
           const registerResponse = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(registrationData),
+            body: JSON.stringify(registrationPayload),
           })
 
           const registerData = await registerResponse.json()
@@ -154,7 +168,9 @@ export default function VerifyCodePage() {
               router.push('/dashboard')
             }, 1500)
           } else {
-            setError(registerData.error || 'Failed to create account. Please try again.')
+            console.error('Registration failed:', registerData)
+            const errorMessage = registerData.error || 'Failed to create account. Please try again.'
+            setError(errorMessage)
             setSuccess(false)
             setCreatingAccount(false)
             // Clear code on error
@@ -163,7 +179,8 @@ export default function VerifyCodePage() {
           }
         } catch (err) {
           console.error('Registration error:', err)
-          setError('Failed to create account. Please try again.')
+          const errorMessage = err instanceof Error ? err.message : 'Failed to create account. Please try again.'
+          setError(`Registration error: ${errorMessage}. Please return to registration and try again.`)
           setSuccess(false)
           setCreatingAccount(false)
           // Clear code on error

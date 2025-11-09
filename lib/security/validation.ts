@@ -44,6 +44,7 @@ export const registrationSchema = z.object({
   sectionNumber: sectionNumberSchema,
   groupName: groupSchema,
   universityEmail: z.string().email().optional().or(z.literal('')),
+  verificationToken: z.string().optional(), // Token from code verification
 })
 
 // Login validation schema

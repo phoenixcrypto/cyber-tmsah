@@ -36,16 +36,36 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { username, email, password, fullName, sectionNumber, groupName, universityEmail } = validationResult.data
+    const { username, email, password, fullName, sectionNumber, groupName, universityEmail, verificationToken } = validationResult.data
 
     // Verify email was verified through verification code
-    const { isEmailVerified, removeVerificationCode } = await import('@/lib/security/verification')
-    if (!isEmailVerified(email.toLowerCase().trim())) {
+    let emailVerified = false
+    
+    if (verificationToken && typeof verificationToken === 'string') {
+      // Verify token (from verify-code page)
+      const { verifyVerificationToken } = await import('@/lib/security/verification')
+      const tokenResult = verifyVerificationToken(verificationToken, email.toLowerCase().trim())
+      emailVerified = tokenResult.valid
+      
+      if (!emailVerified) {
+        console.error('Token verification failed:', tokenResult.error)
+      }
+    } else {
+      // Fallback to in-memory check (for backward compatibility)
+      const { isEmailVerified } = await import('@/lib/security/verification')
+      emailVerified = isEmailVerified(email.toLowerCase().trim())
+    }
+    
+    if (!emailVerified) {
+      console.error('[Register] Email verification failed for:', email)
+      console.error('[Register] VerificationToken provided:', !!verificationToken)
       return NextResponse.json(
-        { error: 'Email verification required. Please verify your email address first.' },
+        { error: 'Email verification required. Please verify your email address first by entering the verification code.' },
         { status: 403 }
       )
     }
+    
+    console.log('[Register] Email verified successfully for:', email)
 
     // Validate password strength
     const passwordValidation = validatePasswordStrength(password)
@@ -115,7 +135,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Note: We don't remove verification code here because it might be needed for token verification
+    // It will be cleaned up automatically when it expires
+
     // Hash password
+    console.log('[Register] Creating account for:', username, email)
     const passwordHash = await hashPassword(password)
 
     // Create user
@@ -154,6 +178,7 @@ export async function POST(request: NextRequest) {
       .eq('id', verificationData.id)
 
     // Remove verification code after successful registration
+    const { removeVerificationCode } = await import('@/lib/security/verification')
     removeVerificationCode(email.toLowerCase().trim())
 
     // Clear failed attempts

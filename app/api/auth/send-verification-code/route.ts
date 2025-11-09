@@ -128,22 +128,28 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    const { verifyCode } = await import('@/lib/security/verification')
-    const result = verifyCode(email, code)
+    const { verifyCode, generateVerificationToken } = await import('@/lib/security/verification')
+    const result = verifyCode(email.toLowerCase().trim(), code)
 
     if (!result.valid) {
+      console.error('[Verify Code] Code verification failed for:', email, 'Error:', result.error)
       return NextResponse.json(
         { error: result.error || 'Invalid verification code' },
         { status: 400 }
       )
     }
 
-    // Code is valid - mark as verified
+    // Code is valid - mark as verified and generate token for registration
+    console.log('[Verify Code] Code verified successfully for:', email)
+    const verificationToken = generateVerificationToken(email.toLowerCase().trim(), code)
+    console.log('[Verify Code] Generated verification token')
+
     return NextResponse.json(
       {
         success: true,
         message: 'Verification code verified successfully',
         verified: true,
+        verificationToken, // Include token for registration
       },
       { status: 200 }
     )
