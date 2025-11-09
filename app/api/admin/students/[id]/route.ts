@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     // Check authentication
@@ -54,7 +54,9 @@ export async function DELETE(
       )
     }
 
-    const studentId = params.id
+    // Handle params (can be Promise in Next.js 14+)
+    const resolvedParams = params instanceof Promise ? await params : params
+    const studentId = resolvedParams.id
 
     if (!studentId) {
       return NextResponse.json(
@@ -78,31 +80,22 @@ export async function DELETE(
       )
     }
 
-    // Find the student in verification_list by email or full_name
-    // First try to find by email (if available)
+    // Find the student in verification_list by registered_by (most reliable)
     let verificationRecord = null
     
-    if (student.email) {
-      // Try to find by matching full_name in verification_list
-      const { data: verificationMatches } = await supabase
-        .from('verification_list')
-        .select('id, full_name, is_registered, registered_by')
-        .ilike('full_name', `%${student.full_name}%`)
-        .eq('section_number', student.section_number)
-        .eq('group_name', student.group_name)
-        .eq('is_registered', true)
-        .eq('registered_by', studentId)
+    // First, try to find by registered_by (direct link)
+    const { data: verificationByRegisteredBy } = await supabase
+      .from('verification_list')
+      .select('id, full_name, is_registered, registered_by')
+      .eq('registered_by', studentId)
+      .eq('is_registered', true)
+      .limit(1)
+      .maybeSingle()
 
-      if (verificationMatches && verificationMatches.length > 0) {
-        // Find exact match
-        verificationRecord = verificationMatches.find(v => 
-          v.registered_by === studentId
-        ) || verificationMatches[0]
-      }
-    }
-
-    // If not found by registered_by, try to find by name and section/group
-    if (!verificationRecord && student.full_name) {
+    if (verificationByRegisteredBy) {
+      verificationRecord = verificationByRegisteredBy
+    } else if (student.full_name) {
+      // If not found by registered_by, try to find by name and section/group (exact match)
       const { data: nameMatches } = await supabase
         .from('verification_list')
         .select('id, full_name, is_registered, registered_by')
@@ -111,7 +104,7 @@ export async function DELETE(
         .eq('group_name', student.group_name)
         .eq('is_registered', true)
         .limit(1)
-        .single()
+        .maybeSingle()
 
       if (nameMatches) {
         verificationRecord = nameMatches

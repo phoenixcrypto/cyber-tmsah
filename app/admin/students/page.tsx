@@ -210,7 +210,7 @@ export default function StudentsPage() {
         setStudents(prev => prev.filter(s => s.id !== studentId))
         setFilteredStudents(prev => prev.filter(s => s.id !== studentId))
         
-        // Update statistics
+        // Update statistics immediately
         if (statistics && studentToDelete) {
           setStatistics(prev => {
             if (!prev) return null
@@ -228,25 +228,48 @@ export default function StudentsPage() {
               newByGroup[studentToDelete.group_name] = Math.max(0, groupCount - 1)
             }
             
+            // Update time-based statistics
+            const now = new Date()
+            const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+            const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+            const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+            
+            let newLoggedInLast24Hours = prev.loggedInLast24Hours || 0
+            let newLoggedInLast7Days = prev.loggedInLast7Days || 0
+            let newNewInLast30Days = prev.newInLast30Days || 0
+            
+            if (studentToDelete.last_login) {
+              const lastLogin = new Date(studentToDelete.last_login)
+              if (lastLogin >= last24Hours) newLoggedInLast24Hours = Math.max(0, newLoggedInLast24Hours - 1)
+              if (lastLogin >= last7Days) newLoggedInLast7Days = Math.max(0, newLoggedInLast7Days - 1)
+            }
+            
+            if (studentToDelete.created_at) {
+              const createdAt = new Date(studentToDelete.created_at)
+              if (createdAt >= last30Days) newNewInLast30Days = Math.max(0, newNewInLast30Days - 1)
+            }
+            
             return {
               ...prev,
               total: newTotal,
               bySection: newBySection,
               byGroup: newByGroup,
+              loggedInLast24Hours: newLoggedInLast24Hours,
+              loggedInLast7Days: newLoggedInLast7Days,
+              newInLast30Days: newNewInLast30Days,
             }
           })
         }
         
         alert('تم حذف حساب الطالب بنجاح وإعادة تعيين حالة التسجيل.')
         
-        // Optionally refresh to get updated statistics from server
-        // But the UI is already updated, so this is optional
+        // Refresh to get updated data from server (ensures consistency)
         setTimeout(() => {
           fetchStudents().catch(err => {
             console.error('[Admin Students] Error refreshing after delete:', err)
-            // Don't show error to user, UI is already updated
+            // Don't show error to user, UI is already updated optimistically
           })
-        }, 500)
+        }, 300)
       } else {
         alert(`فشل حذف الحساب: ${data.error || 'خطأ غير معروف'}`)
       }
