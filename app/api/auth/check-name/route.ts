@@ -40,12 +40,26 @@ export async function POST(request: NextRequest) {
 
     // Search for name in verification_list (case-insensitive, partial match)
     // This helps users find their name even with slight variations
-    const { data: matches, error } = await supabase
-      .from('verification_list')
-      .select('id, full_name, section_number, group_name, is_registered')
-      .ilike('full_name', `%${trimmedName}%`)
-      .order('full_name', { ascending: true })
-      .limit(10)
+    let matches = null
+    let error = null
+
+    try {
+      const result = await supabase
+        .from('verification_list')
+        .select('id, full_name, section_number, group_name, is_registered')
+        .ilike('full_name', `%${trimmedName}%`)
+        .order('full_name', { ascending: true })
+        .limit(10)
+
+      matches = result.data
+      error = result.error
+    } catch (err) {
+      console.error('Database query error:', err)
+      return NextResponse.json(
+        { exists: false, error: 'Database error. Please try again later.' },
+        { status: 500 }
+      )
+    }
 
     if (error) {
       console.error('Error checking name:', error)
