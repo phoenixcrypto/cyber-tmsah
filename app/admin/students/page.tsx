@@ -41,6 +41,33 @@ export default function StudentsPage() {
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
 
+  const fetchStudents = async (accessToken: string) => {
+    try {
+      const response = await fetch('/api/admin/students', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.success !== false) {
+          setStudents(data.students || [])
+          setFilteredStudents(data.students || [])
+          setStatistics(data.statistics || null)
+        } else if (data.students) {
+          setStudents(data.students || [])
+          setFilteredStudents(data.students || [])
+          setStatistics(data.statistics || null)
+        }
+      }
+    } catch (err) {
+      console.error('[Admin Students] Error fetching students:', err)
+    }
+  }
+
   useEffect(() => {
     const checkAdmin = async () => {
       try {
@@ -74,33 +101,6 @@ export default function StudentsPage() {
 
     checkAdmin()
   }, [router])
-
-  const fetchStudents = async (accessToken: string) => {
-    try {
-      const response = await fetch('/api/admin/students', {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        if (data.success !== false) {
-          setStudents(data.students || [])
-          setFilteredStudents(data.students || [])
-          setStatistics(data.statistics || null)
-        } else if (data.students) {
-          setStudents(data.students || [])
-          setFilteredStudents(data.students || [])
-          setStatistics(data.statistics || null)
-        }
-      }
-    } catch (err) {
-      console.error('[Admin Students] Error fetching students:', err)
-    }
-  }
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
