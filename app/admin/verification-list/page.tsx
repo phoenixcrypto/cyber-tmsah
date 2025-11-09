@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2, UserX } from 'lucide-react'
+import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2, UserX, Trash2 } from 'lucide-react'
 import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
 import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
@@ -29,6 +29,7 @@ export default function VerificationListPage() {
   const [editData, setEditData] = useState<Partial<Student>>({})
   const [saving, setSaving] = useState(false)
   const [unregisteringId, setUnregisteringId] = useState<string | null>(null)
+  const [deletingAll, setDeletingAll] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   // Track unregistered students to prevent them from reappearing
   const unregisteredStudentsRef = useRef<Set<string>>(new Set())
@@ -342,6 +343,87 @@ export default function VerificationListPage() {
     }
   }
 
+  // Delete all students and unregister all 703 students
+  const handleDeleteAllStudents = async () => {
+    const confirmed = window.confirm(
+      `⚠️ تحذير: هذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد من حذف جميع حسابات الطلاب وجعل جميع الـ 703 طالب غير مسجلين؟\n\nسيتم:\n- حذف جميع حسابات الطلاب من جدول users\n- جعل جميع الـ 703 طالب في verification_list غير مسجلين\n- إعادة تعيين جميع حالات التسجيل\n\nهذا الإجراء نهائي ولا يمكن التراجع عنه!`
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    // Double confirmation
+    const doubleConfirm = window.confirm(
+      `⚠️ تأكيد نهائي!\n\nأنت على وشك حذف جميع حسابات الطلاب وجعل جميع الـ 703 طالب غير مسجلين.\n\nهل أنت متأكد 100%؟`
+    )
+
+    if (!doubleConfirm) {
+      return
+    }
+
+    setDeletingAll(true)
+    setMessage(null)
+
+    try {
+      const response = await authenticatedFetch(
+        '/api/admin/users/delete-all-students',
+        {
+          method: 'DELETE',
+        },
+        () => router.push('/login')
+      )
+
+      if (!response) {
+        setDeletingAll(false)
+        return
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        setMessage({ 
+          type: 'error', 
+          text: `فشل حذف جميع الطلاب: ${errorData.error || 'خطأ غير معروف'}` 
+        })
+        setDeletingAll(false)
+        return
+      }
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setMessage({ 
+          type: 'success', 
+          text: `تم بنجاح: حذف ${data.deletedCount} حساب طالب وجعل جميع الـ 703 طالب غير مسجلين` 
+        })
+        
+        // Clear all students from UI
+        setStudents([])
+        setFilteredStudents([])
+        
+        // Refresh after a delay to show updated data
+        setTimeout(() => {
+          loadStudents(true).catch(err => {
+            console.error('[Verification List] Error refreshing after delete all:', err)
+          })
+        }, 2000)
+      } else {
+        setMessage({ 
+          type: 'error', 
+          text: `فشل العملية: ${data.error || 'خطأ غير معروف'}` 
+        })
+      }
+    } catch (err) {
+      console.error('[Verification List] Error deleting all students:', err)
+      setMessage({ 
+        type: 'error', 
+        text: 'حدث خطأ أثناء حذف جميع الطلاب. يرجى المحاولة مرة أخرى.' 
+      })
+    } finally {
+      setDeletingAll(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80 flex items-center justify-center">
@@ -376,12 +458,34 @@ export default function VerificationListPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl font-orbitron font-bold text-dark-100 mb-2">
-            Student Verification List
-          </h1>
-          <p className="text-dark-300">
-            Manage and update student data (Total: {students.length} students)
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-orbitron font-bold text-dark-100 mb-2">
+                Student Verification List
+              </h1>
+              <p className="text-dark-300">
+                Manage and update student data (Total: {students.length} students)
+              </p>
+            </div>
+            <button
+              onClick={handleDeleteAllStudents}
+              disabled={deletingAll}
+              className="px-6 py-3 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/50 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+              title="حذف جميع حسابات الطلاب وجعل جميع الـ 703 طالب غير مسجلين"
+            >
+              {deletingAll ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>جاري الحذف...</span>
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-5 h-5" />
+                  <span>حذف جميع الطلاب (703)</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Message */}

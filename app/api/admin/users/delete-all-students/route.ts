@@ -90,7 +90,9 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Reset all registration statuses in verification_list
+    // Reset ALL registration statuses in verification_list (all 703 students)
+    // This ensures all students are unregistered, not just those that were registered
+    // We update ALL records in verification_list to ensure all 703 students become unregistered
     const { error: resetError } = await supabase
       .from('verification_list')
       .update({
@@ -98,7 +100,8 @@ export async function DELETE(request: NextRequest) {
         registered_by: null,
         registered_at: null,
       })
-      .eq('is_registered', true)
+      // No .eq() filter - this updates ALL records in verification_list
+      // This ensures all 703 students become unregistered
 
     if (resetError) {
       logger.error('[Delete All Students] Error resetting registration statuses:', resetError)
