@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2, UserX } from 'lucide-react'
 import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
@@ -30,6 +30,8 @@ export default function VerificationListPage() {
   const [saving, setSaving] = useState(false)
   const [unregisteringId, setUnregisteringId] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  // Track unregistered students to prevent them from reappearing
+  const unregisteredStudentsRef = useRef<Set<string>>(new Set())
 
   // Filters
   const [searchTerm, setSearchTerm] = useState('')
@@ -40,6 +42,9 @@ export default function VerificationListPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
+        // Clear unregistered students ref on page load to ensure fresh data
+        unregisteredStudentsRef.current.clear()
+        
         // Verify admin access using API
         const result = await verifyAdminAccess()
         
@@ -47,7 +52,7 @@ export default function VerificationListPage() {
           setIsAdmin(true)
           setMessage(null) // Clear any previous errors
           // Load students after admin verification
-          await loadStudents()
+          await loadStudents(true)
         } else {
           // More specific error messages
           let errorMessage = result.error || 'Admin access required. Please log in as administrator.'
@@ -110,7 +115,26 @@ export default function VerificationListPage() {
 
       if (filterRegistered !== '') {
         const isRegistered = filterRegistered === 'true'
-        filtered = filtered.filter(s => s && typeof s === 'object' && s.is_registered === isRegistered)
+        filtered = filtered.filter(s => {
+          if (!s || typeof s !== 'object') return false
+          // If student is in unregistered ref, treat as unregistered
+          if (unregisteredStudentsRef.current.has(s.id)) {
+            return !isRegistered // Show only if filtering for unregistered
+          }
+          return s.is_registered === isRegistered
+        })
+      }
+
+      // Also filter out students that are marked as unregistered in ref (if showing all)
+      if (filterRegistered === '') {
+        // When showing all, still respect the unregistered ref
+        // But don't filter them out - just ensure their status is correct
+        filtered = filtered.map(s => {
+          if (unregisteredStudentsRef.current.has(s.id)) {
+            return { ...s, is_registered: false, registered_at: null }
+          }
+          return s
+        })
       }
 
       return filtered
@@ -118,19 +142,31 @@ export default function VerificationListPage() {
       console.error('[Verification List] Error in filteredStudentsMemo:', error)
       return []
     }
-  }, [students, searchTerm, filterSection, filterGroup, filterRegistered])
+  }, [students, searchTerm, filterSection, filterGroup, filterRegistered, unregisteredStudentsRef])
 
   useEffect(() => {
     setFilteredStudents(filteredStudentsMemo)
   }, [filteredStudentsMemo])
 
-  const loadStudents = async () => {
+  const loadStudents = async (showLoading = false) => {
     try {
-      setMessage(null) // Clear previous messages
+      if (showLoading) {
+        setMessage(null) // Clear previous messages
+      }
 
+      // Add cache busting to ensure fresh data
+      const cacheBuster = `?t=${Date.now()}`
       const response = await authenticatedFetch(
-        '/api/admin/verification/list',
-        { method: 'GET' },
+        `/api/admin/verification/list${cacheBuster}`,
+        { 
+          method: 'GET',
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          },
+        },
         () => {
           setMessage({ type: 'error', text: 'Authentication required. Please log in again.' })
           router.push('/login?redirect=/admin/verification-list')
@@ -144,8 +180,17 @@ export default function VerificationListPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        setStudents(data.students || [])
-        if (data.students && data.students.length === 0) {
+        // Update students, ensuring unregistered students have correct status
+        const studentsArray = (data.students || []).map((s: any) => {
+          // If student is marked as unregistered in ref, ensure is_registered is false
+          if (unregisteredStudentsRef.current.has(s.id)) {
+            return { ...s, is_registered: false, registered_at: null }
+          }
+          return s
+        })
+        
+        setStudents(studentsArray)
+        if (studentsArray.length === 0 && (!data.students || data.students.length === 0)) {
           setMessage({ type: 'error', text: 'No students found in verification list. Please upload students first.' })
         }
       } else {
@@ -251,6 +296,9 @@ export default function VerificationListPage() {
       const data = await response.json()
       
       if (data.success) {
+        // Mark student as unregistered to prevent reappearing
+        unregisteredStudentsRef.current.add(verificationId)
+        
         // Find student and update immediately (optimistic update)
         const studentToUnregister = students.find(s => s.id === verificationId)
         
@@ -270,8 +318,19 @@ export default function VerificationListPage() {
         
         setMessage({ type: 'success', text: 'تم إلغاء تسجيل الطالب بنجاح. يمكنه التسجيل مرة أخرى لاحقاً.' })
         
-        // Refresh IMMEDIATELY to sync with server (optimistic update already done)
-        await loadStudents()
+        // DO NOT refresh immediately - the UI is already updated
+        // Only refresh after a delay to allow server to sync, but filter out unregistered students
+        setTimeout(() => {
+          // Clear the unregistered flag after 5 seconds (server should be synced by then)
+          setTimeout(() => {
+            unregisteredStudentsRef.current.delete(verificationId)
+          }, 5000)
+          
+          // Refresh to get updated data from server (but unregistered student won't reappear)
+          loadStudents(false).catch(err => {
+            console.error('[Verification List] Error refreshing after unregister:', err)
+          })
+        }, 2000) // Wait 2 seconds before refreshing
       } else {
         setMessage({ type: 'error', text: `فشل إلغاء التسجيل: ${data.error || 'خطأ غير معروف'}` })
       }
