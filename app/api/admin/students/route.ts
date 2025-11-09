@@ -86,215 +86,112 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // First, check all users to debug
-    const { data: allUsers, error: allUsersError } = await supabase
-      .from('users')
-      .select('id, username, email, role, is_active')
-      .limit(100)
-
-    // Also check verification_list for registered students
-    const { data: registeredStudents } = await supabase
+    // NEW APPROACH: Fetch from verification_list as the source of truth
+    // Get all registered students from verification_list and join with users for account details
+    logger.debug('[Admin Students API] Fetching registered students from verification_list (source of truth)')
+    
+    // First, get all registered students from verification_list
+    const { data: registeredStudents, error: verificationError } = await supabase
       .from('verification_list')
-      .select('id, full_name, is_registered, registered_by, registered_at')
+      .select('id, full_name, section_number, group_name, is_registered, registered_at, registered_by, created_at, updated_at')
       .eq('is_registered', true)
-      .limit(10)
+      .order('registered_at', { ascending: false })
 
-    logger.debug('[Admin Students API] All users check:', {
-      totalUsers: allUsers?.length || 0,
-      hasError: !!allUsersError,
-      error: allUsersError?.message || null,
-      usersByRole: allUsers?.reduce((acc: any, u: any) => {
-        acc[u.role] = (acc[u.role] || 0) + 1
-        return acc
-      }, {}) || {},
-      sampleUsers: allUsers?.slice(0, 5).map((u: any) => ({
-        id: u.id,
-        username: u.username,
-        role: u.role,
-        is_active: u.is_active,
-      })) || [],
-      registeredInVerificationList: registeredStudents?.length || 0,
-      registeredSample: registeredStudents?.slice(0, 3).map((r: any) => ({
-        id: r.id,
-        full_name: r.full_name,
-        registered_by: r.registered_by,
-        registered_at: r.registered_at,
-      })) || [],
-    })
-
-    // Get all students (role = 'student') with required data only
-    // Using service role key bypasses RLS, so we can fetch all students
-    // Select only needed columns for better performance
-    let studentsRaw = null
-    let studentsError = null
-
-    // Get expected student count from the debug check
-    const expectedStudentCount = allUsers?.reduce((acc: number, u: any) => {
-      if (u.role === 'student') acc++
-      return acc
-    }, 0) || 0
-
-    // Check if there are registered students in verification_list
-    const hasRegisteredStudents = (registeredStudents?.length || 0) > 0
-
-    // Always use fallback if we know there are students but query might fail
-    // OR if there are registered students in verification_list
-    const shouldUseFallback = hasRegisteredStudents || expectedStudentCount > 0
-
-    if (shouldUseFallback) {
-      logger.debug('[Admin Students API] Using fallback mechanism (direct fetch + manual filter)')
-      
-      // Fetch all users without role filter, then filter manually
-      // This is more reliable than .eq('role', 'student') which seems to have issues
-      const { data: allUsersData, error: allUsersError } = await supabase
-        .from('users')
-        .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
-        .order('created_at', { ascending: false })
-
-      if (allUsersError) {
-        studentsError = allUsersError
-        logger.error('[Admin Students API] Error fetching all users:', allUsersError)
-      } else {
-        // Filter manually for students - check role case-insensitively
-        studentsRaw = (allUsersData || []).filter((u: any) => {
-          const role = (u.role || '').toString().toLowerCase().trim()
-          return role === 'student'
-        })
-        logger.debug('[Admin Students API] Fallback: Filtered students manually:', {
-          totalUsers: allUsersData?.length || 0,
-          studentsCount: studentsRaw?.length || 0,
-          expectedCount: expectedStudentCount,
-          hasRegisteredStudents,
-          allRoles: [...new Set((allUsersData || []).map((u: any) => u.role))],
-          sampleStudents: studentsRaw?.slice(0, 3).map((s: any) => ({
-            id: s.id,
-            username: s.username,
-            role: s.role,
-          })) || [],
-        })
-      }
-    } else {
-      // Try to fetch students with role filter (only if no registered students)
-      const { data: studentsWithRole, error: errorWithRole } = await supabase
-        .from('users')
-        .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
-        .eq('role', 'student')
-        .order('created_at', { ascending: false })
-
-      if (errorWithRole) {
-        logger.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
-        studentsError = errorWithRole
-      } else {
-        studentsRaw = studentsWithRole
-        logger.debug('[Admin Students API] Query worked correctly, returned', studentsRaw?.length || 0, 'students')
-      }
-    }
-
-    // Log for debugging - comprehensive logging
-    if (studentsError) {
-      logger.error('[Admin Students API] Error fetching students:', studentsError?.message || 'Unknown error')
-    } else {
-      // Log all student IDs and names to verify what's being returned
-      const studentIds = (studentsRaw || []).map((s: any) => s?.id).filter(Boolean)
-      const studentNames = (studentsRaw || []).map((s: any) => s?.full_name).filter(Boolean)
-      
-      logger.debug('[Admin Students API] Fetched students:', {
-        count: studentsRaw?.length || 0,
-        studentIds: studentIds,
-        studentNames: studentNames,
-        firstStudent: studentsRaw && studentsRaw.length > 0 ? {
-          id: studentsRaw[0]?.id,
-          username: studentsRaw[0]?.username,
-          full_name: studentsRaw[0]?.full_name,
-          role: studentsRaw[0]?.role,
-        } : null,
-      })
-      
-      // Check specifically for the problematic student
-      const zeyadStudent = (studentsRaw || []).find((s: any) => 
-        s?.full_name?.includes('زياد محمد') || 
-        s?.username === 'zeyadmohamed' ||
-        s?.email?.includes('zeyadeltmsah')
-      )
-      
-      if (zeyadStudent) {
-        logger.warn('[Admin Students API] WARNING: Found student that should be deleted:', {
-          id: zeyadStudent.id,
-          username: zeyadStudent.username,
-          full_name: zeyadStudent.full_name,
-          email: zeyadStudent.email,
-          role: zeyadStudent.role,
-        })
-      }
-    }
-
-    if (studentsError) {
-      logger.error('[Admin Students API] Error fetching students:', studentsError)
+    if (verificationError) {
+      logger.error('[Admin Students API] Error fetching from verification_list:', verificationError)
       return NextResponse.json(
         { 
           error: 'Failed to fetch students',
-          details: studentsError.message || 'Unknown error'
+          details: verificationError.message || 'Unknown error'
         },
         { status: 500 }
       )
     }
 
-    // Map the results to match expected format (already in correct format from select)
-    // Also validate that each student actually exists and has valid data
-    // IMPORTANT: Double-check each student still exists in database before returning
-    const validStudents = []
-    for (const s of (studentsRaw || [])) {
-      // Basic validation
-      if (!s || !s.id || !s.username || !s.email) {
-        logger.debug('[Admin Students API] Filtering out invalid student:', s?.id || 'no-id')
-        continue
-      }
-      
-      const role = (s.role || '').toString().toLowerCase().trim()
-      if (role !== 'student') {
-        logger.debug('[Admin Students API] Filtering out non-student:', { id: s.id, role: s.role })
-        continue
-      }
+    // Then, get user account details for each registered student
+    const userIds = (registeredStudents || [])
+      .map((v: any) => v.registered_by)
+      .filter((id: any) => id) // Remove null/undefined
 
-      // Double-check: Verify student still exists in database
-      // This ensures we don't return deleted students
-      const { data: verifyStudent, error: verifyError } = await supabase
+    let usersData: any[] = []
+    if (userIds.length > 0) {
+      const { data: users, error: usersError } = await supabase
         .from('users')
-        .select('id')
-        .eq('id', s.id)
+        .select('id, username, email, password_hash, university_email, role, is_active, created_at, updated_at, last_login')
+        .in('id', userIds)
         .eq('role', 'student')
-        .single()
 
-      if (verifyError || !verifyStudent) {
-        logger.debug('[Admin Students API] Student no longer exists in database, filtering out:', {
-          id: s.id,
-          username: s.username,
-          full_name: s.full_name,
-          error: verifyError?.message,
-        })
-        continue
+      if (usersError) {
+        logger.error('[Admin Students API] Error fetching users:', usersError)
+      } else {
+        usersData = users || []
       }
-
-      // Student exists and is valid, include in results
-      validStudents.push(s)
     }
 
-    // Map to final format
-    const students = validStudents.map((s: any) => ({
-      id: s.id,
-      username: s.username,
-      email: s.email,
-      password_hash: s.password_hash || '',
-      full_name: s.full_name,
-      section_number: s.section_number,
-      group_name: s.group_name,
-      university_email: s.university_email,
-      role: s.role,
-      is_active: s.is_active,
-      created_at: s.created_at,
-      updated_at: s.updated_at,
-      last_login: s.last_login,
-    }))
+    // Create a map for quick lookup
+    const usersMap = new Map(usersData.map((u: any) => [u.id, u]))
+
+    if (verificationError) {
+      logger.error('[Admin Students API] Error fetching from verification_list:', verificationError)
+      return NextResponse.json(
+        { 
+          error: 'Failed to fetch students',
+          details: verificationError.message || 'Unknown error'
+        },
+        { status: 500 }
+      )
+    }
+
+    logger.debug('[Admin Students API] Fetched registered students:', {
+      count: registeredStudents?.length || 0,
+      usersCount: usersData.length,
+      sample: registeredStudents?.slice(0, 3).map((s: any) => ({
+        id: s.id,
+        full_name: s.full_name,
+        registered_by: s.registered_by,
+        hasUser: usersMap.has(s.registered_by),
+      })) || [],
+    })
+
+    // Map verification_list data with user account data
+    // verification_list is the source of truth - only show registered students
+    const students = (registeredStudents || [])
+      .map((v: any) => {
+        const user = usersMap.get(v.registered_by)
+        // Only include if user account exists
+        if (!user || !user.id) {
+          logger.debug('[Admin Students API] Skipping student without user account:', {
+            verification_id: v.id,
+            full_name: v.full_name,
+            registered_by: v.registered_by,
+          })
+          return null
+        }
+        
+        return {
+          // Primary ID from users table (for compatibility)
+          id: user.id,
+          // Verification list ID (for unregister functionality)
+          verification_id: v.id,
+          // Account details from users
+          username: user.username,
+          email: user.email,
+          password_hash: user.password_hash || '',
+          university_email: user.university_email || null,
+          role: user.role || 'student',
+          is_active: user.is_active ?? true,
+          created_at: user.created_at || v.created_at,
+          updated_at: user.updated_at || v.updated_at,
+          last_login: user.last_login || null,
+          // Student info from verification_list (source of truth)
+          full_name: v.full_name,
+          section_number: v.section_number,
+          group_name: v.group_name,
+          registered_at: v.registered_at,
+          registered_by: v.registered_by,
+        }
+      })
+      .filter((s: any) => s !== null) // Remove null entries
 
     // Final validation: Log if we still have the problematic student
     const zeyadInResults = students.find((s: any) => 
