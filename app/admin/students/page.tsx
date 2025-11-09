@@ -42,6 +42,7 @@ export default function StudentsPage() {
   const [groupFilter, setGroupFilter] = useState<string>('all')
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
+  const [refreshTime, setRefreshTime] = useState(Date.now()) // For auto-refreshing online status
 
   const fetchStudents = async () => {
     try {
@@ -208,6 +209,16 @@ export default function StudentsPage() {
     setFilteredStudents(filteredStudentsMemo)
     console.log('[Admin Students] Filtered students updated:', filteredStudentsMemo.length)
   }, [filteredStudentsMemo])
+
+  // Auto-refresh online status every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Update refresh time to trigger re-render
+      setRefreshTime(Date.now())
+    }, 60000) // Every 60 seconds
+
+    return () => clearInterval(interval)
+  }, [])
 
   const exportToCSV = () => {
     try {
@@ -461,19 +472,19 @@ export default function StudentsPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
+            <table className="w-full min-w-[1200px]">
               <colgroup>
-                <col className="w-[15%]" />
-                <col className="w-[10%]" />
-                <col className="w-[12%]" />
-                <col className="w-[12%]" />
-                {showPasswordHash && <col className="w-[15%]" />}
-                <col className="w-[6%]" />
-                <col className="w-[8%]" />
-                <col className="w-[7%]" />
-                <col className="w-[8%]" />
-                <col className="w-[8%]" />
-                <col className="w-[9%]" />
+                <col className="min-w-[150px]" />
+                <col className="min-w-[120px]" />
+                <col className="min-w-[180px]" />
+                <col className="min-w-[180px]" />
+                {showPasswordHash && <col className="min-w-[200px] max-w-[300px]" />}
+                <col className="min-w-[60px]" />
+                <col className="min-w-[100px]" />
+                <col className="min-w-[100px]" />
+                <col className="min-w-[100px]" />
+                <col className="min-w-[100px]" />
+                <col className="min-w-[120px]" />
               </colgroup>
               <thead>
                 <tr className="border-b border-cyber-neon/20 bg-cyber-dark/30">
@@ -525,27 +536,39 @@ export default function StudentsPage() {
                         key={student.id}
                         className="border-b border-cyber-neon/10 hover:bg-cyber-dark/50 transition-colors"
                       >
-                        <td className="py-3 px-4 text-dark-100 font-medium">{student.full_name || '-'}</td>
-                        <td className="py-3 px-4 text-dark-200">{student.username || '-'}</td>
-                        <td className="py-3 px-4 text-dark-200">{student.email || '-'}</td>
-                        <td className="py-3 px-4 text-dark-200">{student.university_email || '-'}</td>
+                        <td className="py-3 px-4 text-dark-100 font-medium break-words">{student.full_name || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200 break-words">{student.username || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200 break-words">{student.email || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200 break-words">{student.university_email || '-'}</td>
                         {showPasswordHash && (
-                          <td className="py-3 px-4 text-dark-400 text-xs font-mono break-all max-w-xs">
+                          <td className="py-3 px-4 text-dark-400 text-xs font-mono break-all word-break break-words overflow-wrap-anywhere">
                             {student.password_hash || '-'}
                           </td>
                         )}
                         <td className="py-3 px-4 text-dark-200 text-center">{student.section_number || '-'}</td>
-                        <td className="py-3 px-4 text-dark-200">{student.group_name || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200 break-words">{student.group_name || '-'}</td>
                         <td className="py-3 px-4">
-                          <span
-                            className={`px-2 py-1 rounded text-xs font-semibold ${
-                              student.is_active === true
-                                ? 'bg-green-500/20 text-green-400'
-                                : 'bg-red-500/20 text-red-400'
-                            }`}
-                          >
-                            {student.is_active === true ? 'نشط' : 'غير نشط'}
-                          </span>
+                          {(() => {
+                            // Check if user is online (last login within last 15 minutes)
+                            // Use refreshTime to trigger re-calculation
+                            const isOnline = student.last_login 
+                              ? (refreshTime - new Date(student.last_login).getTime()) < 15 * 60 * 1000
+                              : false
+                            
+                            return (
+                              <span
+                                className={`px-2 py-1 rounded text-xs font-semibold flex items-center gap-1.5 justify-center ${
+                                  isOnline
+                                    ? 'bg-green-500/20 text-green-400'
+                                    : 'bg-gray-500/20 text-gray-400'
+                                }`}
+                                title={isOnline ? 'متصل الآن' : student.last_login ? `آخر نشاط: ${new Date(student.last_login).toLocaleString('ar-EG')}` : 'لم يسجل دخول'}
+                              >
+                                <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></span>
+                                {isOnline ? 'متصل' : 'غير متصل'}
+                              </span>
+                            )
+                          })()}
                         </td>
                         <td className="py-3 px-4 text-dark-300 text-sm">
                           {student.created_at ? new Date(student.created_at).toLocaleDateString('ar-EG') : '-'}
