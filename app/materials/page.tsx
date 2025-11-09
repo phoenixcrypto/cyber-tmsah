@@ -266,7 +266,8 @@ export default function MaterialsPage() {
                 </div>
               </Link>
             )
-          })}
+            })
+          )}
         </div>
 
         {/* Coming Soon Notice */}
