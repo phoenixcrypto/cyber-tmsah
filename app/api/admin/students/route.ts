@@ -27,7 +27,15 @@ export async function GET(request: NextRequest) {
       ? authHeader.substring(7)
       : request.cookies.get('access_token')?.value
 
+    console.log('[Admin Students API] Auth check:', {
+      hasAuthHeader: !!authHeader,
+      hasCookie: !!request.cookies.get('access_token')?.value,
+      hasToken: !!accessToken,
+      tokenLength: accessToken?.length || 0,
+    })
+
     if (!accessToken) {
+      console.error('[Admin Students API] No access token provided')
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
@@ -35,7 +43,23 @@ export async function GET(request: NextRequest) {
     }
 
     const payload = verifyToken(accessToken)
-    if (!payload || payload.role !== 'admin') {
+    console.log('[Admin Students API] Token verification:', {
+      hasPayload: !!payload,
+      payloadRole: payload?.role,
+      payloadUserId: payload?.userId,
+      payloadUsername: payload?.username,
+    })
+
+    if (!payload) {
+      console.error('[Admin Students API] Token verification failed - invalid or expired token')
+      return NextResponse.json(
+        { error: 'Invalid or expired token. Please log in again.' },
+        { status: 401 }
+      )
+    }
+
+    if (payload.role !== 'admin') {
+      console.error('[Admin Students API] Access denied - user role is not admin:', payload.role)
       return NextResponse.json(
         { error: 'Admin access required' },
         { status: 403 }
