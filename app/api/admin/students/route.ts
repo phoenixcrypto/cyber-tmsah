@@ -235,18 +235,21 @@ export async function GET(request: NextRequest) {
     // Calculate statistics efficiently in single pass
     const bySection: Record<number, number> = {}
     const byGroup: Record<string, number> = {}
-    let active = 0
-    let inactive = 0
+    
+    // Time-based statistics
+    const now = Date.now()
+    const last24Hours = now - (24 * 60 * 60 * 1000)
+    const last7Days = now - (7 * 24 * 60 * 60 * 1000)
+    const last30Days = now - (30 * 24 * 60 * 60 * 1000)
+    
+    let loggedInLast24Hours = 0
+    let loggedInLast7Days = 0
+    let newInLast30Days = 0
 
     // Single pass for all statistics
     for (const s of students) {
       if (s && typeof s === 'object') {
-        if (s.is_active === true) {
-          active++
-        } else {
-          inactive++
-        }
-        
+        // Section and group distribution
         if (s.section_number && typeof s.section_number === 'number') {
           bySection[s.section_number] = (bySection[s.section_number] || 0) + 1
         }
@@ -254,13 +257,33 @@ export async function GET(request: NextRequest) {
         if (s.group_name && typeof s.group_name === 'string') {
           byGroup[s.group_name] = (byGroup[s.group_name] || 0) + 1
         }
+        
+        // Last login statistics
+        if (s.last_login) {
+          const lastLoginTime = new Date(s.last_login).getTime()
+          if (lastLoginTime >= last24Hours) {
+            loggedInLast24Hours++
+          }
+          if (lastLoginTime >= last7Days) {
+            loggedInLast7Days++
+          }
+        }
+        
+        // New students in last 30 days
+        if (s.created_at) {
+          const createdTime = new Date(s.created_at).getTime()
+          if (createdTime >= last30Days) {
+            newInLast30Days++
+          }
+        }
       }
     }
 
     const stats = {
       total: students.length,
-      active,
-      inactive,
+      loggedInLast24Hours,
+      loggedInLast7Days,
+      newInLast30Days,
       bySection,
       byGroup,
     }

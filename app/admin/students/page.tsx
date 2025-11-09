@@ -24,8 +24,9 @@ interface Student {
 
 interface Statistics {
   total: number
-  active: number
-  inactive: number
+  loggedInLast24Hours: number
+  loggedInLast7Days: number
+  newInLast30Days: number
   bySection: Record<number, number>
   byGroup: Record<string, number>
 }
@@ -42,7 +43,6 @@ export default function StudentsPage() {
   const [groupFilter, setGroupFilter] = useState<string>('all')
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
-  const [refreshTime, setRefreshTime] = useState(Date.now()) // For auto-refreshing online status
 
   // Auto-refresh students data periodically to get updated last_login
   useEffect(() => {
@@ -222,15 +222,6 @@ export default function StudentsPage() {
     console.log('[Admin Students] Filtered students updated:', filteredStudentsMemo.length)
   }, [filteredStudentsMemo])
 
-  // Auto-refresh online status every 30 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Update refresh time to trigger re-render
-      setRefreshTime(Date.now())
-    }, 30000) // Every 30 seconds (reduced from 60)
-
-    return () => clearInterval(interval)
-  }, [])
 
   const exportToCSV = () => {
     try {
@@ -309,8 +300,9 @@ export default function StudentsPage() {
   // Use statistics from API, with fallback to students length
   const displayStats = statistics || {
     total: students.length,
-    active: 0,
-    inactive: 0,
+    loggedInLast24Hours: 0,
+    loggedInLast7Days: 0,
+    newInLast30Days: 0,
     bySection: {} as Record<number, number>,
     byGroup: {} as Record<string, number>,
   }
@@ -327,18 +319,22 @@ export default function StudentsPage() {
         </div>
 
         {/* Statistics Cards - Fixed height to prevent CLS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="enhanced-card p-6 border border-cyber-neon/20 hover:border-cyber-neon/40 transition-colors min-h-[140px] flex flex-col justify-center">
             <div className="text-4xl sm:text-5xl font-bold text-cyber-neon mb-2">{displayStats.total}</div>
             <div className="text-dark-100 font-medium">إجمالي الطلاب المسجلين</div>
           </div>
           <div className="enhanced-card p-6 border border-green-400/20 hover:border-green-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
-            <div className="text-4xl sm:text-5xl font-bold text-green-400 mb-2">{displayStats.active}</div>
-            <div className="text-dark-100 font-medium">نشط</div>
+            <div className="text-4xl sm:text-5xl font-bold text-green-400 mb-2">{displayStats.loggedInLast24Hours}</div>
+            <div className="text-dark-100 font-medium">دخلوا في آخر 24 ساعة</div>
           </div>
-          <div className="enhanced-card p-6 border border-red-400/20 hover:border-red-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
-            <div className="text-4xl sm:text-5xl font-bold text-red-400 mb-2">{displayStats.inactive}</div>
-            <div className="text-dark-100 font-medium">غير نشط</div>
+          <div className="enhanced-card p-6 border border-blue-400/20 hover:border-blue-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
+            <div className="text-4xl sm:text-5xl font-bold text-blue-400 mb-2">{displayStats.loggedInLast7Days}</div>
+            <div className="text-dark-100 font-medium">دخلوا في آخر 7 أيام</div>
+          </div>
+          <div className="enhanced-card p-6 border border-purple-400/20 hover:border-purple-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
+            <div className="text-4xl sm:text-5xl font-bold text-purple-400 mb-2">{displayStats.newInLast30Days}</div>
+            <div className="text-dark-100 font-medium">جدد في آخر 30 يوم</div>
           </div>
         </div>
 
@@ -478,8 +474,8 @@ export default function StudentsPage() {
             </div>
             <div className="text-sm text-dark-300">
               إجمالي المسجلين: <span className="text-cyber-neon font-bold">{displayStats.total}</span> | 
-              نشط: <span className="text-green-400 font-bold">{displayStats.active}</span> | 
-              غير نشط: <span className="text-red-400 font-bold">{displayStats.inactive}</span>
+              آخر 24 ساعة: <span className="text-green-400 font-bold">{displayStats.loggedInLast24Hours}</span> | 
+              آخر 7 أيام: <span className="text-blue-400 font-bold">{displayStats.loggedInLast7Days}</span>
             </div>
           </div>
 
@@ -509,7 +505,6 @@ export default function StudentsPage() {
                   )}
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">السكشن</th>
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">المجموعة</th>
-                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">الحالة</th>
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">تاريخ التسجيل</th>
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">آخر تحديث</th>
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">آخر دخول</th>
@@ -518,7 +513,7 @@ export default function StudentsPage() {
               <tbody>
                 {filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={showPasswordHash ? 11 : 10} className="text-center py-8 text-dark-400">
+                    <td colSpan={showPasswordHash ? 10 : 9} className="text-center py-8 text-dark-400">
                       <div className="flex flex-col items-center gap-2">
                         <AlertCircle className="w-8 h-8 text-dark-500" />
                         <p className="text-lg font-semibold">لا توجد نتائج</p>
@@ -559,29 +554,6 @@ export default function StudentsPage() {
                         )}
                         <td className="py-3 px-4 text-dark-200 text-center">{student.section_number || '-'}</td>
                         <td className="py-3 px-4 text-dark-200 break-words">{student.group_name || '-'}</td>
-                        <td className="py-3 px-4">
-                          {(() => {
-                            // Check if user is online (last login within last 5 minutes)
-                            // Use refreshTime to trigger re-calculation
-                            const isOnline = student.last_login 
-                              ? (refreshTime - new Date(student.last_login).getTime()) < 5 * 60 * 1000
-                              : false
-                            
-                            return (
-                              <span
-                                className={`px-2 py-1 rounded text-xs font-semibold flex items-center gap-1.5 justify-center ${
-                                  isOnline
-                                    ? 'bg-green-500/20 text-green-400'
-                                    : 'bg-gray-500/20 text-gray-400'
-                                }`}
-                                title={isOnline ? 'متصل الآن' : student.last_login ? `آخر نشاط: ${new Date(student.last_login).toLocaleString('ar-EG')}` : 'لم يسجل دخول'}
-                              >
-                                <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></span>
-                                {isOnline ? 'متصل' : 'غير متصل'}
-                              </span>
-                            )
-                          })()}
-                        </td>
                         <td className="py-3 px-4 text-dark-300 text-sm">
                           {student.created_at ? new Date(student.created_at).toLocaleDateString('ar-EG') : '-'}
                         </td>
@@ -590,7 +562,13 @@ export default function StudentsPage() {
                         </td>
                         <td className="py-3 px-4 text-dark-300 text-sm">
                           {student.last_login
-                            ? new Date(student.last_login).toLocaleDateString('ar-EG')
+                            ? new Date(student.last_login).toLocaleString('ar-EG', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })
                             : 'لم يسجل دخول'}
                         </td>
                       </tr>
