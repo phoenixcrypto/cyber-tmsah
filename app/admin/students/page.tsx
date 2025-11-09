@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Users, Search, Download, Loader2, AlertCircle } from 'lucide-react'
+import { Users, Search, Download, Loader2, AlertCircle, Trash2 } from 'lucide-react'
 import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
 import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
@@ -43,6 +43,7 @@ export default function StudentsPage() {
   const [groupFilter, setGroupFilter] = useState<string>('all')
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   // Auto-refresh students data periodically to get updated last_login
   useEffect(() => {
@@ -166,6 +167,55 @@ export default function StudentsPage() {
 
     checkAdmin()
   }, [router])
+
+  // Delete student account
+  const handleDeleteStudent = async (studentId: string, studentName: string) => {
+    // Confirm deletion
+    const confirmed = window.confirm(
+      `هل أنت متأكد من حذف حساب الطالب "${studentName}"؟\n\nسيتم:\n- حذف الحساب من النظام\n- إعادة تعيين حالة التسجيل في قائمة التحقق\n\nهذا الإجراء لا يمكن التراجع عنه.`
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    setDeletingId(studentId)
+
+    try {
+      const response = await authenticatedFetch(
+        `/api/admin/students/${studentId}`,
+        {
+          method: 'DELETE',
+        },
+        () => router.push('/login')
+      )
+
+      if (!response) {
+        return
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        alert(`فشل حذف الحساب: ${errorData.error || 'خطأ غير معروف'}`)
+        return
+      }
+
+      const data = await response.json()
+      
+      if (data.success) {
+        alert('تم حذف حساب الطالب بنجاح وإعادة تعيين حالة التسجيل.')
+        // Refresh students list
+        await fetchStudents()
+      } else {
+        alert(`فشل حذف الحساب: ${data.error || 'خطأ غير معروف'}`)
+      }
+    } catch (err) {
+      console.error('[Admin Students] Error deleting student:', err)
+      alert('حدث خطأ أثناء حذف الحساب. يرجى المحاولة مرة أخرى.')
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
@@ -493,6 +543,7 @@ export default function StudentsPage() {
                 <col className="min-w-[100px]" />
                 <col className="min-w-[100px]" />
                 <col className="min-w-[120px]" />
+                <col className="min-w-[100px]" />
               </colgroup>
               <thead>
                 <tr className="border-b border-cyber-neon/20 bg-cyber-dark/30">
@@ -508,12 +559,13 @@ export default function StudentsPage() {
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">تاريخ التسجيل</th>
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">آخر تحديث</th>
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">آخر دخول</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">إجراءات</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={showPasswordHash ? 10 : 9} className="text-center py-8 text-dark-400">
+                    <td colSpan={showPasswordHash ? 11 : 10} className="text-center py-8 text-dark-400">
                       <div className="flex flex-col items-center gap-2">
                         <AlertCircle className="w-8 h-8 text-dark-500" />
                         <p className="text-lg font-semibold">لا توجد نتائج</p>
@@ -570,6 +622,26 @@ export default function StudentsPage() {
                                 minute: '2-digit',
                               })
                             : 'لم يسجل دخول'}
+                        </td>
+                        <td className="py-3 px-4">
+                          <button
+                            onClick={() => handleDeleteStudent(student.id, student.full_name || student.username)}
+                            disabled={deletingId === student.id}
+                            className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="حذف حساب الطالب"
+                          >
+                            {deletingId === student.id ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span className="text-xs">جاري الحذف...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 className="w-4 h-4" />
+                                <span className="text-xs">حذف</span>
+                              </>
+                            )}
+                          </button>
                         </td>
                       </tr>
                     )
