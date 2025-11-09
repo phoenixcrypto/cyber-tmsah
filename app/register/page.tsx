@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { UserPlus, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { UserPlus, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff, Search, ChevronDown } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -23,13 +23,87 @@ export default function RegisterPage() {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [namesList, setNamesList] = useState<Array<{
+    id: string
+    fullName: string
+    sectionNumber: number
+    groupName: string
+    isRegistered: boolean
+  }>>([])
+  const [namesLoading, setNamesLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const [verificationStatus, setVerificationStatus] = useState<{
     checked: boolean
     valid: boolean
     message: string
   }>({ checked: false, valid: false, message: '' })
-  // Remove automatic name checking - verification only happens when user clicks "Verify" button
+  
+  // Fetch all names from verification_list on component mount
+  useEffect(() => {
+    const fetchNames = async () => {
+      try {
+        setNamesLoading(true)
+        const response = await fetch('/api/auth/verification-names')
+        const data = await response.json()
+        
+        if (data.success && Array.isArray(data.names)) {
+          setNamesList(data.names)
+        } else {
+          console.error('[Register] Failed to fetch names:', data.error)
+        }
+      } catch (err) {
+        console.error('[Register] Error fetching names:', err)
+      } finally {
+        setNamesLoading(false)
+      }
+    }
+    
+    fetchNames()
+  }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  // Filter names based on search term
+  const filteredNames = namesList.filter((name) => {
+    if (!searchTerm.trim()) return true
+    const search = searchTerm.toLowerCase().trim()
+    return name.fullName.toLowerCase().includes(search)
+  })
+
+  // Handle name selection
+  const handleNameSelect = (name: {
+    fullName: string
+    sectionNumber: number
+    groupName: string
+  }) => {
+    setFormData({
+      ...formData,
+      fullName: name.fullName,
+      sectionNumber: name.sectionNumber.toString(),
+      groupName: name.groupName,
+    })
+    setSearchTerm('')
+    setShowDropdown(false)
+    // Reset verification status when selecting a new name
+    setVerificationStatus({ checked: false, valid: false, message: '' })
+    setError('')
+    setSuccess('')
+  }
 
   // Verify student data before registration
   const handleVerify = async () => {
@@ -206,35 +280,92 @@ export default function RegisterPage() {
               Step 1: Verify Your Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div>
+              <div className="relative" ref={dropdownRef}>
                 <label className="block text-sm font-medium text-dark-300 mb-2">
-                  Full Name
+                  الاسم الكامل (اختر من القائمة)
                 </label>
-                <input
-                  type="text"
-                  value={formData.fullName}
-                  onChange={(e) => {
-                    setFormData({ ...formData, fullName: e.target.value })
-                    // Reset verification status when user changes name
-                    setVerificationStatus({ checked: false, valid: false, message: '' })
-                    setError('')
-                    setSuccess('')
-                  }}
-                  className={`w-full p-3 bg-cyber-dark border rounded-lg text-dark-100 focus:ring-1 focus:ring-cyber-neon/50 ${
-                    verificationStatus.checked
-                      ? verificationStatus.valid
-                        ? 'border-cyber-green/50'
-                        : 'border-red-500/50'
-                      : 'border-cyber-neon/30'
-                  } focus:border-cyber-neon`}
-                  placeholder="اكتب الاسم الكامل بالضبط كما هو في الكشف الرسمي (703 طالب)"
-                  required
-                />
+                <div className="relative">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-400 w-5 h-5" />
+                    <input
+                      type="text"
+                      value={searchTerm || formData.fullName}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value)
+                        setShowDropdown(true)
+                        if (!e.target.value) {
+                          setFormData({ ...formData, fullName: '' })
+                          setVerificationStatus({ checked: false, valid: false, message: '' })
+                          setError('')
+                          setSuccess('')
+                        }
+                      }}
+                      onFocus={() => {
+                        if (namesList.length > 0) {
+                          setShowDropdown(true)
+                        }
+                      }}
+                      className={`w-full pl-10 pr-10 p-3 bg-cyber-dark border rounded-lg text-dark-100 focus:ring-1 focus:ring-cyber-neon/50 ${
+                        verificationStatus.checked
+                          ? verificationStatus.valid
+                            ? 'border-cyber-green/50'
+                            : 'border-red-500/50'
+                          : 'border-cyber-neon/30'
+                      } focus:border-cyber-neon`}
+                      placeholder={namesLoading ? "جاري تحميل الأسماء..." : "ابحث عن اسمك من القائمة (703 طالب)"}
+                      required
+                    />
+                    <ChevronDown className={`absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 w-5 h-5 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                  </div>
+                  
+                  {/* Dropdown */}
+                  {showDropdown && !namesLoading && (
+                    <div className="absolute z-50 w-full mt-1 bg-cyber-dark border border-cyber-neon/30 rounded-lg shadow-xl max-h-60 overflow-auto">
+                      {filteredNames.length > 0 ? (
+                        <div className="py-1">
+                          {filteredNames.slice(0, 50).map((name) => (
+                            <button
+                              key={name.id}
+                              type="button"
+                              onClick={() => handleNameSelect(name)}
+                              disabled={name.isRegistered}
+                              className={`w-full text-right px-4 py-2 text-sm text-dark-100 hover:bg-cyber-neon/10 transition-colors ${
+                                name.isRegistered
+                                  ? 'opacity-50 cursor-not-allowed line-through'
+                                  : 'cursor-pointer'
+                              } ${formData.fullName === name.fullName ? 'bg-cyber-neon/20' : ''}`}
+                            >
+                              <div className="font-medium">{name.fullName}</div>
+                              <div className="text-xs text-dark-400">
+                                السكشن {name.sectionNumber} - {name.groupName}
+                                {name.isRegistered && ' (مسجل بالفعل)'}
+                              </div>
+                            </button>
+                          ))}
+                          {filteredNames.length > 50 && (
+                            <div className="px-4 py-2 text-xs text-dark-400 text-center">
+                              عرض 50 من {filteredNames.length} نتيجة. استمر في البحث للعثور على المزيد.
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="px-4 py-3 text-sm text-dark-400 text-center">
+                          {searchTerm ? 'لم يتم العثور على نتائج' : 'ابدأ بالبحث عن اسمك'}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
                 {verificationStatus.checked && (
                   <p className={`mt-1 text-xs ${
                     verificationStatus.valid ? 'text-cyber-green' : 'text-red-400'
                   }`}>
                     {verificationStatus.message}
+                  </p>
+                )}
+                {namesLoading && (
+                  <p className="mt-1 text-xs text-dark-400">
+                    جاري تحميل قائمة الأسماء...
                   </p>
                 )}
               </div>
@@ -278,7 +409,7 @@ export default function RegisterPage() {
             </div>
             <button
               onClick={handleVerify}
-              disabled={verifying || !formData.fullName || !formData.sectionNumber || !formData.groupName}
+              disabled={verifying || namesLoading || !formData.fullName || !formData.sectionNumber || !formData.groupName}
               className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {verifying ? (
