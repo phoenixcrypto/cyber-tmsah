@@ -19,12 +19,13 @@ export async function POST(request: NextRequest) {
     const supabase = createAdminClient()
     const trimmedName = fullName.trim()
 
-    // First, check if name exists at all (case-insensitive)
+    // First, check if name exists at all (case-insensitive, partial match)
+    // Use partial match first to find similar names, then check for exact match
     const { data: nameMatches, error: nameError } = await supabase
       .from('verification_list')
       .select('id, full_name, section_number, group_name, is_registered')
-      .ilike('full_name', trimmedName)
-      .limit(5)
+      .ilike('full_name', `%${trimmedName}%`)
+      .limit(10)
 
     if (nameError) {
       console.error('Error checking name:', nameError)
@@ -44,15 +45,27 @@ export async function POST(request: NextRequest) {
 
     if (!exactMatch) {
       // Name not found - provide suggestions
-      const suggestions = nameMatches?.slice(0, 3).map(m => m.full_name) || []
+      const suggestions = nameMatches?.slice(0, 5).map(m => ({
+        fullName: m.full_name,
+        sectionNumber: m.section_number,
+        groupName: m.group_name,
+      })) || []
+      
+      let errorMessage = 'Your name was not found in our records.'
+      let message = 'Please verify your full name as it appears in the official list.'
+      
+      if (suggestions.length > 0) {
+        errorMessage = 'Your name was not found exactly. Did you mean one of these names?'
+        message = `Found ${suggestions.length} similar name(s). Please check if your name matches one of them:`
+      }
+      
       return NextResponse.json(
         { 
           valid: false,
-          error: 'Your name was not found in our records.',
-          suggestions: suggestions.length > 0 ? suggestions : undefined,
-          message: suggestions.length > 0 
-            ? 'Did you mean one of these names?'
-            : 'Please verify your full name as it appears in the official list.'
+          error: errorMessage,
+          suggestions: suggestions.length > 0 ? suggestions.map(s => s.fullName) : undefined,
+          suggestionDetails: suggestions.length > 0 ? suggestions : undefined,
+          message: message,
         },
         { status: 200 }
       )
@@ -70,10 +83,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Now verify section and group match
+    // Use exact match for final verification (case-insensitive)
     const { data: verificationData, error: verificationError } = await supabase
       .from('verification_list')
       .select('*')
-      .ilike('full_name', trimmedName)
+      .ilike('full_name', trimmedName) // Exact match for final verification
       .eq('section_number', sectionNumber)
       .eq('group_name', groupName)
       .eq('is_registered', false)

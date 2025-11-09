@@ -80,21 +80,29 @@ export default function RegisterPage() {
       } else {
         // Enhanced error messages with suggestions
         let errorMessage = data.error || 'Verification failed. Please check your information and try again.'
+        let detailedMessage = errorMessage
         
-        if (data.suggestions && data.suggestions.length > 0) {
-          errorMessage += `\n\nDid you mean one of these names?\n${data.suggestions.map((s: string) => `• ${s}`).join('\n')}`
+        if (data.suggestionDetails && data.suggestionDetails.length > 0) {
+          // Show suggestions with section and group details
+          detailedMessage += `\n\n${data.message || 'Did you mean one of these names?'}\n\n`
+          data.suggestionDetails.forEach((s: any, index: number) => {
+            detailedMessage += `${index + 1}. ${s.fullName} (Section ${s.sectionNumber}, ${s.groupName})\n`
+          })
+        } else if (data.suggestions && data.suggestions.length > 0) {
+          // Fallback to simple suggestions
+          detailedMessage += `\n\n${data.message || 'Did you mean one of these names?'}\n${data.suggestions.map((s: string) => `• ${s}`).join('\n')}`
         }
         
         if (data.foundName) {
-          errorMessage += `\n\nFound in records: ${data.foundName}\nSection: ${data.foundSection}, Group: ${data.foundGroup}`
+          detailedMessage += `\n\nFound in records: ${data.foundName}\nSection: ${data.foundSection}, Group: ${data.foundGroup}`
         }
 
         setVerificationStatus({
           checked: true,
           valid: false,
-          message: errorMessage,
+          message: detailedMessage,
         })
-        setError(errorMessage)
+        setError(detailedMessage)
         setSuccess('')
       }
     } catch (err) {
