@@ -3,7 +3,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Users, Search, Download, Loader2, AlertCircle } from 'lucide-react'
-import { authenticatedFetch, getValidAccessToken } from '@/lib/auth/tokenRefresh'
+import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
+import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
 interface Student {
   id: string
@@ -102,46 +103,23 @@ export default function StudentsPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        // Get valid token (refresh if needed)
-        const accessToken = await getValidAccessToken(() => {
-          router.push('/login?redirect=/admin/students')
-        })
-
-        if (!accessToken) {
-          setIsAdmin(false)
-          setLoading(false)
-          return
-        }
-
-        try {
-          const tokenParts = accessToken.split('.')
-          if (tokenParts.length < 2 || !tokenParts[1]) {
-            console.error('[Admin Students] Invalid token format')
-            setIsAdmin(false)
-            setLoading(false)
-            return
-          }
-
-          const payload = JSON.parse(atob(tokenParts[1]))
-          
-          if (!payload || payload.role !== 'admin') {
-            setIsAdmin(false)
-            setLoading(false)
-            return
-          }
-
+        // Verify admin access using API
+        const result = await verifyAdminAccess()
+        
+        if (result.isAdmin) {
           setIsAdmin(true)
           await fetchStudents()
           // fetchStudents handles setLoading(false) in its finally block
-        } catch (e) {
-          console.error('[Admin Students] Error parsing token:', e)
+        } else {
           setIsAdmin(false)
           setLoading(false)
+          router.push('/login?redirect=/admin/students')
         }
       } catch (err) {
         console.error('[Admin Students] Error in checkAdmin:', err)
         setIsAdmin(false)
         setLoading(false)
+        router.push('/login?redirect=/admin/students')
       }
     }
 
