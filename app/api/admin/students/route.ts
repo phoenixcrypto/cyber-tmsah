@@ -94,6 +94,21 @@ export async function GET(request: NextRequest) {
       .eq('role', 'student')
       .order('created_at', { ascending: false })
 
+    // Log for debugging
+    if (studentsError) {
+      console.error('[Admin Students API] Error fetching students:', studentsError?.message || 'Unknown error')
+    } else {
+      console.log('[Admin Students API] Fetched students:', {
+        count: studentsRaw?.length || 0,
+        firstStudent: studentsRaw && studentsRaw.length > 0 ? {
+          id: studentsRaw[0]?.id,
+          username: studentsRaw[0]?.username,
+          full_name: studentsRaw[0]?.full_name,
+          role: studentsRaw[0]?.role,
+        } : null,
+      })
+    }
+
     if (studentsError) {
       console.error('[Admin Students API] Error fetching students:', studentsError)
       return NextResponse.json(
@@ -154,6 +169,12 @@ export async function GET(request: NextRequest) {
       bySection,
       byGroup,
     }
+
+    // Log response before sending
+    console.log('[Admin Students API] Returning response:', {
+      studentsCount: students.length,
+      statistics: stats,
+    })
 
     return NextResponse.json({
       success: true,

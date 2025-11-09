@@ -59,15 +59,33 @@ export default function StudentsPage() {
       if (response.ok) {
         try {
           const data = await response.json()
+          
+          // Log for debugging
+          console.log('[Admin Students] API Response:', {
+            success: data.success,
+            studentsCount: Array.isArray(data.students) ? data.students.length : 0,
+            hasStatistics: !!data.statistics,
+            statistics: data.statistics,
+            firstStudent: Array.isArray(data.students) && data.students.length > 0 ? {
+              id: data.students[0].id,
+              username: data.students[0].username,
+              full_name: data.students[0].full_name,
+            } : null,
+          })
+          
           if (data.success !== false) {
-            setStudents(Array.isArray(data.students) ? data.students : [])
-            setFilteredStudents(Array.isArray(data.students) ? data.students : [])
+            const studentsArray = Array.isArray(data.students) ? data.students : []
+            setStudents(studentsArray)
+            setFilteredStudents(studentsArray)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
+            console.log('[Admin Students] Set students:', studentsArray.length)
           } else if (data.students && Array.isArray(data.students)) {
             setStudents(data.students)
             setFilteredStudents(data.students)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
+            console.log('[Admin Students] Set students (fallback):', data.students.length)
           } else {
+            console.warn('[Admin Students] No students in response')
             setStudents([])
             setFilteredStudents([])
             setStatistics(null)
@@ -188,6 +206,7 @@ export default function StudentsPage() {
 
   useEffect(() => {
     setFilteredStudents(filteredStudentsMemo)
+    console.log('[Admin Students] Filtered students updated:', filteredStudentsMemo.length)
   }, [filteredStudentsMemo])
 
   const exportToCSV = () => {
