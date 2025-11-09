@@ -35,18 +35,25 @@ export async function POST(request: NextRequest) {
 
     // Update last_login (used as last_activity) in database
     const supabase = createAdminClient()
+    const now = new Date().toISOString()
     const { error: updateError } = await supabase
       .from('users')
-      .update({ last_login: new Date().toISOString() })
+      .update({ last_login: now })
       .eq('id', payload.userId)
 
     if (updateError) {
       console.error('[User Activity] Error updating last_login:', updateError)
-      // Don't fail the request if update fails
+      return NextResponse.json(
+        { error: 'Failed to update activity', details: updateError.message },
+        { status: 500 }
+      )
     }
+
+    console.log('[User Activity] Updated last_login for user:', payload.userId, 'at', now)
 
     return NextResponse.json({
       success: true,
+      updated_at: now,
     })
   } catch (error) {
     console.error('[User Activity] Error:', error)

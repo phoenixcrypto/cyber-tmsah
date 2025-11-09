@@ -44,6 +44,18 @@ export default function StudentsPage() {
   const [showPasswordHash, setShowPasswordHash] = useState(false)
   const [refreshTime, setRefreshTime] = useState(Date.now()) // For auto-refreshing online status
 
+  // Auto-refresh students data periodically to get updated last_login
+  useEffect(() => {
+    // Only set up interval after initial load
+    if (loading) return
+
+    const interval = setInterval(() => {
+      fetchStudents()
+    }, 60000) // Every 60 seconds, refetch students to get updated last_login
+
+    return () => clearInterval(interval)
+  }, [loading])
+
   const fetchStudents = async () => {
     try {
       const response = await authenticatedFetch(

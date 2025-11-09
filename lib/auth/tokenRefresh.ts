@@ -91,17 +91,31 @@ export async function getValidAccessToken(
  * @returns Response object or null if authentication failed
  */
 // Track last activity update to avoid too frequent calls
-let lastActivityUpdate = 0
+// Use sessionStorage to persist across page reloads
 const ACTIVITY_UPDATE_INTERVAL = 30 * 1000 // 30 seconds
+const ACTIVITY_STORAGE_KEY = 'cyber_tmsah_last_activity_update'
+
+function getLastActivityUpdate(): number {
+  if (typeof window === 'undefined') return 0
+  const stored = sessionStorage.getItem(ACTIVITY_STORAGE_KEY)
+  return stored ? parseInt(stored, 10) : 0
+}
+
+function setLastActivityUpdate(timestamp: number) {
+  if (typeof window === 'undefined') return
+  sessionStorage.setItem(ACTIVITY_STORAGE_KEY, timestamp.toString())
+}
 
 async function updateUserActivity(token: string) {
   // Only update if enough time has passed since last update
   const now = Date.now()
-  if (now - lastActivityUpdate < ACTIVITY_UPDATE_INTERVAL) {
+  const lastUpdate = getLastActivityUpdate()
+  
+  if (now - lastUpdate < ACTIVITY_UPDATE_INTERVAL) {
     return
   }
 
-  lastActivityUpdate = now
+  setLastActivityUpdate(now)
 
   // Update activity in background (don't wait for response)
   fetch('/api/user/activity', {
@@ -111,9 +125,18 @@ async function updateUserActivity(token: string) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-  }).catch(() => {
-    // Ignore errors - activity update is not critical
   })
+    .then((res) => {
+      if (res.ok) {
+        console.log('[Activity] User activity updated successfully')
+      } else {
+        console.warn('[Activity] Failed to update activity:', res.status)
+      }
+    })
+    .catch((err) => {
+      console.warn('[Activity] Error updating activity:', err)
+      // Ignore errors - activity update is not critical
+    })
 }
 
 export async function authenticatedFetch(
