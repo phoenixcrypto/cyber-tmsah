@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2, UserX } from 'lucide-react'
 import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
 import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
@@ -28,6 +28,7 @@ export default function VerificationListPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editData, setEditData] = useState<Partial<Student>>({})
   const [saving, setSaving] = useState(false)
+  const [unregisteringId, setUnregisteringId] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   // Filters
@@ -212,6 +213,73 @@ export default function VerificationListPage() {
       setMessage({ type: 'error', text: 'Error updating student' })
     } finally {
       setSaving(false)
+    }
+  }
+
+  // Unregister student - move from registered to unregistered
+  const handleUnregisterStudent = async (verificationId: string, studentName: string) => {
+    // Confirm unregistration
+    const confirmed = window.confirm(
+      `هل أنت متأكد من إلغاء تسجيل الطالب "${studentName}"؟\n\nسيتم:\n- إعادة الطالب إلى قائمة غير المسجلين\n- حذف الحساب من النظام\n\nيمكن للطالب التسجيل مرة أخرى لاحقاً.`
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    setUnregisteringId(verificationId)
+
+    try {
+      const response = await authenticatedFetch(
+        `/api/admin/students/${verificationId}/unregister`,
+        {
+          method: 'POST',
+        },
+        () => router.push('/login')
+      )
+
+      if (!response) {
+        return
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        setMessage({ type: 'error', text: `فشل إلغاء التسجيل: ${errorData.error || 'خطأ غير معروف'}` })
+        return
+      }
+
+      const data = await response.json()
+      
+      if (data.success) {
+        // Find student and update immediately (optimistic update)
+        const studentToUnregister = students.find(s => s.id === verificationId)
+        
+        if (studentToUnregister) {
+          // Update student status IMMEDIATELY (optimistic update)
+          setStudents(prev => prev.map(s => 
+            s.id === verificationId 
+              ? { ...s, is_registered: false, registered_at: null }
+              : s
+          ))
+          setFilteredStudents(prev => prev.map(s => 
+            s.id === verificationId 
+              ? { ...s, is_registered: false, registered_at: null }
+              : s
+          ))
+        }
+        
+        setMessage({ type: 'success', text: 'تم إلغاء تسجيل الطالب بنجاح. يمكنه التسجيل مرة أخرى لاحقاً.' })
+        
+        // Refresh IMMEDIATELY to sync with server (optimistic update already done)
+        await loadStudents()
+      } else {
+        setMessage({ type: 'error', text: `فشل إلغاء التسجيل: ${data.error || 'خطأ غير معروف'}` })
+      }
+    } catch (err) {
+      console.error('[Verification List] Error unregistering student:', err)
+      setMessage({ type: 'error', text: 'حدث خطأ أثناء إلغاء التسجيل. يرجى المحاولة مرة أخرى.' })
+    } finally {
+      setUnregisteringId(null)
     }
   }
 
@@ -497,12 +565,30 @@ export default function VerificationListPage() {
                             </button>
                           </div>
                         ) : (
-                          <button
-                            onClick={() => startEdit(student)}
-                            className="p-2 bg-cyber-neon/20 text-cyber-neon rounded hover:bg-cyber-neon/30 transition-colors"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => startEdit(student)}
+                              className="p-2 bg-cyber-neon/20 text-cyber-neon rounded hover:bg-cyber-neon/30 transition-colors"
+                              title="تعديل"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            {/* Unregister button - only show for registered students */}
+                            {student.is_registered && (
+                              <button
+                                onClick={() => handleUnregisterStudent(student.id, student.full_name)}
+                                disabled={unregisteringId === student.id}
+                                className="p-2 bg-yellow-500/20 text-yellow-400 rounded hover:bg-yellow-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="إلغاء تسجيل الطالب (إرجاعه إلى قائمة غير المسجلين)"
+                              >
+                                {unregisteringId === student.id ? (
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <UserX className="w-4 h-4" />
+                                )}
+                              </button>
+                            )}
+                          </div>
                         )}
                       </td>
                     </tr>
@@ -520,24 +606,20 @@ export default function VerificationListPage() {
               </span>
               <div className="flex items-center gap-4">
                 <span>
-                  Registered: {(() => {
-                    const studentsArray = Array.isArray(students) ? students : []
-                    let count = 0
-                    for (const s of studentsArray) {
-                      if (s && s.is_registered) count++
-                    }
-                    return count
-                  })()}
+                  Registered: <span className="text-cyber-green font-bold">
+                    {(() => {
+                      const studentsArray = Array.isArray(students) ? students : []
+                      return studentsArray.filter(s => s && s.is_registered).length
+                    })()}
+                  </span>
                 </span>
                 <span>
-                  Not Registered: {(() => {
-                    const studentsArray = Array.isArray(students) ? students : []
-                    let count = 0
-                    for (const s of studentsArray) {
-                      if (s && !s.is_registered) count++
-                    }
-                    return count
-                  })()}
+                  Not Registered: <span className="text-cyber-neon font-bold">
+                    {(() => {
+                      const studentsArray = Array.isArray(students) ? students : []
+                      return studentsArray.filter(s => s && !s.is_registered).length
+                    })()}
+                  </span>
                 </span>
               </div>
             </div>

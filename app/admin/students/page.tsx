@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Users, Search, Download, Loader2, AlertCircle, Trash2, RefreshCw, UserX } from 'lucide-react'
+import { Users, Search, Download, Loader2, AlertCircle, Trash2, RefreshCw } from 'lucide-react'
 import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
 import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
@@ -47,7 +47,6 @@ export default function StudentsPage() {
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [unregisteringId, setUnregisteringId] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
   const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null)
   // Track deleted students to prevent them from reappearing
@@ -411,21 +410,10 @@ export default function StudentsPage() {
         
         alert('تم حذف حساب الطالب بنجاح وإعادة تعيين حالة التسجيل.')
         
-        // DO NOT refresh immediately - the UI is already updated
-        // Only refresh after a longer delay (5 seconds) to allow server to sync
-        // This prevents the deleted student from reappearing due to race conditions
-        setTimeout(() => {
-          // Clear the deleted flag after 5 seconds (server should be synced by then)
-          setTimeout(() => {
-            deletedStudentsRef.current.delete(studentId)
-          }, 5000)
-          
-          // Refresh to get updated statistics from server (but deleted student won't reappear)
-          fetchStudents().catch(err => {
-            console.error('[Admin Students] Error refreshing after delete:', err)
-            // Don't show error to user, UI is already updated optimistically
-          })
-        }, 2000) // Wait 2 seconds before refreshing
+        // Refresh IMMEDIATELY to sync with server (optimistic update already done)
+        fetchStudents(false).catch(err => {
+          console.error('[Admin Students] Error refreshing after delete:', err)
+        })
       } else {
         alert(`فشل حذف الحساب: ${data.error || 'خطأ غير معروف'}`)
       }
@@ -437,119 +425,6 @@ export default function StudentsPage() {
     }
   }
 
-  // Unregister student (move from registered to unregistered)
-  const handleUnregisterStudent = async (verificationId: string, studentName: string) => {
-    // Confirm unregistration
-    const confirmed = window.confirm(
-      `هل أنت متأكد من إلغاء تسجيل الطالب "${studentName}"؟\n\nسيتم:\n- إعادة الطالب إلى قائمة غير المسجلين\n- حذف الحساب من النظام\n\nيمكن للطالب التسجيل مرة أخرى لاحقاً.`
-    )
-
-    if (!confirmed) {
-      return
-    }
-
-    setUnregisteringId(verificationId)
-
-    try {
-      const response = await authenticatedFetch(
-        `/api/admin/students/${verificationId}/unregister`,
-        {
-          method: 'POST',
-        },
-        () => router.push('/login')
-      )
-
-      if (!response) {
-        return
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        alert(`فشل إلغاء التسجيل: ${errorData.error || 'خطأ غير معروف'}`)
-        return
-      }
-
-      const data = await response.json()
-      
-      if (data.success) {
-        // Find student by verification_id
-        const studentToUnregister = students.find(s => s.verification_id === verificationId || s.id === verificationId)
-        
-        if (studentToUnregister) {
-          // Remove student from list immediately (optimistic update)
-          setStudents(prev => prev.filter(s => s.verification_id !== verificationId && s.id !== studentToUnregister.id))
-          setFilteredStudents(prev => prev.filter(s => s.verification_id !== verificationId && s.id !== studentToUnregister.id))
-          
-          // Update statistics
-          if (statistics && studentToUnregister) {
-            setStatistics(prev => {
-              if (!prev) return null
-              const newTotal = Math.max(0, prev.total - 1)
-              const newBySection = { ...prev.bySection }
-              const newByGroup = { ...prev.byGroup }
-              
-              if (studentToUnregister.section_number) {
-                const sectionCount = newBySection[studentToUnregister.section_number] || 0
-                newBySection[studentToUnregister.section_number] = Math.max(0, sectionCount - 1)
-              }
-              
-              if (studentToUnregister.group_name) {
-                const groupCount = newByGroup[studentToUnregister.group_name] || 0
-                newByGroup[studentToUnregister.group_name] = Math.max(0, groupCount - 1)
-              }
-              
-              // Update time-based statistics
-              const now = new Date()
-              const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-              const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-              const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-              
-              let newLoggedInLast24Hours = prev.loggedInLast24Hours || 0
-              let newLoggedInLast7Days = prev.loggedInLast7Days || 0
-              let newNewInLast30Days = prev.newInLast30Days || 0
-              
-              if (studentToUnregister.last_login) {
-                const lastLogin = new Date(studentToUnregister.last_login)
-                if (lastLogin >= last24Hours) newLoggedInLast24Hours = Math.max(0, newLoggedInLast24Hours - 1)
-                if (lastLogin >= last7Days) newLoggedInLast7Days = Math.max(0, newLoggedInLast7Days - 1)
-              }
-              
-              if (studentToUnregister.created_at) {
-                const createdAt = new Date(studentToUnregister.created_at)
-                if (createdAt >= last30Days) newNewInLast30Days = Math.max(0, newNewInLast30Days - 1)
-              }
-              
-              return {
-                ...prev,
-                total: newTotal,
-                bySection: newBySection,
-                byGroup: newByGroup,
-                loggedInLast24Hours: newLoggedInLast24Hours,
-                loggedInLast7Days: newLoggedInLast7Days,
-                newInLast30Days: newNewInLast30Days,
-              }
-            })
-          }
-        }
-        
-        alert('تم إلغاء تسجيل الطالب بنجاح. يمكنه التسجيل مرة أخرى لاحقاً.')
-        
-        // Refresh after a delay to get updated data
-        setTimeout(() => {
-          fetchStudents(false).catch(err => {
-            console.error('[Admin Students] Error refreshing after unregister:', err)
-          })
-        }, 2000)
-      } else {
-        alert(`فشل إلغاء التسجيل: ${data.error || 'خطأ غير معروف'}`)
-      }
-    } catch (err) {
-      console.error('[Admin Students] Error unregistering student:', err)
-      alert('حدث خطأ أثناء إلغاء التسجيل. يرجى المحاولة مرة أخرى.')
-    } finally {
-      setUnregisteringId(null)
-    }
-  }
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
@@ -880,6 +755,11 @@ export default function StudentsPage() {
               إجمالي المسجلين: <span className="text-cyber-neon font-bold">{displayStats.total}</span> | 
               آخر 24 ساعة: <span className="text-green-400 font-bold">{displayStats.loggedInLast24Hours}</span> | 
               آخر 7 أيام: <span className="text-blue-400 font-bold">{displayStats.loggedInLast7Days}</span>
+              {lastRefreshTime && (
+                <span className="mr-2 text-xs text-dark-400">
+                  (آخر تحديث: {lastRefreshTime.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' })})
+                </span>
+              )}
             </div>
           </div>
 
@@ -978,49 +858,24 @@ export default function StudentsPage() {
                             : 'لم يسجل دخول'}
                         </td>
                         <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            {/* Unregister Button */}
-                            <button
-                              onClick={() => handleUnregisterStudent(
-                                student.verification_id || student.id, 
-                                student.full_name || student.username
-                              )}
-                              disabled={unregisteringId === (student.verification_id || student.id) || deletingId === student.id}
-                              className="px-3 py-1.5 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                              title="إلغاء تسجيل الطالب (إرجاعه إلى قائمة غير المسجلين)"
-                            >
-                              {unregisteringId === (student.verification_id || student.id) ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                  <span className="text-xs">جاري الإلغاء...</span>
-                                </>
-                              ) : (
-                                <>
-                                  <UserX className="w-4 h-4" />
-                                  <span className="text-xs">إلغاء التسجيل</span>
-                                </>
-                              )}
-                            </button>
-                            {/* Delete Button */}
-                            <button
-                              onClick={() => handleDeleteStudent(student.id, student.full_name || student.username)}
-                              disabled={deletingId === student.id || unregisteringId === (student.verification_id || student.id)}
-                              className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                              title="حذف حساب الطالب"
-                            >
-                              {deletingId === student.id ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                  <span className="text-xs">جاري الحذف...</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Trash2 className="w-4 h-4" />
-                                  <span className="text-xs">حذف</span>
-                                </>
-                              )}
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => handleDeleteStudent(student.id, student.full_name || student.username)}
+                            disabled={deletingId === student.id}
+                            className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="حذف حساب الطالب"
+                          >
+                            {deletingId === student.id ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span className="text-xs">جاري الحذف...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 className="w-4 h-4" />
+                                <span className="text-xs">حذف</span>
+                              </>
+                            )}
+                          </button>
                         </td>
                       </tr>
                     )
