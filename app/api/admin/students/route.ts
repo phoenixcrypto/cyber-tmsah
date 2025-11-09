@@ -85,6 +85,28 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // First, check all users to debug
+    const { data: allUsers, error: allUsersError } = await supabase
+      .from('users')
+      .select('id, username, email, role, is_active')
+      .limit(100)
+
+    console.log('[Admin Students API] All users check:', {
+      totalUsers: allUsers?.length || 0,
+      hasError: !!allUsersError,
+      error: allUsersError?.message || null,
+      usersByRole: allUsers?.reduce((acc: any, u: any) => {
+        acc[u.role] = (acc[u.role] || 0) + 1
+        return acc
+      }, {}) || {},
+      sampleUsers: allUsers?.slice(0, 5).map((u: any) => ({
+        id: u.id,
+        username: u.username,
+        role: u.role,
+        is_active: u.is_active,
+      })) || [],
+    })
+
     // Get all students (role = 'student') with required data only
     // Using service role key bypasses RLS, so we can fetch all students
     // Select only needed columns for better performance
