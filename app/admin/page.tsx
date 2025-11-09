@@ -68,7 +68,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        {/* Admin Features Grid */}
+        {/* Admin Features Grid - Fixed height to prevent CLS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {adminFeatures.map((feature, index) => {
             const Icon = feature.icon
@@ -79,17 +79,19 @@ export default async function AdminPage() {
                 prefetch={false}
                 className="group block"
               >
-                <div className="enhanced-card p-6 text-center h-full hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
+                <div className="enhanced-card p-6 text-center h-full min-h-[220px] flex flex-col justify-between hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
                      style={{ animationDelay: `${index * 0.1}s` }}>
                   <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform`}>
                     <Icon className="w-8 h-8 text-dark-100" />
                   </div>
-                  <h3 className="text-xl font-semibold text-dark-100 mb-2 group-hover:text-cyber-neon transition-colors">
-                    {feature.title}
-                  </h3>
-                  <p className="text-dark-300 group-hover:text-dark-200 transition-colors">
-                    {feature.description}
-                  </p>
+                  <div>
+                    <h3 className="text-xl font-semibold text-dark-100 mb-2 group-hover:text-cyber-neon transition-colors min-h-[56px] flex items-center justify-center">
+                      {feature.title}
+                    </h3>
+                    <p className="text-dark-300 group-hover:text-dark-200 transition-colors">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
               </Link>
             )

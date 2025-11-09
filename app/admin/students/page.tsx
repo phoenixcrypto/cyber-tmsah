@@ -235,57 +235,69 @@ export default function StudentsPage() {
           <p className="text-dark-300">عرض وإدارة جميع الطلاب المسجلين في النظام</p>
         </div>
 
-        {/* Statistics Cards */}
+        {/* Statistics Cards - Fixed height to prevent CLS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="enhanced-card p-6 border border-cyber-neon/20 hover:border-cyber-neon/40 transition-colors">
+          <div className="enhanced-card p-6 border border-cyber-neon/20 hover:border-cyber-neon/40 transition-colors min-h-[140px] flex flex-col justify-center">
             <div className="text-4xl sm:text-5xl font-bold text-cyber-neon mb-2">{stats.total}</div>
             <div className="text-dark-100 font-medium">إجمالي الطلاب المسجلين</div>
           </div>
-          <div className="enhanced-card p-6 border border-green-400/20 hover:border-green-400/40 transition-colors">
+          <div className="enhanced-card p-6 border border-green-400/20 hover:border-green-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
             <div className="text-4xl sm:text-5xl font-bold text-green-400 mb-2">{stats.active}</div>
             <div className="text-dark-100 font-medium">نشط</div>
           </div>
-          <div className="enhanced-card p-6 border border-red-400/20 hover:border-red-400/40 transition-colors">
+          <div className="enhanced-card p-6 border border-red-400/20 hover:border-red-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
             <div className="text-4xl sm:text-5xl font-bold text-red-400 mb-2">{stats.inactive}</div>
             <div className="text-dark-100 font-medium">غير نشط</div>
           </div>
         </div>
 
-        {/* Distribution Sections */}
-        {statistics && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* Distribution by Section */}
-            <div className="enhanced-card p-6 border border-cyber-neon/20">
-              <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب القسم</h3>
+        {/* Distribution Sections - Fixed height to prevent CLS */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 min-h-[400px]">
+          {/* Distribution by Section */}
+          <div className="enhanced-card p-6 border border-cyber-neon/20">
+            <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب القسم</h3>
+            {statistics ? (
               <div className="grid grid-cols-3 gap-3">
                 {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => (
                   <div 
                     key={section} 
-                    className="text-center p-3 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors"
+                    className="text-center p-3 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors min-h-[80px] flex flex-col justify-center"
                   >
                     <div className="text-2xl font-bold text-cyber-neon mb-1">{statistics.bySection[section] || 0}</div>
                     <div className="text-xs text-dark-300">قسم {section}</div>
                   </div>
                 ))}
               </div>
-            </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-3">
+                {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => (
+                  <div 
+                    key={section} 
+                    className="text-center p-3 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 min-h-[80px] flex flex-col justify-center"
+                  >
+                    <div className="text-2xl font-bold text-cyber-neon mb-1">-</div>
+                    <div className="text-xs text-dark-300">قسم {section}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-            {/* Distribution by Group */}
-            <div className="enhanced-card p-6 border border-cyber-neon/20">
-              <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب المجموعة</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors">
-                  <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics.byGroup['Group 1'] || 0}</div>
-                  <div className="text-sm text-dark-300 font-medium">Group 1 (A)</div>
-                </div>
-                <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors">
-                  <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics.byGroup['Group 2'] || 0}</div>
-                  <div className="text-sm text-dark-300 font-medium">Group 2 (B)</div>
-                </div>
+          {/* Distribution by Group */}
+          <div className="enhanced-card p-6 border border-cyber-neon/20">
+            <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب المجموعة</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors min-h-[120px] flex flex-col justify-center">
+                <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics?.byGroup['Group 1'] || 0}</div>
+                <div className="text-sm text-dark-300 font-medium">Group 1 (A)</div>
+              </div>
+              <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors min-h-[120px] flex flex-col justify-center">
+                <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics?.byGroup['Group 2'] || 0}</div>
+                <div className="text-sm text-dark-300 font-medium">Group 2 (B)</div>
               </div>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Search and Filter Section */}
         <div className="enhanced-card p-6 mb-6 border border-cyber-neon/20">
@@ -383,7 +395,20 @@ export default function StudentsPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
+              <colgroup>
+                <col className="w-[15%]" />
+                <col className="w-[10%]" />
+                <col className="w-[12%]" />
+                <col className="w-[12%]" />
+                {showPasswordHash && <col className="w-[15%]" />}
+                <col className="w-[6%]" />
+                <col className="w-[8%]" />
+                <col className="w-[7%]" />
+                <col className="w-[8%]" />
+                <col className="w-[8%]" />
+                <col className="w-[9%]" />
+              </colgroup>
               <thead>
                 <tr className="border-b border-cyber-neon/20 bg-cyber-dark/30">
                   <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">الاسم الكامل</th>
