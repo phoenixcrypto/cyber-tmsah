@@ -593,7 +593,8 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading || !verificationStatus.valid || !verificationStatus.checked || !formData.username || !formData.email || !formData.password}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed py-3 sm:py-2 text-sm sm:text-base touch-manipulation"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {loading ? (
                 <>
