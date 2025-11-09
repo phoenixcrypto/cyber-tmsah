@@ -64,17 +64,21 @@ export default function RegisterPage() {
     fetchNames()
   }, [])
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (mobile and desktop)
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false)
       }
     }
 
+    // Handle both mouse and touch events for mobile compatibility
     document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside)
+    
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
     }
   }, [])
 
@@ -262,24 +266,24 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl w-full space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl w-full space-y-6 sm:space-y-8">
         <div className="text-center animate-fade-in">
-          <h1 className="text-4xl font-orbitron font-bold text-dark-100 mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-orbitron font-bold text-dark-100 mb-2">
             Create Account
           </h1>
-          <p className="text-dark-300">
+          <p className="text-sm sm:text-base text-dark-300 px-2">
             Register to access your personalized academic dashboard
           </p>
         </div>
 
-        <div className="enhanced-card p-8 animate-slide-up">
+        <div className="enhanced-card p-4 sm:p-8 animate-slide-up">
           {/* Verification Section */}
-          <div className="mb-6 p-4 bg-cyber-dark/50 rounded-lg border border-cyber-neon/20">
-            <h3 className="text-lg font-semibold text-dark-100 mb-4">
+          <div className="mb-6 p-3 sm:p-4 bg-cyber-dark/50 rounded-lg border border-cyber-neon/20">
+            <h3 className="text-base sm:text-lg font-semibold text-dark-100 mb-3 sm:mb-4">
               Step 1: Verify Your Information
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
               <div className="relative" ref={dropdownRef}>
                 <label className="block text-sm font-medium text-dark-300 mb-2">
                   الاسم الكامل (اختر من القائمة)
@@ -305,6 +309,12 @@ export default function RegisterPage() {
                           setShowDropdown(true)
                         }
                       }}
+                      onTouchStart={(e) => {
+                        // Prevent zoom on double tap (iOS)
+                        if (e.touches.length > 1) {
+                          e.preventDefault()
+                        }
+                      }}
                       className={`w-full pl-10 pr-10 p-3 bg-cyber-dark border rounded-lg text-dark-100 focus:ring-1 focus:ring-cyber-neon/50 ${
                         verificationStatus.checked
                           ? verificationStatus.valid
@@ -318,32 +328,57 @@ export default function RegisterPage() {
                     <ChevronDown className={`absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 w-5 h-5 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                   </div>
                   
-                  {/* Dropdown */}
+                  {/* Dropdown - Mobile optimized */}
                   {showDropdown && !namesLoading && (
-                    <div className="absolute z-50 w-full mt-1 bg-cyber-dark border border-cyber-neon/30 rounded-lg shadow-xl max-h-60 overflow-auto">
+                    <div className="absolute left-0 right-0 w-full mt-1 bg-cyber-dark border border-cyber-neon/30 rounded-lg shadow-xl max-h-[50vh] sm:max-h-60 overflow-auto overscroll-contain touch-pan-y"
+                      style={{ 
+                        zIndex: 9999,
+                        WebkitOverflowScrolling: 'touch',
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       {filteredNames.length > 0 ? (
                         <div className="py-1">
                           {filteredNames.slice(0, 50).map((name) => (
                             <button
                               key={name.id}
                               type="button"
-                              onClick={() => handleNameSelect(name)}
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleNameSelect(name)
+                              }}
+                              onTouchEnd={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                if (!name.isRegistered) {
+                                  handleNameSelect(name)
+                                }
+                              }}
                               disabled={name.isRegistered}
-                              className={`w-full text-right px-4 py-2 text-sm text-dark-100 hover:bg-cyber-neon/10 transition-colors ${
+                              className={`w-full text-right px-4 py-3 sm:py-2 text-sm text-dark-100 active:bg-cyber-neon/20 touch-manipulation ${
                                 name.isRegistered
                                   ? 'opacity-50 cursor-not-allowed line-through'
-                                  : 'cursor-pointer'
+                                  : 'cursor-pointer hover:bg-cyber-neon/10'
                               } ${formData.fullName === name.fullName ? 'bg-cyber-neon/20' : ''}`}
+                              style={{ 
+                                WebkitTapHighlightColor: 'transparent',
+                                touchAction: 'manipulation',
+                              }}
                             >
-                              <div className="font-medium">{name.fullName}</div>
-                              <div className="text-xs text-dark-400">
+                              <div className="font-medium break-words">{name.fullName}</div>
+                              <div className="text-xs text-dark-400 mt-1">
                                 السكشن {name.sectionNumber} - {name.groupName}
                                 {name.isRegistered && ' (مسجل بالفعل)'}
                               </div>
                             </button>
                           ))}
                           {filteredNames.length > 50 && (
-                            <div className="px-4 py-2 text-xs text-dark-400 text-center">
+                            <div className="px-4 py-2 text-xs text-dark-400 text-center border-t border-cyber-neon/10">
                               عرض 50 من {filteredNames.length} نتيجة. استمر في البحث للعثور على المزيد.
                             </div>
                           )}
@@ -410,7 +445,8 @@ export default function RegisterPage() {
             <button
               onClick={handleVerify}
               disabled={verifying || namesLoading || !formData.fullName || !formData.sectionNumber || !formData.groupName}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed py-3 sm:py-2 text-sm sm:text-base touch-manipulation"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {verifying ? (
                 <>
