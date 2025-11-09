@@ -203,9 +203,50 @@ export default function StudentsPage() {
       const data = await response.json()
       
       if (data.success) {
+        // Get student info before removing from state
+        const studentToDelete = students.find(s => s.id === studentId)
+        
+        // Remove student from list immediately (optimistic update)
+        setStudents(prev => prev.filter(s => s.id !== studentId))
+        setFilteredStudents(prev => prev.filter(s => s.id !== studentId))
+        
+        // Update statistics
+        if (statistics && studentToDelete) {
+          setStatistics(prev => {
+            if (!prev) return null
+            const newTotal = Math.max(0, prev.total - 1)
+            // Update section count if available
+            const newBySection = { ...prev.bySection }
+            if (studentToDelete.section_number) {
+              const sectionCount = newBySection[studentToDelete.section_number] || 0
+              newBySection[studentToDelete.section_number] = Math.max(0, sectionCount - 1)
+            }
+            // Update group count if available
+            const newByGroup = { ...prev.byGroup }
+            if (studentToDelete.group_name) {
+              const groupCount = newByGroup[studentToDelete.group_name] || 0
+              newByGroup[studentToDelete.group_name] = Math.max(0, groupCount - 1)
+            }
+            
+            return {
+              ...prev,
+              total: newTotal,
+              bySection: newBySection,
+              byGroup: newByGroup,
+            }
+          })
+        }
+        
         alert('تم حذف حساب الطالب بنجاح وإعادة تعيين حالة التسجيل.')
-        // Refresh students list
-        await fetchStudents()
+        
+        // Optionally refresh to get updated statistics from server
+        // But the UI is already updated, so this is optional
+        setTimeout(() => {
+          fetchStudents().catch(err => {
+            console.error('[Admin Students] Error refreshing after delete:', err)
+            // Don't show error to user, UI is already updated
+          })
+        }, 500)
       } else {
         alert(`فشل حذف الحساب: ${data.error || 'خطأ غير معروف'}`)
       }

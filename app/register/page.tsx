@@ -40,17 +40,17 @@ export default function RegisterPage() {
 
     // Validate required fields
     if (!formData.fullName || !formData.fullName.trim()) {
-      setError('Please enter your full name')
+      setError('يرجى إدخال الاسم الكامل')
       return
     }
 
     if (!formData.sectionNumber) {
-      setError('Please select your section number')
+      setError('يرجى اختيار رقم السكشن')
       return
     }
 
     if (!formData.groupName) {
-      setError('Please select your group')
+      setError('يرجى اختيار المجموعة')
       return
     }
 
@@ -73,28 +73,28 @@ export default function RegisterPage() {
         setVerificationStatus({
           checked: true,
           valid: true,
-          message: 'Verification successful! Your information matches our records. You can proceed with registration.',
+          message: 'تم التحقق بنجاح! معلوماتك تطابق السجلات. يمكنك المتابعة مع التسجيل.',
         })
-        setSuccess('Your information has been verified successfully. Please complete the registration form below.')
+        setSuccess('تم التحقق من معلوماتك بنجاح. يرجى إكمال نموذج التسجيل أدناه.')
         setError('')
       } else {
         // Enhanced error messages with suggestions
-        let errorMessage = data.error || 'Verification failed. Please check your information and try again.'
+        let errorMessage = data.error || 'فشل التحقق. يرجى التحقق من المعلومات والمحاولة مرة أخرى.'
         let detailedMessage = errorMessage
         
         if (data.suggestionDetails && data.suggestionDetails.length > 0) {
           // Show suggestions with section and group details
-          detailedMessage += `\n\n${data.message || 'Did you mean one of these names?'}\n\n`
+          detailedMessage += `\n\n${data.message || 'هل تقصد أحد هذه الأسماء؟'}\n\n`
           data.suggestionDetails.forEach((s: any, index: number) => {
-            detailedMessage += `${index + 1}. ${s.fullName} (Section ${s.sectionNumber}, ${s.groupName})\n`
+            detailedMessage += `${index + 1}. ${s.fullName} (السكشن ${s.sectionNumber}, ${s.groupName})\n`
           })
         } else if (data.suggestions && data.suggestions.length > 0) {
           // Fallback to simple suggestions
-          detailedMessage += `\n\n${data.message || 'Did you mean one of these names?'}\n${data.suggestions.map((s: string) => `• ${s}`).join('\n')}`
+          detailedMessage += `\n\n${data.message || 'هل تقصد أحد هذه الأسماء؟'}\n${data.suggestions.map((s: string) => `• ${s}`).join('\n')}`
         }
         
         if (data.foundName) {
-          detailedMessage += `\n\nFound in records: ${data.foundName}\nSection: ${data.foundSection}, Group: ${data.foundGroup}`
+          detailedMessage += `\n\nموجود في السجلات: ${data.foundName}\nالسكشن: ${data.foundSection}, المجموعة: ${data.foundGroup}`
         }
 
         setVerificationStatus({
@@ -107,7 +107,7 @@ export default function RegisterPage() {
       }
     } catch (err) {
       console.error('Verification error:', err)
-      const errorMessage = 'Failed to verify. Please check your connection and try again.'
+      const errorMessage = 'فشل التحقق. يرجى التحقق من الاتصال والمحاولة مرة أخرى.'
       setError(errorMessage)
       setVerificationStatus({
         checked: true,
@@ -227,7 +227,7 @@ export default function RegisterPage() {
                         : 'border-red-500/50'
                       : 'border-cyber-neon/30'
                   } focus:border-cyber-neon`}
-                  placeholder="Enter your full name exactly as it appears in the official list"
+                  placeholder="اكتب الاسم الكامل بالضبط كما هو في الكشف الرسمي (703 طالب)"
                   required
                 />
                 {verificationStatus.checked && (

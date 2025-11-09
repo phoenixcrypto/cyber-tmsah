@@ -12,7 +12,10 @@ export async function POST(request: NextRequest) {
 
     if (!fullName || !sectionNumber || !groupName) {
       return NextResponse.json(
-        { error: 'Full name, section number, and group are required' },
+        { 
+          valid: false,
+          error: 'الاسم الكامل ورقم السكشن والمجموعة مطلوبة' 
+        },
         { status: 400 }
       )
     }
@@ -20,12 +23,12 @@ export async function POST(request: NextRequest) {
     const supabase = createAdminClient()
     const trimmedName = fullName.trim()
 
-    // First, check if name exists at all (case-insensitive, partial match)
-    // Use partial match first to find similar names, then check for exact match
-    const { data: nameMatches, error: nameError } = await supabase
+    // First, check for EXACT match (case-insensitive, but must match exactly after trimming)
+    // This ensures the name matches exactly as it appears in the verification list
+    const { data: exactMatches, error: nameError } = await supabase
       .from('verification_list')
       .select('id, full_name, section_number, group_name, is_registered')
-      .ilike('full_name', `%${trimmedName}%`)
+      .ilike('full_name', trimmedName) // Exact match (case-insensitive)
       .limit(10)
 
     if (nameError) {
@@ -39,25 +42,36 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check for exact match (case-insensitive)
-    const exactMatch = nameMatches?.find(m => 
-      m.full_name.toLowerCase().trim() === trimmedName.toLowerCase()
+    // Find exact match by comparing trimmed names (handles extra spaces)
+    const exactMatch = exactMatches?.find(m => 
+      m.full_name.trim().toLowerCase() === trimmedName.toLowerCase()
     )
-
+    
+    // If no exact match found, try to find similar names for suggestions
+    let suggestions: any[] = []
     if (!exactMatch) {
-      // Name not found - provide suggestions
-      const suggestions = nameMatches?.slice(0, 5).map(m => ({
+      // Try partial match only for suggestions
+      const { data: partialMatches } = await supabase
+        .from('verification_list')
+        .select('id, full_name, section_number, group_name, is_registered')
+        .ilike('full_name', `%${trimmedName}%`)
+        .limit(5)
+      
+      suggestions = (partialMatches || []).slice(0, 5).map(m => ({
         fullName: m.full_name,
         sectionNumber: m.section_number,
         groupName: m.group_name,
-      })) || []
-      
-      let errorMessage = 'Your name was not found in our records.'
-      let message = 'Please verify your full name as it appears in the official list.'
+      }))
+    }
+
+    if (!exactMatch) {
+      // Name not found - provide suggestions
+      let errorMessage = 'الاسم الذي أدخلته لا يطابق الاسم الموجود في الكشف الرسمي.'
+      let message = 'يرجى كتابة الاسم الكامل بالضبط كما هو مكتوب في الكشف الرسمي (703 طالب).'
       
       if (suggestions.length > 0) {
-        errorMessage = 'Your name was not found exactly. Did you mean one of these names?'
-        message = `Found ${suggestions.length} similar name(s). Please check if your name matches one of them:`
+        errorMessage = 'الاسم الذي أدخلته لا يطابق الاسم الموجود في الكشف الرسمي. هل تقصد أحد هذه الأسماء؟'
+        message = `تم العثور على ${suggestions.length} اسم مشابه. يرجى التحقق من أن اسمك يطابق أحدها:`
       }
       
       return NextResponse.json(
@@ -77,7 +91,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           valid: false,
-          error: 'This student is already registered. Please log in instead.' 
+          error: 'هذا الطالب مسجل بالفعل. يرجى تسجيل الدخول بدلاً من ذلك.' 
         },
         { status: 200 }
       )
@@ -133,7 +147,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           { 
             valid: false,
-            error: 'Your name was not found in our records. Please verify your information.',
+            error: 'الاسم الذي أدخلته لا يطابق الاسم الموجود في الكشف الرسمي. يرجى التحقق من المعلومات.',
           },
           { status: 200 }
         )
@@ -142,7 +156,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           valid: false,
-          error: `Your name was found, but the section number (${sectionNumber}) or group (${groupName}) does not match our records. Please verify your section and group.`,
+          error: `تم العثور على الاسم، لكن رقم السكشن (${sectionNumber}) أو المجموعة (${groupName}) لا يطابق السجلات. يرجى التحقق من السكشن والمجموعة.`,
           foundName: exactMatch.full_name,
           foundSection: exactMatch.section_number,
           foundGroup: exactMatch.group_name,
@@ -154,7 +168,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         valid: true,
-        message: 'Verification successful. You can proceed with registration.',
+        message: 'تم التحقق بنجاح. يمكنك المتابعة مع التسجيل.',
       },
       { status: 200 }
     )
@@ -163,7 +177,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         valid: false,
-        error: 'Internal server error. Please try again later.' 
+        error: 'خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.' 
       },
       { status: 500 }
     )
