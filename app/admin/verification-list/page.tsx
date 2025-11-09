@@ -142,7 +142,7 @@ export default function VerificationListPage() {
       console.error('[Verification List] Error in filteredStudentsMemo:', error)
       return []
     }
-  }, [students, searchTerm, filterSection, filterGroup, filterRegistered, unregisteredStudentsRef])
+  }, [students, searchTerm, filterSection, filterGroup, filterRegistered])
 
   useEffect(() => {
     setFilteredStudents(filteredStudentsMemo)
