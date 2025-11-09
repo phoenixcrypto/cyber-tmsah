@@ -226,70 +226,78 @@ export default function StudentsPage() {
           <p className="text-dark-300">عرض وإدارة جميع الطلاب المسجلين في النظام</p>
         </div>
 
-        {/* Statistics */}
+        {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="enhanced-card p-6">
-            <div className="text-3xl font-bold text-cyber-neon mb-1">{stats.total}</div>
-            <div className="text-dark-300">إجمالي الطلاب المسجلين</div>
+          <div className="enhanced-card p-6 border border-cyber-neon/20 hover:border-cyber-neon/40 transition-colors">
+            <div className="text-4xl sm:text-5xl font-bold text-cyber-neon mb-2">{stats.total}</div>
+            <div className="text-dark-100 font-medium">إجمالي الطلاب المسجلين</div>
           </div>
-          <div className="enhanced-card p-6">
-            <div className="text-3xl font-bold text-green-400 mb-1">{stats.active}</div>
-            <div className="text-dark-300">نشط</div>
+          <div className="enhanced-card p-6 border border-green-400/20 hover:border-green-400/40 transition-colors">
+            <div className="text-4xl sm:text-5xl font-bold text-green-400 mb-2">{stats.active}</div>
+            <div className="text-dark-100 font-medium">نشط</div>
           </div>
-          <div className="enhanced-card p-6">
-            <div className="text-3xl font-bold text-red-400 mb-1">{stats.inactive}</div>
-            <div className="text-dark-300">غير نشط</div>
+          <div className="enhanced-card p-6 border border-red-400/20 hover:border-red-400/40 transition-colors">
+            <div className="text-4xl sm:text-5xl font-bold text-red-400 mb-2">{stats.inactive}</div>
+            <div className="text-dark-100 font-medium">غير نشط</div>
           </div>
         </div>
 
-        {/* Detailed Statistics */}
+        {/* Distribution Sections */}
         {statistics && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="enhanced-card p-6">
-              <h3 className="text-lg font-semibold text-dark-100 mb-4">التوزيع حسب القسم</h3>
-              <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {/* Distribution by Section */}
+            <div className="enhanced-card p-6 border border-cyber-neon/20">
+              <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب القسم</h3>
+              <div className="grid grid-cols-3 gap-3">
                 {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => (
-                  <div key={section} className="text-center p-2 bg-cyber-dark/50 rounded">
-                    <div className="text-xl font-bold text-cyber-neon">{statistics.bySection[section] || 0}</div>
+                  <div 
+                    key={section} 
+                    className="text-center p-3 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors"
+                  >
+                    <div className="text-2xl font-bold text-cyber-neon mb-1">{statistics.bySection[section] || 0}</div>
                     <div className="text-xs text-dark-300">قسم {section}</div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="enhanced-card p-6">
-              <h3 className="text-lg font-semibold text-dark-100 mb-4">التوزيع حسب المجموعة</h3>
+
+            {/* Distribution by Group */}
+            <div className="enhanced-card p-6 border border-cyber-neon/20">
+              <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب المجموعة</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-cyber-dark/50 rounded">
-                  <div className="text-2xl font-bold text-cyber-neon">{statistics.byGroup['Group 1'] || 0}</div>
-                  <div className="text-sm text-dark-300">Group 1 (A)</div>
+                <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors">
+                  <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics.byGroup['Group 1'] || 0}</div>
+                  <div className="text-sm text-dark-300 font-medium">Group 1 (A)</div>
                 </div>
-                <div className="text-center p-4 bg-cyber-dark/50 rounded">
-                  <div className="text-2xl font-bold text-cyber-neon">{statistics.byGroup['Group 2'] || 0}</div>
-                  <div className="text-sm text-dark-300">Group 2 (B)</div>
+                <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors">
+                  <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics.byGroup['Group 2'] || 0}</div>
+                  <div className="text-sm text-dark-300 font-medium">Group 2 (B)</div>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Filters */}
-        <div className="enhanced-card p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
+        {/* Search and Filter Section */}
+        <div className="enhanced-card p-6 mb-6 border border-cyber-neon/20">
+          <div className="flex flex-wrap items-center gap-4 mb-4">
+            {/* Search Bar */}
+            <div className="relative flex-1 min-w-[200px]">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
               <input
                 type="text"
-                placeholder="بحث بالاسم، اسم المستخدم، أو البريد..."
+                placeholder="بحث بالاسم، اسم المستخدم، أو البريد"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 pl-10 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:outline-none focus:border-cyber-neon"
+                className="w-full px-4 py-2 pr-10 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:border-cyber-neon transition-colors"
               />
             </div>
 
+            {/* Section Filter */}
             <select
               value={sectionFilter}
               onChange={(e) => setSectionFilter(e.target.value)}
-              className="px-4 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:outline-none focus:border-cyber-neon"
+              className="px-4 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:outline-none focus:border-cyber-neon transition-colors min-w-[150px]"
             >
               <option value="all">جميع السكاشن</option>
               {Array.from({ length: 15 }, (_, i) => (
@@ -299,61 +307,65 @@ export default function StudentsPage() {
               ))}
             </select>
 
+            {/* Group Filter */}
             <select
               value={groupFilter}
               onChange={(e) => setGroupFilter(e.target.value)}
-              className="px-4 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:outline-none focus:border-cyber-neon"
+              className="px-4 py-2 bg-cyber-dark/50 border border-cyber-neon/20 rounded-lg text-dark-100 focus:outline-none focus:border-cyber-neon transition-colors min-w-[150px]"
             >
               <option value="all">جميع المجموعات</option>
               <option value="Group 1">Group 1</option>
               <option value="Group 2">Group 2</option>
             </select>
 
+            {/* Show Inactive Checkbox */}
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
                 id="showInactive"
                 checked={showInactive}
                 onChange={(e) => setShowInactive(e.target.checked)}
-                className="w-4 h-4"
+                className="w-4 h-4 rounded border-cyber-neon/30 bg-cyber-dark/50 text-cyber-neon focus:ring-cyber-neon focus:ring-offset-cyber-dark"
               />
-              <label htmlFor="showInactive" className="text-dark-300 cursor-pointer">
+              <label htmlFor="showInactive" className="text-dark-100 cursor-pointer select-none">
                 إظهار غير النشطين
               </label>
             </div>
-          </div>
 
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="showPasswordHash"
-                checked={showPasswordHash}
-                onChange={(e) => setShowPasswordHash(e.target.checked)}
-                className="w-4 h-4"
-              />
-              <label htmlFor="showPasswordHash" className="text-dark-300 cursor-pointer">
-                إظهار Password Hash
-              </label>
-            </div>
+            {/* Export Button */}
             <button
               onClick={exportToCSV}
-              className="px-4 py-2 bg-cyber-neon text-cyber-dark rounded-lg font-semibold hover:bg-cyber-neon/80 transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-cyber-neon text-cyber-dark rounded-lg font-semibold hover:bg-cyber-neon/80 transition-colors flex items-center gap-2 whitespace-nowrap"
             >
               <Download className="w-4 h-4" />
               تصدير CSV (مع Password Hash)
             </button>
           </div>
+
+          {/* Password Hash Checkbox */}
+          <div className="flex items-center gap-2 pt-4 border-t border-cyber-neon/10">
+            <input
+              type="checkbox"
+              id="showPasswordHash"
+              checked={showPasswordHash}
+              onChange={(e) => setShowPasswordHash(e.target.checked)}
+              className="w-4 h-4 rounded border-cyber-neon/30 bg-cyber-dark/50 text-cyber-neon focus:ring-cyber-neon focus:ring-offset-cyber-dark"
+            />
+            <label htmlFor="showPasswordHash" className="text-dark-100 cursor-pointer select-none">
+              إظهار Password Hash
+            </label>
+          </div>
         </div>
 
         {/* Students Table */}
-        <div className="enhanced-card p-6">
-          <div className="mb-4 flex justify-between items-center">
-            <div className="text-dark-300">
+        <div className="enhanced-card p-6 border border-cyber-neon/20">
+          {/* Table Summary */}
+          <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-cyber-neon/10">
+            <div className="text-dark-100 font-medium">
               عرض {filteredStudents.length} من {students.length} طالب مسجل
             </div>
             {statistics && (
-              <div className="text-sm text-dark-400">
+              <div className="text-sm text-dark-300">
                 إجمالي المسجلين: <span className="text-cyber-neon font-bold">{statistics.total}</span> | 
                 نشط: <span className="text-green-400 font-bold">{statistics.active}</span> | 
                 غير نشط: <span className="text-red-400 font-bold">{statistics.inactive}</span>
@@ -364,20 +376,20 @@ export default function StudentsPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-cyber-neon/20">
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">الاسم الكامل</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">اسم المستخدم</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">البريد الإلكتروني</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">البريد الجامعي</th>
+                <tr className="border-b border-cyber-neon/20 bg-cyber-dark/30">
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">الاسم الكامل</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">اسم المستخدم</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">البريد الإلكتروني</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">البريد الجامعي</th>
                   {showPasswordHash && (
-                    <th className="text-right py-3 px-4 text-dark-300 font-semibold">Password Hash</th>
+                    <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">Password Hash</th>
                   )}
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">السكشن</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">المجموعة</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">الحالة</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">تاريخ التسجيل</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">آخر تحديث</th>
-                  <th className="text-right py-3 px-4 text-dark-300 font-semibold">آخر دخول</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">السكشن</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">المجموعة</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">الحالة</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">تاريخ التسجيل</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">آخر تحديث</th>
+                  <th className="text-right py-3 px-4 text-dark-100 font-bold text-sm">آخر دخول</th>
                 </tr>
               </thead>
               <tbody>
