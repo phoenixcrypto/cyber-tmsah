@@ -14,6 +14,18 @@ export default function Error({
   useEffect(() => {
     // Log the error to an error reporting service
     console.error('Error:', error)
+    console.error('Error stack:', error.stack)
+    console.error('Error name:', error.name)
+    
+    // Log to external service if available
+    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+      // You can add error reporting service here (e.g., Sentry, LogRocket, etc.)
+      try {
+        // Example: fetch('/api/log-error', { method: 'POST', body: JSON.stringify({ error: error.message, stack: error.stack }) })
+      } catch (e) {
+        // Silently fail if error reporting fails
+      }
+    }
   }, [error])
 
   return (
@@ -27,16 +39,16 @@ export default function Error({
           
           {/* Error Message */}
           <h1 className="text-4xl sm:text-5xl font-orbitron font-bold text-red-400 mb-6">
-            System Error
+            خطأ في النظام
           </h1>
           
           <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-4">
-            An Unexpected Error Occurred
+            حدث خطأ غير متوقع
           </h2>
           
           <p className="text-lg text-dark-300 mb-8 leading-relaxed">
-            Sorry, an unexpected error occurred in the system. 
-            Please try again or return to the home page.
+            عذرًا، حدث خطأ غير متوقع في النظام. 
+            يرجى المحاولة مجددًا أو العودة إلى الصفحة الرئيسية.
           </p>
           
           {/* Error Details (Development Only) */}
@@ -66,7 +78,7 @@ export default function Error({
               className="btn-primary flex items-center gap-2"
             >
               <RefreshCw className="w-4 h-4" />
-              Try Again
+              حاول ثانية
             </button>
             
             <Link
@@ -74,24 +86,24 @@ export default function Error({
               className="btn-secondary flex items-center gap-2"
             >
               <Home className="w-4 h-4" />
-              Home Page
+              الصفحة الرئيسية
             </Link>
           </div>
           
           {/* Help Section */}
           <div className="glass-card p-6 animate-slide-up">
             <h3 className="text-lg font-semibold text-dark-100 mb-4">
-              Need Help?
+              هل تحتاج إلى مساعدة؟
             </h3>
             <p className="text-dark-300 mb-4">
-              If the error persists, please try refreshing the page or return to the home page
+              إذا استمر الخطأ، يرجى محاولة تحديث الصفحة أو العودة إلى الصفحة الرئيسية
             </p>
             <Link
               href="/"
               className="btn-tertiary inline-flex items-center gap-2"
             >
               <Home className="w-4 h-4" />
-              Go to Home
+              العودة للصفحة الرئيسية
             </Link>
           </div>
         </div>

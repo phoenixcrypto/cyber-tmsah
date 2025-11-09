@@ -128,6 +128,17 @@ export async function POST(request: NextRequest) {
         foundGroup: exactMatch?.group_name,
       })
       
+      // Ensure exactMatch exists before accessing its properties
+      if (!exactMatch) {
+        return NextResponse.json(
+          { 
+            valid: false,
+            error: 'Your name was not found in our records. Please verify your information.',
+          },
+          { status: 200 }
+        )
+      }
+      
       return NextResponse.json(
         { 
           valid: false,
