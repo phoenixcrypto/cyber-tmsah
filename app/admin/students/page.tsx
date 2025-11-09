@@ -89,15 +89,19 @@ export default function StudentsPage() {
           
           if (data.success !== false) {
             const studentsArray = Array.isArray(data.students) ? data.students : []
-            setStudents(studentsArray)
-            setFilteredStudents(studentsArray)
+            // Filter out any invalid students (safety check)
+            const validStudents = studentsArray.filter((s: any) => s && s.id && s.role === 'student')
+            setStudents(validStudents)
+            setFilteredStudents(validStudents)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
-            console.log('[Admin Students] Set students:', studentsArray.length)
+            console.log('[Admin Students] Set students:', validStudents.length)
           } else if (data.students && Array.isArray(data.students)) {
-            setStudents(data.students)
-            setFilteredStudents(data.students)
+            // Filter out any invalid students (safety check)
+            const validStudents = data.students.filter((s: any) => s && s.id && s.role === 'student')
+            setStudents(validStudents)
+            setFilteredStudents(validStudents)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
-            console.log('[Admin Students] Set students (fallback):', data.students.length)
+            console.log('[Admin Students] Set students (fallback):', validStudents.length)
           } else {
             console.warn('[Admin Students] No students in response')
             setStudents([])
@@ -196,6 +200,78 @@ export default function StudentsPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
+        
+        // If student not found (404), remove from list anyway (already deleted)
+        if (response.status === 404) {
+          // Student already deleted, remove from UI
+          setStudents(prev => prev.filter(s => s.id !== studentId))
+          setFilteredStudents(prev => prev.filter(s => s.id !== studentId))
+          
+          // Update statistics
+          const studentToDelete = students.find(s => s.id === studentId)
+          if (statistics && studentToDelete) {
+            setStatistics(prev => {
+              if (!prev) return null
+              const newTotal = Math.max(0, prev.total - 1)
+              const newBySection = { ...prev.bySection }
+              const newByGroup = { ...prev.byGroup }
+              
+              if (studentToDelete.section_number) {
+                const sectionCount = newBySection[studentToDelete.section_number] || 0
+                newBySection[studentToDelete.section_number] = Math.max(0, sectionCount - 1)
+              }
+              
+              if (studentToDelete.group_name) {
+                const groupCount = newByGroup[studentToDelete.group_name] || 0
+                newByGroup[studentToDelete.group_name] = Math.max(0, groupCount - 1)
+              }
+              
+              // Update time-based statistics
+              const now = new Date()
+              const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+              const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+              const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+              
+              let newLoggedInLast24Hours = prev.loggedInLast24Hours || 0
+              let newLoggedInLast7Days = prev.loggedInLast7Days || 0
+              let newNewInLast30Days = prev.newInLast30Days || 0
+              
+              if (studentToDelete.last_login) {
+                const lastLogin = new Date(studentToDelete.last_login)
+                if (lastLogin >= last24Hours) newLoggedInLast24Hours = Math.max(0, newLoggedInLast24Hours - 1)
+                if (lastLogin >= last7Days) newLoggedInLast7Days = Math.max(0, newLoggedInLast7Days - 1)
+              }
+              
+              if (studentToDelete.created_at) {
+                const createdAt = new Date(studentToDelete.created_at)
+                if (createdAt >= last30Days) newNewInLast30Days = Math.max(0, newNewInLast30Days - 1)
+              }
+              
+              return {
+                ...prev,
+                total: newTotal,
+                bySection: newBySection,
+                byGroup: newByGroup,
+                loggedInLast24Hours: newLoggedInLast24Hours,
+                loggedInLast7Days: newLoggedInLast7Days,
+                newInLast30Days: newNewInLast30Days,
+              }
+            })
+          }
+          
+          alert('الطالب محذوف بالفعل من النظام. تم إزالته من القائمة.')
+          
+          // Refresh to get updated data
+          setTimeout(() => {
+            fetchStudents().catch(err => {
+              console.error('[Admin Students] Error refreshing after delete:', err)
+            })
+          }, 300)
+          
+          return
+        }
+        
+        // Other errors
         alert(`فشل حذف الحساب: ${errorData.error || 'خطأ غير معروف'}`)
         return
       }
