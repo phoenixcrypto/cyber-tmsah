@@ -90,6 +90,32 @@ export async function getValidAccessToken(
  * @param redirectToLogin Callback to redirect to login if authentication fails
  * @returns Response object or null if authentication failed
  */
+// Track last activity update to avoid too frequent calls
+let lastActivityUpdate = 0
+const ACTIVITY_UPDATE_INTERVAL = 30 * 1000 // 30 seconds
+
+async function updateUserActivity(token: string) {
+  // Only update if enough time has passed since last update
+  const now = Date.now()
+  if (now - lastActivityUpdate < ACTIVITY_UPDATE_INTERVAL) {
+    return
+  }
+
+  lastActivityUpdate = now
+
+  // Update activity in background (don't wait for response)
+  fetch('/api/user/activity', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  }).catch(() => {
+    // Ignore errors - activity update is not critical
+  })
+}
+
 export async function authenticatedFetch(
   url: string,
   options: RequestInit = {},
@@ -100,6 +126,9 @@ export async function authenticatedFetch(
   if (!token) {
     return null
   }
+
+  // Update user activity (non-blocking)
+  updateUserActivity(token)
 
   // Make request with token
   const response = await fetch(url, {
@@ -116,6 +145,9 @@ export async function authenticatedFetch(
   if (response.status === 401) {
     const newToken = await refreshAccessToken()
     if (newToken) {
+      // Update activity with new token
+      updateUserActivity(newToken)
+      
       // Retry with new token
       return fetch(url, {
         ...options,

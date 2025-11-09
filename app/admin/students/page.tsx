@@ -210,12 +210,12 @@ export default function StudentsPage() {
     console.log('[Admin Students] Filtered students updated:', filteredStudentsMemo.length)
   }, [filteredStudentsMemo])
 
-  // Auto-refresh online status every minute
+  // Auto-refresh online status every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       // Update refresh time to trigger re-render
       setRefreshTime(Date.now())
-    }, 60000) // Every 60 seconds
+    }, 30000) // Every 30 seconds (reduced from 60)
 
     return () => clearInterval(interval)
   }, [])
@@ -549,10 +549,10 @@ export default function StudentsPage() {
                         <td className="py-3 px-4 text-dark-200 break-words">{student.group_name || '-'}</td>
                         <td className="py-3 px-4">
                           {(() => {
-                            // Check if user is online (last login within last 15 minutes)
+                            // Check if user is online (last login within last 5 minutes)
                             // Use refreshTime to trigger re-calculation
                             const isOnline = student.last_login 
-                              ? (refreshTime - new Date(student.last_login).getTime()) < 15 * 60 * 1000
+                              ? (refreshTime - new Date(student.last_login).getTime()) < 5 * 60 * 1000
                               : false
                             
                             return (

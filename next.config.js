@@ -118,13 +118,21 @@ const withPWA = require('next-pwa')({
       },
     },
     {
+      urlPattern: /\/api\/auth\/(login|register|refresh)/i,
+      handler: 'NetworkOnly', // Never cache auth endpoints
+    },
+    {
+      urlPattern: /\/api\/admin\/.*/i,
+      handler: 'NetworkOnly', // Never cache admin endpoints
+    },
+    {
       urlPattern: /\/api\/.*/i,
       handler: 'NetworkFirst',
       options: {
         cacheName: 'api-cache',
         expiration: {
           maxEntries: 16,
-          maxAgeSeconds: 5 * 60, // 5 minutes
+          maxAgeSeconds: 1 * 60, // 1 minute (reduced from 5)
         },
         networkTimeoutSeconds: 10,
       },
