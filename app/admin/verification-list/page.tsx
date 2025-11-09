@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { authenticatedFetch, getValidAccessToken } from '@/lib/auth/tokenRefresh'
 
 interface Student {
   id: string
@@ -37,30 +38,36 @@ export default function VerificationListPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        // Check if token exists first
-        const cookies = document.cookie.split(';')
-        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-        const accessToken = accessTokenCookie?.split('=')[1]
-
-        if (!accessToken) {
+        // Get valid token (refresh if needed)
+        const accessToken = await getValidAccessToken(() => {
           setMessage({ type: 'error', text: 'No authentication token found. Please log in.' })
           setIsAdmin(false)
           setLoading(false)
           setTimeout(() => {
             router.push('/login?redirect=/admin/verification-list')
           }, 1500)
+        })
+
+        if (!accessToken) {
           return
         }
 
         // Use server-side verification for secure admin check
-        const response = await fetch('/api/admin/verify', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-          },
-        })
+        const response = await authenticatedFetch(
+          '/api/admin/verify',
+          { method: 'GET' },
+          () => {
+            setMessage({ type: 'error', text: 'Your session has expired. Please log in again.' })
+            setIsAdmin(false)
+            setTimeout(() => {
+              router.push('/login?redirect=/admin/verification-list')
+            }, 2000)
+          }
+        )
+
+        if (!response) {
+          return
+        }
 
         const data = await response.json()
 
@@ -136,23 +143,19 @@ export default function VerificationListPage() {
   const loadStudents = async () => {
     try {
       setMessage(null) // Clear previous messages
-      const cookies = document.cookie.split(';')
-      const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-      const accessToken = accessTokenCookie?.split('=')[1]
 
-      if (!accessToken) {
-        setMessage({ type: 'error', text: 'Authentication required. Please log in again.' })
+      const response = await authenticatedFetch(
+        '/api/admin/verification/list',
+        { method: 'GET' },
+        () => {
+          setMessage({ type: 'error', text: 'Authentication required. Please log in again.' })
+          router.push('/login?redirect=/admin/verification-list')
+        }
+      )
+
+      if (!response) {
         return
       }
-
-      const response = await fetch('/api/admin/verification/list', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-      })
 
       const data = await response.json()
 
@@ -192,22 +195,25 @@ export default function VerificationListPage() {
     setMessage(null)
 
     try {
-      const cookies = document.cookie.split(';')
-      const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-      const accessToken = accessTokenCookie?.split('=')[1]
-
-      const response = await fetch('/api/admin/verification/update', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      const response = await authenticatedFetch(
+        '/api/admin/verification/update',
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            id,
+            ...editData,
+          }),
         },
-        credentials: 'include',
-        body: JSON.stringify({
-          id,
-          ...editData,
-        }),
-      })
+        () => {
+          setMessage({ type: 'error', text: 'Authentication required. Please log in again.' })
+          router.push('/login?redirect=/admin/verification-list')
+        }
+      )
+
+      if (!response) {
+        setSaving(false)
+        return
+      }
 
       const data = await response.json()
 

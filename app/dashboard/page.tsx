@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, BookOpen, CheckSquare, Clock, MapPin, User, Loader2, LogOut } from 'lucide-react'
+import { authenticatedFetch, getValidAccessToken } from '@/lib/auth/tokenRefresh'
 
 interface UserData {
   id: string
@@ -31,57 +32,56 @@ export default function DashboardPage() {
   const [loadingMaterials, setLoadingMaterials] = useState(false)
 
   useEffect(() => {
-    // Check authentication
-    const accessToken = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('access_token='))
-      ?.split('=')[1]
+    // Check authentication with token refresh
+    const checkAuth = async () => {
+      const token = await getValidAccessToken(() => router.push('/login'))
+      if (!token) {
+        return
+      }
 
-    if (!accessToken) {
-      router.push('/login')
-      return
-    }
+      // Decode token to get user info (simple decode, not verification - for display only)
+      try {
+        const tokenPart = token?.split('.')?.[1]
+        if (!tokenPart) {
+          router.push('/login')
+          return
+        }
+        const payload = JSON.parse(atob(tokenPart))
+        const userRole = payload.role || 'student'
+        
+        // If user is admin, redirect to admin page
+        if (userRole === 'admin') {
+          router.push('/admin')
+          return
+        }
+        
+        setUser({
+          id: payload.userId,
+          username: payload.username,
+          email: payload.email || '',
+          fullName: payload.fullName || '',
+          sectionNumber: payload.sectionNumber || null,
+          groupName: payload.groupName || null,
+          role: userRole,
+        })
 
-    // Decode token to get user info (simple decode, not verification - for display only)
-    try {
-      const tokenPart = accessToken?.split('.')?.[1]
-      if (!tokenPart) {
+        // Load stats and initial data in parallel
+        await Promise.all([
+          loadStats(),
+          activeTab === 'schedule' ? loadSchedule() : Promise.resolve(),
+          activeTab === 'tasks' ? loadTasks() : Promise.resolve(),
+          activeTab === 'materials' ? loadMaterials() : Promise.resolve(),
+        ])
+      } catch (err) {
+        console.error('Error decoding token:', err)
         router.push('/login')
         return
+      } finally {
+        setLoading(false)
       }
-      const payload = JSON.parse(atob(tokenPart))
-      const userRole = payload.role || 'student'
-      
-      // If user is admin, redirect to admin page
-      if (userRole === 'admin') {
-        router.push('/admin')
-        return
-      }
-      
-      setUser({
-        id: payload.userId,
-        username: payload.username,
-        email: payload.email || '',
-        fullName: payload.fullName || '',
-        sectionNumber: payload.sectionNumber || null,
-        groupName: payload.groupName || null,
-        role: userRole,
-      })
-    } catch (err) {
-      console.error('Error decoding token:', err)
-      router.push('/login')
-      return
     }
 
-    // Load stats and initial data in parallel
-    Promise.all([
-      loadStats(),
-      activeTab === 'schedule' ? loadSchedule() : Promise.resolve(),
-      activeTab === 'tasks' ? loadTasks() : Promise.resolve(),
-      activeTab === 'materials' ? loadMaterials() : Promise.resolve(),
-    ]).finally(() => {
-      setLoading(false)
-    })
+    checkAuth()
   }, [router, activeTab])
 
   useEffect(() => {
@@ -95,22 +95,15 @@ export default function DashboardPage() {
     }
   }, [activeTab, schedule.length, tasks.length, materials.length])
 
-  // Memoize access token getter
-  const getAccessToken = useCallback(() => {
-    return document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('access_token='))
-      ?.split('=')[1] || ''
-  }, [])
-
   const loadStats = async () => {
     try {
-      const response = await fetch('/api/dashboard/stats', {
-        headers: {
-          'Authorization': `Bearer ${getAccessToken()}`,
-        },
-        credentials: 'include',
-      })
+      const response = await authenticatedFetch(
+        '/api/dashboard/stats',
+        { method: 'GET' },
+        () => router.push('/login')
+      )
+      
+      if (!response) return
       
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
@@ -133,12 +126,16 @@ export default function DashboardPage() {
   const loadSchedule = async () => {
     setLoadingSchedule(true)
     try {
-      const response = await fetch('/api/dashboard/schedule', {
-        headers: {
-          'Authorization': `Bearer ${getAccessToken()}`,
-        },
-        credentials: 'include',
-      })
+      const response = await authenticatedFetch(
+        '/api/dashboard/schedule',
+        { method: 'GET' },
+        () => router.push('/login')
+      )
+      
+      if (!response) {
+        setLoadingSchedule(false)
+        return
+      }
       
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
@@ -163,12 +160,16 @@ export default function DashboardPage() {
   const loadTasks = async () => {
     setLoadingTasks(true)
     try {
-      const response = await fetch('/api/dashboard/tasks', {
-        headers: {
-          'Authorization': `Bearer ${getAccessToken()}`,
-        },
-        credentials: 'include',
-      })
+      const response = await authenticatedFetch(
+        '/api/dashboard/tasks',
+        { method: 'GET' },
+        () => router.push('/login')
+      )
+      
+      if (!response) {
+        setLoadingTasks(false)
+        return
+      }
       
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
@@ -193,12 +194,16 @@ export default function DashboardPage() {
   const loadMaterials = async () => {
     setLoadingMaterials(true)
     try {
-      const response = await fetch('/api/dashboard/materials', {
-        headers: {
-          'Authorization': `Bearer ${getAccessToken()}`,
-        },
-        credentials: 'include',
-      })
+      const response = await authenticatedFetch(
+        '/api/dashboard/materials',
+        { method: 'GET' },
+        () => router.push('/login')
+      )
+      
+      if (!response) {
+        setLoadingMaterials(false)
+        return
+      }
       
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {

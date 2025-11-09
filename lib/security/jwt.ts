@@ -93,10 +93,13 @@ export function verifyToken(token: string): JWTPayload | null {
     const { nonce, type, iat, exp, ...payload } = decoded
 
     return payload as JWTPayload
-  } catch (error) {
-    // Don't log token details in production
+  } catch (error: any) {
+    // Log specific error for debugging
     if (process.env.NODE_ENV === 'development') {
-      console.error('Token verification failed:', error)
+      console.error('Token verification failed:', {
+        message: error?.message || 'Unknown error',
+        name: error?.name || 'Unknown',
+      })
     }
     return null
   }

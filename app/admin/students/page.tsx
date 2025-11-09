@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Users, Search, Download, Loader2, AlertCircle } from 'lucide-react'
+import { authenticatedFetch, getValidAccessToken } from '@/lib/auth/tokenRefresh'
 
 interface Student {
   id: string
@@ -41,15 +42,17 @@ export default function StudentsPage() {
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
 
-  const fetchStudents = async (accessToken: string) => {
+  const fetchStudents = async () => {
     try {
-      const response = await fetch('/api/admin/students', {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-      })
+      const response = await authenticatedFetch(
+        '/api/admin/students',
+        { method: 'GET' },
+        () => router.push('/login?redirect=/admin/students')
+      )
+
+      if (!response) {
+        return
+      }
 
       if (response.ok) {
         const data = await response.json()
@@ -62,34 +65,46 @@ export default function StudentsPage() {
           setFilteredStudents(data.students || [])
           setStatistics(data.statistics || null)
         }
+      } else {
+        // If still not ok after refresh, redirect to login
+        if (response.status === 401 || response.status === 403) {
+          router.push('/login?redirect=/admin/students')
+        }
       }
     } catch (err) {
       console.error('[Admin Students] Error fetching students:', err)
+      // On error, redirect to login
+      router.push('/login?redirect=/admin/students')
     }
   }
 
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const cookies = document.cookie.split(';')
-        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-        const accessToken = accessTokenCookie?.split('=')[1]
+        // Get valid token (refresh if needed)
+        const accessToken = await getValidAccessToken(() => {
+          router.push('/login?redirect=/admin/students')
+        })
 
         if (!accessToken) {
-          router.push('/login?redirect=/admin/students')
+          setIsAdmin(false)
+          setLoading(false)
           return
         }
 
         try {
           const payload = JSON.parse(atob(accessToken.split('.')[1] || ''))
+          
           if (payload.role !== 'admin') {
             setIsAdmin(false)
+            setLoading(false)
             return
           }
 
           setIsAdmin(true)
-          await fetchStudents(accessToken)
+          await fetchStudents()
         } catch (e) {
+          console.error('[Admin Students] Error parsing token:', e)
           setIsAdmin(false)
         }
       } catch (err) {

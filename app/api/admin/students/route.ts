@@ -36,6 +36,14 @@ export async function GET(request: NextRequest) {
 
     const payload = verifyToken(accessToken)
     if (!payload) {
+      // Log more details for debugging (only in development)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Admin Students API] Token verification failed:', {
+          hasToken: !!accessToken,
+          tokenLength: accessToken?.length || 0,
+          tokenPreview: accessToken ? `${accessToken.substring(0, 20)}...` : 'none',
+        })
+      }
       return NextResponse.json(
         { error: 'Invalid or expired token. Please log in again.' },
         { status: 401 }
