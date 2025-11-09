@@ -102,13 +102,24 @@ export default function DashboardPage() {
         headers: {
           'Authorization': `Bearer ${getAccessToken()}`,
         },
+        credentials: 'include',
       })
+      
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          router.push('/login')
+          return
+        }
+        throw new Error(`Failed to load stats: ${response.status}`)
+      }
+      
       const data = await response.json()
       if (data.success) {
         setStats(data.stats)
       }
     } catch (err) {
       console.error('Error loading stats:', err)
+      // Don't show error to user, just log it
     }
   }
 
@@ -119,13 +130,24 @@ export default function DashboardPage() {
         headers: {
           'Authorization': `Bearer ${getAccessToken()}`,
         },
+        credentials: 'include',
       })
+      
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          router.push('/login')
+          return
+        }
+        throw new Error(`Failed to load schedule: ${response.status}`)
+      }
+      
       const data = await response.json()
       if (data.success) {
         setSchedule(data.schedule || [])
       }
     } catch (err) {
       console.error('Error loading schedule:', err)
+      // Don't show error to user, just log it
     } finally {
       setLoadingSchedule(false)
     }
@@ -138,13 +160,24 @@ export default function DashboardPage() {
         headers: {
           'Authorization': `Bearer ${getAccessToken()}`,
         },
+        credentials: 'include',
       })
+      
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          router.push('/login')
+          return
+        }
+        throw new Error(`Failed to load tasks: ${response.status}`)
+      }
+      
       const data = await response.json()
       if (data.success) {
         setTasks(data.tasks || [])
       }
     } catch (err) {
       console.error('Error loading tasks:', err)
+      // Don't show error to user, just log it
     } finally {
       setLoadingTasks(false)
     }
@@ -157,13 +190,24 @@ export default function DashboardPage() {
         headers: {
           'Authorization': `Bearer ${getAccessToken()}`,
         },
+        credentials: 'include',
       })
+      
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          router.push('/login')
+          return
+        }
+        throw new Error(`Failed to load materials: ${response.status}`)
+      }
+      
       const data = await response.json()
       if (data.success) {
         setMaterials(data.materials || [])
       }
     } catch (err) {
       console.error('Error loading materials:', err)
+      // Don't show error to user, just log it
     } finally {
       setLoadingMaterials(false)
     }
