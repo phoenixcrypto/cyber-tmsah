@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { UserPlus, Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react'
@@ -29,9 +29,6 @@ export default function RegisterPage() {
     valid: boolean
     message: string
   }>({ checked: false, valid: false, message: '' })
-  const [emailVerified, setEmailVerified] = useState(false)
-  const [sendingCode, setSendingCode] = useState(false)
-
   // Remove automatic name checking - verification only happens when user clicks "Verify" button
 
   // Verify student data before registration
@@ -115,50 +112,6 @@ export default function RegisterPage() {
     }
   }
 
-  // Check if email is verified from URL params
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search)
-    const verified = searchParams.get('verified') === 'true'
-    const emailParam = searchParams.get('email')
-    
-    if (verified && emailParam && emailParam === formData.email.toLowerCase().trim()) {
-      setEmailVerified(true)
-    }
-  }, [formData.email])
-
-  // Send verification code
-  const handleSendVerificationCode = async () => {
-    if (!formData.email) {
-      setError('Please enter your email address first')
-      return
-    }
-
-    setSendingCode(true)
-    setError('')
-
-    try {
-      const response = await fetch('/api/auth/send-verification-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email.toLowerCase().trim(),
-        }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok && data.success) {
-        // Redirect to verification page
-        router.push(`/verify-code?email=${encodeURIComponent(formData.email.toLowerCase().trim())}`)
-      } else {
-        setError(data.error || 'Failed to send verification code. Please try again.')
-      }
-    } catch (err) {
-      setError('Failed to send verification code. Please try again.')
-    } finally {
-      setSendingCode(false)
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -173,52 +126,55 @@ export default function RegisterPage() {
 
     // Check if verified
     if (!verificationStatus.checked || !verificationStatus.valid) {
-      setError('Please verify your information first')
+      setError('Please verify your information first by clicking "Verify Information"')
       return
     }
 
-    // Check if email is verified
-    if (!emailVerified) {
-      setError('Please verify your email address first by clicking "Send Verification Code"')
+    // Validate all required fields
+    if (!formData.username || !formData.email || !formData.password) {
+      setError('Please fill in all required fields')
       return
     }
 
     setLoading(true)
 
     try {
-      const response = await fetch('/api/auth/register', {
+      // Step 1: Send verification code
+      const sendCodeResponse = await fetch('/api/auth/send-verification-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: formData.username.trim(),
           email: formData.email.toLowerCase().trim(),
-          password: formData.password,
-          fullName: formData.fullName.trim(),
-          sectionNumber: parseInt(formData.sectionNumber),
-          groupName: formData.groupName,
-          universityEmail: formData.universityEmail || undefined,
         }),
       })
 
-      const data = await response.json()
+      const sendCodeData = await sendCodeResponse.json()
 
-      if (response.ok && data.success) {
-        // Access token is now set in cookie by server-side
-        // No need to set it client-side anymore
-
-        setSuccess('Registration successful! Redirecting to dashboard...')
-        
-        // Redirect based on user role (though students register, not admins)
-        // Redirect to dashboard after 1 second
-        setTimeout(() => {
-          router.push('/dashboard')
-        }, 1000)
-      } else {
-        setError(data.error || 'Registration failed. Please try again.')
+      if (!sendCodeResponse.ok || !sendCodeData.success) {
+        setError(sendCodeData.error || 'Failed to send verification code. Please try again.')
+        setLoading(false)
+        return
       }
+
+      // Step 2: Store registration data in sessionStorage and redirect to verification page
+      const registrationData = {
+        username: formData.username.trim(),
+        email: formData.email.toLowerCase().trim(),
+        password: formData.password,
+        fullName: formData.fullName.trim(),
+        sectionNumber: parseInt(formData.sectionNumber),
+        groupName: formData.groupName,
+        universityEmail: formData.universityEmail || undefined,
+      }
+
+      // Store in sessionStorage temporarily
+      sessionStorage.setItem('pendingRegistration', JSON.stringify(registrationData))
+
+      // Redirect to verification page
+      router.push(`/verify-code?email=${encodeURIComponent(formData.email.toLowerCase().trim())}&from=register`)
     } catch (err) {
+      console.error('Error sending verification code:', err)
       setError('An error occurred. Please try again.')
-    } finally {
       setLoading(false)
     }
   }
@@ -362,47 +318,19 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-dark-300 mb-2">
                 Email *
               </label>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => {
-                    setFormData({ ...formData, email: e.target.value })
-                    setEmailVerified(false)
-                  }}
-                  className="flex-1 p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50"
-                  placeholder="your@email.com"
-                />
-                <button
-                  type="button"
-                  onClick={handleSendVerificationCode}
-                  disabled={sendingCode || !formData.email || emailVerified}
-                  className="px-4 py-3 bg-cyber-neon/20 border border-cyber-neon/50 rounded-lg text-cyber-neon hover:bg-cyber-neon/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold whitespace-nowrap"
-                >
-                  {emailVerified ? (
-                    <>
-                      <CheckCircle2 className="w-4 h-4 inline mr-1" />
-                      Verified
-                    </>
-                  ) : sendingCode ? (
-                    'Sending...'
-                  ) : (
-                    'Send Code'
-                  )}
-                </button>
-              </div>
-              {emailVerified && (
-                <p className="text-xs text-cyber-green mt-1 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  Email verified successfully
-                </p>
-              )}
-              {!emailVerified && formData.email && (
-                <p className="text-xs text-dark-400 mt-1">
-                  Click "Send Code" to receive a verification code
-                </p>
-              )}
+              <input
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => {
+                  setFormData({ ...formData, email: e.target.value })
+                }}
+                className="w-full p-3 bg-cyber-dark border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:ring-1 focus:ring-cyber-neon/50"
+                placeholder="your@email.com"
+              />
+              <p className="text-xs text-dark-400 mt-1">
+                A verification code will be sent to this email when you click "Create Account"
+              </p>
             </div>
             </div>
 
@@ -489,7 +417,7 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              disabled={loading || !verificationStatus.valid || !verificationStatus.checked || !formData.username || !formData.email || !formData.password || !emailVerified}
+              disabled={loading || !verificationStatus.valid || !verificationStatus.checked || !formData.username || !formData.email || !formData.password}
               className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (

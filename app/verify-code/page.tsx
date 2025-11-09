@@ -9,12 +9,14 @@ export default function VerifyCodePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get('email') || ''
+  const from = searchParams.get('from') || ''
   
   const [code, setCode] = useState(['', '', '', '', '', ''])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [resending, setResending] = useState(false)
+  const [creatingAccount, setCreatingAccount] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
@@ -98,7 +100,8 @@ export default function VerifyCodePage() {
     setError('')
 
     try {
-      const response = await fetch('/api/auth/send-verification-code', {
+      // Step 1: Verify the code
+      const verifyResponse = await fetch('/api/auth/send-verification-code', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -107,21 +110,75 @@ export default function VerifyCodePage() {
         }),
       })
 
-      const data = await response.json()
+      const verifyData = await verifyResponse.json()
 
-      if (response.ok && data.success) {
-        setSuccess(true)
-        // Redirect to registration page with verified flag
-        setTimeout(() => {
-          router.push(`/register?email=${encodeURIComponent(email)}&verified=true`)
-        }, 1500)
-      } else {
-        setError(data.error || 'Invalid verification code. Please try again.')
+      if (!verifyResponse.ok || !verifyData.success) {
+        setError(verifyData.error || 'Invalid verification code. Please try again.')
         // Clear code on error
         setCode(['', '', '', '', '', ''])
         inputRefs.current[0]?.focus()
+        setLoading(false)
+        return
+      }
+
+      // Step 2: If coming from registration, create account automatically
+      if (from === 'register') {
+        const pendingRegistration = sessionStorage.getItem('pendingRegistration')
+        
+        if (!pendingRegistration) {
+          setError('Registration data not found. Please return to registration page.')
+          setLoading(false)
+          return
+        }
+
+        setCreatingAccount(true)
+        setSuccess(true)
+
+        try {
+          const registrationData = JSON.parse(pendingRegistration)
+          
+          const registerResponse = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(registrationData),
+          })
+
+          const registerData = await registerResponse.json()
+
+          if (registerResponse.ok && registerData.success) {
+            // Clear pending registration
+            sessionStorage.removeItem('pendingRegistration')
+            
+            // Redirect to dashboard after successful registration
+            setTimeout(() => {
+              router.push('/dashboard')
+            }, 1500)
+          } else {
+            setError(registerData.error || 'Failed to create account. Please try again.')
+            setSuccess(false)
+            setCreatingAccount(false)
+            // Clear code on error
+            setCode(['', '', '', '', '', ''])
+            inputRefs.current[0]?.focus()
+          }
+        } catch (err) {
+          console.error('Registration error:', err)
+          setError('Failed to create account. Please try again.')
+          setSuccess(false)
+          setCreatingAccount(false)
+          // Clear code on error
+          setCode(['', '', '', '', '', ''])
+          inputRefs.current[0]?.focus()
+        }
+      } else {
+        // Not from registration, just verify and redirect
+        setSuccess(true)
+        setTimeout(() => {
+          router.push(`/register?email=${encodeURIComponent(email)}&verified=true`)
+        }, 1500)
       }
     } catch (err) {
+      console.error('Verification error:', err)
       setError('An error occurred. Please try again.')
       setCode(['', '', '', '', '', ''])
       inputRefs.current[0]?.focus()
@@ -202,8 +259,17 @@ export default function VerifyCodePage() {
           {success ? (
             <div className="text-center py-8">
               <CheckCircle2 className="w-16 h-16 text-cyber-green mx-auto mb-4" />
-              <h2 className="text-2xl font-semibold text-dark-100 mb-2">Code Verified!</h2>
-              <p className="text-dark-300">Redirecting to registration...</p>
+              <h2 className="text-2xl font-semibold text-dark-100 mb-2">
+                {creatingAccount ? 'Creating Your Account...' : 'Code Verified!'}
+              </h2>
+              <p className="text-dark-300">
+                {creatingAccount 
+                  ? 'Your account is being created. You will be redirected to your dashboard shortly...'
+                  : 'Redirecting to registration...'}
+              </p>
+              {creatingAccount && (
+                <Loader2 className="w-8 h-8 animate-spin text-cyber-neon mx-auto mt-4" />
+              )}
             </div>
           ) : (
             <>
