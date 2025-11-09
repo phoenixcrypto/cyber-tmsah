@@ -68,8 +68,19 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (adminError || !adminUser) {
+      // Log more details for debugging
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Admin Students API] Admin verification failed:', {
+          userId: payload.userId,
+          adminError: adminError?.message || 'No error',
+          adminUser: adminUser ? 'Found' : 'Not found',
+        })
+      }
       return NextResponse.json(
-        { error: 'Admin account not found or inactive' },
+        { 
+          error: 'Admin account not found or inactive',
+          code: 403,
+        },
         { status: 403 }
       )
     }

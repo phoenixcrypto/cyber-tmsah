@@ -81,6 +81,16 @@ export default function StudentsPage() {
       } else {
         // If still not ok after refresh, redirect to login
         if (response.status === 401 || response.status === 403) {
+          try {
+            const errorData = await response.json().catch(() => ({}))
+            console.error('[Admin Students] Access denied:', {
+              status: response.status,
+              error: errorData.error || 'Unknown error',
+              code: errorData.code,
+            })
+          } catch (e) {
+            console.error('[Admin Students] Failed to parse error response:', e)
+          }
           router.push('/login?redirect=/admin/students')
         } else {
           console.error('[Admin Students] API error:', response.status, response.statusText)
