@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
       console.warn('[Admin Students API] No students found with role="student"')
       
       // Check what roles exist
-      const { data: rolesCheck, error: rolesError } = await supabase
+      const { data: rolesCheck } = await supabase
         .from('users')
         .select('role')
       
