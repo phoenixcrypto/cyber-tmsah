@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Users, Search, Download, Loader2, AlertCircle, Trash2 } from 'lucide-react'
+import { Users, Search, Download, Loader2, AlertCircle, Trash2, RefreshCw } from 'lucide-react'
 import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
 import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
@@ -44,23 +44,54 @@ export default function StudentsPage() {
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
+  const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null)
   // Track deleted students to prevent them from reappearing
   const deletedStudentsRef = useRef<Set<string>>(new Set())
 
-  // Auto-refresh students data periodically to get updated last_login
+  // Auto-refresh students data periodically for real-time updates
   useEffect(() => {
     // Only set up interval after initial load
     if (loading) return
 
     const interval = setInterval(() => {
-      fetchStudents()
-    }, 60000) // Every 60 seconds, refetch students to get updated last_login
+      fetchStudents(false) // Silent refresh (no loading indicator)
+    }, 10000) // Every 10 seconds for real-time updates
 
     return () => clearInterval(interval)
   }, [loading])
 
-  const fetchStudents = async () => {
+  // Refresh when page becomes visible (user returns to tab)
+  useEffect(() => {
+    if (loading) return
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('[Admin Students] Page became visible, refreshing data...')
+        fetchStudents(false)
+      }
+    }
+
+    const handleFocus = () => {
+      console.log('[Admin Students] Page focused, refreshing data...')
+      fetchStudents(false)
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [loading])
+
+  const fetchStudents = async (showLoading = true) => {
     try {
+      if (showLoading) {
+        setRefreshing(true)
+      }
+      
       // Add cache busting to ensure we always get fresh data
       const cacheBuster = `?t=${Date.now()}`
       const response = await authenticatedFetch(
@@ -110,6 +141,7 @@ export default function StudentsPage() {
             setStudents(validStudents)
             setFilteredStudents(validStudents)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
+            setLastRefreshTime(new Date())
             console.log('[Admin Students] Set students:', validStudents.length, 'filtered from', studentsArray.length)
           } else if (data.students && Array.isArray(data.students)) {
             // Filter out any invalid students AND deleted students
@@ -121,6 +153,7 @@ export default function StudentsPage() {
             setStudents(validStudents)
             setFilteredStudents(validStudents)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
+            setLastRefreshTime(new Date())
             console.log('[Admin Students] Set students (fallback):', validStudents.length, 'filtered from', data.students.length)
           } else {
             console.warn('[Admin Students] No students in response')
@@ -537,11 +570,31 @@ export default function StudentsPage() {
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl font-orbitron font-bold text-dark-100 mb-2 flex items-center gap-3">
-            <Users className="w-8 h-8 text-cyber-neon" />
-            قائمة الطلاب المسجلين
-          </h1>
-          <p className="text-dark-300">عرض وإدارة جميع الطلاب المسجلين في النظام</p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-orbitron font-bold text-dark-100 mb-2 flex items-center gap-3">
+                <Users className="w-8 h-8 text-cyber-neon" />
+                قائمة الطلاب المسجلين
+              </h1>
+              <p className="text-dark-300">
+                عرض وإدارة جميع الطلاب المسجلين في النظام
+                {lastRefreshTime && (
+                  <span className="mr-2 text-xs text-dark-400">
+                    (آخر تحديث: {lastRefreshTime.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' })})
+                  </span>
+                )}
+              </p>
+            </div>
+            <button
+              onClick={handleManualRefresh}
+              disabled={refreshing || loading}
+              className="flex items-center gap-2 px-4 py-2 bg-cyber-neon/10 hover:bg-cyber-neon/20 text-cyber-neon border border-cyber-neon/30 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="تحديث البيانات"
+            >
+              <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">تحديث</span>
+            </button>
+          </div>
         </div>
 
         {/* Statistics Cards - Fixed height to prevent CLS */}
