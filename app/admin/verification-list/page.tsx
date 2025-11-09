@@ -287,8 +287,8 @@ export default function VerificationListPage() {
           </div>
         )}
 
-        {/* Filters */}
-        <div className="mb-6 enhanced-card p-6 animate-slide-up">
+        {/* Filters - Fixed height to prevent CLS */}
+        <div className="mb-6 enhanced-card p-6 animate-slide-up min-h-[140px]">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-dark-300 mb-2">Search</label>
@@ -348,10 +348,19 @@ export default function VerificationListPage() {
           </div>
         </div>
 
-        {/* Students Table */}
-        <div className="enhanced-card overflow-hidden animate-slide-up">
+        {/* Students Table - Fixed layout to prevent CLS */}
+        <div className="enhanced-card overflow-hidden animate-slide-up min-h-[600px]">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
+              <colgroup>
+                <col className="w-[12%]" />
+                <col className="w-[20%]" />
+                <col className="w-[8%]" />
+                <col className="w-[10%]" />
+                <col className="w-[20%]" />
+                <col className="w-[12%]" />
+                <col className="w-[18%]" />
+              </colgroup>
               <thead className="bg-cyber-dark/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">

@@ -80,9 +80,16 @@ export default function MaterialsPage() {
         const subjectsWithCounts = await Promise.all(
           subjectConfig.map(async (subject) => {
             try {
+              // Add timeout to prevent hanging requests
+              const controller = new AbortController()
+              const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+              
               const response = await fetch(`/api/articles/by-subject?subjectId=${subject.id}&status=published`, {
-                cache: 'no-store'
+                cache: 'no-store',
+                signal: controller.signal
               })
+              
+              clearTimeout(timeoutId)
               
               if (response.ok) {
                 const data = await response.json()
@@ -149,8 +156,13 @@ export default function MaterialsPage() {
                   lastUpdated: 'No articles yet'
                 }
               }
-            } catch (error) {
-              console.error(`Error loading articles for ${subject.id}:`, error)
+            } catch (error: any) {
+              // Handle timeout or network errors gracefully
+              if (error.name === 'AbortError') {
+                console.warn(`Request timeout for ${subject.id}`)
+              } else {
+                console.error(`Error loading articles for ${subject.id}:`, error)
+              }
               return {
                 ...subject,
                 articlesCount: 0,
@@ -197,35 +209,48 @@ export default function MaterialsPage() {
           </p>
         </div>
 
-        {/* Subjects Grid */}
+        {/* Subjects Grid - Fixed height to prevent CLS and improve FCP */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {subjects.map((subject, index) => {
-            const Icon = subject.icon
-            return (
-              <Link
-                key={subject.id}
-                href={`/materials/${subject.id}`}
-                className="group block"
-              >
-                <div className="enhanced-card p-6 h-full hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
-                     style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${subject.color} rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg`}>
-                      <Icon className="w-8 h-8 text-white" />
+          {loading ? (
+            // Skeleton loading to prevent layout shift
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="enhanced-card p-6 min-h-[240px] animate-pulse">
+                <div className="w-16 h-16 bg-cyber-dark/50 rounded-2xl mb-4"></div>
+                <div className="h-6 bg-cyber-dark/50 rounded mb-2"></div>
+                <div className="h-4 bg-cyber-dark/50 rounded mb-4"></div>
+                <div className="h-4 bg-cyber-dark/50 rounded w-2/3"></div>
+              </div>
+            ))
+          ) : (
+            subjects.map((subject, index) => {
+              const Icon = subject.icon
+              return (
+                <Link
+                  key={subject.id}
+                  href={`/materials/${subject.id}`}
+                  className="group block"
+                >
+                  <div className="enhanced-card p-6 h-full min-h-[240px] flex flex-col justify-between hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
+                       style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`w-16 h-16 bg-gradient-to-br ${subject.color} rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg`}>
+                        <Icon className="w-8 h-8 text-white" />
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-cyber-neon group-hover:translate-x-1 transition-transform" />
                     </div>
-                    <ArrowRight className="w-5 h-5 text-cyber-neon group-hover:translate-x-1 transition-transform" />
-                  </div>
-                  
-                  <h3 className="text-xl font-semibold text-dark-100 mb-2 group-hover:text-cyber-neon transition-colors">
-                    {subject.title}
-                  </h3>
-                  
-                  <p className="text-dark-300 mb-4 group-hover:text-dark-200 transition-colors">
-                    {subject.description}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-sm text-dark-400">
-                    <span>
+                    
+                    <div>
+                      <h3 className="text-xl font-semibold text-dark-100 mb-2 group-hover:text-cyber-neon transition-colors min-h-[56px]">
+                        {subject.title}
+                      </h3>
+                      
+                      <p className="text-dark-300 mb-4 group-hover:text-dark-200 transition-colors">
+                        {subject.description}
+                      </p>
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-sm text-dark-400">
+                      <span>
                       {loading ? (
                         <span className="text-cyber-neon">Loading...</span>
                       ) : (
