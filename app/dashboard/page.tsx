@@ -280,39 +280,45 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Fixed height to prevent CLS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-slide-up">
-          <div className="enhanced-card p-6">
+          <div className="enhanced-card p-6 min-h-[180px] flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-lg flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-dark-100" />
               </div>
               <span className="text-2xl font-bold text-cyber-neon">Today</span>
             </div>
-            <h3 className="text-lg font-semibold text-dark-100 mb-2">Schedule</h3>
-            <p className="text-dark-300 text-sm">View your classes and schedule</p>
+            <div>
+              <h3 className="text-lg font-semibold text-dark-100 mb-2">Schedule</h3>
+              <p className="text-dark-300 text-sm">View your classes and schedule</p>
+            </div>
           </div>
 
-          <div className="enhanced-card p-6">
+          <div className="enhanced-card p-6 min-h-[180px] flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-lg flex items-center justify-center">
                 <CheckSquare className="w-6 h-6 text-dark-100" />
               </div>
               <span className="text-2xl font-bold text-cyber-violet">{stats.tasks}</span>
             </div>
-            <h3 className="text-lg font-semibold text-dark-100 mb-2">Tasks</h3>
-            <p className="text-dark-300 text-sm">Pending assignments</p>
+            <div>
+              <h3 className="text-lg font-semibold text-dark-100 mb-2">Tasks</h3>
+              <p className="text-dark-300 text-sm">Pending assignments</p>
+            </div>
           </div>
 
-          <div className="enhanced-card p-6">
+          <div className="enhanced-card p-6 min-h-[180px] flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-gradient-to-r from-cyber-green to-cyber-neon rounded-lg flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-dark-100" />
               </div>
               <span className="text-2xl font-bold text-cyber-green">{stats.materials}</span>
             </div>
-            <h3 className="text-lg font-semibold text-dark-100 mb-2">Materials</h3>
-            <p className="text-dark-300 text-sm">Available resources</p>
+            <div>
+              <h3 className="text-lg font-semibold text-dark-100 mb-2">Materials</h3>
+              <p className="text-dark-300 text-sm">Available resources</p>
+            </div>
           </div>
         </div>
 
