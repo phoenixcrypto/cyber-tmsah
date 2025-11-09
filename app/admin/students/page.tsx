@@ -196,7 +196,14 @@ export default function StudentsPage() {
       // Don't redirect on network errors, just show empty state
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
+  }
+
+  // Manual refresh handler
+  const handleManualRefresh = () => {
+    console.log('[Admin Students] Manual refresh triggered')
+    fetchStudents(true)
   }
 
   useEffect(() => {
