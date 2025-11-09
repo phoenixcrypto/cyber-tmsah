@@ -67,20 +67,28 @@ export async function GET(request: NextRequest) {
 
     const tasks = tasksResult.data || []
     const submissions = submissionsResult.data || []
-    const submittedTaskIds = new Set(submissions.map(s => s.task_id))
+    const submittedTaskIds = new Set((submissions || []).map((s: any) => s.task_id))
 
     // Filter tasks by section/group efficiently
-    const userSection = user.section_number
-    const userGroup = user.group_name
+    const userSection = user?.section_number
+    const userGroup = user?.group_name
     
-    const tasksWithStatus = tasks
-      .filter(task => {
+    const tasksWithStatus = (tasks || [])
+      .filter((task: any) => {
+        if (!task) return false
         if (task.is_general) return true
-        const matchesSection = !task.target_sections || task.target_sections.length === 0 || task.target_sections.includes(userSection)
-        const matchesGroup = !task.target_groups || task.target_groups.length === 0 || task.target_groups.includes(userGroup)
+        
+        // Handle target_sections - can be array or null
+        const targetSections = Array.isArray(task.target_sections) ? task.target_sections : []
+        const matchesSection = targetSections.length === 0 || (userSection && targetSections.includes(userSection))
+        
+        // Handle target_groups - can be array or null
+        const targetGroups = Array.isArray(task.target_groups) ? task.target_groups : []
+        const matchesGroup = targetGroups.length === 0 || (userGroup && targetGroups.includes(userGroup))
+        
         return matchesSection && matchesGroup
       })
-      .map(task => ({
+      .map((task: any) => ({
         ...task,
         submitted: submittedTaskIds.has(task.id),
       }))
@@ -89,10 +97,18 @@ export async function GET(request: NextRequest) {
       success: true,
       tasks: tasksWithStatus,
     })
-  } catch (error) {
-    console.error('Tasks error:', error)
+  } catch (error: any) {
+    console.error('[Dashboard Tasks] Error:', error)
+    console.error('[Dashboard Tasks] Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
+      },
       { status: 500 }
     )
   }

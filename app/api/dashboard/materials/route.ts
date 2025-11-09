@@ -67,20 +67,28 @@ export async function GET(request: NextRequest) {
 
     const articles = articlesResult.data || []
     const views = viewsResult.data || []
-    const viewedArticleIds = new Set(views.map(v => v.article_id))
+    const viewedArticleIds = new Set((views || []).map((v: any) => v.article_id))
 
     // Filter articles by section/group efficiently
-    const userSection = user.section_number
-    const userGroup = user.group_name
+    const userSection = user?.section_number
+    const userGroup = user?.group_name
     
-    const articlesWithStatus = articles
-      .filter(article => {
+    const articlesWithStatus = (articles || [])
+      .filter((article: any) => {
+        if (!article) return false
         if (article.is_general) return true
-        const matchesSection = !article.target_sections || article.target_sections.length === 0 || article.target_sections.includes(userSection)
-        const matchesGroup = !article.target_groups || article.target_groups.length === 0 || article.target_groups.includes(userGroup)
+        
+        // Handle target_sections - can be array or null
+        const targetSections = Array.isArray(article.target_sections) ? article.target_sections : []
+        const matchesSection = targetSections.length === 0 || (userSection && targetSections.includes(userSection))
+        
+        // Handle target_groups - can be array or null
+        const targetGroups = Array.isArray(article.target_groups) ? article.target_groups : []
+        const matchesGroup = targetGroups.length === 0 || (userGroup && targetGroups.includes(userGroup))
+        
         return matchesSection && matchesGroup
       })
-      .map(article => ({
+      .map((article: any) => ({
         ...article,
         viewed: viewedArticleIds.has(article.id),
       }))
@@ -89,10 +97,18 @@ export async function GET(request: NextRequest) {
       success: true,
       materials: articlesWithStatus,
     })
-  } catch (error) {
-    console.error('Materials error:', error)
+  } catch (error: any) {
+    console.error('[Dashboard Materials] Error:', error)
+    console.error('[Dashboard Materials] Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: process.env.NODE_ENV === 'development' ? error?.message : undefined
+      },
       { status: 500 }
     )
   }
