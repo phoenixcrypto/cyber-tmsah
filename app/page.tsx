@@ -1,9 +1,10 @@
 'use client'
 
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Sparkles, Zap, Shield, LogIn, UserPlus } from 'lucide-react'
 
-export default function HomePage() {
+function HomeContent() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -86,5 +87,17 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-cyber-dark flex items-center justify-center">
+        <div className="text-cyber-neon animate-pulse">Loading...</div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   )
 }

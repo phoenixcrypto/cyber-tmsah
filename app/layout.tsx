@@ -14,6 +14,9 @@ const inter = Inter({
   display: 'swap',
   fallback: ['system-ui', 'arial'],
   preload: true,
+  adjustFontFallback: true,
+  // Reduce font loading time
+  weight: ['400', '500', '600', '700'],
 })
 
 const orbitron = Orbitron({ 
@@ -22,6 +25,9 @@ const orbitron = Orbitron({
   display: 'swap',
   fallback: ['monospace'],
   preload: true,
+  adjustFontFallback: true,
+  // Only load weights we actually use
+  weight: ['400', '700', '900'],
 })
 
 export const metadata: Metadata = {

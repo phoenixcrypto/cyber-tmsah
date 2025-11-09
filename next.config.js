@@ -137,6 +137,8 @@ const nextConfig = {
   // Enable experimental features
   experimental: {
     optimizePackageImports: ['lucide-react'],
+    // Enable partial prerendering for better performance
+    ppr: false, // Can enable later if needed
   },
   
   // Image optimization

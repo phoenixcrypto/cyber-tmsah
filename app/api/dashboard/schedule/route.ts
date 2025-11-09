@@ -4,6 +4,7 @@ import { verifyToken } from '@/lib/security/jwt'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+export const revalidate = 300 // Cache for 5 minutes (schedule doesn't change often)
 
 export async function GET(request: NextRequest) {
   try {

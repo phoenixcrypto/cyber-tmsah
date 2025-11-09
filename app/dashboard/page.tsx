@@ -73,21 +73,27 @@ export default function DashboardPage() {
       return
     }
 
-    // Load stats and initial data
-    loadStats()
-    if (activeTab === 'schedule') loadSchedule()
-    if (activeTab === 'tasks') loadTasks()
-    if (activeTab === 'materials') loadMaterials()
-
-    setLoading(false)
-  }, [router])
+    // Load stats and initial data in parallel
+    Promise.all([
+      loadStats(),
+      activeTab === 'schedule' ? loadSchedule() : Promise.resolve(),
+      activeTab === 'tasks' ? loadTasks() : Promise.resolve(),
+      activeTab === 'materials' ? loadMaterials() : Promise.resolve(),
+    ]).finally(() => {
+      setLoading(false)
+    })
+  }, [router, activeTab])
 
   useEffect(() => {
-    // Load data when tab changes
-    if (activeTab === 'schedule' && !schedule.length) loadSchedule()
-    if (activeTab === 'tasks' && !tasks.length) loadTasks()
-    if (activeTab === 'materials' && !materials.length) loadMaterials()
-  }, [activeTab])
+    // Load data when tab changes (only if not already loaded)
+    if (activeTab === 'schedule' && schedule.length === 0) {
+      loadSchedule()
+    } else if (activeTab === 'tasks' && tasks.length === 0) {
+      loadTasks()
+    } else if (activeTab === 'materials' && materials.length === 0) {
+      loadMaterials()
+    }
+  }, [activeTab, schedule.length, tasks.length, materials.length])
 
   const getAccessToken = () => {
     return document.cookie
