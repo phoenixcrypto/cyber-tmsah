@@ -133,25 +133,18 @@ export async function GET(request: NextRequest) {
       return acc
     }, 0) || 0
 
-    // Try to fetch students with role filter
-    const { data: studentsWithRole, error: errorWithRole } = await supabase
-      .from('users')
-      .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
-      .eq('role', 'student')
-      .order('created_at', { ascending: false })
+    // Check if there are registered students in verification_list
+    const hasRegisteredStudents = (registeredStudents?.length || 0) > 0
 
-    // Check if query returned results or if we need fallback
-    const queryReturnedResults = studentsWithRole && studentsWithRole.length > 0
-    const needsFallback = errorWithRole || (!queryReturnedResults && expectedStudentCount > 0)
+    // Always use fallback if we know there are students but query might fail
+    // OR if there are registered students in verification_list
+    const shouldUseFallback = hasRegisteredStudents || expectedStudentCount > 0
 
-    if (needsFallback) {
-      if (errorWithRole) {
-        console.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
-      } else {
-        console.warn('[Admin Students API] Query returned 0 results but expected', expectedStudentCount, 'students. Using fallback.')
-      }
+    if (shouldUseFallback) {
+      console.log('[Admin Students API] Using fallback mechanism (direct fetch + manual filter)')
       
-      // Try without role filter as fallback
+      // Fetch all users without role filter, then filter manually
+      // This is more reliable than .eq('role', 'student') which seems to have issues
       const { data: allUsersData, error: allUsersError } = await supabase
         .from('users')
         .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
@@ -170,12 +163,30 @@ export async function GET(request: NextRequest) {
           totalUsers: allUsersData?.length || 0,
           studentsCount: studentsRaw?.length || 0,
           expectedCount: expectedStudentCount,
+          hasRegisteredStudents,
           allRoles: [...new Set((allUsersData || []).map((u: any) => u.role))],
+          sampleStudents: studentsRaw?.slice(0, 3).map((s: any) => ({
+            id: s.id,
+            username: s.username,
+            role: s.role,
+          })) || [],
         })
       }
     } else {
-      studentsRaw = studentsWithRole
-      console.log('[Admin Students API] Query worked correctly, returned', studentsRaw?.length || 0, 'students')
+      // Try to fetch students with role filter (only if no registered students)
+      const { data: studentsWithRole, error: errorWithRole } = await supabase
+        .from('users')
+        .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
+        .eq('role', 'student')
+        .order('created_at', { ascending: false })
+
+      if (errorWithRole) {
+        console.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
+        studentsError = errorWithRole
+      } else {
+        studentsRaw = studentsWithRole
+        console.log('[Admin Students API] Query worked correctly, returned', studentsRaw?.length || 0, 'students')
+      }
     }
 
     // Log for debugging
