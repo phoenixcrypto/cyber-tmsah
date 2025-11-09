@@ -77,9 +77,18 @@ export default function StudentsPage() {
 
   const fetchStudents = async (accessToken: string) => {
     try {
+      console.log('[Admin Students] Fetching students with token:', {
+        hasToken: !!accessToken,
+        tokenLength: accessToken?.length || 0,
+        tokenPreview: accessToken ? `${accessToken.substring(0, 20)}...` : 'none',
+      })
+      
       const response = await fetch('/api/admin/students', {
         credentials: 'include',
-        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
       })
 
       if (response.ok) {
