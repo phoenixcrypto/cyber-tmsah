@@ -217,21 +217,36 @@ export async function GET(request: NextRequest) {
     }
 
     // Map the results to match expected format (already in correct format from select)
-    const students = (studentsRaw || []).map((s: any) => ({
-      id: s.id,
-      username: s.username,
-      email: s.email,
-      password_hash: s.password_hash || '',
-      full_name: s.full_name,
-      section_number: s.section_number,
-      group_name: s.group_name,
-      university_email: s.university_email,
-      role: s.role,
-      is_active: s.is_active,
-      created_at: s.created_at,
-      updated_at: s.updated_at,
-      last_login: s.last_login,
-    }))
+    // Also validate that each student actually exists and has valid data
+    const students = (studentsRaw || [])
+      .filter((s: any) => {
+        // Ensure student has required fields and is actually a student
+        if (!s || !s.id || !s.username || !s.email) {
+          logger.debug('[Admin Students API] Filtering out invalid student:', s?.id || 'no-id')
+          return false
+        }
+        const role = (s.role || '').toString().toLowerCase().trim()
+        if (role !== 'student') {
+          logger.debug('[Admin Students API] Filtering out non-student:', { id: s.id, role: s.role })
+          return false
+        }
+        return true
+      })
+      .map((s: any) => ({
+        id: s.id,
+        username: s.username,
+        email: s.email,
+        password_hash: s.password_hash || '',
+        full_name: s.full_name,
+        section_number: s.section_number,
+        group_name: s.group_name,
+        university_email: s.university_email,
+        role: s.role,
+        is_active: s.is_active,
+        created_at: s.created_at,
+        updated_at: s.updated_at,
+        last_login: s.last_login,
+      }))
 
     // Calculate statistics efficiently in single pass
     const bySection: Record<number, number> = {}

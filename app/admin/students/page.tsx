@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Users, Search, Download, Loader2, AlertCircle, Trash2 } from 'lucide-react'
 import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
@@ -44,6 +44,8 @@ export default function StudentsPage() {
   const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  // Track deleted students to prevent them from reappearing
+  const deletedStudentsRef = useRef<Set<string>>(new Set())
 
   // Auto-refresh students data periodically to get updated last_login
   useEffect(() => {
@@ -89,19 +91,27 @@ export default function StudentsPage() {
           
           if (data.success !== false) {
             const studentsArray = Array.isArray(data.students) ? data.students : []
-            // Filter out any invalid students (safety check)
-            const validStudents = studentsArray.filter((s: any) => s && s.id && s.role === 'student')
+            // Filter out any invalid students AND deleted students
+            const validStudents = studentsArray.filter((s: any) => {
+              if (!s || !s.id || s.role !== 'student') return false
+              // Exclude students that were deleted (prevent reappearing)
+              return !deletedStudentsRef.current.has(s.id)
+            })
             setStudents(validStudents)
             setFilteredStudents(validStudents)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
-            console.log('[Admin Students] Set students:', validStudents.length)
+            console.log('[Admin Students] Set students:', validStudents.length, 'filtered from', studentsArray.length)
           } else if (data.students && Array.isArray(data.students)) {
-            // Filter out any invalid students (safety check)
-            const validStudents = data.students.filter((s: any) => s && s.id && s.role === 'student')
+            // Filter out any invalid students AND deleted students
+            const validStudents = data.students.filter((s: any) => {
+              if (!s || !s.id || s.role !== 'student') return false
+              // Exclude students that were deleted (prevent reappearing)
+              return !deletedStudentsRef.current.has(s.id)
+            })
             setStudents(validStudents)
             setFilteredStudents(validStudents)
             setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
-            console.log('[Admin Students] Set students (fallback):', validStudents.length)
+            console.log('[Admin Students] Set students (fallback):', validStudents.length, 'filtered from', data.students.length)
           } else {
             console.warn('[Admin Students] No students in response')
             setStudents([])
@@ -203,6 +213,9 @@ export default function StudentsPage() {
         
         // If student not found (404), remove from list anyway (already deleted)
         if (response.status === 404) {
+          // Mark student as deleted to prevent reappearing
+          deletedStudentsRef.current.add(studentId)
+          
           // Student already deleted, remove from UI
           setStudents(prev => prev.filter(s => s.id !== studentId))
           setFilteredStudents(prev => prev.filter(s => s.id !== studentId))
@@ -261,12 +274,8 @@ export default function StudentsPage() {
           
           alert('الطالب محذوف بالفعل من النظام. تم إزالته من القائمة.')
           
-          // Refresh to get updated data
-          setTimeout(() => {
-            fetchStudents().catch(err => {
-              console.error('[Admin Students] Error refreshing after delete:', err)
-            })
-          }, 300)
+          // DO NOT refresh - the student is already deleted and we've updated the UI
+          // Refreshing would cause the student to reappear if API still returns it
           
           return
         }
@@ -279,6 +288,9 @@ export default function StudentsPage() {
       const data = await response.json()
       
       if (data.success) {
+        // Mark student as deleted to prevent reappearing
+        deletedStudentsRef.current.add(studentId)
+        
         // Get student info before removing from state
         const studentToDelete = students.find(s => s.id === studentId)
         
@@ -339,13 +351,21 @@ export default function StudentsPage() {
         
         alert('تم حذف حساب الطالب بنجاح وإعادة تعيين حالة التسجيل.')
         
-        // Refresh to get updated data from server (ensures consistency)
+        // DO NOT refresh immediately - the UI is already updated
+        // Only refresh after a longer delay (5 seconds) to allow server to sync
+        // This prevents the deleted student from reappearing due to race conditions
         setTimeout(() => {
+          // Clear the deleted flag after 5 seconds (server should be synced by then)
+          setTimeout(() => {
+            deletedStudentsRef.current.delete(studentId)
+          }, 5000)
+          
+          // Refresh to get updated statistics from server (but deleted student won't reappear)
           fetchStudents().catch(err => {
             console.error('[Admin Students] Error refreshing after delete:', err)
             // Don't show error to user, UI is already updated optimistically
           })
-        }, 300)
+        }, 2000) // Wait 2 seconds before refreshing
       } else {
         alert(`فشل حذف الحساب: ${data.error || 'خطأ غير معروف'}`)
       }
