@@ -198,7 +198,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({
+    const responseData = {
       success: true,
       students: students || [],
       statistics: {
@@ -208,7 +208,14 @@ export async function GET(request: NextRequest) {
         bySection: sectionCounts,
         byGroup: groupCounts,
       },
+    }
+
+    console.log('[Admin Students API] Returning response:', {
+      studentsCount: responseData.students.length,
+      statistics: responseData.statistics,
     })
+
+    return NextResponse.json(responseData)
   } catch (error) {
     console.error('Students fetch error:', error)
     return NextResponse.json(
