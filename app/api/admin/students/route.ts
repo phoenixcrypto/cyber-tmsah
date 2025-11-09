@@ -102,122 +102,14 @@ export async function GET(request: NextRequest) {
 
     // Get all students (role = 'student') with ALL data including password_hash
     // Using service role key bypasses RLS, so we can fetch all students
-    // First, try a simple query to see if it works
-    const { data: studentsSimple, error: studentsSimpleError } = await supabase
+    // Use simple query (select *) as it's more reliable
+    const { data: studentsRaw, error: studentsError } = await supabase
       .from('users')
       .select('*')
       .eq('role', 'student')
-    
-    console.log('[Admin Students API] Simple query result:', studentsSimple?.length || 0, 'Error:', studentsSimpleError)
-    
-    // Now try with specific columns
-    const { data: students, error: studentsError } = await supabase
-      .from('users')
-      .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
-      .eq('role', 'student')
       .order('created_at', { ascending: false })
     
-    // If the simple query worked but the detailed one didn't, use the simple one
-    if (studentsSimple && studentsSimple.length > 0 && (!students || students.length === 0)) {
-      console.warn('[Admin Students API] Simple query worked but detailed query failed. Using simple query results.')
-      // Map the simple results to match expected format
-      const mappedStudents = studentsSimple.map((s: any) => ({
-        id: s.id,
-        username: s.username,
-        email: s.email,
-        password_hash: s.password_hash || '',
-        full_name: s.full_name,
-        section_number: s.section_number,
-        group_name: s.group_name,
-        university_email: s.university_email,
-        role: s.role,
-        is_active: s.is_active,
-        created_at: s.created_at,
-        updated_at: s.updated_at,
-        last_login: s.last_login,
-      }))
-      
-      // Use mapped students for statistics
-      const totalCount = mappedStudents.length
-      const activeCount = mappedStudents.filter(s => s.is_active).length
-      const inactiveCount = totalCount - activeCount
-      
-      const sectionCounts: Record<number, number> = {}
-      mappedStudents.forEach(s => {
-        if (s.section_number) {
-          sectionCounts[s.section_number] = (sectionCounts[s.section_number] || 0) + 1
-        }
-      })
-      
-      const groupCounts: Record<string, number> = {}
-      mappedStudents.forEach(s => {
-        if (s.group_name) {
-          groupCounts[s.group_name] = (groupCounts[s.group_name] || 0) + 1
-        }
-      })
-      
-      return NextResponse.json({
-        success: true,
-        students: mappedStudents,
-        statistics: {
-          total: totalCount,
-          active: activeCount,
-          inactive: inactiveCount,
-          bySection: sectionCounts,
-          byGroup: groupCounts,
-        },
-      })
-    }
-
-    // If simple query worked, use it
-    if (studentsSimple && studentsSimple.length > 0) {
-      console.log('[Admin Students API] Using simple query results:', studentsSimple.length)
-      const mappedStudents = studentsSimple.map((s: any) => ({
-        id: s.id,
-        username: s.username,
-        email: s.email,
-        password_hash: s.password_hash || '',
-        full_name: s.full_name,
-        section_number: s.section_number,
-        group_name: s.group_name,
-        university_email: s.university_email,
-        role: s.role,
-        is_active: s.is_active,
-        created_at: s.created_at,
-        updated_at: s.updated_at,
-        last_login: s.last_login,
-      }))
-      
-      const totalCount = mappedStudents.length
-      const activeCount = mappedStudents.filter(s => s.is_active).length
-      const inactiveCount = totalCount - activeCount
-      
-      const sectionCounts: Record<number, number> = {}
-      mappedStudents.forEach(s => {
-        if (s.section_number) {
-          sectionCounts[s.section_number] = (sectionCounts[s.section_number] || 0) + 1
-        }
-      })
-      
-      const groupCounts: Record<string, number> = {}
-      mappedStudents.forEach(s => {
-        if (s.group_name) {
-          groupCounts[s.group_name] = (groupCounts[s.group_name] || 0) + 1
-        }
-      })
-      
-      return NextResponse.json({
-        success: true,
-        students: mappedStudents,
-        statistics: {
-          total: totalCount,
-          active: activeCount,
-          inactive: inactiveCount,
-          bySection: sectionCounts,
-          byGroup: groupCounts,
-        },
-      })
-    }
+    console.log('[Admin Students API] Query result:', studentsRaw?.length || 0, 'Error:', studentsError)
 
     if (studentsError) {
       console.error('[Admin Students API] Error fetching students:', studentsError)
@@ -231,8 +123,25 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.log('[Admin Students API] Fetched students:', students?.length || 0)
-    console.log('[Admin Students API] Sample student:', students?.[0])
+    // Map the results to match expected format
+    const students = (studentsRaw || []).map((s: any) => ({
+      id: s.id,
+      username: s.username,
+      email: s.email,
+      password_hash: s.password_hash || '',
+      full_name: s.full_name,
+      section_number: s.section_number,
+      group_name: s.group_name,
+      university_email: s.university_email,
+      role: s.role,
+      is_active: s.is_active,
+      created_at: s.created_at,
+      updated_at: s.updated_at,
+      last_login: s.last_login,
+    }))
+
+    console.log('[Admin Students API] Fetched students:', students.length)
+    console.log('[Admin Students API] Sample student:', students[0])
     
     // Debug: Check if students array is empty
     if (!students || students.length === 0) {
