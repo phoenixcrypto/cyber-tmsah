@@ -51,30 +51,51 @@ export default function StudentsPage() {
       )
 
       if (!response) {
+        setLoading(false)
         return
       }
 
       if (response.ok) {
-        const data = await response.json()
-        if (data.success !== false) {
-          setStudents(data.students || [])
-          setFilteredStudents(data.students || [])
-          setStatistics(data.statistics || null)
-        } else if (data.students) {
-          setStudents(data.students || [])
-          setFilteredStudents(data.students || [])
-          setStatistics(data.statistics || null)
+        try {
+          const data = await response.json()
+          if (data.success !== false) {
+            setStudents(Array.isArray(data.students) ? data.students : [])
+            setFilteredStudents(Array.isArray(data.students) ? data.students : [])
+            setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
+          } else if (data.students && Array.isArray(data.students)) {
+            setStudents(data.students)
+            setFilteredStudents(data.students)
+            setStatistics(data.statistics && typeof data.statistics === 'object' ? data.statistics : null)
+          } else {
+            setStudents([])
+            setFilteredStudents([])
+            setStatistics(null)
+          }
+        } catch (parseError) {
+          console.error('[Admin Students] Error parsing response:', parseError)
+          setStudents([])
+          setFilteredStudents([])
+          setStatistics(null)
         }
       } else {
         // If still not ok after refresh, redirect to login
         if (response.status === 401 || response.status === 403) {
           router.push('/login?redirect=/admin/students')
+        } else {
+          console.error('[Admin Students] API error:', response.status, response.statusText)
+          setStudents([])
+          setFilteredStudents([])
+          setStatistics(null)
         }
       }
     } catch (err) {
       console.error('[Admin Students] Error fetching students:', err)
-      // On error, redirect to login
-      router.push('/login?redirect=/admin/students')
+      setStudents([])
+      setFilteredStudents([])
+      setStatistics(null)
+      // Don't redirect on network errors, just show empty state
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -93,9 +114,17 @@ export default function StudentsPage() {
         }
 
         try {
-          const payload = JSON.parse(atob(accessToken.split('.')[1] || ''))
+          const tokenParts = accessToken.split('.')
+          if (tokenParts.length < 2 || !tokenParts[1]) {
+            console.error('[Admin Students] Invalid token format')
+            setIsAdmin(false)
+            setLoading(false)
+            return
+          }
+
+          const payload = JSON.parse(atob(tokenParts[1]))
           
-          if (payload.role !== 'admin') {
+          if (!payload || payload.role !== 'admin') {
             setIsAdmin(false)
             setLoading(false)
             return
@@ -103,13 +132,15 @@ export default function StudentsPage() {
 
           setIsAdmin(true)
           await fetchStudents()
+          // fetchStudents handles setLoading(false) in its finally block
         } catch (e) {
           console.error('[Admin Students] Error parsing token:', e)
           setIsAdmin(false)
+          setLoading(false)
         }
       } catch (err) {
+        console.error('[Admin Students] Error in checkAdmin:', err)
         setIsAdmin(false)
-      } finally {
         setLoading(false)
       }
     }
@@ -119,22 +150,29 @@ export default function StudentsPage() {
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
-    let filtered = students
+    if (!Array.isArray(students) || students.length === 0) {
+      return []
+    }
+
+    let filtered = [...students]
 
     // Search filter
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase()
+    if (searchTerm && searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim()
       filtered = filtered.filter(
         (s) =>
-          s.full_name.toLowerCase().includes(term) ||
-          s.username.toLowerCase().includes(term) ||
-          s.email.toLowerCase().includes(term)
+          (s.full_name && s.full_name.toLowerCase().includes(term)) ||
+          (s.username && s.username.toLowerCase().includes(term)) ||
+          (s.email && s.email.toLowerCase().includes(term))
       )
     }
 
     // Section filter
     if (sectionFilter !== 'all') {
-      filtered = filtered.filter((s) => s.section_number === parseInt(sectionFilter))
+      const sectionNum = parseInt(sectionFilter, 10)
+      if (!isNaN(sectionNum)) {
+        filtered = filtered.filter((s) => s.section_number === sectionNum)
+      }
     }
 
     // Group filter
@@ -144,7 +182,7 @@ export default function StudentsPage() {
 
     // Active/Inactive filter
     if (!showInactive) {
-      filtered = filtered.filter((s) => s.is_active)
+      filtered = filtered.filter((s) => s.is_active === true)
     }
 
     return filtered
@@ -155,31 +193,48 @@ export default function StudentsPage() {
   }, [filteredStudentsMemo])
 
   const exportToCSV = () => {
-    const headers = ['Full Name', 'Username', 'Email', 'Password Hash', 'Section', 'Group', 'University Email', 'Status', 'Registered', 'Last Login', 'Updated At']
-    const rows = filteredStudents.map((s) => [
-      s.full_name,
-      s.username,
-      s.email,
-      s.password_hash,
-      s.section_number,
-      s.group_name,
-      s.university_email || '',
-      s.is_active ? 'Active' : 'Inactive',
-      new Date(s.created_at).toLocaleDateString('ar-EG'),
-      s.last_login ? new Date(s.last_login).toLocaleDateString('ar-EG') : 'Never',
-      new Date(s.updated_at).toLocaleDateString('ar-EG'),
-    ])
+    try {
+      if (!Array.isArray(filteredStudents) || filteredStudents.length === 0) {
+        console.warn('[Admin Students] No students to export')
+        return
+      }
 
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
-    ].join('\n')
+      const headers = ['Full Name', 'Username', 'Email', 'Password Hash', 'Section', 'Group', 'University Email', 'Status', 'Registered', 'Last Login', 'Updated At']
+      const rows = filteredStudents.map((s) => {
+        if (!s || typeof s !== 'object') {
+          return ['', '', '', '', '', '', '', '', '', '', '']
+        }
+        return [
+          s.full_name || '',
+          s.username || '',
+          s.email || '',
+          s.password_hash || '',
+          s.section_number || '',
+          s.group_name || '',
+          s.university_email || '',
+          s.is_active ? 'Active' : 'Inactive',
+          s.created_at ? new Date(s.created_at).toLocaleDateString('ar-EG') : '',
+          s.last_login ? new Date(s.last_login).toLocaleDateString('ar-EG') : 'Never',
+          s.updated_at ? new Date(s.updated_at).toLocaleDateString('ar-EG') : '',
+        ]
+      })
 
-    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = `students_${new Date().toISOString().split('T')[0]}.csv`
-    link.click()
+      const csvContent = [
+        headers.join(','),
+        ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
+      ].join('\n')
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = `students_${new Date().toISOString().split('T')[0]}.csv`
+      link.click()
+      
+      // Clean up
+      setTimeout(() => URL.revokeObjectURL(link.href), 100)
+    } catch (err) {
+      console.error('[Admin Students] Error exporting CSV:', err)
+    }
   }
 
   if (loading || isAdmin === null) {
@@ -213,19 +268,33 @@ export default function StudentsPage() {
 
   // Memoize stats calculation
   const stats = useMemo(() => {
+    if (!Array.isArray(students)) {
+      return {
+        total: 0,
+        active: 0,
+        inactive: 0,
+        bySection: Array.from({ length: 15 }, (_, i) => ({
+          section: i + 1,
+          count: 0,
+        })),
+      }
+    }
+
     let active = 0
     let inactive = 0
     const bySection: Record<number, number> = {}
     
     // Single pass for all stats
     for (const s of students) {
-      if (s.is_active) {
-        active++
-      } else {
-        inactive++
-      }
-      if (s.section_number) {
-        bySection[s.section_number] = (bySection[s.section_number] || 0) + 1
+      if (s && typeof s === 'object') {
+        if (s.is_active === true) {
+          active++
+        } else {
+          inactive++
+        }
+        if (s.section_number && typeof s.section_number === 'number') {
+          bySection[s.section_number] = (bySection[s.section_number] || 0) + 1
+        }
       }
     }
     
@@ -279,7 +348,7 @@ export default function StudentsPage() {
                     key={section} 
                     className="text-center p-3 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors min-h-[80px] flex flex-col justify-center"
                   >
-                    <div className="text-2xl font-bold text-cyber-neon mb-1">{statistics.bySection[section] || 0}</div>
+                    <div className="text-2xl font-bold text-cyber-neon mb-1">{(statistics?.bySection && statistics.bySection[section]) || 0}</div>
                     <div className="text-xs text-dark-300">قسم {section}</div>
                   </div>
                 ))}
@@ -466,46 +535,51 @@ export default function StudentsPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredStudents.map((student) => (
-                    <tr
-                      key={student.id}
-                      className="border-b border-cyber-neon/10 hover:bg-cyber-dark/50 transition-colors"
-                    >
-                      <td className="py-3 px-4 text-dark-100 font-medium">{student.full_name}</td>
-                      <td className="py-3 px-4 text-dark-200">{student.username}</td>
-                      <td className="py-3 px-4 text-dark-200">{student.email}</td>
-                      <td className="py-3 px-4 text-dark-200">{student.university_email || '-'}</td>
-                      {showPasswordHash && (
-                        <td className="py-3 px-4 text-dark-400 text-xs font-mono break-all max-w-xs">
-                          {student.password_hash}
+                  filteredStudents.map((student) => {
+                    if (!student || typeof student !== 'object' || !student.id) {
+                      return null
+                    }
+                    return (
+                      <tr
+                        key={student.id}
+                        className="border-b border-cyber-neon/10 hover:bg-cyber-dark/50 transition-colors"
+                      >
+                        <td className="py-3 px-4 text-dark-100 font-medium">{student.full_name || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200">{student.username || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200">{student.email || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200">{student.university_email || '-'}</td>
+                        {showPasswordHash && (
+                          <td className="py-3 px-4 text-dark-400 text-xs font-mono break-all max-w-xs">
+                            {student.password_hash || '-'}
+                          </td>
+                        )}
+                        <td className="py-3 px-4 text-dark-200 text-center">{student.section_number || '-'}</td>
+                        <td className="py-3 px-4 text-dark-200">{student.group_name || '-'}</td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`px-2 py-1 rounded text-xs font-semibold ${
+                              student.is_active === true
+                                ? 'bg-green-500/20 text-green-400'
+                                : 'bg-red-500/20 text-red-400'
+                            }`}
+                          >
+                            {student.is_active === true ? 'نشط' : 'غير نشط'}
+                          </span>
                         </td>
-                      )}
-                      <td className="py-3 px-4 text-dark-200 text-center">{student.section_number}</td>
-                      <td className="py-3 px-4 text-dark-200">{student.group_name}</td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`px-2 py-1 rounded text-xs font-semibold ${
-                            student.is_active
-                              ? 'bg-green-500/20 text-green-400'
-                              : 'bg-red-500/20 text-red-400'
-                          }`}
-                        >
-                          {student.is_active ? 'نشط' : 'غير نشط'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-dark-300 text-sm">
-                        {new Date(student.created_at).toLocaleDateString('ar-EG')}
-                      </td>
-                      <td className="py-3 px-4 text-dark-300 text-sm">
-                        {new Date(student.updated_at).toLocaleDateString('ar-EG')}
-                      </td>
-                      <td className="py-3 px-4 text-dark-300 text-sm">
-                        {student.last_login
-                          ? new Date(student.last_login).toLocaleDateString('ar-EG')
-                          : 'لم يسجل دخول'}
-                      </td>
-                    </tr>
-                  ))
+                        <td className="py-3 px-4 text-dark-300 text-sm">
+                          {student.created_at ? new Date(student.created_at).toLocaleDateString('ar-EG') : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-dark-300 text-sm">
+                          {student.updated_at ? new Date(student.updated_at).toLocaleDateString('ar-EG') : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-dark-300 text-sm">
+                          {student.last_login
+                            ? new Date(student.last_login).toLocaleDateString('ar-EG')
+                            : 'لم يسجل دخول'}
+                        </td>
+                      </tr>
+                    )
+                  }).filter(Boolean)
                 )}
               </tbody>
             </table>
