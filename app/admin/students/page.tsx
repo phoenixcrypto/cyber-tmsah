@@ -138,11 +138,14 @@ export default function StudentsPage() {
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
-    if (!Array.isArray(students) || students.length === 0) {
+    // Ensure students is always an array
+    const studentsArray = Array.isArray(students) ? students : []
+    
+    if (studentsArray.length === 0) {
       return []
     }
 
-    let filtered = [...students]
+    let filtered = [...studentsArray]
 
     // Search filter
     if (searchTerm && searchTerm.trim()) {

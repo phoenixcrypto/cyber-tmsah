@@ -3,7 +3,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2 } from 'lucide-react'
-import { authenticatedFetch, getValidAccessToken } from '@/lib/auth/tokenRefresh'
+import { authenticatedFetch } from '@/lib/auth/tokenRefresh'
+import { verifyAdminAccess } from '@/lib/auth/client-admin'
 
 interface Student {
   id: string
@@ -38,53 +39,17 @@ export default function VerificationListPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        // Get valid token (refresh if needed)
-        const accessToken = await getValidAccessToken(() => {
-          setMessage({ type: 'error', text: 'No authentication token found. Please log in.' })
-          setIsAdmin(false)
-          setLoading(false)
-          setTimeout(() => {
-            router.push('/login?redirect=/admin/verification-list')
-          }, 1500)
-        })
-
-        if (!accessToken) {
-          return
-        }
-
-        // Use server-side verification for secure admin check
-        const response = await authenticatedFetch(
-          '/api/admin/verify',
-          { method: 'GET' },
-          () => {
-            setMessage({ type: 'error', text: 'Your session has expired. Please log in again.' })
-            setIsAdmin(false)
-            setTimeout(() => {
-              router.push('/login?redirect=/admin/verification-list')
-            }, 2000)
-          }
-        )
-
-        if (!response) {
-          return
-        }
-
-        const data = await response.json()
-
-        if (response.ok && data.isAdmin === true) {
+        // Verify admin access using API
+        const result = await verifyAdminAccess()
+        
+        if (result.isAdmin) {
           setIsAdmin(true)
           setMessage(null) // Clear any previous errors
           // Load students after admin verification
           await loadStudents()
         } else {
           // More specific error messages
-          let errorMessage = data.error || 'Admin access required. Please log in as administrator.'
-          
-          if (response.status === 401) {
-            errorMessage = 'Your session has expired. Please log in again.'
-          } else if (response.status === 403) {
-            errorMessage = data.error || 'You do not have admin privileges. Please log in as administrator.'
-          }
+          let errorMessage = result.error || 'Admin access required. Please log in as administrator.'
           
           setMessage({ type: 'error', text: errorMessage })
           setIsAdmin(false)
@@ -110,19 +75,24 @@ export default function VerificationListPage() {
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
-    let filtered = [...students]
+    // Ensure students is always an array
+    const studentsArray = Array.isArray(students) ? students : []
+    let filtered = [...studentsArray]
 
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase()
+    if (searchTerm && searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim()
       filtered = filtered.filter(s =>
-        s.full_name.toLowerCase().includes(term) ||
-        s.student_id?.toLowerCase().includes(term) ||
-        s.email?.toLowerCase().includes(term)
+        (s.full_name && s.full_name.toLowerCase().includes(term)) ||
+        (s.student_id && s.student_id.toLowerCase().includes(term)) ||
+        (s.email && s.email.toLowerCase().includes(term))
       )
     }
 
     if (filterSection) {
-      filtered = filtered.filter(s => s.section_number === parseInt(filterSection))
+      const sectionNum = parseInt(filterSection, 10)
+      if (!isNaN(sectionNum)) {
+        filtered = filtered.filter(s => s.section_number === sectionNum)
+      }
     }
 
     if (filterGroup) {
@@ -537,18 +507,24 @@ export default function VerificationListPage() {
               </span>
               <div className="flex items-center gap-4">
                 <span>
-                  Registered: {useMemo(() => {
+                  Registered: {(() => {
+                    const studentsArray = Array.isArray(students) ? students : []
                     let count = 0
-                    for (const s of students) if (s.is_registered) count++
+                    for (const s of studentsArray) {
+                      if (s && s.is_registered) count++
+                    }
                     return count
-                  }, [students])}
+                  })()}
                 </span>
                 <span>
-                  Not Registered: {useMemo(() => {
+                  Not Registered: {(() => {
+                    const studentsArray = Array.isArray(students) ? students : []
                     let count = 0
-                    for (const s of students) if (!s.is_registered) count++
+                    for (const s of studentsArray) {
+                      if (s && !s.is_registered) count++
+                    }
                     return count
-                  }, [students])}
+                  })()}
                 </span>
               </div>
             </div>
