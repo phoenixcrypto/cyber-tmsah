@@ -131,17 +131,6 @@ export async function GET(request: NextRequest) {
     // Create a map for quick lookup
     const usersMap = new Map(usersData.map((u: any) => [u.id, u]))
 
-    if (verificationError) {
-      logger.error('[Admin Students API] Error fetching from verification_list:', verificationError)
-      return NextResponse.json(
-        { 
-          error: 'Failed to fetch students',
-          details: verificationError.message || 'Unknown error'
-        },
-        { status: 500 }
-      )
-    }
-
     logger.debug('[Admin Students API] Fetched registered students:', {
       count: registeredStudents?.length || 0,
       usersCount: usersData.length,
