@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, BookOpen, CheckSquare, Clock, MapPin, User, Loader2, LogOut } from 'lucide-react'
 
@@ -95,12 +95,13 @@ export default function DashboardPage() {
     }
   }, [activeTab, schedule.length, tasks.length, materials.length])
 
-  const getAccessToken = () => {
+  // Memoize access token getter
+  const getAccessToken = useCallback(() => {
     return document.cookie
       .split('; ')
       .find((row) => row.startsWith('access_token='))
       ?.split('=')[1] || ''
-  }
+  }, [])
 
   const loadStats = async () => {
     try {

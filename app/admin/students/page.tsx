@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Users, Search, Download, Loader2, AlertCircle } from 'lucide-react'
 
@@ -77,12 +77,6 @@ export default function StudentsPage() {
 
   const fetchStudents = async (accessToken: string) => {
     try {
-      console.log('[Admin Students] Fetching students with token:', {
-        hasToken: !!accessToken,
-        tokenLength: accessToken?.length || 0,
-        tokenPreview: accessToken ? `${accessToken.substring(0, 20)}...` : 'none',
-      })
-      
       const response = await fetch('/api/admin/students', {
         credentials: 'include',
         headers: {
@@ -93,37 +87,23 @@ export default function StudentsPage() {
 
       if (response.ok) {
         const data = await response.json()
-        console.log('[Admin Students] Response status:', response.status)
-        console.log('[Admin Students] Response data:', data)
-        console.log('[Admin Students] Fetched students:', data.students?.length || 0)
-        console.log('[Admin Students] Statistics:', data.statistics)
-        console.log('[Admin Students] Sample student:', data.students?.[0])
-        
         if (data.success !== false) {
-          // Accept response even if success field is not explicitly true
           setStudents(data.students || [])
           setFilteredStudents(data.students || [])
           setStatistics(data.statistics || null)
-        } else {
-          console.error('[Admin Students] API returned success=false:', data.error)
-          // Still try to set data if students array exists
-          if (data.students) {
-            setStudents(data.students || [])
-            setFilteredStudents(data.students || [])
-            setStatistics(data.statistics || null)
-          }
+        } else if (data.students) {
+          setStudents(data.students || [])
+          setFilteredStudents(data.students || [])
+          setStatistics(data.statistics || null)
         }
-      } else {
-        const errorData = await response.json().catch(() => ({}))
-        console.error('[Admin Students] Failed to fetch:', response.status, errorData)
-        console.error('[Admin Students] Response text:', await response.text().catch(() => 'Could not read response'))
       }
     } catch (err) {
       console.error('[Admin Students] Error fetching students:', err)
     }
   }
 
-  useEffect(() => {
+  // Memoize filtered students to avoid unnecessary recalculations
+  const filteredStudentsMemo = useMemo(() => {
     let filtered = students
 
     // Search filter
@@ -152,10 +132,12 @@ export default function StudentsPage() {
       filtered = filtered.filter((s) => s.is_active)
     }
 
-    console.log('[Admin Students] Filtered students:', filtered.length, 'from', students.length)
-    console.log('[Admin Students] Filters:', { searchTerm, sectionFilter, groupFilter, showInactive })
-    setFilteredStudents(filtered)
-  }, [searchTerm, sectionFilter, groupFilter, showInactive, students])
+    return filtered
+  }, [students, searchTerm, sectionFilter, groupFilter, showInactive])
+
+  useEffect(() => {
+    setFilteredStudents(filteredStudentsMemo)
+  }, [filteredStudentsMemo])
 
   const exportToCSV = () => {
     const headers = ['Full Name', 'Username', 'Email', 'Password Hash', 'Section', 'Group', 'University Email', 'Status', 'Registered', 'Last Login', 'Updated At']
@@ -214,15 +196,34 @@ export default function StudentsPage() {
     )
   }
 
-  const stats = {
-    total: students.length,
-    active: students.filter((s) => s.is_active).length,
-    inactive: students.filter((s) => !s.is_active).length,
-    bySection: Array.from({ length: 15 }, (_, i) => ({
-      section: i + 1,
-      count: students.filter((s) => s.section_number === i + 1).length,
-    })),
-  }
+  // Memoize stats calculation
+  const stats = useMemo(() => {
+    let active = 0
+    let inactive = 0
+    const bySection: Record<number, number> = {}
+    
+    // Single pass for all stats
+    for (const s of students) {
+      if (s.is_active) {
+        active++
+      } else {
+        inactive++
+      }
+      if (s.section_number) {
+        bySection[s.section_number] = (bySection[s.section_number] || 0) + 1
+      }
+    }
+    
+    return {
+      total: students.length,
+      active,
+      inactive,
+      bySection: Array.from({ length: 15 }, (_, i) => ({
+        section: i + 1,
+        count: bySection[i + 1] || 0,
+      })),
+    }
+  }, [students])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">

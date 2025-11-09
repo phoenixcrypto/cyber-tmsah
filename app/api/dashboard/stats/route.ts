@@ -31,36 +31,42 @@ export async function GET(request: NextRequest) {
 
     const supabase = createAdminClient()
 
-    // Get user info
-    const { data: user } = await supabase
-      .from('users')
-      .select('section_number, group_name')
-      .eq('id', payload.userId)
-      .single()
+    // Get user info and tasks/articles in parallel for better performance
+    const [userResult, tasksResult, articlesResult] = await Promise.all([
+      supabase
+        .from('users')
+        .select('section_number, group_name')
+        .eq('id', payload.userId)
+        .single(),
+      supabase
+        .from('tasks')
+        .select('id, is_general, target_sections, target_groups')
+        .not('published_at', 'is', null),
+      supabase
+        .from('articles')
+        .select('id, is_general, target_sections, target_groups')
+        .not('published_at', 'is', null),
+    ])
 
-    // Get all published tasks
-    const { data: tasks } = await supabase
-      .from('tasks')
-      .select('id, is_general, target_sections, target_groups')
-      .not('published_at', 'is', null)
+    const user = userResult.data
+    const tasks = tasksResult.data || []
+    const articles = articlesResult.data || []
 
-    const filteredTasks = (tasks || []).filter(task => {
+    // Filter tasks and articles efficiently
+    const userSection = user?.section_number
+    const userGroup = user?.group_name
+
+    const filteredTasks = tasks.filter(task => {
       if (task.is_general) return true
-      const matchesSection = !task.target_sections || task.target_sections.length === 0 || task.target_sections.includes(user?.section_number)
-      const matchesGroup = !task.target_groups || task.target_groups.length === 0 || task.target_groups.includes(user?.group_name)
+      const matchesSection = !task.target_sections || task.target_sections.length === 0 || task.target_sections.includes(userSection)
+      const matchesGroup = !task.target_groups || task.target_groups.length === 0 || task.target_groups.includes(userGroup)
       return matchesSection && matchesGroup
     })
 
-    // Get all published materials
-    const { data: articles } = await supabase
-      .from('articles')
-      .select('id, is_general, target_sections, target_groups')
-      .not('published_at', 'is', null)
-
-    const filteredArticles = (articles || []).filter(article => {
+    const filteredArticles = articles.filter(article => {
       if (article.is_general) return true
-      const matchesSection = !article.target_sections || article.target_sections.length === 0 || article.target_sections.includes(user?.section_number)
-      const matchesGroup = !article.target_groups || article.target_groups.length === 0 || article.target_groups.includes(user?.group_name)
+      const matchesSection = !article.target_sections || article.target_sections.length === 0 || article.target_sections.includes(userSection)
+      const matchesGroup = !article.target_groups || article.target_groups.length === 0 || article.target_groups.includes(userGroup)
       return matchesSection && matchesGroup
     })
 

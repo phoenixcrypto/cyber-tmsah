@@ -70,10 +70,10 @@ export async function GET(request: NextRequest) {
     const isRegistered = searchParams.get('is_registered')
     const search = searchParams.get('search')
 
-    // Build query
+    // Build query - select only needed columns for better performance
     let query = supabase
       .from('verification_list')
-      .select('*')
+      .select('id, full_name, section_number, group_name, student_id, email, is_registered, registered_at, created_at, updated_at')
       .order('created_at', { ascending: false })
 
     // Apply filters

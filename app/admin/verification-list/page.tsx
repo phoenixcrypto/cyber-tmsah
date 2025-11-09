@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Search, Edit2, Save, X, AlertCircle, CheckCircle2 } from 'lucide-react'
 
@@ -101,15 +101,16 @@ export default function VerificationListPage() {
     checkAdmin()
   }, [router])
 
-  useEffect(() => {
-    // Apply filters
+  // Memoize filtered students to avoid unnecessary recalculations
+  const filteredStudentsMemo = useMemo(() => {
     let filtered = [...students]
 
     if (searchTerm) {
+      const term = searchTerm.toLowerCase()
       filtered = filtered.filter(s =>
-        s.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.student_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.email?.toLowerCase().includes(searchTerm.toLowerCase())
+        s.full_name.toLowerCase().includes(term) ||
+        s.student_id?.toLowerCase().includes(term) ||
+        s.email?.toLowerCase().includes(term)
       )
     }
 
@@ -125,8 +126,12 @@ export default function VerificationListPage() {
       filtered = filtered.filter(s => s.is_registered === (filterRegistered === 'true'))
     }
 
-    setFilteredStudents(filtered)
+    return filtered
   }, [students, searchTerm, filterSection, filterGroup, filterRegistered])
+
+  useEffect(() => {
+    setFilteredStudents(filteredStudentsMemo)
+  }, [filteredStudentsMemo])
 
   const loadStudents = async () => {
     try {
@@ -526,10 +531,18 @@ export default function VerificationListPage() {
               </span>
               <div className="flex items-center gap-4">
                 <span>
-                  Registered: {students.filter(s => s.is_registered).length}
+                  Registered: {useMemo(() => {
+                    let count = 0
+                    for (const s of students) if (s.is_registered) count++
+                    return count
+                  }, [students])}
                 </span>
                 <span>
-                  Not Registered: {students.filter(s => !s.is_registered).length}
+                  Not Registered: {useMemo(() => {
+                    let count = 0
+                    for (const s of students) if (!s.is_registered) count++
+                    return count
+                  }, [students])}
                 </span>
               </div>
             </div>

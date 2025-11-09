@@ -31,63 +31,59 @@ export async function GET(request: NextRequest) {
 
     const supabase = createAdminClient()
 
-    // Get user info
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('section_number, group_name')
-      .eq('id', payload.userId)
-      .single()
+    // Get user info, articles, and views in parallel
+    const [userResult, articlesResult, viewsResult] = await Promise.all([
+      supabase
+        .from('users')
+        .select('section_number, group_name')
+        .eq('id', payload.userId)
+        .single(),
+      supabase
+        .from('articles')
+        .select('id, title, content, subject_id, is_general, target_sections, target_groups, published_at, created_at, updated_at, author_id, view_count')
+        .not('published_at', 'is', null)
+        .order('published_at', { ascending: false }),
+      supabase
+        .from('article_views')
+        .select('article_id')
+        .eq('user_id', payload.userId),
+    ])
 
-    if (userError || !user) {
+    const user = userResult.data
+    if (userResult.error || !user) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       )
     }
 
-    // Get all published articles/materials
-    const { data: articles, error: articlesError } = await supabase
-      .from('articles')
-      .select('*')
-      .not('published_at', 'is', null)
-      .order('published_at', { ascending: false })
-
-    if (articlesError) {
-      console.error('Articles error:', articlesError)
+    if (articlesResult.error) {
+      console.error('Articles error:', articlesResult.error)
       return NextResponse.json(
         { error: 'Failed to fetch materials' },
         { status: 500 }
       )
     }
 
-    // Filter articles by section/group
-    const filteredArticles = (articles || []).filter(article => {
-      if (article.is_general) return true
-      
-      const matchesSection = !article.target_sections || 
-        article.target_sections.length === 0 ||
-        article.target_sections.includes(user.section_number)
-      
-      const matchesGroup = !article.target_groups || 
-        article.target_groups.length === 0 ||
-        article.target_groups.includes(user.group_name)
-      
-      return matchesSection && matchesGroup
-    })
+    const articles = articlesResult.data || []
+    const views = viewsResult.data || []
+    const viewedArticleIds = new Set(views.map(v => v.article_id))
 
-    // Get view counts
-    const { data: views } = await supabase
-      .from('article_views')
-      .select('article_id')
-      .eq('user_id', payload.userId)
-
-    const viewedArticleIds = new Set((views || []).map(v => v.article_id))
-
-    // Add viewed status to articles
-    const articlesWithStatus = filteredArticles.map(article => ({
-      ...article,
-      viewed: viewedArticleIds.has(article.id),
-    }))
+    // Filter articles by section/group efficiently
+    const userSection = user.section_number
+    const userGroup = user.group_name
+    
+    const articlesWithStatus = articles
+      .filter(article => {
+        if (article.is_general) return true
+        const matchesSection = !article.target_sections || article.target_sections.length === 0 || article.target_sections.includes(userSection)
+        const matchesGroup = !article.target_groups || article.target_groups.length === 0 || article.target_groups.includes(userGroup)
+        return matchesSection && matchesGroup
+      })
+      .map(article => ({
+        ...article,
+        viewed: viewedArticleIds.has(article.id),
+      }))
 
     return NextResponse.json({
       success: true,

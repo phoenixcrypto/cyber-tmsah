@@ -34,13 +34,14 @@ export function middleware(request: NextRequest) {
       
       if (accessToken) {
         try {
-          // Decode JWT to get user role (no signature verification needed for role check)
+          // Quick decode JWT to get user role (no signature verification needed for role check)
           const parts = accessToken.split('.')
           if (parts.length === 3 && parts[1]) {
-            // Base64URL decode
+            // Base64URL decode (optimized)
             const base64Url = parts[1]
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-            const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
+            const padLength = (4 - (base64.length % 4)) % 4
+            const padded = padLength > 0 ? base64 + '='.repeat(padLength) : base64
             
             // Decode base64 to string (Edge Runtime compatible)
             const jsonPayload = atob(padded)
@@ -73,13 +74,14 @@ export function middleware(request: NextRequest) {
     
     if (accessToken) {
       try {
-        // Decode JWT to get user role (no signature verification needed for role check)
+        // Quick decode JWT to get user role (optimized)
         const parts = accessToken.split('.')
         if (parts.length === 3 && parts[1]) {
-          // Base64URL decode
+          // Base64URL decode (optimized)
           const base64Url = parts[1]
           const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-          const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
+          const padLength = (4 - (base64.length % 4)) % 4
+          const padded = padLength > 0 ? base64 + '='.repeat(padLength) : base64
           
           // Decode base64 to string (Edge Runtime compatible)
           const jsonPayload = atob(padded)
@@ -92,7 +94,6 @@ export function middleware(request: NextRequest) {
         }
       } catch (error) {
         // If token is invalid, let the request proceed (user will see login page)
-        // Silently fail - user will see login page
       }
     }
   }

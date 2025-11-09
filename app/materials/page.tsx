@@ -76,20 +76,17 @@ export default function MaterialsPage() {
       try {
         setLoading(true)
         
-        // Fetch articles count for all subjects
+        // Fetch articles count for all subjects with timeout
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second total timeout
+        
         const subjectsWithCounts = await Promise.all(
           subjectConfig.map(async (subject) => {
             try {
-              // Add timeout to prevent hanging requests
-              const controller = new AbortController()
-              const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
-              
               const response = await fetch(`/api/articles/by-subject?subjectId=${subject.id}&status=published`, {
                 cache: 'no-store',
                 signal: controller.signal
               })
-              
-              clearTimeout(timeoutId)
               
               if (response.ok) {
                 const data = await response.json()
@@ -172,6 +169,7 @@ export default function MaterialsPage() {
           })
         )
         
+        clearTimeout(timeoutId)
         setSubjects(subjectsWithCounts)
       } catch (error) {
         console.error('Error loading articles count:', error)
