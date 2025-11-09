@@ -256,24 +256,15 @@ export default function StudentsPage() {
 
   // Memoize stats calculation
   const stats = useMemo(() => {
-    if (!Array.isArray(students)) {
-      return {
-        total: 0,
-        active: 0,
-        inactive: 0,
-        bySection: Array.from({ length: 15 }, (_, i) => ({
-          section: i + 1,
-          count: 0,
-        })),
-      }
-    }
-
+    // Ensure students is always an array
+    const studentsArray = Array.isArray(students) ? students : []
+    
     let active = 0
     let inactive = 0
     const bySection: Record<number, number> = {}
     
     // Single pass for all stats
-    for (const s of students) {
+    for (const s of studentsArray) {
       if (s && typeof s === 'object') {
         if (s.is_active === true) {
           active++
@@ -287,7 +278,7 @@ export default function StudentsPage() {
     }
     
     return {
-      total: students.length,
+      total: studentsArray.length,
       active,
       inactive,
       bySection: Array.from({ length: 15 }, (_, i) => ({
