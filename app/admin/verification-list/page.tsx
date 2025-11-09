@@ -75,35 +75,48 @@ export default function VerificationListPage() {
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
-    // Ensure students is always an array
-    const studentsArray = Array.isArray(students) ? students : []
-    let filtered = [...studentsArray]
-
-    if (searchTerm && searchTerm.trim()) {
-      const term = searchTerm.toLowerCase().trim()
-      filtered = filtered.filter(s =>
-        (s.full_name && s.full_name.toLowerCase().includes(term)) ||
-        (s.student_id && s.student_id.toLowerCase().includes(term)) ||
-        (s.email && s.email.toLowerCase().includes(term))
-      )
-    }
-
-    if (filterSection) {
-      const sectionNum = parseInt(filterSection, 10)
-      if (!isNaN(sectionNum)) {
-        filtered = filtered.filter(s => s.section_number === sectionNum)
+    try {
+      // Ensure students is always an array
+      const studentsArray = Array.isArray(students) ? students : []
+      if (studentsArray.length === 0) {
+        return []
       }
-    }
+      
+      let filtered = [...studentsArray]
 
-    if (filterGroup) {
-      filtered = filtered.filter(s => s.group_name === filterGroup)
-    }
+      if (searchTerm && searchTerm.trim()) {
+        const term = searchTerm.toLowerCase().trim()
+        filtered = filtered.filter(s => {
+          if (!s || typeof s !== 'object') return false
+          return (
+            (s.full_name && typeof s.full_name === 'string' && s.full_name.toLowerCase().includes(term)) ||
+            (s.student_id && typeof s.student_id === 'string' && s.student_id.toLowerCase().includes(term)) ||
+            (s.email && typeof s.email === 'string' && s.email.toLowerCase().includes(term))
+          )
+        })
+      }
 
-    if (filterRegistered !== '') {
-      filtered = filtered.filter(s => s.is_registered === (filterRegistered === 'true'))
-    }
+      if (filterSection) {
+        const sectionNum = parseInt(filterSection, 10)
+        if (!isNaN(sectionNum)) {
+          filtered = filtered.filter(s => s && typeof s === 'object' && s.section_number === sectionNum)
+        }
+      }
 
-    return filtered
+      if (filterGroup) {
+        filtered = filtered.filter(s => s && typeof s === 'object' && s.group_name === filterGroup)
+      }
+
+      if (filterRegistered !== '') {
+        const isRegistered = filterRegistered === 'true'
+        filtered = filtered.filter(s => s && typeof s === 'object' && s.is_registered === isRegistered)
+      }
+
+      return filtered
+    } catch (error) {
+      console.error('[Verification List] Error in filteredStudentsMemo:', error)
+      return []
+    }
   }, [students, searchTerm, filterSection, filterGroup, filterRegistered])
 
   useEffect(() => {

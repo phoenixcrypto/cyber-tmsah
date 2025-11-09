@@ -123,29 +123,36 @@ export async function GET(request: NextRequest) {
     }))
 
     // Calculate statistics efficiently in single pass
-    const stats = {
-      total: students.length,
-      active: 0,
-      inactive: 0,
-      bySection: {} as Record<number, number>,
-      byGroup: {} as Record<string, number>,
-    }
+    const bySection: Record<number, number> = {}
+    const byGroup: Record<string, number> = {}
+    let active = 0
+    let inactive = 0
 
     // Single pass for all statistics
     for (const s of students) {
-      if (s.is_active) {
-        stats.active++
-      } else {
-        stats.inactive++
+      if (s && typeof s === 'object') {
+        if (s.is_active === true) {
+          active++
+        } else {
+          inactive++
+        }
+        
+        if (s.section_number && typeof s.section_number === 'number') {
+          bySection[s.section_number] = (bySection[s.section_number] || 0) + 1
+        }
+        
+        if (s.group_name && typeof s.group_name === 'string') {
+          byGroup[s.group_name] = (byGroup[s.group_name] || 0) + 1
+        }
       }
-      
-      if (s.section_number) {
-        stats.bySection[s.section_number] = (stats.bySection[s.section_number] || 0) + 1
-      }
-      
-      if (s.group_name) {
-        stats.byGroup[s.group_name] = (stats.byGroup[s.group_name] || 0) + 1
-      }
+    }
+
+    const stats = {
+      total: students.length,
+      active,
+      inactive,
+      bySection,
+      byGroup,
     }
 
     return NextResponse.json({

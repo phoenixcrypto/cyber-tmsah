@@ -138,45 +138,52 @@ export default function StudentsPage() {
 
   // Memoize filtered students to avoid unnecessary recalculations
   const filteredStudentsMemo = useMemo(() => {
-    // Ensure students is always an array
-    const studentsArray = Array.isArray(students) ? students : []
-    
-    if (studentsArray.length === 0) {
+    try {
+      // Ensure students is always an array
+      const studentsArray = Array.isArray(students) ? students : []
+      
+      if (studentsArray.length === 0) {
+        return []
+      }
+
+      let filtered = [...studentsArray]
+
+      // Search filter
+      if (searchTerm && searchTerm.trim()) {
+        const term = searchTerm.toLowerCase().trim()
+        filtered = filtered.filter((s) => {
+          if (!s || typeof s !== 'object') return false
+          return (
+            (s.full_name && typeof s.full_name === 'string' && s.full_name.toLowerCase().includes(term)) ||
+            (s.username && typeof s.username === 'string' && s.username.toLowerCase().includes(term)) ||
+            (s.email && typeof s.email === 'string' && s.email.toLowerCase().includes(term))
+          )
+        })
+      }
+
+      // Section filter
+      if (sectionFilter !== 'all') {
+        const sectionNum = parseInt(sectionFilter, 10)
+        if (!isNaN(sectionNum)) {
+          filtered = filtered.filter((s) => s && typeof s === 'object' && s.section_number === sectionNum)
+        }
+      }
+
+      // Group filter
+      if (groupFilter !== 'all') {
+        filtered = filtered.filter((s) => s && typeof s === 'object' && s.group_name === groupFilter)
+      }
+
+      // Active/Inactive filter
+      if (!showInactive) {
+        filtered = filtered.filter((s) => s && typeof s === 'object' && s.is_active === true)
+      }
+
+      return filtered
+    } catch (error) {
+      console.error('[Admin Students] Error in filteredStudentsMemo:', error)
       return []
     }
-
-    let filtered = [...studentsArray]
-
-    // Search filter
-    if (searchTerm && searchTerm.trim()) {
-      const term = searchTerm.toLowerCase().trim()
-      filtered = filtered.filter(
-        (s) =>
-          (s.full_name && s.full_name.toLowerCase().includes(term)) ||
-          (s.username && s.username.toLowerCase().includes(term)) ||
-          (s.email && s.email.toLowerCase().includes(term))
-      )
-    }
-
-    // Section filter
-    if (sectionFilter !== 'all') {
-      const sectionNum = parseInt(sectionFilter, 10)
-      if (!isNaN(sectionNum)) {
-        filtered = filtered.filter((s) => s.section_number === sectionNum)
-      }
-    }
-
-    // Group filter
-    if (groupFilter !== 'all') {
-      filtered = filtered.filter((s) => s.group_name === groupFilter)
-    }
-
-    // Active/Inactive filter
-    if (!showInactive) {
-      filtered = filtered.filter((s) => s.is_active === true)
-    }
-
-    return filtered
   }, [students, searchTerm, sectionFilter, groupFilter, showInactive])
 
   useEffect(() => {
@@ -257,39 +264,14 @@ export default function StudentsPage() {
     )
   }
 
-  // Memoize stats calculation
-  const stats = useMemo(() => {
-    // Ensure students is always an array
-    const studentsArray = Array.isArray(students) ? students : []
-    
-    let active = 0
-    let inactive = 0
-    const bySection: Record<number, number> = {}
-    
-    // Single pass for all stats
-    for (const s of studentsArray) {
-      if (s && typeof s === 'object') {
-        if (s.is_active === true) {
-          active++
-        } else {
-          inactive++
-        }
-        if (s.section_number && typeof s.section_number === 'number') {
-          bySection[s.section_number] = (bySection[s.section_number] || 0) + 1
-        }
-      }
-    }
-    
-    return {
-      total: studentsArray.length,
-      active,
-      inactive,
-      bySection: Array.from({ length: 15 }, (_, i) => ({
-        section: i + 1,
-        count: bySection[i + 1] || 0,
-      })),
-    }
-  }, [students])
+  // Use statistics from API, with fallback to students length
+  const displayStats = statistics || {
+    total: students.length,
+    active: 0,
+    inactive: 0,
+    bySection: {} as Record<number, number>,
+    byGroup: {} as Record<string, number>,
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
@@ -305,15 +287,15 @@ export default function StudentsPage() {
         {/* Statistics Cards - Fixed height to prevent CLS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="enhanced-card p-6 border border-cyber-neon/20 hover:border-cyber-neon/40 transition-colors min-h-[140px] flex flex-col justify-center">
-            <div className="text-4xl sm:text-5xl font-bold text-cyber-neon mb-2">{stats.total}</div>
+            <div className="text-4xl sm:text-5xl font-bold text-cyber-neon mb-2">{displayStats.total}</div>
             <div className="text-dark-100 font-medium">إجمالي الطلاب المسجلين</div>
           </div>
           <div className="enhanced-card p-6 border border-green-400/20 hover:border-green-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
-            <div className="text-4xl sm:text-5xl font-bold text-green-400 mb-2">{stats.active}</div>
+            <div className="text-4xl sm:text-5xl font-bold text-green-400 mb-2">{displayStats.active}</div>
             <div className="text-dark-100 font-medium">نشط</div>
           </div>
           <div className="enhanced-card p-6 border border-red-400/20 hover:border-red-400/40 transition-colors min-h-[140px] flex flex-col justify-center">
-            <div className="text-4xl sm:text-5xl font-bold text-red-400 mb-2">{stats.inactive}</div>
+            <div className="text-4xl sm:text-5xl font-bold text-red-400 mb-2">{displayStats.inactive}</div>
             <div className="text-dark-100 font-medium">غير نشط</div>
           </div>
         </div>
@@ -323,14 +305,14 @@ export default function StudentsPage() {
           {/* Distribution by Section */}
           <div className="enhanced-card p-6 border border-cyber-neon/20">
             <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب القسم</h3>
-            {statistics ? (
+            {displayStats.bySection && typeof displayStats.bySection === 'object' ? (
               <div className="grid grid-cols-3 gap-3">
                 {Array.from({ length: 15 }, (_, i) => i + 1).map((section) => (
                   <div 
                     key={section} 
                     className="text-center p-3 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors min-h-[80px] flex flex-col justify-center"
                   >
-                    <div className="text-2xl font-bold text-cyber-neon mb-1">{(statistics?.bySection && statistics.bySection[section]) || 0}</div>
+                    <div className="text-2xl font-bold text-cyber-neon mb-1">{(displayStats.bySection[section]) || 0}</div>
                     <div className="text-xs text-dark-300">قسم {section}</div>
                   </div>
                 ))}
@@ -355,11 +337,11 @@ export default function StudentsPage() {
             <h3 className="text-xl font-bold text-dark-100 mb-6">التوزيع حسب المجموعة</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors min-h-[120px] flex flex-col justify-center">
-                <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics?.byGroup['Group 1'] || 0}</div>
+                <div className="text-3xl font-bold text-cyber-neon mb-2">{(displayStats.byGroup && displayStats.byGroup['Group 1']) || 0}</div>
                 <div className="text-sm text-dark-300 font-medium">Group 1 (A)</div>
               </div>
               <div className="text-center p-6 bg-cyber-dark/50 rounded-lg border border-cyber-neon/10 hover:border-cyber-neon/30 transition-colors min-h-[120px] flex flex-col justify-center">
-                <div className="text-3xl font-bold text-cyber-neon mb-2">{statistics?.byGroup['Group 2'] || 0}</div>
+                <div className="text-3xl font-bold text-cyber-neon mb-2">{(displayStats.byGroup && displayStats.byGroup['Group 2']) || 0}</div>
                 <div className="text-sm text-dark-300 font-medium">Group 2 (B)</div>
               </div>
             </div>
@@ -452,13 +434,11 @@ export default function StudentsPage() {
             <div className="text-dark-100 font-medium">
               عرض {filteredStudents.length} من {students.length} طالب مسجل
             </div>
-            {statistics && (
-              <div className="text-sm text-dark-300">
-                إجمالي المسجلين: <span className="text-cyber-neon font-bold">{statistics.total}</span> | 
-                نشط: <span className="text-green-400 font-bold">{statistics.active}</span> | 
-                غير نشط: <span className="text-red-400 font-bold">{statistics.inactive}</span>
-              </div>
-            )}
+            <div className="text-sm text-dark-300">
+              إجمالي المسجلين: <span className="text-cyber-neon font-bold">{displayStats.total}</span> | 
+              نشط: <span className="text-green-400 font-bold">{displayStats.active}</span> | 
+              غير نشط: <span className="text-red-400 font-bold">{displayStats.inactive}</span>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
