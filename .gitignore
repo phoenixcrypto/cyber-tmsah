@@ -105,3 +105,8 @@ public/workbox-*.js
 public/sw.js.map
 public/workbox-*.js.map
 public/fallback-*.js
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyToken } from '@/lib/security/jwt'
 import { rateLimit } from '@/lib/security/rateLimit'
+import { logger } from '@/lib/utils/logger'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -98,7 +99,7 @@ export async function GET(request: NextRequest) {
       .eq('is_registered', true)
       .limit(10)
 
-    console.log('[Admin Students API] All users check:', {
+    logger.debug('[Admin Students API] All users check:', {
       totalUsers: allUsers?.length || 0,
       hasError: !!allUsersError,
       error: allUsersError?.message || null,
@@ -141,7 +142,7 @@ export async function GET(request: NextRequest) {
     const shouldUseFallback = hasRegisteredStudents || expectedStudentCount > 0
 
     if (shouldUseFallback) {
-      console.log('[Admin Students API] Using fallback mechanism (direct fetch + manual filter)')
+      logger.debug('[Admin Students API] Using fallback mechanism (direct fetch + manual filter)')
       
       // Fetch all users without role filter, then filter manually
       // This is more reliable than .eq('role', 'student') which seems to have issues
@@ -152,14 +153,14 @@ export async function GET(request: NextRequest) {
 
       if (allUsersError) {
         studentsError = allUsersError
-        console.error('[Admin Students API] Error fetching all users:', allUsersError)
+        logger.error('[Admin Students API] Error fetching all users:', allUsersError)
       } else {
         // Filter manually for students - check role case-insensitively
         studentsRaw = (allUsersData || []).filter((u: any) => {
           const role = (u.role || '').toString().toLowerCase().trim()
           return role === 'student'
         })
-        console.log('[Admin Students API] Fallback: Filtered students manually:', {
+        logger.debug('[Admin Students API] Fallback: Filtered students manually:', {
           totalUsers: allUsersData?.length || 0,
           studentsCount: studentsRaw?.length || 0,
           expectedCount: expectedStudentCount,
@@ -181,19 +182,19 @@ export async function GET(request: NextRequest) {
         .order('created_at', { ascending: false })
 
       if (errorWithRole) {
-        console.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
+        logger.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
         studentsError = errorWithRole
       } else {
         studentsRaw = studentsWithRole
-        console.log('[Admin Students API] Query worked correctly, returned', studentsRaw?.length || 0, 'students')
+        logger.debug('[Admin Students API] Query worked correctly, returned', studentsRaw?.length || 0, 'students')
       }
     }
 
     // Log for debugging
     if (studentsError) {
-      console.error('[Admin Students API] Error fetching students:', studentsError?.message || 'Unknown error')
+      logger.error('[Admin Students API] Error fetching students:', studentsError?.message || 'Unknown error')
     } else {
-      console.log('[Admin Students API] Fetched students:', {
+      logger.debug('[Admin Students API] Fetched students:', {
         count: studentsRaw?.length || 0,
         firstStudent: studentsRaw && studentsRaw.length > 0 ? {
           id: studentsRaw[0]?.id,
@@ -205,7 +206,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (studentsError) {
-      console.error('[Admin Students API] Error fetching students:', studentsError)
+      logger.error('[Admin Students API] Error fetching students:', studentsError)
       return NextResponse.json(
         { 
           error: 'Failed to fetch students',
@@ -289,7 +290,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Log response before sending
-    console.log('[Admin Students API] Returning response:', {
+    logger.debug('[Admin Students API] Returning response:', {
       studentsCount: students.length,
       statistics: stats,
     })

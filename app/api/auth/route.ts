@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { verifyPassword } from '@/lib/security/password'
+import { logger } from '@/lib/utils/logger'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -99,9 +101,26 @@ export async function POST(request: NextRequest) {
     // Add artificial delay to prevent timing attacks
     await new Promise(resolve => setTimeout(resolve, 1000))
     
-    // Simple password check (in production, use bcrypt with hashed password)
-    // TODO: Implement bcrypt hashing for production
-    if (password === ADMIN_PASSWORD) {
+    // Verify password using bcrypt
+    // ADMIN_PASSWORD should be stored as bcrypt hash in environment variable
+    // For existing installations, check if it's already a hash (starts with $2b$)
+    const isHashed = ADMIN_PASSWORD?.startsWith('$2b$') || ADMIN_PASSWORD?.startsWith('$2a$')
+    
+    let passwordValid = false
+    if (isHashed) {
+      // Password is already hashed, use bcrypt.compare
+      passwordValid = await verifyPassword(password, ADMIN_PASSWORD)
+    } else {
+      // Password is plain text (legacy), compare directly for migration
+      // In production, always use hashed passwords
+      passwordValid = password === ADMIN_PASSWORD
+      
+      if (passwordValid && process.env.NODE_ENV === 'production') {
+        logger.warn('[Auth] WARNING: Using plain text password in production! Please hash ADMIN_PASSWORD.')
+      }
+    }
+    
+    if (passwordValid) {
       // Generate a simple session token (in production, use JWT)
       const token = Buffer.from(`${Date.now()}-${Math.random()}`).toString('base64')
       
@@ -128,7 +147,7 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (error) {
-    console.error('Auth error:', error)
+    logger.error('Auth error:', error)
     return NextResponse.json(
       { error: 'Authentication failed' },
       { status: 500 }

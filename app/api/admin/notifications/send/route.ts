@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyToken } from '@/lib/security/jwt'
 import { sendArticleNotification, sendTaskNotification } from '@/lib/notifications/email'
+import { logger } from '@/lib/utils/logger'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -88,13 +89,43 @@ export async function POST(request: NextRequest) {
     }
 
     // Filter by notification settings
-    // TODO: Filter by notification_settings
-    // const { data: notificationSettings } = await supabase
-    //   .from('notification_settings')
-    //   .select('user_id, email_notifications')
-    //   .in('user_id', recipients.map((_, i) => i.toString())) // This is simplified - should get actual user IDs
+    // Get user IDs from recipients emails
+    const { data: usersData } = await supabase
+      .from('users')
+      .select('id, email')
+      .in('email', recipients)
+      .eq('is_active', true)
 
-    // For now, send to all recipients
+    const userIds = (usersData || []).map(u => u.id)
+    
+    // Get notification settings for these users
+    const { data: notificationSettings } = await supabase
+      .from('notification_settings')
+      .select('user_id, email_notifications')
+      .in('user_id', userIds)
+
+    // Create a map of user_id -> email_notifications
+    const settingsByUserId = new Map<string, boolean>()
+    
+    // Map user emails to IDs
+    const emailToUserId = new Map<string, string>()
+    usersData?.forEach(u => {
+      emailToUserId.set(u.email, u.id)
+    })
+
+    // Map notification settings
+    notificationSettings?.forEach(setting => {
+      settingsByUserId.set(setting.user_id, setting.email_notifications ?? true)
+    })
+
+    // Filter recipients based on notification settings
+    // Default to true if no setting exists (opt-in by default)
+    recipients = recipients.filter(email => {
+      const userId = emailToUserId.get(email)
+      if (!userId) return false
+      const emailEnabled = settingsByUserId.get(userId) ?? true // Default to enabled
+      return emailEnabled
+    })
 
     // Send notifications
     if (sendNow) {
@@ -115,7 +146,7 @@ export async function POST(request: NextRequest) {
       recipientsCount: recipients.length,
     })
   } catch (error) {
-    console.error('Notification error:', error)
+    logger.error('Notification error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

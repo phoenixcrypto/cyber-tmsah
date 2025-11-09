@@ -116,8 +116,33 @@ export default function PublishContentPage() {
       // Upload files first (if any)
       const fileUrls: string[] = []
       if (formData.files.length > 0) {
-        // TODO: Upload files to Supabase Storage
-        // For now, skip file upload
+        try {
+          const uploadFormData = new FormData()
+          formData.files.forEach(file => {
+            uploadFormData.append('files', file)
+          })
+          uploadFormData.append('folder', contentType === 'article' ? 'articles' : 'tasks')
+
+          const uploadResponse = await fetch('/api/admin/storage/upload', {
+            method: 'POST',
+            credentials: 'include',
+            body: uploadFormData,
+          })
+
+          if (uploadResponse.ok) {
+            const uploadData = await uploadResponse.json()
+            if (uploadData.success && uploadData.urls) {
+              fileUrls.push(...uploadData.urls)
+            } else {
+              console.warn('[Publish] Some files failed to upload:', uploadData.failed)
+            }
+          } else {
+            console.error('[Publish] File upload failed:', await uploadResponse.text())
+          }
+        } catch (uploadError) {
+          console.error('[Publish] File upload error:', uploadError)
+          // Continue without files if upload fails
+        }
       }
       payload.files = fileUrls
 
