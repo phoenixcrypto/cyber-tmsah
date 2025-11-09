@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { logger } from '@/lib/utils/logger'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
       .limit(10)
 
     if (nameError) {
-      console.error('Error checking name:', nameError)
+      logger.error('[Verify] Error checking name:', nameError)
       return NextResponse.json(
         { 
           valid: false,
@@ -84,7 +85,8 @@ export async function POST(request: NextRequest) {
 
     // Now verify section and group match
     // Use exact match for final verification (case-insensitive)
-    const { data: verificationData, error: verificationError } = await supabase
+    // First try with exact name match
+    let { data: verificationData, error: verificationError } = await supabase
       .from('verification_list')
       .select('*')
       .ilike('full_name', trimmedName) // Exact match for final verification
@@ -93,8 +95,39 @@ export async function POST(request: NextRequest) {
       .eq('is_registered', false)
       .single()
 
+    // If not found, try with trimmed name comparison (handle extra spaces)
+    if (verificationError || !verificationData) {
+      // Try to find by matching trimmed names
+      const { data: allMatches } = await supabase
+        .from('verification_list')
+        .select('*')
+        .ilike('full_name', `%${trimmedName}%`)
+        .eq('section_number', sectionNumber)
+        .eq('group_name', groupName)
+        .eq('is_registered', false)
+
+      // Find exact match by comparing trimmed names
+      if (allMatches && allMatches.length > 0) {
+        const trimmedMatch = allMatches.find(m => 
+          m.full_name.trim().toLowerCase() === trimmedName.toLowerCase()
+        )
+        if (trimmedMatch) {
+          verificationData = trimmedMatch
+          verificationError = null
+        }
+      }
+    }
+
     if (verificationError || !verificationData) {
       // Name exists but section/group don't match
+      logger.debug('[Verify] Section/group mismatch:', {
+        name: trimmedName,
+        providedSection: sectionNumber,
+        providedGroup: groupName,
+        foundSection: exactMatch?.section_number,
+        foundGroup: exactMatch?.group_name,
+      })
+      
       return NextResponse.json(
         { 
           valid: false,
@@ -115,9 +148,12 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('Verification error:', error)
+    logger.error('[Verify] Verification error:', error)
     return NextResponse.json(
-      { error: 'Internal server error. Please try again later.' },
+      { 
+        valid: false,
+        error: 'Internal server error. Please try again later.' 
+      },
       { status: 500 }
     )
   }
