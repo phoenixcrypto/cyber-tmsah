@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, BookOpen, CheckSquare, Clock, MapPin, User, Loader2, LogOut } from 'lucide-react'
 import { authenticatedFetch, getValidAccessToken } from '@/lib/auth/tokenRefresh'
+import { offlineManager } from '@/lib/storage/offline-manager'
 
 interface UserData {
   id: string
@@ -30,8 +31,22 @@ export default function DashboardPage() {
   const [loadingSchedule, setLoadingSchedule] = useState(false)
   const [loadingTasks, setLoadingTasks] = useState(false)
   const [loadingMaterials, setLoadingMaterials] = useState(false)
+  const [isOffline, setIsOffline] = useState(false)
 
   useEffect(() => {
+    // Check online status
+    const updateOnlineStatus = () => {
+      setIsOffline(!navigator.onLine)
+    }
+    updateOnlineStatus()
+    window.addEventListener('online', updateOnlineStatus)
+    window.addEventListener('offline', updateOnlineStatus)
+    
+    // Register sync listener
+    offlineManager.registerSyncListener(async () => {
+      await Promise.all([loadSchedule(), loadTasks(), loadMaterials()])
+    })
+
     // Check authentication with token refresh
     const checkAuth = async () => {
       const token = await getValidAccessToken(() => router.push('/login'))
@@ -126,6 +141,17 @@ export default function DashboardPage() {
   const loadSchedule = async () => {
     setLoadingSchedule(true)
     try {
+      // Try to load from offline storage first if offline
+      if (!offlineManager.isConnected()) {
+        const offlineSchedule = await offlineManager.getSchedule()
+        if (offlineSchedule) {
+          console.log('[Dashboard] Loaded schedule from offline storage')
+          setSchedule(offlineSchedule)
+          setLoadingSchedule(false)
+          return
+        }
+      }
+
       const response = await authenticatedFetch(
         '/api/dashboard/schedule',
         { method: 'GET' },
@@ -133,6 +159,11 @@ export default function DashboardPage() {
       )
       
       if (!response) {
+        // If offline and no cached data, try to load from offline storage
+        const offlineSchedule = await offlineManager.getSchedule()
+        if (offlineSchedule) {
+          setSchedule(offlineSchedule)
+        }
         setLoadingSchedule(false)
         return
       }
@@ -142,16 +173,32 @@ export default function DashboardPage() {
           router.push('/login')
           return
         }
+        // If network error, try offline storage
+        const offlineSchedule = await offlineManager.getSchedule()
+        if (offlineSchedule) {
+          setSchedule(offlineSchedule)
+        }
         throw new Error(`Failed to load schedule: ${response.status}`)
       }
       
       const data = await response.json()
       if (data.success) {
-        setSchedule(data.schedule || [])
+        const scheduleData = data.schedule || []
+        setSchedule(scheduleData)
+        // Save to offline storage
+        await offlineManager.saveSchedule(scheduleData)
       }
     } catch (err) {
       console.error('Error loading schedule:', err)
-      // Don't show error to user, just log it
+      // Try to load from offline storage as fallback
+      try {
+        const offlineSchedule = await offlineManager.getSchedule()
+        if (offlineSchedule) {
+          setSchedule(offlineSchedule)
+        }
+      } catch (offlineErr) {
+        console.error('Error loading from offline storage:', offlineErr)
+      }
     } finally {
       setLoadingSchedule(false)
     }
@@ -160,6 +207,17 @@ export default function DashboardPage() {
   const loadTasks = async () => {
     setLoadingTasks(true)
     try {
+      // Try to load from offline storage first if offline
+      if (!offlineManager.isConnected()) {
+        const offlineTasks = await offlineManager.getTasks()
+        if (offlineTasks) {
+          console.log('[Dashboard] Loaded tasks from offline storage')
+          setTasks(offlineTasks)
+          setLoadingTasks(false)
+          return
+        }
+      }
+
       const response = await authenticatedFetch(
         '/api/dashboard/tasks',
         { method: 'GET' },
@@ -167,6 +225,11 @@ export default function DashboardPage() {
       )
       
       if (!response) {
+        // If offline and no cached data, try to load from offline storage
+        const offlineTasks = await offlineManager.getTasks()
+        if (offlineTasks) {
+          setTasks(offlineTasks)
+        }
         setLoadingTasks(false)
         return
       }
@@ -176,16 +239,32 @@ export default function DashboardPage() {
           router.push('/login')
           return
         }
+        // If network error, try offline storage
+        const offlineTasks = await offlineManager.getTasks()
+        if (offlineTasks) {
+          setTasks(offlineTasks)
+        }
         throw new Error(`Failed to load tasks: ${response.status}`)
       }
       
       const data = await response.json()
       if (data.success) {
-        setTasks(data.tasks || [])
+        const tasksData = data.tasks || []
+        setTasks(tasksData)
+        // Save to offline storage
+        await offlineManager.saveTasks(tasksData)
       }
     } catch (err) {
       console.error('Error loading tasks:', err)
-      // Don't show error to user, just log it
+      // Try to load from offline storage as fallback
+      try {
+        const offlineTasks = await offlineManager.getTasks()
+        if (offlineTasks) {
+          setTasks(offlineTasks)
+        }
+      } catch (offlineErr) {
+        console.error('Error loading from offline storage:', offlineErr)
+      }
     } finally {
       setLoadingTasks(false)
     }
@@ -194,6 +273,17 @@ export default function DashboardPage() {
   const loadMaterials = async () => {
     setLoadingMaterials(true)
     try {
+      // Try to load from offline storage first if offline
+      if (!offlineManager.isConnected()) {
+        const offlineMaterials = await offlineManager.getMaterials()
+        if (offlineMaterials) {
+          console.log('[Dashboard] Loaded materials from offline storage')
+          setMaterials(offlineMaterials)
+          setLoadingMaterials(false)
+          return
+        }
+      }
+
       const response = await authenticatedFetch(
         '/api/dashboard/materials',
         { method: 'GET' },
@@ -201,6 +291,11 @@ export default function DashboardPage() {
       )
       
       if (!response) {
+        // If offline and no cached data, try to load from offline storage
+        const offlineMaterials = await offlineManager.getMaterials()
+        if (offlineMaterials) {
+          setMaterials(offlineMaterials)
+        }
         setLoadingMaterials(false)
         return
       }
@@ -210,16 +305,32 @@ export default function DashboardPage() {
           router.push('/login')
           return
         }
+        // If network error, try offline storage
+        const offlineMaterials = await offlineManager.getMaterials()
+        if (offlineMaterials) {
+          setMaterials(offlineMaterials)
+        }
         throw new Error(`Failed to load materials: ${response.status}`)
       }
       
       const data = await response.json()
       if (data.success) {
-        setMaterials(data.materials || [])
+        const materialsData = data.materials || []
+        setMaterials(materialsData)
+        // Save to offline storage
+        await offlineManager.saveMaterials(materialsData)
       }
     } catch (err) {
       console.error('Error loading materials:', err)
-      // Don't show error to user, just log it
+      // Try to load from offline storage as fallback
+      try {
+        const offlineMaterials = await offlineManager.getMaterials()
+        if (offlineMaterials) {
+          setMaterials(offlineMaterials)
+        }
+      } catch (offlineErr) {
+        console.error('Error loading from offline storage:', offlineErr)
+      }
     } finally {
       setLoadingMaterials(false)
     }
