@@ -213,6 +213,7 @@ export default function AboutPage() {
                 <div className="text-dark-300 font-medium">Ahmed Nashaat</div>
                 <div className="text-dark-300 font-medium">Mohamed Ammar</div>
                 <div className="text-dark-300 font-medium">Dina Ali</div>
+                <div className="text-dark-300 font-medium">Aya Gamal</div>
               </div>
             </div>
           </div>
