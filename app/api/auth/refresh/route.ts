@@ -46,7 +46,14 @@ export async function POST(request: NextRequest) {
 
     // Check if refresh token is actually a refresh token
     try {
-      const decoded = JSON.parse(Buffer.from(refreshToken.split('.')[1], 'base64').toString())
+      const tokenParts = refreshToken.split('.')
+      if (tokenParts.length < 2 || !tokenParts[1]) {
+        return NextResponse.json(
+          { error: 'Invalid refresh token format. Please log in again.' },
+          { status: 401 }
+        )
+      }
+      const decoded = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString())
       if (decoded.type !== 'refresh') {
         return NextResponse.json(
           { error: 'Invalid token type. Please log in again.' },
