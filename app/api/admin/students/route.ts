@@ -127,6 +127,12 @@ export async function GET(request: NextRequest) {
     let studentsRaw = null
     let studentsError = null
 
+    // Get expected student count from the debug check
+    const expectedStudentCount = allUsers?.reduce((acc: number, u: any) => {
+      if (u.role === 'student') acc++
+      return acc
+    }, 0) || 0
+
     // Try to fetch students with role filter
     const { data: studentsWithRole, error: errorWithRole } = await supabase
       .from('users')
@@ -134,8 +140,17 @@ export async function GET(request: NextRequest) {
       .eq('role', 'student')
       .order('created_at', { ascending: false })
 
-    if (errorWithRole) {
-      console.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
+    // Check if query returned results or if we need fallback
+    const queryReturnedResults = studentsWithRole && studentsWithRole.length > 0
+    const needsFallback = errorWithRole || (!queryReturnedResults && expectedStudentCount > 0)
+
+    if (needsFallback) {
+      if (errorWithRole) {
+        console.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
+      } else {
+        console.warn('[Admin Students API] Query returned 0 results but expected', expectedStudentCount, 'students. Using fallback.')
+      }
+      
       // Try without role filter as fallback
       const { data: allUsersData, error: allUsersError } = await supabase
         .from('users')
@@ -146,15 +161,21 @@ export async function GET(request: NextRequest) {
         studentsError = allUsersError
         console.error('[Admin Students API] Error fetching all users:', allUsersError)
       } else {
-        // Filter manually for students
-        studentsRaw = (allUsersData || []).filter((u: any) => u.role === 'student' || u.role === null || !u.role)
+        // Filter manually for students - check role case-insensitively
+        studentsRaw = (allUsersData || []).filter((u: any) => {
+          const role = (u.role || '').toString().toLowerCase().trim()
+          return role === 'student'
+        })
         console.log('[Admin Students API] Fallback: Filtered students manually:', {
           totalUsers: allUsersData?.length || 0,
           studentsCount: studentsRaw?.length || 0,
+          expectedCount: expectedStudentCount,
+          allRoles: [...new Set((allUsersData || []).map((u: any) => u.role))],
         })
       }
     } else {
       studentsRaw = studentsWithRole
+      console.log('[Admin Students API] Query worked correctly, returned', studentsRaw?.length || 0, 'students')
     }
 
     // Log for debugging
