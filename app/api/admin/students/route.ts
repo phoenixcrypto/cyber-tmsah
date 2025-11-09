@@ -310,11 +310,20 @@ export async function GET(request: NextRequest) {
       statistics: stats,
     })
 
-    return NextResponse.json({
+    // Return response with no-cache headers to ensure fresh data
+    const response = NextResponse.json({
       success: true,
       students: students || [],
       statistics: stats,
     })
+
+    // Add cache control headers to prevent caching
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    response.headers.set('Surrogate-Control', 'no-store')
+
+    return response
   } catch (error) {
     console.error('Students fetch error:', error)
     return NextResponse.json(

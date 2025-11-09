@@ -61,9 +61,19 @@ export default function StudentsPage() {
 
   const fetchStudents = async () => {
     try {
+      // Add cache busting to ensure we always get fresh data
+      const cacheBuster = `?t=${Date.now()}`
       const response = await authenticatedFetch(
-        '/api/admin/students',
-        { method: 'GET' },
+        `/api/admin/students${cacheBuster}`,
+        { 
+          method: 'GET',
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          },
+        },
         () => router.push('/login?redirect=/admin/students')
       )
 
@@ -159,6 +169,12 @@ export default function StudentsPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
+        // Clear deleted students ref on page load to ensure fresh data
+        // This ensures we always fetch the latest data from the server
+        // The server is the source of truth, not the client-side ref
+        deletedStudentsRef.current.clear()
+        console.log('[Admin Students] Cleared deletedStudentsRef on page load')
+        
         // Verify admin access using API
         const result = await verifyAdminAccess()
         

@@ -153,15 +153,22 @@ export async function authenticatedFetch(
   // Update user activity (non-blocking)
   updateUserActivity(token)
 
+  // Merge headers to include cache control and authorization
+  const headers = new Headers(options.headers)
+  headers.set('Content-Type', 'application/json')
+  headers.set('Authorization', `Bearer ${token}`)
+  if (!headers.has('Cache-Control')) {
+    headers.set('Cache-Control', 'no-cache, no-store, must-revalidate')
+  }
+  if (!headers.has('Pragma')) {
+    headers.set('Pragma', 'no-cache')
+  }
+  
   // Make request with token
   const response = await fetch(url, {
     ...options,
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-      Authorization: `Bearer ${token}`,
-    },
+    headers: headers,
   })
 
   // If 401, try refreshing token once more and retry
@@ -172,14 +179,20 @@ export async function authenticatedFetch(
       updateUserActivity(newToken)
       
       // Retry with new token
+      const retryHeaders = new Headers(options.headers)
+      retryHeaders.set('Content-Type', 'application/json')
+      retryHeaders.set('Authorization', `Bearer ${newToken}`)
+      if (!retryHeaders.has('Cache-Control')) {
+        retryHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate')
+      }
+      if (!retryHeaders.has('Pragma')) {
+        retryHeaders.set('Pragma', 'no-cache')
+      }
+      
       return fetch(url, {
         ...options,
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(options.headers || {}),
-          Authorization: `Bearer ${newToken}`,
-        },
+        headers: retryHeaders,
       })
     } else {
       // Refresh failed - redirect to login
