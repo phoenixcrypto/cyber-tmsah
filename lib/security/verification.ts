@@ -100,30 +100,32 @@ export function verifyVerificationToken(token: string, email: string): { valid: 
       return { valid: false, error: 'Verification token has expired' }
     }
     
-    // Try to verify code in memory (may fail in serverless due to different instances)
-    // If code exists in memory, verify it. Otherwise, trust the token if it's recent
+    // Try to verify code in memory first (preferred method)
     const stored = verificationCodes.get(email.toLowerCase().trim())
     
     if (stored) {
       // Code exists in memory - verify it matches
-      if (stored.code === code && stored.verified === true) {
-        return { valid: true }
-      } else if (stored.code === code) {
-        // Code matches but not marked as verified - mark it now
+      if (stored.code === code) {
+        // Code matches - mark as verified and return success
         stored.verified = true
         return { valid: true }
       } else {
+        // Code doesn't match
         return { valid: false, error: 'Verification code mismatch' }
       }
+    }
+    
+    // Code not in memory (serverless instance issue)
+    // Since we have a valid token with matching email and recent timestamp,
+    // and the code was verified on a different instance, we trust the token
+    // Token must be very recent (within 2 minutes) to be accepted
+    if (tokenAge < 2 * 60 * 1000) {
+      // Token is very recent (within 2 minutes) - accept it
+      // This handles serverless environment where verification happened on different instance
+      console.log('[Verify Token] Accepting token from different instance (serverless):', email)
+      return { valid: true }
     } else {
-      // Code not in memory (serverless instance issue) - trust token if recent (within 2 minutes)
-      // This handles the case where verification happened on a different instance
-      if (tokenAge < 2 * 60 * 1000) {
-        // Token is very recent (within 2 minutes) - accept it
-        return { valid: true }
-      } else {
-        return { valid: false, error: 'Verification token expired or invalid' }
-      }
+      return { valid: false, error: 'Verification token expired or invalid' }
     }
   } catch (err) {
     console.error('Token verification error:', err)
