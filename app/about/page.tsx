@@ -202,18 +202,18 @@ export default function AboutPage() {
                 <h3 className="text-2xl font-semibold text-dark-100">Teaching Assistants</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="text-dark-300 font-medium">Mohamed Mostafa</div>
-                <div className="text-dark-300 font-medium">Ehab Mohamed</div>
-                <div className="text-dark-300 font-medium">Kareem Adel</div>
-                <div className="text-dark-300 font-medium">Mahmoud Mohamed</div>
-                <div className="text-dark-300 font-medium">Mariam Ashraf</div>
-                <div className="text-dark-300 font-medium">Nagla Saeed</div>
-                <div className="text-dark-300 font-medium">Omnia Ibrahim</div>
-                <div className="text-dark-300 font-medium">Yasmin Ibrahim</div>
-                <div className="text-dark-300 font-medium">Ahmed Nashaat</div>
-                <div className="text-dark-300 font-medium">Mohamed Ammar</div>
-                <div className="text-dark-300 font-medium">Dina Ali</div>
-                <div className="text-dark-300 font-medium">Aya Gamal</div>
+                <div className="text-dark-300 font-medium">Eng Mohamed Mostafa</div>
+                <div className="text-dark-300 font-medium">Eng Ehab Mohamed</div>
+                <div className="text-dark-300 font-medium">Eng Kareem Adel</div>
+                <div className="text-dark-300 font-medium">Eng Mahmoud Mohamed</div>
+                <div className="text-dark-300 font-medium">Eng Mariam Ashraf</div>
+                <div className="text-dark-300 font-medium">Eng Nagla Saeed</div>
+                <div className="text-dark-300 font-medium">Eng Omnia Ibrahim</div>
+                <div className="text-dark-300 font-medium">Eng Yasmin Ibrahim</div>
+                <div className="text-dark-300 font-medium">Eng Ahmed Nashaat</div>
+                <div className="text-dark-300 font-medium">Eng Mohamed Ammar</div>
+                <div className="text-dark-300 font-medium">Eng Dina Ali</div>
+                <div className="text-dark-300 font-medium">Eng Aya Gamal</div>
               </div>
             </div>
           </div>
