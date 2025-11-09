@@ -38,7 +38,7 @@ export default function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sectionFilter, setSectionFilter] = useState<string>('all')
   const [groupFilter, setGroupFilter] = useState<string>('all')
-  const [showInactive, setShowInactive] = useState(false)
+  const [showInactive, setShowInactive] = useState(true) // Show all students by default
   const [showPasswordHash, setShowPasswordHash] = useState(false)
 
   useEffect(() => {
@@ -84,12 +84,18 @@ export default function StudentsPage() {
 
       if (response.ok) {
         const data = await response.json()
+        console.log('[Admin Students] Fetched students:', data.students?.length || 0)
+        console.log('[Admin Students] Statistics:', data.statistics)
+        console.log('[Admin Students] Sample student:', data.students?.[0])
         setStudents(data.students || [])
         setFilteredStudents(data.students || [])
         setStatistics(data.statistics || null)
+      } else {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('[Admin Students] Failed to fetch:', response.status, errorData)
       }
     } catch (err) {
-      console.error('Error fetching students:', err)
+      console.error('[Admin Students] Error fetching students:', err)
     }
   }
 
@@ -122,6 +128,8 @@ export default function StudentsPage() {
       filtered = filtered.filter((s) => s.is_active)
     }
 
+    console.log('[Admin Students] Filtered students:', filtered.length, 'from', students.length)
+    console.log('[Admin Students] Filters:', { searchTerm, sectionFilter, groupFilter, showInactive })
     setFilteredStudents(filtered)
   }, [searchTerm, sectionFilter, groupFilter, showInactive, students])
 
@@ -361,7 +369,23 @@ export default function StudentsPage() {
                 {filteredStudents.length === 0 ? (
                   <tr>
                     <td colSpan={showPasswordHash ? 11 : 10} className="text-center py-8 text-dark-400">
-                      لا توجد نتائج
+                      <div className="flex flex-col items-center gap-2">
+                        <AlertCircle className="w-8 h-8 text-dark-500" />
+                        <p className="text-lg font-semibold">لا توجد نتائج</p>
+                        {students.length === 0 ? (
+                          <p className="text-sm text-dark-500">
+                            لا يوجد طلاب مسجلين في النظام بعد
+                          </p>
+                        ) : (
+                          <p className="text-sm text-dark-500">
+                            لا توجد نتائج تطابق الفلاتر المحددة. جرب تغيير معايير البحث أو الفلترة.
+                            <br />
+                            <span className="text-cyber-neon">
+                              إجمالي الطلاب في النظام: {students.length}
+                            </span>
+                          </p>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ) : (

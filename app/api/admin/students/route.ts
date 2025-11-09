@@ -67,12 +67,15 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (studentsError) {
-      console.error('Error fetching students:', studentsError)
+      console.error('[Admin Students API] Error fetching students:', studentsError)
       return NextResponse.json(
         { error: 'Failed to fetch students' },
         { status: 500 }
       )
     }
+
+    console.log('[Admin Students API] Fetched students:', students?.length || 0)
+    console.log('[Admin Students API] Sample student:', students?.[0])
 
     // Get statistics
     const totalCount = students?.length || 0
