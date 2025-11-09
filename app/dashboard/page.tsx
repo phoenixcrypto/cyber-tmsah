@@ -31,18 +31,9 @@ export default function DashboardPage() {
   const [loadingSchedule, setLoadingSchedule] = useState(false)
   const [loadingTasks, setLoadingTasks] = useState(false)
   const [loadingMaterials, setLoadingMaterials] = useState(false)
-  const [isOffline, setIsOffline] = useState(false)
 
   useEffect(() => {
-    // Check online status
-    const updateOnlineStatus = () => {
-      setIsOffline(!navigator.onLine)
-    }
-    updateOnlineStatus()
-    window.addEventListener('online', updateOnlineStatus)
-    window.addEventListener('offline', updateOnlineStatus)
-    
-    // Register sync listener
+    // Register sync listener for automatic sync when back online
     offlineManager.registerSyncListener(async () => {
       await Promise.all([loadSchedule(), loadTasks(), loadMaterials()])
     })
