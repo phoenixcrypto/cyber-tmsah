@@ -91,6 +91,13 @@ export async function GET(request: NextRequest) {
       .select('id, username, email, role, is_active')
       .limit(100)
 
+    // Also check verification_list for registered students
+    const { data: registeredStudents } = await supabase
+      .from('verification_list')
+      .select('id, full_name, is_registered, registered_by, registered_at')
+      .eq('is_registered', true)
+      .limit(10)
+
     console.log('[Admin Students API] All users check:', {
       totalUsers: allUsers?.length || 0,
       hasError: !!allUsersError,
@@ -105,16 +112,50 @@ export async function GET(request: NextRequest) {
         role: u.role,
         is_active: u.is_active,
       })) || [],
+      registeredInVerificationList: registeredStudents?.length || 0,
+      registeredSample: registeredStudents?.slice(0, 3).map((r: any) => ({
+        id: r.id,
+        full_name: r.full_name,
+        registered_by: r.registered_by,
+        registered_at: r.registered_at,
+      })) || [],
     })
 
     // Get all students (role = 'student') with required data only
     // Using service role key bypasses RLS, so we can fetch all students
     // Select only needed columns for better performance
-    const { data: studentsRaw, error: studentsError } = await supabase
+    let studentsRaw = null
+    let studentsError = null
+
+    // Try to fetch students with role filter
+    const { data: studentsWithRole, error: errorWithRole } = await supabase
       .from('users')
       .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
       .eq('role', 'student')
       .order('created_at', { ascending: false })
+
+    if (errorWithRole) {
+      console.error('[Admin Students API] Error fetching students with role filter:', errorWithRole)
+      // Try without role filter as fallback
+      const { data: allUsersData, error: allUsersError } = await supabase
+        .from('users')
+        .select('id, username, email, password_hash, full_name, section_number, group_name, university_email, role, is_active, created_at, updated_at, last_login')
+        .order('created_at', { ascending: false })
+
+      if (allUsersError) {
+        studentsError = allUsersError
+        console.error('[Admin Students API] Error fetching all users:', allUsersError)
+      } else {
+        // Filter manually for students
+        studentsRaw = (allUsersData || []).filter((u: any) => u.role === 'student' || u.role === null || !u.role)
+        console.log('[Admin Students API] Fallback: Filtered students manually:', {
+          totalUsers: allUsersData?.length || 0,
+          studentsCount: studentsRaw?.length || 0,
+        })
+      }
+    } else {
+      studentsRaw = studentsWithRole
+    }
 
     // Log for debugging
     if (studentsError) {
