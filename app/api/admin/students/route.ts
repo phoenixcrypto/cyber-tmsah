@@ -190,12 +190,18 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Log for debugging
+    // Log for debugging - comprehensive logging
     if (studentsError) {
       logger.error('[Admin Students API] Error fetching students:', studentsError?.message || 'Unknown error')
     } else {
+      // Log all student IDs and names to verify what's being returned
+      const studentIds = (studentsRaw || []).map((s: any) => s?.id).filter(Boolean)
+      const studentNames = (studentsRaw || []).map((s: any) => s?.full_name).filter(Boolean)
+      
       logger.debug('[Admin Students API] Fetched students:', {
         count: studentsRaw?.length || 0,
+        studentIds: studentIds,
+        studentNames: studentNames,
         firstStudent: studentsRaw && studentsRaw.length > 0 ? {
           id: studentsRaw[0]?.id,
           username: studentsRaw[0]?.username,
@@ -203,6 +209,23 @@ export async function GET(request: NextRequest) {
           role: studentsRaw[0]?.role,
         } : null,
       })
+      
+      // Check specifically for the problematic student
+      const zeyadStudent = (studentsRaw || []).find((s: any) => 
+        s?.full_name?.includes('زياد محمد') || 
+        s?.username === 'zeyadmohamed' ||
+        s?.email?.includes('zeyadeltmsah')
+      )
+      
+      if (zeyadStudent) {
+        logger.warn('[Admin Students API] WARNING: Found student that should be deleted:', {
+          id: zeyadStudent.id,
+          username: zeyadStudent.username,
+          full_name: zeyadStudent.full_name,
+          email: zeyadStudent.email,
+          role: zeyadStudent.role,
+        })
+      }
     }
 
     if (studentsError) {
@@ -218,35 +241,75 @@ export async function GET(request: NextRequest) {
 
     // Map the results to match expected format (already in correct format from select)
     // Also validate that each student actually exists and has valid data
-    const students = (studentsRaw || [])
-      .filter((s: any) => {
-        // Ensure student has required fields and is actually a student
-        if (!s || !s.id || !s.username || !s.email) {
-          logger.debug('[Admin Students API] Filtering out invalid student:', s?.id || 'no-id')
-          return false
-        }
-        const role = (s.role || '').toString().toLowerCase().trim()
-        if (role !== 'student') {
-          logger.debug('[Admin Students API] Filtering out non-student:', { id: s.id, role: s.role })
-          return false
-        }
-        return true
+    // IMPORTANT: Double-check each student still exists in database before returning
+    const validStudents = []
+    for (const s of (studentsRaw || [])) {
+      // Basic validation
+      if (!s || !s.id || !s.username || !s.email) {
+        logger.debug('[Admin Students API] Filtering out invalid student:', s?.id || 'no-id')
+        continue
+      }
+      
+      const role = (s.role || '').toString().toLowerCase().trim()
+      if (role !== 'student') {
+        logger.debug('[Admin Students API] Filtering out non-student:', { id: s.id, role: s.role })
+        continue
+      }
+
+      // Double-check: Verify student still exists in database
+      // This ensures we don't return deleted students
+      const { data: verifyStudent, error: verifyError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', s.id)
+        .eq('role', 'student')
+        .single()
+
+      if (verifyError || !verifyStudent) {
+        logger.debug('[Admin Students API] Student no longer exists in database, filtering out:', {
+          id: s.id,
+          username: s.username,
+          full_name: s.full_name,
+          error: verifyError?.message,
+        })
+        continue
+      }
+
+      // Student exists and is valid, include in results
+      validStudents.push(s)
+    }
+
+    // Map to final format
+    const students = validStudents.map((s: any) => ({
+      id: s.id,
+      username: s.username,
+      email: s.email,
+      password_hash: s.password_hash || '',
+      full_name: s.full_name,
+      section_number: s.section_number,
+      group_name: s.group_name,
+      university_email: s.university_email,
+      role: s.role,
+      is_active: s.is_active,
+      created_at: s.created_at,
+      updated_at: s.updated_at,
+      last_login: s.last_login,
+    }))
+
+    // Final validation: Log if we still have the problematic student
+    const zeyadInResults = students.find((s: any) => 
+      s?.full_name?.includes('زياد محمد') || 
+      s?.username === 'zeyadmohamed' ||
+      s?.email?.includes('zeyadeltmsah')
+    )
+    
+    if (zeyadInResults) {
+      logger.error('[Admin Students API] CRITICAL: Student still in results after verification!', {
+        id: zeyadInResults.id,
+        username: zeyadInResults.username,
+        full_name: zeyadInResults.full_name,
       })
-      .map((s: any) => ({
-        id: s.id,
-        username: s.username,
-        email: s.email,
-        password_hash: s.password_hash || '',
-        full_name: s.full_name,
-        section_number: s.section_number,
-        group_name: s.group_name,
-        university_email: s.university_email,
-        role: s.role,
-        is_active: s.is_active,
-        created_at: s.created_at,
-        updated_at: s.updated_at,
-        last_login: s.last_login,
-      }))
+    }
 
     // Calculate statistics efficiently in single pass
     const bySection: Record<number, number> = {}

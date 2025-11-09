@@ -112,11 +112,38 @@ export async function DELETE(
     }
 
     // Delete the student from users table
-    const { error: deleteError } = await supabase
+    // First, verify the student exists before deletion
+    const { data: studentToDelete, error: verifyError } = await supabase
+      .from('users')
+      .select('id, username, full_name, email')
+      .eq('id', studentId)
+      .eq('role', 'student')
+      .single()
+
+    if (verifyError || !studentToDelete) {
+      logger.error('[Delete Student] Student not found before deletion:', {
+        studentId,
+        error: verifyError?.message,
+      })
+      return NextResponse.json(
+        { error: 'Student not found' },
+        { status: 404 }
+      )
+    }
+
+    logger.debug('[Delete Student] About to delete student:', {
+      id: studentToDelete.id,
+      username: studentToDelete.username,
+      full_name: studentToDelete.full_name,
+    })
+
+    // Delete the student from users table
+    const { error: deleteError, count: deleteCount } = await supabase
       .from('users')
       .delete()
       .eq('id', studentId)
       .eq('role', 'student')
+      .select()
 
     if (deleteError) {
       logger.error('[Delete Student] Error deleting user:', deleteError)
@@ -124,6 +151,26 @@ export async function DELETE(
         { error: 'Failed to delete student account' },
         { status: 500 }
       )
+    }
+
+    // Verify deletion was successful
+    const { data: verifyDeleted } = await supabase
+      .from('users')
+      .select('id')
+      .eq('id', studentId)
+      .single()
+
+    if (verifyDeleted) {
+      logger.error('[Delete Student] WARNING: Student still exists after deletion!', {
+        studentId,
+        studentName: studentToDelete.full_name,
+      })
+    } else {
+      logger.debug('[Delete Student] Successfully verified deletion:', {
+        studentId,
+        studentName: studentToDelete.full_name,
+        deleteCount,
+      })
     }
 
     // Reset registration status in verification_list if found
