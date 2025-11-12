@@ -37,7 +37,7 @@ export default function SubjectPage() {
     const loadArticles = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`/api/articles/by-subject?subjectId=${subjectId}&status=published`)
+        const response = await fetch(`/api/materials?subjectId=${subjectId}&status=published`)
         if (response.ok) {
           const data = await response.json()
           setArticles(data)

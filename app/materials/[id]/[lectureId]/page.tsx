@@ -58,29 +58,17 @@ export default function LecturePage() {
         setLoading(true)
         setError(null)
         
-        // Get access token from cookies
-        const cookies = document.cookie.split(';')
-        const accessTokenCookie = cookies.find(c => c.trim().startsWith('access_token='))
-        const accessToken = accessTokenCookie?.split('=')[1]
-        
-        // Fetch article by ID from Supabase
-        const response = await fetch(`/api/articles/${lectureId}`, {
-          credentials: 'include',
-          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-        })
+        // Fetch article by ID from Supabase (Public API - No authentication required)
+        const response = await fetch(`/api/materials/${lectureId}`)
         
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error('Article not found')
           }
-          if (response.status === 403) {
-            throw new Error('Access denied')
-          }
           throw new Error('Failed to load article')
         }
         
-        const data = await response.json()
-        const article = data.article
+        const article = await response.json()
         
         if (!article) {
           throw new Error('Article not found')
@@ -104,15 +92,6 @@ export default function LecturePage() {
           relatedLectures: [],
           youtubeUrl: ''
         })
-        
-        // Track view
-        if (accessToken) {
-          fetch(`/api/materials/${article.id}/view`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-          }).catch(() => {}) // Ignore errors
-        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load article')
       } finally {

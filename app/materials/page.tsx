@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, Calculator, Atom, Database, Globe, Users, FileText, ArrowRight } from 'lucide-react'
+import { BookOpen, Calculator, Atom, Database, Globe, Users, ArrowRight, Upload } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 interface Subject {
@@ -83,7 +83,7 @@ export default function MaterialsPage() {
         const subjectsWithCounts = await Promise.all(
           subjectConfig.map(async (subject) => {
             try {
-              const response = await fetch(`/api/articles/by-subject?subjectId=${subject.id}&status=published`, {
+              const response = await fetch(`/api/materials?subjectId=${subject.id}&status=published`, {
                 cache: 'no-store',
                 signal: controller.signal
               })
@@ -268,16 +268,15 @@ export default function MaterialsPage() {
           )}
         </div>
 
-        {/* Coming Soon Notice */}
+        {/* Upload Button */}
         <div className="mt-12 text-center">
-          <div className="glass-card p-6 max-w-2xl mx-auto">
-            <h3 className="text-lg font-semibold text-dark-100 mb-2">
-              Content Coming Soon
-            </h3>
-            <p className="text-dark-300">
-              Lecture materials and resources will be uploaded soon. Stay tuned for updates!
-            </p>
-          </div>
+          <Link
+            href="/materials/upload"
+            className="inline-flex items-center gap-2 btn-primary px-6 py-3 text-lg"
+          >
+            <Upload className="w-5 h-5" />
+            Upload Material
+          </Link>
         </div>
       </div>
     </div>
