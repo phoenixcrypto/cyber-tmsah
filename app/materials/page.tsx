@@ -58,7 +58,7 @@ export default function MaterialsPage() {
       id: 'english-language',
       title: 'English Language',
       description: 'English communication and technical writing',
-      icon: FileText,
+      icon: BookOpen,
       color: 'from-red-500 to-red-600'
     },
     {

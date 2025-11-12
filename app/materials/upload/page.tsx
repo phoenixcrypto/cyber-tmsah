@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Upload, FileText, Loader2, CheckCircle2, AlertCircle, ArrowLeft } from 'lucide-react'
+import { Upload, Loader2, CheckCircle2, AlertCircle, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 export default function UploadMaterialsPage() {
@@ -62,7 +62,7 @@ export default function UploadMaterialsPage() {
         throw new Error(errorData.error || 'Failed to upload material')
       }
 
-      const data = await response.json()
+      await response.json()
       setMessage({ type: 'success', text: 'Material uploaded successfully!' })
       
       // Reset form
