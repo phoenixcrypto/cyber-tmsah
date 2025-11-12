@@ -638,22 +638,48 @@ export default function SchedulePage() {
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <h3 className="text-lg font-semibold text-dark-100">Matrix View Options</h3>
                 <div className="flex flex-wrap gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={showLecturesInMatrix}
-                      onChange={(e) => setShowLecturesInMatrix(e.target.checked)}
-                      className="w-4 h-4 rounded border-cyber-neon/30 bg-cyber-dark text-cyber-neon focus:ring-2 focus:ring-cyber-neon"
-                    />
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={showLecturesInMatrix}
+                        onChange={(e) => setShowLecturesInMatrix(e.target.checked)}
+                        className="sr-only"
+                      />
+                      <div className={`w-4 h-4 rounded border-2 transition-all ${
+                        showLecturesInMatrix 
+                          ? 'bg-cyber-neon border-cyber-neon' 
+                          : 'bg-cyber-dark border-cyber-neon/30'
+                      } flex items-center justify-center`}>
+                        {showLecturesInMatrix && (
+                          <svg className="w-3 h-3 text-cyber-dark" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
                     <span className="text-sm text-dark-300">Show Lectures</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={showEmptyPeriods}
-                      onChange={(e) => setShowEmptyPeriods(e.target.checked)}
-                      className="w-4 h-4 rounded border-cyber-neon/30 bg-cyber-dark text-cyber-neon focus:ring-2 focus:ring-cyber-neon"
-                    />
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={showEmptyPeriods}
+                        onChange={(e) => setShowEmptyPeriods(e.target.checked)}
+                        className="sr-only"
+                      />
+                      <div className={`w-4 h-4 rounded border-2 transition-all ${
+                        showEmptyPeriods 
+                          ? 'bg-cyber-neon border-cyber-neon' 
+                          : 'bg-cyber-dark border-cyber-neon/30'
+                      } flex items-center justify-center`}>
+                        {showEmptyPeriods && (
+                          <svg className="w-3 h-3 text-cyber-dark" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                          </svg>
+                        )}
+                      </div>
+                    </div>
                     <span className="text-sm text-dark-300">Show Empty Periods</span>
                   </label>
                 </div>

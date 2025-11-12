@@ -1,110 +1,70 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, BookOpen, Clock, User, Calendar, FileText, Download, Play } from 'lucide-react'
+import { ArrowLeft, BookOpen, Clock, User, Calendar, FileText } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
 
-interface Article {
-  id: string
-  title: string
-  description: string
-  content: string
-  subjectId: string
-  subjectName: string
-  instructor: string
-  duration: string
-  date: string
-  type: 'lecture' | 'lab' | 'assignment'
-  status: 'published' | 'draft' | 'archived' | 'scheduled'
-  publishedAt: string
-  lastModified: string
-  views: number
-  likes: number
-  tags: string[]
-  excerpt: string
-  youtubeUrl?: string
+// Static articles data - no API calls
+const staticArticles: { [key: string]: any[] } = {
+  'applied-physics': [],
+  'mathematics': [],
+  'entrepreneurship': [],
+  'information-technology': [],
+  'database-systems': [],
+  'english-language': [],
+  'information-systems': []
+}
+
+// Subject data mapping
+const subjectData = {
+  'applied-physics': {
+    title: 'Applied Physics',
+    description: 'Physics principles and applications in technology',
+    instructor: 'Dr. Ahmed Bakr',
+    color: 'from-blue-500 to-blue-600',
+  },
+  'mathematics': {
+    title: 'Mathematics',
+    description: 'Mathematical foundations and problem solving',
+    instructor: 'Dr. Simon Ezzat',
+    color: 'from-green-500 to-green-600',
+  },
+  'entrepreneurship': {
+    title: 'Entrepreneurship & Creative Thinking',
+    description: 'Business innovation and creative problem solving',
+    instructor: 'Dr. Abeer Hassan',
+    color: 'from-purple-500 to-purple-600',
+  },
+  'information-technology': {
+    title: 'Information Technology',
+    description: 'IT fundamentals and modern technologies',
+    instructor: 'Dr. Shaima Ahmed',
+    color: 'from-cyan-500 to-cyan-600',
+  },
+  'database-systems': {
+    title: 'Database Systems',
+    description: 'Database design, implementation and management',
+    instructor: 'Dr. Abeer Hassan',
+    color: 'from-orange-500 to-orange-600',
+  },
+  'english-language': {
+    title: 'English Language',
+    description: 'English communication and technical writing',
+    instructor: 'Dr. Sabreen',
+    color: 'from-red-500 to-red-600',
+  },
+  'information-systems': {
+    title: 'Information Systems',
+    description: 'IS analysis, design and implementation',
+    instructor: 'Dr. Hind Ziada',
+    color: 'from-indigo-500 to-indigo-600',
+  }
 }
 
 export default function SubjectPage() {
   const params = useParams()
   const subjectId = params.id as string
-  const [articles, setArticles] = useState<Article[]>([])
-  const [loading, setLoading] = useState(true)
-
-  // Load articles for this subject
-  useEffect(() => {
-    const loadArticles = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch(`/api/materials?subjectId=${subjectId}&status=published`)
-        if (response.ok) {
-          const data = await response.json()
-          setArticles(data)
-        }
-      } catch (error) {
-        console.error('Error loading articles:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadArticles()
-  }, [subjectId])
-
-  // Subject data mapping
-  const subjectData = {
-    'applied-physics': {
-      title: 'Applied Physics',
-      description: 'Physics principles and applications in technology',
-      instructor: 'Dr. Ahmed Bakr',
-      color: 'from-blue-500 to-blue-600',
-      lectures: []
-    },
-    'mathematics': {
-      title: 'Mathematics',
-      description: 'Mathematical foundations and problem solving',
-      instructor: 'Dr. Simon Ezzat',
-      color: 'from-green-500 to-green-600',
-      lectures: []
-    },
-    'entrepreneurship': {
-      title: 'Entrepreneurship & Creative Thinking',
-      description: 'Business innovation and creative problem solving',
-      instructor: 'Dr. Abeer Hassan',
-      color: 'from-purple-500 to-purple-600',
-      lectures: []
-    },
-    'information-technology': {
-      title: 'Information Technology',
-      description: 'IT fundamentals and modern technologies',
-      instructor: 'Dr. Shaima Ahmed',
-      color: 'from-cyan-500 to-cyan-600',
-      lectures: []
-    },
-    'database-systems': {
-      title: 'Database Systems',
-      description: 'Database design, implementation and management',
-      instructor: 'Dr. Abeer Hassan',
-      color: 'from-orange-500 to-orange-600',
-      lectures: []
-    },
-    'english-language': {
-      title: 'English Language',
-      description: 'English communication and technical writing',
-      instructor: 'Dr. Sabreen',
-      color: 'from-red-500 to-red-600',
-      lectures: []
-    },
-    'information-systems': {
-      title: 'Information Systems',
-      description: 'IS analysis, design and implementation',
-      instructor: 'Dr. Hind Ziada',
-      color: 'from-indigo-500 to-indigo-600',
-      lectures: []
-    }
-  }
-
+  const articles = staticArticles[subjectId] || []
   const subject = subjectData[subjectId as keyof typeof subjectData]
 
   if (!subject) {
@@ -152,19 +112,14 @@ export default function SubjectPage() {
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span>{loading ? 'Loading...' : `${articles.length} lectures`}</span>
+              <span>{articles.length} lectures</span>
             </div>
           </div>
         </div>
 
         {/* Lectures List */}
         <div className="space-y-4">
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="w-8 h-8 border-2 border-cyber-neon border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-dark-300">Loading lectures...</p>
-            </div>
-          ) : articles.length > 0 ? articles.map((article, index) => (
+          {articles.length > 0 ? articles.map((article, index) => (
             <div 
               key={article.id}
               className="enhanced-card p-6 hover:scale-[1.02] transition-all duration-300 animate-slide-up-delayed"
@@ -203,44 +158,6 @@ export default function SubjectPage() {
                       <span className="capitalize">{article.type}</span>
                     </div>
                   </div>
-
-                  {article.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-3">
-                      {article.tags.slice(0, 3).map((tag, tagIndex) => (
-                        <span key={tagIndex} className="px-2 py-1 bg-cyber-dark/50 text-cyber-neon text-xs rounded">
-                          #{tag}
-                        </span>
-                      ))}
-                      {article.tags.length > 3 && (
-                        <span className="px-2 py-1 bg-cyber-dark/50 text-dark-400 text-xs rounded">
-                          +{article.tags.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex items-center gap-2 ml-4">
-                  {article.status === 'published' ? (
-                    <>
-                      <Link 
-                        href={`/materials/${subjectId}/${article.id}`}
-                        className="btn-primary flex items-center gap-2"
-                      >
-                        <Play className="w-4 h-4" />
-                        Read Article
-                      </Link>
-                      <button className="btn-secondary flex items-center gap-2">
-                        <Download className="w-4 h-4" />
-                        Download
-                      </button>
-                    </>
-                  ) : (
-                    <button className="btn-tertiary flex items-center gap-2" disabled>
-                      <Clock className="w-4 h-4" />
-                      Coming Soon
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
