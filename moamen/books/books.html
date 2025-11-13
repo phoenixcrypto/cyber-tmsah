@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبة الكتب - Cyber Security Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-black: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --primary-white: #FFFFFF;
+            --accent-silver: #F0F0F0;
+            --secondary-gray: #AAAAAA;
+            --hover-silver: #D0D0D0;
+            --primary-red: #E03B3B; 
+        }
+
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #1A1A1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-silver);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #E03B3B;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            letter-spacing: 1px;
+            text-decoration: none;
+            flex-grow: 0; 
+            flex-shrink: 0;
+            padding: 0 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            flex: 1; 
+        }
+        
+        .nav-links.nav-left {
+            justify-content: flex-start; 
+        }
+        
+        .nav-links.nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red); 
+        }
+        
+        /* Dropdown specific styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg); 
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden; 
+            border: 1px solid #2A2A2A; 
+            top: 100%; 
+            right: 0; 
+            padding: 0.5rem 0; 
+        }
+
+        .dropdown-content a {
+            color: var(--accent-silver); 
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400; 
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-red); 
+            color: var(--primary-white); 
+        }
+
+        .dropdown-content a.active {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown > a::after {
+            content: ' ▼'; 
+            font-size: 0.7em;
+            margin-right: 5px;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a::after {
+            transform: rotate(180deg); 
+        }
+
+        /* Page Hero Section */
+        .page-hero {
+            padding: 10rem 2rem 4rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.5) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            color: var(--secondary-gray);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Library Content */
+        .library-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Book Category Title */
+        .book-category-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            margin-bottom: 2rem;
+            margin-top: 4rem;
+            padding-right: 15px;
+            border-right: 5px solid var(--primary-red);
+            display: inline-block;
+        }
+
+        .book-category-title:first-of-type {
+            margin-top: 0;
+        }
+
+        /* Book Grid */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 5rem;
+        }
+
+        /* Book Card */
+        .book-card {
+            background-color: var(--card-bg);
+            border: 2px solid #2A2A2A;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-red);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #2A2A2A 0%, #1A1A1A 100%);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border: 1px solid #3A3A3A;
+        }
+
+        .book-card h4 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .book-author {
+            color: var(--primary-red);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .book-description {
+            color: var(--secondary-gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .book-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .book-tag {
+            background-color: #2A2A2A;
+            color: var(--accent-silver);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #3A3A3A;
+        }
+
+        .book-link {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--accent-silver);
+            padding: 0.9rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent-silver);
+            text-align: center;
+        }
+
+        .book-link:hover {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            border-color: var(--primary-red);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(224, 59, 59, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--secondary-gray);
+        }
+
+        .footer-section {
+            margin: 20px;
+            min-width: 200px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-red);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            color: var(--secondary-gray);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom p a:hover {
+             color: var(--hover-silver);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            .page-hero {
+                padding: 8rem 2rem 3rem;
+            }
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            .page-hero p {
+                font-size: 1rem;
+            }
+            .book-category-title {
+                font-size: 1.8rem;
+            }
+            .book-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+                .back-box {
+            position: fixed;
+            top: 200px;
+            right: 360px;
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+            z-index: 999;
+            border: 2px solid var(--primary-red);
+        }
+
+        .back-box:hover {
+            background-color: transparent;
+            color: var(--primary-red);
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--primary-red);
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links nav-left">
+                <li><a href="../roadmap-html-new/roadmap-html-new.html">خريطة الطريق</a></li>
+                <li class="dropdown">
+                    <a href="">المصادر المصنفة</a>
+                    <div class="dropdown-content">
+                        <a href="../courses/courses.html">الدورات</a>
+                        <a href="../books/books.html">الكتب</a>
+                        <a href="../videos/videos.html">الفيديوهات المقترحة</a>
+                        <a href="../podcasts/podcasts.html">البودكاست</a>
+                        <a href="../platforms/platforms.html">مواقع ومنصات تعليمية</a>
+                    </div>
+                </li>
+            </ul>
+
+            <a href="../cyber-security-hub.html" class="logo">Cyber Security Hub</a>
+
+            <ul class="nav-links nav-right">
+                <li><a href="../expertise-guide/expertise-guide.html">دليل الخبرات</a></li>
+                <li><a href="../evaluation/evaluation.html">التقييم والأخبار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>📚 مكتبة الكتب الشاملة</h1>
+        <p>مجموعة منتقاة لأهم كتب الأمن السيبراني، مصنفة حسب التخصص والمستوى.</p>
+        <a href="../cyber-security-hub.html" class="back-box" title="العودة للصفحة الرئيسية">
+    →
+</a>
+    </section>
+
+    <main class="library-content">
+        <!-- قسم كتب البرمجة -->
+        <h2 class="book-category-title">💻 كتب البرمجة (Programming Books)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🐍</div>
+                <h4>Python for Cybersecurity</h4>
+                <p class="book-author">Howard E. Poston III</p>
+                <p class="book-description">دليل شامل لتعلم البايثون من منظور الأمن السيبراني، يغطي بناء الأدوات الأمنية والتحليل الآلي.</p>
+                <div class="book-tags">
+                    <span class="book-tag">مبتدئ</span>
+                    <span class="book-tag">بايثون</span>
+                    <span class="book-tag">برمجة</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">📘</div>
+                <h4>Black Hat Python</h4>
+                <p class="book-author">Justin Seitz</p>
+                <p class="book-description">تعلم كتابة أدوات القرصنة الأخلاقية باستخدام بايثون، من اختراق الشبكات إلى تحليل البرمجيات الخبيثة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">بايثون</span>
+                    <span class="book-tag">Hacking</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🔧</div>
+                <h4>Violent Python</h4>
+                <p class="book-author">TJ O'Connor</p>
+                <p class="book-description">كتاب متخصص في بناء أدوات الاختراق والتحليل الجنائي باستخدام بايثون بطريقة عملية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">بايثون</span>
+                    <span class="book-tag">أدوات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">⚙️</div>
+                <h4>C Programming for Security</h4>
+                <p class="book-author">Marcus Johnson</p>
+                <p class="book-description">فهم عميق للغة C وكيفية استخدامها في تطوير برمجيات آمنة واكتشاف الثغرات.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">C Language</span>
+                    <span class="book-tag">Secure Coding</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب الشبكات -->
+        <h2 class="book-category-title">🌐 كتب الشبكات (Networking Books)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">📡</div>
+                <h4>Computer Networking: A Top-Down Approach</h4>
+                <p class="book-author">James Kurose & Keith Ross</p>
+                <p class="book-description">الكتاب الأساسي لفهم الشبكات من الطبقة التطبيقية حتى الطبقة الفيزيائية، مرجع أكاديمي موثوق.</p>
+                <div class="book-tags">
+                    <span class="book-tag">مبتدئ</span>
+                    <span class="book-tag">شبكات</span>
+                    <span class="book-tag">أساسيات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🔒</div>
+                <h4>Network Security Essentials</h4>
+                <p class="book-author">William Stallings</p>
+                <p class="book-description">أساسيات أمن الشبكات بما في ذلك التشفير، جدران النار، والكشف عن التسلل.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">أمن الشبكات</span>
+                    <span class="book-tag">تشفير</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🛡️</div>
+                <h4>The Practice of Network Security Monitoring</h4>
+                <p class="book-author">Richard Bejtlich</p>
+                <p class="book-description">دليل عملي لمراقبة أمن الشبكات واكتشاف التهديدات والاستجابة للحوادث الأمنية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">مراقبة</span>
+                    <span class="book-tag">تهديدات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🌍</div>
+                <h4>TCP/IP Illustrated</h4>
+                <p class="book-author">W. Richard Stevens</p>
+                <p class="book-description">المرجع الكلاسيكي لفهم بروتوكولات TCP/IP بتفصيل عميق مع أمثلة عملية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">TCP/IP</span>
+                    <span class="book-tag">بروتوكولات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب اختبار الاختراق -->
+        <h2 class="book-category-title">🎯 كتب اختبار الاختراق (Penetration Testing)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🔓</div>
+                <h4>The Web Application Hacker's Handbook</h4>
+                <p class="book-author">Dafydd Stuttard & Marcus Pinto</p>
+                <p class="book-description">الدليل الشامل لاختبار أمن تطبيقات الويب، يغطي جميع تقنيات الاختراق والثغرات المعروفة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Web Security</span>
+                    <span class="book-tag">Pentesting</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">⚔️</div>
+                <h4>Metasploit: The Penetration Tester's Guide</h4>
+                <p class="book-author">David Kennedy et al.</p>
+                <p class="book-description">دليل عملي شامل لاستخدام إطار عمل Metasploit في اختبار الاختراق والاستغلال.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Metasploit</span>
+                    <span class="book-tag">أدوات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🎭</div>
+                <h4>Penetration Testing: A Hands-On Introduction</h4>
+                <p class="book-author">Georgia Weidman</p>
+                <p class="book-description">مقدمة عملية لاختبار الاختراق تغطي المنهجيات والأدوات والتقنيات الحديثة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">مبتدئ</span>
+                    <span class="book-tag">Pentesting</span>
+                    <span class="book-tag">عملي</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🏴</div>
+                <h4>Advanced Penetration Testing</h4>
+                <p class="book-author">Wil Allsopp</p>
+                <p class="book-description">تقنيات متقدمة في اختبار الاختراق للبنى التحتية المعقدة والشبكات المؤسسية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">خبير</span>
+                    <span class="book-tag">Advanced</span>
+                    <span class="book-tag">Enterprise</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🌐</div>
+                <h4>The Hacker Playbook 3</h4>
+                <p class="book-author">Peter Kim</p>
+                <p class="book-description">دليل عملي يحاكي سيناريوهات اختبار الاختراق الواقعية مع أحدث التقنيات والأدوات.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">عملي</span>
+                    <span class="book-tag">سيناريوهات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب الأمن الدفاعي -->
+        <h2 class="book-category-title">🛡️ كتب الأمن الدفاعي (Defensive Security)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🔍</div>
+                <h4>Blue Team Handbook: Incident Response Edition</h4>
+                <p class="book-author">Don Murdoch</p>
+                <p class="book-description">دليل مرجعي سريع لفرق الدفاع السيبراني والاستجابة للحوادث الأمنية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Blue Team</span>
+                    <span class="book-tag">Incident Response</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🚨</div>
+                <h4>Security Operations Center: Building, Operating, and Maintaining</h4>
+                <p class="book-author">Joseph Muniz et al.</p>
+                <p class="book-description">دليل شامل لبناء وتشغيل مراكز العمليات الأمنية (SOC) بكفاءة عالية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">SOC</span>
+                    <span class="book-tag">عمليات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">📊</div>
+                <h4>Applied Incident Response</h4>
+                <p class="book-author">Steve Anson</p>
+                <p class="book-description">منهجية عملية للاستجابة للحوادث الأمنية من الكشف حتى التعافي الكامل.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">IR</span>
+                    <span class="book-tag">عملي</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🔐</div>
+                <h4>Defensive Security Handbook</h4>
+                <p class="book-author">Lee Brotherston & Amanda Berlin</p>
+                <p class="book-description">أفضل الممارسات لحماية البنية التحتية وبناء دفاعات سيبرانية قوية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">مبتدئ</span>
+                    <span class="book-tag">دفاع</span>
+                    <span class="book-tag">أفضل الممارسات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب الهندسة العكسية -->
+        <h2 class="book-category-title">🔬 كتب الهندسة العكسية (Reverse Engineering)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🧬</div>
+                <h4>Practical Malware Analysis</h4>
+                <p class="book-author">Michael Sikorski & Andrew Honig</p>
+                <p class="book-description">الدليل الشامل لتحليل البرمجيات الخبيثة والهندسة العكسية بأسلوب عملي.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Malware</span>
+                    <span class="book-tag">تحليل</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">⚙️</div>
+                <h4>Reversing: Secrets of Reverse Engineering</h4>
+                <p class="book-author">Eldad Eilam</p>
+                <p class="book-description">أساسيات ومفاهيم الهندسة العكسية للبرمجيات مع تطبيقات عملية متنوعة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Reverse Engineering</span>
+                    <span class="book-tag">أساسيات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🦠</div>
+                <h4>The Art of Memory Forensics</h4>
+                <p class="book-author">Michael Hale Ligh et al.</p>
+                <p class="book-description">تحليل الذاكرة الجنائي لاكتشاف البرمجيات الخبيثة والتهديدات المتقدمة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">خبير</span>
+                    <span class="book-tag">Forensics</span>
+                    <span class="book-tag">Memory Analysis</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">💾</div>
+                <h4>Practical Binary Analysis</h4>
+                <p class="book-author">Dennis Andriesse</p>
+                <p class="book-description">تعلم تحليل الملفات الثنائية واستخراج المعلومات منها باستخدام أدوات حديثة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Binary Analysis</span>
+                    <span class="book-tag">عملي</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب التشفير -->
+        <h2 class="book-category-title">🔐 كتب التشفير (Cryptography)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🔑</div>
+                <h4>Cryptography Engineering</h4>
+                <p class="book-author">Niels Ferguson, Bruce Schneier, Tadayoshi Kohno</p>
+                <p class="book-description">مبادئ التصميم وأفضل الممارسات لبناء أنظمة تشفير آمنة وفعالة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">تشفير</span>
+                    <span class="book-tag">تصميم</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">📐</div>
+                <h4>Introduction to Modern Cryptography</h4>
+                <p class="book-author">Jonathan Katz & Yehuda Lindell</p>
+                <p class="book-description">مقدمة أكاديمية شاملة للتشفير الحديث مع أسس رياضية قوية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">تشفير</span>
+                    <span class="book-tag">أكاديمي</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🧮</div>
+                <h4>Applied Cryptography</h4>
+                <p class="book-author">Bruce Schneier</p>
+                <p class="book-description">المرجع الكلاسيكي للتشفير التطبيقي، يغطي البروتوكولات والخوارزميات.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Protocols</span>
+                    <span class="book-tag">مرجع</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🔓</div>
+                <h4>Serious Cryptography</h4>
+                <p class="book-author">Jean-Philippe Aumasson</p>
+                <p class="book-description">دليل عملي للتشفير الحديث بأسلوب واضح ومباشر للممارسين.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">عملي</span>
+                    <span class="book-tag">حديث</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب أمن التطبيقات -->
+        <h2 class="book-category-title">📱 كتب أمن التطبيقات (Application Security)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🌐</div>
+                <h4>OWASP Testing Guide</h4>
+                <p class="book-author">OWASP Foundation</p>
+                <p class="book-description">الدليل الشامل لاختبار أمن تطبيقات الويب وفقاً لمعايير OWASP العالمية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">OWASP</span>
+                    <span class="book-tag">Web Security</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">📲</div>
+                <h4>Mobile Application Hacker's Handbook</h4>
+                <p class="book-author">Dominic Chell et al.</p>
+                <p class="book-description">دليل شامل لاختبار أمن تطبيقات الموبايل على منصات iOS و Android.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Mobile</span>
+                    <span class="book-tag">iOS/Android</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">⚡</div>
+                <h4>The Tangled Web</h4>
+                <p class="book-author">Michal Zalewski</p>
+                <p class="book-description">فهم عميق لأمن المتصفحات وتطبيقات الويب من منظور تقني متقدم.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Browser Security</span>
+                    <span class="book-tag">تقني</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">☁️</div>
+                <h4>Cloud Security & Privacy</h4>
+                <p class="book-author">Tim Mather et al.</p>
+                <p class="book-description">أمن الحوسبة السحابية وحماية البيانات في البيئات السحابية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Cloud</span>
+                    <span class="book-tag">Privacy</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب الأمن العام والاستراتيجي -->
+        <h2 class="book-category-title">📖 كتب الأمن العام والاستراتيجي (General & Strategic Security)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🎓</div>
+                <h4>Security Engineering</h4>
+                <p class="book-author">Ross Anderson</p>
+                <p class="book-description">موسوعة شاملة في هندسة الأمن، تغطي المبادئ والأنظمة والتطبيقات الواقعية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">هندسة</span>
+                    <span class="book-tag">موسوعي</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🧠</div>
+                <h4>The Art of Deception</h4>
+                <p class="book-author">Kevin Mitnick</p>
+                <p class="book-description">فهم الهندسة الاجتماعية وكيف يستغل المهاجمون العنصر البشري.</p>
+                <div class="book-tags">
+                    <span class="book-tag">مبتدئ</span>
+                    <span class="book-tag">Social Engineering</span>
+                    <span class="book-tag">إنساني</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">📚</div>
+                <h4>Hacking: The Art of Exploitation</h4>
+                <p class="book-author">Jon Erickson</p>
+                <p class="book-description">تعلم أساسيات الاختراق والبرمجة والاستغلال من منظور تقني عميق.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Exploitation</span>
+                    <span class="book-tag">أساسيات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🎯</div>
+                <h4>Threat Modeling: Designing for Security</h4>
+                <p class="book-author">Adam Shostack</p>
+                <p class="book-description">منهجيات نمذجة التهديدات لبناء أنظمة آمنة من مرحلة التصميم.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Threat Modeling</span>
+                    <span class="book-tag">تصميم</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🏢</div>
+                <h4>NIST Cybersecurity Framework</h4>
+                <p class="book-author">NIST</p>
+                <p class="book-description">إطار العمل الوطني الأمريكي للأمن السيبراني، مرجع أساسي للمؤسسات.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Framework</span>
+                    <span class="book-tag">مؤسسي</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">⚖️</div>
+                <h4>CISSP Official Study Guide</h4>
+                <p class="book-author">Mike Chapple et al.</p>
+                <p class="book-description">الدليل الرسمي للتحضير لشهادة CISSP، يغطي جميع مجالات الأمن السيبراني.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">CISSP</span>
+                    <span class="book-tag">شهادة</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب التحليل الجنائي -->
+        <h2 class="book-category-title">🔎 كتب التحليل الجنائي الرقمي (Digital Forensics)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🕵️</div>
+                <h4>File System Forensic Analysis</h4>
+                <p class="book-author">Brian Carrier</p>
+                <p class="book-description">تحليل أنظمة الملفات المختلفة لاستخراج الأدلة الرقمية وتتبع الأنشطة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Forensics</span>
+                    <span class="book-tag">File Systems</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">💿</div>
+                <h4>The Art of Memory Forensics</h4>
+                <p class="book-author">Michael Hale Ligh et al.</p>
+                <p class="book-description">تقنيات تحليل ذاكرة النظام لاكتشاف البرمجيات الخبيثة والأنشطة المشبوهة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">خبير</span>
+                    <span class="book-tag">Memory Forensics</span>
+                    <span class="book-tag">تقني</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">📁</div>
+                <h4>Practical Forensic Imaging</h4>
+                <p class="book-author">Bruce Nikkel</p>
+                <p class="book-description">دليل عملي لإنشاء نسخ جنائية من الأقراص والأجهزة المختلفة.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متوسط</span>
+                    <span class="book-tag">Imaging</span>
+                    <span class="book-tag">عملي</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🌐</div>
+                <h4>Network Forensics: Tracking Hackers</h4>
+                <p class="book-author">Sherri Davidoff & Jonathan Ham</p>
+                <p class="book-description">تتبع المهاجمين عبر الشبكة وتحليل حركة البيانات الجنائية.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Network Forensics</span>
+                    <span class="book-tag">تتبع</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+        <!-- قسم كتب أنظمة التشغيل -->
+        <h2 class="book-category-title">🖥️ كتب أنظمة التشغيل والأمن (Operating Systems Security)</h2>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover">🐧</div>
+                <h4>Linux Basics for Hackers</h4>
+                <p class="book-author">OccupyTheWeb</p>
+                <p class="book-description">أساسيات نظام Linux من منظور الأمن السيبراني واختبار الاختراق.</p>
+                <div class="book-tags">
+                    <span class="book-tag">مبتدئ</span>
+                    <span class="book-tag">Linux</span>
+                    <span class="book-tag">أساسيات</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🪟</div>
+                <h4>Windows Internals</h4>
+                <p class="book-author">Pavel Yosifovich et al.</p>
+                <p class="book-description">فهم عميق للبنية الداخلية لنظام Windows وآليات عمله.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">Windows</span>
+                    <span class="book-tag">Internals</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">🔧</div>
+                <h4>macOS and iOS Internals</h4>
+                <p class="book-author">Jonathan Levin</p>
+                <p class="book-description">استكشاف البنية الداخلية لأنظمة Apple وآليات الأمن فيها.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">macOS</span>
+                    <span class="book-tag">iOS</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+
+            <div class="book-card">
+                <div class="book-cover">⚙️</div>
+                <h4>Operating System Security</h4>
+                <p class="book-author">Trent Jaeger</p>
+                <p class="book-description">مبادئ وتقنيات تأمين أنظمة التشغيل والحماية من المستوى المنخفض.</p>
+                <div class="book-tags">
+                    <span class="book-tag">متقدم</span>
+                    <span class="book-tag">OS Security</span>
+                    <span class="book-tag">نظري</span>
+                </div>
+                <a href="#" class="book-link">عرض التفاصيل</a>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="cyber-security-hub.html#about">عن الموقع</a></li>
+                        <li><a href="cyber-security-hub.html#team">الفريق</a></li>
+                        <li><a href="cyber-security-hub.html#contact">اتصل بنا</a></li>
+                        <li><a href="cyber-security-hub.html#contribute">ساهم معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المصادر</h4>
+                    <ul class="footer-links">
+                        <li><a href="resources.html#courses">الدورات</a></li>
+                        <li><a href="books.html">الكتب</a></li>
+                        <li><a href="resources.html#tools">الأدوات</a></li>
+                        <li><a href="resources.html#labs">المختبرات</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المجتمع</h4>
+                    <ul class="footer-links">
+                        <li><a href="#forum">المنتدى</a></li>
+                        <li><a href="#discord">Discord</a></li>
+                        <li><a href="#blog">المدونة</a></li>
+                        <li><a href="#events">الفعاليات</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 
+                    <a href="https://www.moamenhaytham.com" target="_blank">Moamen Haytham</a>.
+                    جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

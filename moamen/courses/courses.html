@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدورات التعليمية - Cyber Security Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-black: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --primary-white: #FFFFFF;
+            --accent-silver: #F0F0F0;
+            --secondary-gray: #AAAAAA;
+            --hover-silver: #D0D0D0;
+            /* اللون الأحمر الوحيد للـ Accent */
+            --primary-red: #E03B3B; 
+        }
+
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #1A1A1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-silver);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #E03B3B;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* ------------------------------------------- */
+        /* ** Header & Navigation (التصميم الجديد) ** */
+        /* ------------------------------------------- */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between; /* توزيع العناصر على المساحة */
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            letter-spacing: 1px;
+            text-decoration: none;
+            /* إعطاء الشعار مساحة خاصة به في المنتصف */
+            flex-grow: 0; 
+            flex-shrink: 0;
+            padding: 0 1rem; /* مسافة حول الشعار */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            /* جعل القوائم تأخذ المساحة المتبقية بالتساوي */
+            flex: 1; 
+        }
+        
+        /* القائمة اليمنى (في RTL) */
+        .nav-links.nav-left {
+            justify-content: flex-start; 
+        }
+        
+        /* القائمة اليسرى (في RTL) */
+        .nav-links.nav-right {
+            justify-content: flex-end;
+        }
+
+
+        .nav-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red); 
+        }
+        
+        /* Dropdown specific styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg); 
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden; 
+            border: 1px solid #2A2A2A; 
+            top: 100%; 
+            right: 0; 
+            padding: 0.5rem 0; 
+        }
+
+        .dropdown-content a {
+            color: var(--accent-silver); 
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400; 
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-red); 
+            color: var(--primary-white); 
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Arrow indicator for dropdown */
+        .dropdown > a::after {
+            content: ' ▼'; 
+            font-size: 0.7em;
+            margin-right: 5px;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a::after {
+            transform: rotate(180deg); 
+        }
+
+        /* Hero Section for Courses Page */
+        .page-hero {
+            padding: 12rem 2rem 6rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.5) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-white);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .page-hero p {
+            font-size: 1.3rem;
+            color: var(--secondary-gray);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Courses Content Section */
+        .courses-content {
+            padding: 2rem 2rem 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            margin: 4rem 0 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-red);
+            display: inline-block;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .course-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2A2A2A;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            border-color: var(--primary-red);
+        }
+
+        .course-thumbnail {
+            width: 100%;
+            height: 200px;
+            background-color: #2A2A2A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-gray);
+            font-size: 1.2rem;
+        }
+
+        .course-info {
+            padding: 1.5rem;
+        }
+
+        .course-info h4 {
+            font-size: 1.3rem;
+            color: var(--primary-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .course-instructor {
+            color: var(--primary-red);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .course-description {
+            color: var(--secondary-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .course-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-tag {
+            background-color: #2A2A2A;
+            color: var(--accent-silver);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .course-link {
+            display: inline-block;
+            background-color: var(--accent-silver);
+            color: var(--primary-black);
+            padding: 0.7rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent-silver);
+        }
+
+        .course-link:hover {
+            background-color: transparent;
+            color: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--primary-red);
+        }
+
+        /* ------------------------------------------- */
+        /* تنسيقات الـ Footer (التصميم النهائي المدمج) */
+        /* ------------------------------------------- */
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--secondary-gray);
+        }
+
+        .footer-section {
+            margin: 20px;
+            min-width: 200px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-red);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            color: var(--secondary-gray);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom p a:hover {
+             color: var(--hover-silver);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            .page-hero {
+                padding: 12rem 2rem 4rem;
+            }
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            .page-hero p {
+                font-size: 1.1rem;
+            }
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            .category-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        .colorcyber{
+            color: #E03B3B;
+        }
+
+        .cyber{
+            color: #E03B3B;
+        }
+
+        .back-box {
+    position: fixed;
+    top: 200px;
+    right: 360px;
+    background-color: var(--primary-red);
+    color: var(--primary-white);
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
+    z-index: 999;
+    border: 2px solid var(--primary-red);
+}
+
+.back-box:hover {
+    background-color: transparent;
+    color: var(--primary-red);
+    transform: translateX(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--primary-red);
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links nav-left">
+                <li><a href="../roadmap-html-new/roadmap-html-new.html">خريطة الطريق</a></li>
+                <li class="dropdown">
+                    <a href="">المصادر المصنفة</a>
+                    <div class="dropdown-content">
+                        <a href="../courses/courses.html">الدورات</a>
+                        <a href="../books/books.html">الكتب</a>
+                        <a href="../videos/videos.html">الفيديوهات المقترحة</a>
+                        <a href="../podcasts/podcasts.html">البودكاست</a>
+                        <a href="../platforms/platforms.html">مواقع ومنصات تعليمية</a>
+                    </div>
+                </li>
+            </ul>
+
+            <a href="../cyber-security-hub.html" class="logo">Cyber Security Hub</a>
+
+            <ul class="nav-links nav-right">
+                <li><a href="../expertise-guide/expertise-guide.html">دليل الخبرات</a></li>
+                <li><a href="../evaluation/evaluation.html">التقييم والأخبار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>📚 <span class="colorcyber">الدورات التعليمية المصنفة</span></h1>
+        <p>ابدأ رحلتك التعليمية مع أفضل الدورات المجانية والمدفوعة، مصنفة حسب التخصص والمستوى.</p>
+        <a href="../cyber-security-hub.html" class="back-box" title="العودة للصفحة الرئيسية">
+    →
+</a>
+    </section>
+
+    <main class="courses-content">
+        <!-- قسم دورات الأساسيات -->
+        <h2 class="category-title">دورات الأساسيات (الشبكات، الأنظمة، البرمجة)</h2>
+        <div class="courses-grid">
+            <!-- دورة 1 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>مقدمة في الأمن السيبراني</h4>
+                    <p class="course-instructor">Cisco Networking Academy</p>
+                    <p class="course-description">دورة شاملة تغطي أساسيات الأمن السيبراني، التهديدات، ومبادئ الحماية.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">مبتدئ</span>
+                        <span class="course-tag">مجاني</span>
+                        <span class="course-tag">شهادة</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+            
+            <!-- دورة 2 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>أساسيات الشبكات</h4>
+                    <p class="course-instructor">Google</p>
+                    <p class="course-description">تعلم أساسيات الشبكات، البروتوكولات، وتصميم البنية التحتية للشبكات.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">مبتدئ</span>
+                        <span class="course-tag">مجاني</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+            
+            <!-- دورة 3 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>برمجة بايثون للأمن السيبراني</h4>
+                    <p class="course-instructor">Codecademy</p>
+                    <p class="course-description">تعلم برمجة بايثون وتطبيقها في مجالات الأمن السيبراني المختلفة.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">مبتدئ</span>
+                        <span class="course-tag">مدفوع</span>
+                        <span class="course-tag">برمجة</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم دورات المسار الهجومي -->
+        <h2 class="category-title">دورات المسار الهجومي (Penetration Testing)</h2>
+        <div class="courses-grid">
+            <!-- دورة 1 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>أخلاقيات الهاكينج والاختراق</h4>
+                    <p class="course-instructor">EC-Council</p>
+                    <p class="course-description">دورة شاملة تغطي منهجيات الاختبارات الاختراقية وأدواتها.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">متوسط</span>
+                        <span class="course-tag">مدفوع</span>
+                        <span class="course-tag">شهادة</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+            
+            <!-- دورة 2 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>اختبار اختراق تطبيقات الويب</h4>
+                    <p class="course-instructor">PortSwigger</p>
+                    <p class="course-description">تعلم كيفية اكتشاف الثغرات في تطبيقات الويب واستغلالها.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">متقدم</span>
+                        <span class="course-tag">مجاني</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+            
+            <!-- دورة 3 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>الهندسة الاجتماعية والاختراق المادي</h4>
+                    <p class="course-instructor">SANS Institute</p>
+                    <p class="course-description">تعلم تقنيات الهندسة الاجتماعية والاختراق المادي للأنظمة.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">متقدم</span>
+                        <span class="course-tag">مدفوع</span>
+                        <span class="course-tag">مكثف</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم دورات المسار الدفاعي -->
+        <h2 class="category-title">دورات المسار الدفاعي (SOC & Incident Response)</h2>
+        <div class="courses-grid">
+            <!-- دورة 1 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>مركز عمليات الأمن SOC</h4>
+                    <p class="course-instructor">Coursera - IBM</p>
+                    <p class="course-description">تعلم مهام ومهارات محللي مركز عمليات الأمن SOC.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">متوسط</span>
+                        <span class="course-tag">مجاني</span>
+                        <span class="course-tag">شهادة</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+            
+            <!-- دورة 2 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>الاستجابة للحوادث الأمنية</h4>
+                    <p class="course-instructor">Cybrary</p>
+                    <p class="course-description">تعلم منهجيات الاستجابة للحوادث الأمنية وتحليل الأدلة الرقمية.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">متقدم</span>
+                        <span class="course-tag">مجاني</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+            
+            <!-- دورة 3 -->
+            <div class="course-card">
+                <div class="course-thumbnail">صورة الدورة</div>
+                <div class="course-info">
+                    <h4>تحليل البرمجيات الخبيثة</h4>
+                    <p class="course-instructor">Pluralsight</p>
+                    <p class="course-description">تعلم تقنيات تحليل البرمجيات الخبيثة وتفكيكها لفهم سلوكها.</p>
+                    <div class="course-tags">
+                        <span class="course-tag">متقدم</span>
+                        <span class="course-tag">مدفوع</span>
+                        <span class="course-tag">مختبر</span>
+                    </div>
+                    <a href="#" class="course-link">مشاهدة الدورة</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="cyber-security-hub.html#about">عن الموقع</a></li>
+                        <li><a href="cyber-security-hub.html#team">الفريق</a></li>
+                        <li><a href="cyber-security-hub.html#contact">اتصل بنا</a></li>
+                        <li><a href="cyber-security-hub.html#contribute">ساهم معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المصادر</h4>
+                    <ul class="footer-links">
+                        <li><a href="courses.html">الدورات</a></li>
+                        <li><a href="resources.html#books">الكتب</a></li>
+                        <li><a href="resources.html#tools">الأدوات</a></li>
+                        <li><a href="resources.html#labs">المختبرات</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المجتمع</h4>
+                    <ul class="footer-links">
+                        <li><a href="#forum">المنتدى</a></li>
+                        <li><a href="#discord">Discord</a></li>
+                        <li><a href="#blog">المدونة</a></li>
+                        <li><a href="#events">الفعاليات</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 
+                    <a href="https://www.moamenhaytham.com" target="_blank" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Moamen Haytham</a>.
+                    جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

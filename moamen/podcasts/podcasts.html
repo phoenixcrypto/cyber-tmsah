@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البودكاست الصوتي - Cyber Security Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-black: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --primary-white: #FFFFFF;
+            --accent-silver: #F0F0F0;
+            --secondary-gray: #AAAAAA;
+            --hover-silver: #D0D0D0;
+            --primary-red: #E03B3B; 
+        }
+
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #1A1A1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-silver);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #E03B3B;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            letter-spacing: 1px;
+            text-decoration: none;
+            flex-grow: 0; 
+            flex-shrink: 0;
+            padding: 0 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            flex: 1; 
+        }
+        
+        .nav-links.nav-left {
+            justify-content: flex-start; 
+        }
+        
+        .nav-links.nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red); 
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-red);
+            font-weight: 700;
+        }
+        
+        /* Dropdown specific styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg); 
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden; 
+            border: 1px solid #2A2A2A; 
+            top: 100%; 
+            right: 0; 
+            padding: 0.5rem 0; 
+        }
+
+        .dropdown-content a {
+            color: var(--accent-silver); 
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400; 
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover,
+        .dropdown-content a.active {
+            background-color: var(--primary-red); 
+            color: var(--primary-white); 
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown > a::after {
+            content: ' ▼'; 
+            font-size: 0.7em;
+            margin-right: 5px;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a::after {
+            transform: rotate(180deg); 
+        }
+
+        /* Page Hero Section */
+        .page-hero {
+            padding: 10rem 2rem 4rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.5) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            color: var(--secondary-gray);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Podcast Content */
+        .podcast-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem 6rem;
+        }
+
+        .category-section {
+            margin-bottom: 5rem;
+        }
+
+        .category-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            margin-bottom: 2.5rem;
+            padding-right: 20px;
+            border-right: 5px solid var(--primary-red);
+            display: inline-block;
+        }
+
+        .podcast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .podcast-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #2A2A2A;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .podcast-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-red);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .podcast-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #2A2A2A 0%, #1A1A1A 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            border: 1px solid #3A3A3A;
+        }
+
+        .podcast-card h4 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .podcast-host {
+            color: var(--primary-red);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .podcast-description {
+            color: var(--secondary-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .podcast-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background-color: #2A2A2A;
+            color: var(--accent-silver);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #3A3A3A;
+        }
+
+        .podcast-links {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 1px solid #2A2A2A;
+        }
+
+        .podcast-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background-color: var(--primary-black);
+            color: var(--accent-silver);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid #3A3A3A;
+            transition: all 0.3s ease;
+        }
+
+        .podcast-link:hover {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            border-color: var(--primary-red);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--secondary-gray);
+        }
+
+        .footer-section {
+            margin: 20px;
+            min-width: 200px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-red);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            color: var(--secondary-gray);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom p a:hover {
+             color: var(--hover-silver);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .page-hero {
+                padding: 8rem 1.5rem 3rem;
+            }
+            
+            .page-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .page-hero p {
+                font-size: 1rem;
+            }
+            
+            .podcast-content {
+                padding: 3rem 1.5rem;
+            }
+            
+            .category-title {
+                font-size: 1.8rem;
+            }
+            
+            .podcast-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .podcast-card {
+                padding: 1.2rem;
+            }
+        }
+
+        .back-box {
+    position: fixed;
+    top: 200px;
+    right: 360px;
+    background-color: var(--primary-red);
+    color: var(--primary-white);
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
+    z-index: 999;
+    border: 2px solid var(--primary-red);
+}
+
+.back-box:hover {
+    background-color: transparent;
+    color: var(--primary-red);
+    transform: translateX(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--primary-red);
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links nav-left">
+                <li><a href="../roadmap-html-new/roadmap-html-new.html">خريطة الطريق</a></li>
+                <li class="dropdown">
+                    <a href="">المصادر المصنفة</a>
+                    <div class="dropdown-content">
+                        <a href="../courses/courses.html">الدورات</a>
+                        <a href="../books/books.html">الكتب</a>
+                        <a href="../videos/videos.html">الفيديوهات المقترحة</a>
+                        <a href="../podcasts/podcasts.html">البودكاست</a>
+                        <a href="../platforms/platforms.html">مواقع ومنصات تعليمية</a>
+                    </div>
+                </li>
+            </ul>
+
+            <a href="../cyber-security-hub.html" class="logo">Cyber Security Hub</a>
+
+            <ul class="nav-links nav-right">
+                <li><a href="../expertise-guide/expertise-guide.html">دليل الخبرات</a></li>
+                <li><a href="../evaluation/evaluation.html">التقييم والأخبار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>🎙️ استمع وتعلّم: بودكاست الأمن السيبراني</h1>
+        <p>أفضل البرامج الصوتية العربية والأجنبية التي تناقش أحدث التهديدات، التقنيات، وتجارب الخبراء في المجال.</p>
+        <a href="../cyber-security-hub.html" class="back-box" title="العودة للصفحة الرئيسية">
+    →
+</a>
+    </section>
+
+    <main class="podcast-content">
+        <!-- قسم البودكاست العربي -->
+        <div class="category-section">
+            <h2 class="category-title">🇸🇦 برامج باللغة العربية</h2>
+            <div class="podcast-grid">
+                
+                <div class="podcast-card">
+                    <div class="podcast-cover">🎧</div>
+                    <h4>بودكاست الأمن السيبراني</h4>
+                    <p class="podcast-host">مقدم البرنامج: أحمد محمد</p>
+                    <p class="podcast-description">برنامج أسبوعي يناقش أحدث الأخبار والتهديدات في عالم الأمن السيبراني باللغة العربية، مع تحليلات عميقة للهجمات الإلكترونية والحلول الأمنية.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">مبتدئ</span>
+                        <span class="tag">أخبار</span>
+                        <span class="tag">تحليلات</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                        <a href="#" class="podcast-link">🎙️ Google Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">🔒</div>
+                    <h4>حديث التقنية الآمنة</h4>
+                    <p class="podcast-host">مقدم البرنامج: سارة العلي</p>
+                    <p class="podcast-description">حوارات مع خبراء الأمن السيبراني العرب، مناقشة التحديات الأمنية في المنطقة وأفضل الممارسات لحماية البيانات والشبكات.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متوسط</span>
+                        <span class="tag">مقابلات</span>
+                        <span class="tag">استراتيجيات</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">🛡️</div>
+                    <h4>الحماية الرقمية</h4>
+                    <p class="podcast-host">مقدم البرنامج: محمد الخطيب</p>
+                    <p class="podcast-description">برنامج تعليمي يركز على الجوانب العملية للأمن السيبراني، من حماية الهواتف الذكية إلى تأمين الشبكات المؤسسية.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">مبتدئ</span>
+                        <span class="tag">تطبيقي</span>
+                        <span class="tag">توعية</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎙️ Google Podcasts</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- قسم البودكاست الأجنبي -->
+        <div class="category-section">
+            <h2 class="category-title">🌐 برامج باللغة الإنجليزية</h2>
+            <div class="podcast-grid">
+                
+                <div class="podcast-card">
+                    <div class="podcast-cover">🔐</div>
+                    <h4>Darknet Diaries</h4>
+                    <p class="podcast-host">Host: Jack Rhysider</p>
+                    <p class="podcast-description">قصص حقيقية عن الهاكرز، الاختراقات، والجرائم الإلكترونية. أحد أشهر البودكاست في مجال الأمن السيبراني مع سرد قصصي مشوق.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">قصص</span>
+                        <span class="tag">تحقيقات</span>
+                        <span class="tag">مشوق</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                        <a href="#" class="podcast-link">🎙️ Google Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">🔴</div>
+                    <h4>Security Now</h4>
+                    <p class="podcast-host">Host: Steve Gibson & Leo Laporte</p>
+                    <p class="podcast-description">برنامج أسبوعي يغطي أحدث أخبار الأمن السيبراني، الثغرات الأمنية، والتقنيات الجديدة بأسلوب تقني محترف.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متقدم</span>
+                        <span class="tag">أخبار</span>
+                        <span class="tag">تقني</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">⚡</div>
+                    <h4>CyberWire Daily</h4>
+                    <p class="podcast-host">Host: Dave Bittner</p>
+                    <p class="podcast-description">تحديثات يومية عن أحدث التهديدات والأخبار في عالم الأمن السيبراني، بأسلوب موجز واحترافي.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">يومي</span>
+                        <span class="tag">أخبار</span>
+                        <span class="tag">سريع</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎙️ Google Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">🎯</div>
+                    <h4>Risky Business</h4>
+                    <p class="podcast-host">Host: Patrick Gray</p>
+                    <p class="podcast-description">نقاشات عميقة حول الجوانب التجارية والتقنية للأمن السيبراني مع ضيوف من كبار الخبراء في المجال.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متقدم</span>
+                        <span class="tag">مقابلات</span>
+                        <span class="tag">أعمال</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">🕵️</div>
+                    <h4>Malicious Life</h4>
+                    <p class="podcast-host">Host: Ran Levi</p>
+                    <p class="podcast-description">قصص تاريخية عن الفيروسات، الهجمات الإلكترونية الشهيرة، والأحداث التي غيرت مسار الأمن السيبراني.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">تاريخي</span>
+                        <span class="tag">قصص</span>
+                        <span class="tag">تعليمي</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- قسم البودكاست التقني العميق -->
+        <div class="category-section">
+            <h2 class="category-title">🔬 برامج تقنية متخصصة (Deep Dives)</h2>
+            <div class="podcast-grid">
+                
+                <div class="podcast-card">
+                    <div class="podcast-cover">🔴</div>
+                    <h4>Red Team Podcast</h4>
+                    <p class="podcast-host">Host: Red Team Community</p>
+                    <p class="podcast-description">مناقشات متخصصة في تقنيات الاختراق الأخلاقي، اختبار الاختراق، والهجمات المتقدمة مع خبراء Red Team.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متقدم</span>
+                        <span class="tag">Red Team</span>
+                        <span class="tag">اختراق أخلاقي</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎙️ Google Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">🛡️</div>
+                    <h4>Defensive Security Podcast</h4>
+                    <p class="podcast-host">Hosts: Jerry Bell & Andrew Kalat</p>
+                    <p class="podcast-description">تركيز على الجانب الدفاعي من الأمن السيبراني، SOC، مراقبة الشبكات، والاستجابة للحوادث.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متقدم</span>
+                        <span class="tag">Blue Team</span>
+                        <span class="tag">SOC</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">💻</div>
+                    <h4>Application Security Weekly</h4>
+                    <p class="podcast-host">Hosts: Multiple Security Experts</p>
+                    <p class="podcast-description">برنامج متخصص في أمن التطبيقات، OWASP، وأحدث الثغرات في تطبيقات الويب والموبايل.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متقدم</span>
+                        <span class="tag">AppSec</span>
+                        <span class="tag">تطوير آمن</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">🔍</div>
+                    <h4>Forensic Focus Podcast</h4>
+                    <p class="podcast-host">Host: Forensic Focus Team</p>
+                    <p class="podcast-description">متخصص في الطب الشرعي الرقمي، تحليل البرمجيات الخبيثة، والتحقيق في الحوادث الإلكترونية.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متخصص</span>
+                        <span class="tag">Forensics</span>
+                        <span class="tag">تحليل</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎙️ Google Podcasts</a>
+                    </div>
+                </div>
+
+                <div class="podcast-card">
+                    <div class="podcast-cover">☁️</div>
+                    <h4>Cloud Security Podcast</h4>
+                    <p class="podcast-host">Hosts: Cloud Security Experts</p>
+                    <p class="podcast-description">نقاشات متعمقة حول أمن السحابة، AWS Security، Azure Security، وأفضل الممارسات في البيئات السحابية.</p>
+                    <div class="podcast-tags">
+                        <span class="tag">متقدم</span>
+                        <span class="tag">Cloud Security</span>
+                        <span class="tag">DevSecOps</span>
+                    </div>
+                    <div class="podcast-links">
+                        <a href="#" class="podcast-link">🟢 Spotify</a>
+                        <a href="#" class="podcast-link">🎵 Apple Podcasts</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">عن الموقع</a></li>
+                        <li><a href="#team">الفريق</a></li>
+                        <li><a href="#contact">اتصل بنا</a></li>
+                        <li><a href="#contribute">ساهم معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المصادر</h4>
+                    <ul class="footer-links">
+                        <li><a href="resources.html#courses">الدورات</a></li>
+                        <li><a href="resources.html#books">الكتب</a></li>
+                        <li><a href="resources.html#tools">الأدوات</a></li>
+                        <li><a href="resources.html#labs">المختبرات</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المجتمع</h4>
+                    <ul class="footer-links">
+                        <li><a href="#forum">المنتدى</a></li>
+                        <li><a href="#discord">Discord</a></li>
+                        <li><a href="#blog">المدونة</a></li>
+                        <li><a href="#events">الفعاليات</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 
+                    <a href="https://www.moamenhaytham.com" target="_blank" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Moamen Haytham</a>.
+                    جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>

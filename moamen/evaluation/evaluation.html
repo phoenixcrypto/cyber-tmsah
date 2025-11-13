@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقييم والأخبار - Cyber Security Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-black: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --primary-white: #FFFFFF;
+            --accent-silver: #F0F0F0;
+            --secondary-gray: #AAAAAA;
+            --hover-silver: #D0D0D0;
+            --primary-red: #E03B3B;
+        }
+
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #1A1A1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-silver);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #E03B3B;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            letter-spacing: 1px;
+            text-decoration: none;
+            flex-grow: 0; 
+            flex-shrink: 0;
+            padding: 0 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            flex: 1; 
+        }
+        
+        .nav-links.nav-left {
+            justify-content: flex-start; 
+        }
+        
+        .nav-links.nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red); 
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg); 
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden; 
+            border: 1px solid #2A2A2A; 
+            top: 100%; 
+            right: 0; 
+            padding: 0.5rem 0; 
+        }
+
+        .dropdown-content a {
+            color: var(--accent-silver); 
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400; 
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-red); 
+            color: var(--primary-white); 
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown > a::after {
+            content: ' ▼'; 
+            font-size: 0.7em;
+            margin-right: 5px;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a::after {
+            transform: rotate(180deg); 
+        }
+
+        /* Hero Section */
+        .page-hero {
+            padding: 12rem 2rem 6rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.5) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-white);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .page-hero p {
+            font-size: 1.3rem;
+            color: var(--secondary-gray);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Evaluation Content */
+        .evaluation-content {
+            padding: 2rem 2rem 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            margin: 4rem 0 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-red);
+            display: inline-block;
+        }
+
+        /* News Section */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .news-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #2A2A2A;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+            border-color: var(--primary-red);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 200px;
+            background-color: #2A2A2A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-gray);
+            font-size: 1.2rem;
+        }
+
+        .news-content {
+            padding: 1.5rem;
+        }
+
+        .news-category {
+            color: var(--primary-red);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .news-title {
+            font-size: 1.3rem;
+            color: var(--primary-white);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .news-excerpt {
+            color: var(--secondary-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--secondary-gray);
+            font-size: 0.85rem;
+        }
+
+        .news-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .read-more {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .read-more:hover {
+            color: var(--accent-silver);
+        }
+
+        /* Tools Section */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .tool-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #2A2A2A;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+            border-color: var(--primary-red);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #2A2A2A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .tool-info h4 {
+            font-size: 1.3rem;
+            color: var(--primary-white);
+            margin-bottom: 0.3rem;
+        }
+
+        .tool-type {
+            color: var(--primary-red);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .tool-description {
+            color: var(--secondary-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .tool-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: var(--primary-red);
+            font-size: 1.1rem;
+        }
+
+        .rating-value {
+            color: var(--accent-silver);
+            font-weight: 700;
+        }
+
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-tag {
+            background-color: rgba(224, 59, 59, 0.1);
+            color: var(--primary-red);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(224, 59, 59, 0.3);
+        }
+
+        .tool-link {
+            display: inline-block;
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            padding: 0.7rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-red);
+        }
+
+        .tool-link:hover {
+            background-color: transparent;
+            color: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(224, 59, 59, 0.3);
+        }
+
+        /* Courses Section */
+        .courses-slider {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .course-review {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #2A2A2A;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .course-review:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+            border-color: var(--primary-red);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            color: var(--primary-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .course-platform {
+            color: var(--primary-red);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            color: var(--secondary-gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .reviewer {
+            color: var(--accent-silver);
+            font-weight: 600;
+            text-align: left;
+        }
+
+        /* Security Alerts */
+        .alerts-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--primary-red);
+            margin-bottom: 4rem;
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-icon {
+            font-size: 2rem;
+            color: var(--primary-red);
+        }
+
+        .alert-title {
+            font-size: 1.5rem;
+            color: var(--primary-white);
+        }
+
+        .alert-list {
+            list-style: none;
+        }
+
+        .alert-item {
+            padding: 1rem;
+            border-bottom: 1px solid #2A2A2A;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-name {
+            color: var(--primary-white);
+            font-weight: 600;
+        }
+
+        .alert-severity {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .severity-high {
+            background-color: rgba(224, 59, 59, 0.2);
+            color: var(--primary-red);
+            border: 1px solid var(--primary-red);
+        }
+
+        .severity-medium {
+            background-color: rgba(255, 165, 0, 0.2);
+            color: orange;
+            border: 1px solid orange;
+        }
+
+        .severity-low {
+            background-color: rgba(144, 238, 144, 0.2);
+            color: lightgreen;
+            border: 1px solid lightgreen;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--secondary-gray);
+        }
+
+        .footer-section {
+            margin: 20px;
+            min-width: 200px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-red);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            color: var(--secondary-gray);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom p a:hover {
+             color: var(--hover-silver);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            .page-hero {
+                padding: 12rem 2rem 4rem;
+            }
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            .page-hero p {
+                font-size: 1.1rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .news-grid, .tools-grid, .courses-slider {
+                grid-template-columns: 1fr;
+            }
+            .tool-header, .course-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .tool-icon {
+                margin: 0 auto;
+            }
+        }
+
+        .colorcyber{
+            color: #E03B3B;
+        }
+
+        .cyber{
+            color: #E03B3B;
+        }
+
+        .back-box {
+    position: fixed;
+    top: 200px;
+    right: 360px;
+    background-color: var(--primary-red);
+    color: var(--primary-white);
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
+    z-index: 999;
+    border: 2px solid var(--primary-red);
+}
+
+.back-box:hover {
+    background-color: transparent;
+    color: var(--primary-red);
+    transform: translateX(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--primary-red);
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links nav-left">
+                <li><a href="../roadmap-html-new/roadmap-html-new.html">خريطة الطريق</a></li>
+                <li class="dropdown">
+                    <a href="">المصادر المصنفة</a>
+                    <div class="dropdown-content">
+                        <a href="../courses/courses.html">الدورات</a>
+                        <a href="../books/books.html">الكتب</a>
+                        <a href="../videos/videos.html">الفيديوهات المقترحة</a>
+                        <a href="../podcasts/podcasts.html">البودكاست</a>
+                        <a href="../platforms/platforms.html">مواقع ومنصات تعليمية</a>
+                    </div>
+                </li>
+            </ul>
+
+            <a href="../cyber-security-hub.html" class="logo">Cyber Security Hub</a>
+
+            <ul class="nav-links nav-right">
+                <li><a href="../expertise-guide/expertise-guide.html">دليل الخبرات</a></li>
+                <li><a href="../evaluation/evaluation.html">التقييم والأخبار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>📊 <span class="colorcyber">التقييم والأخبار الأمنية</span></h1>
+        <p>ابقَ على اطلاع بآخر الأخبار الأمنية، تقييمات الأدوات، مراجعات الدورات، وأهم التنبيهات الأمنية.</p>
+        <a href="../cyber-security-hub.html" class="back-box" title="العودة للصفحة الرئيسية">
+    →
+</a>
+    </section>
+
+    <main class="evaluation-content">
+        <!-- قسم الأخبار الأمنية -->
+        <section>
+            <h2 class="section-title">📰 آخر الأخبار الأمنية</h2>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-image">صورة الخبر</div>
+                    <div class="news-content">
+                        <span class="news-category">ثغرات أمنية</span>
+                        <h3 class="news-title">اكتشاف ثغرة حرجة في نظام إدارة المحتوى WordPress</h3>
+                        <p class="news-excerpt">باحثون أمنيون يكتشفون ثغرة تسمح بتنفيذ أكواد عن بعد في الإصدارات القديمة من WordPress...</p>
+                        <div class="news-meta">
+                            <span class="news-date">📅 15 ديسمبر 2024</span>
+                            <a href="#" class="read-more">قراءة المزيد →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-image">صورة الخبر</div>
+                    <div class="news-content">
+                        <span class="news-category">هجمات إلكترونية</span>
+                        <h3 class="news-title">هجوم تصيد جديد يستهدف قطاع البنوك في الشرق الأوسط</h3>
+                        <p class="news-excerpt">حملة تصيد متطورة تنتحل هوية البنوك المحلية لسرقة بيانات العملاء...</p>
+                        <div class="news-meta">
+                            <span class="news-date">📅 12 ديسمبر 2024</span>
+                            <a href="#" class="read-more">قراءة المزيد →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-image">صورة الخبر</div>
+                    <div class="news-content">
+                        <span class="news-category">تحديثات أمنية</span>
+                        <h3 class="news-title">Microsoft تطلق تحديثات أمنية عاجلة لنظام Windows</h3>
+                        <p class="news-excerpt">إصدار تحديثات أمنية لمعالجة 75 ثغرة أمنية في أنظمة Windows المختلفة...</p>
+                        <div class="news-meta">
+                            <span class="news-date">📅 10 ديسمبر 2024</span>
+                            <a href="#" class="read-more">قراءة المزيد →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم تقييم الأدوات -->
+        <section>
+            <h2 class="section-title">🛠️ تقييم أدوات الأمن السيبراني</h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon">🔍</div>
+                        <div class="tool-info">
+                            <h4>Nmap</h4>
+                            <span class="tool-type">أداة مسح الشبكات</span>
+                        </div>
+                    </div>
+                    <p class="tool-description">أداة مسح الشبكات القياسية لاكتشاف المضيفين والخدمات على شبكة الكمبيوتر.</p>
+                    <div class="tool-rating">
+                        <div class="stars">★★★★★</div>
+                        <span class="rating-value">4.8/5</span>
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tool-tag">مجاني</span>
+                        <span class="tool-tag">مفتوح المصدر</span>
+                        <span class="tool-tag">مسح شبكات</span>
+                    </div>
+                    <a href="#" class="tool-link">عرض التقييم الكامل</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon">🛡️</div>
+                        <div class="tool-info">
+                            <h4>Burp Suite</h4>
+                            <span class="tool-type">منصة اختبار تطبيقات الويب</span>
+                        </div>
+                    </div>
+                    <p class="tool-description">المنصة الرائدة لاختبار اختراق تطبيقات الويب مع ميزات متقدمة للفحص الأمني.</p>
+                    <div class="tool-rating">
+                        <div class="stars">★★★★☆</div>
+                        <span class="rating-value">4.6/5</span>
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tool-tag">مدفوع</span>
+                        <span class="tool-tag">Web App</span>
+                        <span class="tool-tag">احترافي</span>
+                    </div>
+                    <a href="#" class="tool-link">عرض التقييم الكامل</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon">⚡</div>
+                        <div class="tool-info">
+                            <h4>Wireshark</h4>
+                            <span class="tool-type">محلل بروتوكولات الشبكات</span>
+                        </div>
+                    </div>
+                    <p class="tool-description">أداة تحليل بروتوكولات الشبكات مفتوحة المصدر لفحص حركة البيانات بالتفصيل.</p>
+                    <div class="tool-rating">
+                        <div class="stars">★★★★★</div>
+                        <span class="rating-value">4.7/5</span>
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tool-tag">مجاني</span>
+                        <span class="tool-tag">تحليل شبكات</span>
+                        <span class="tool-tag">مفصل</span>
+                    </div>
+                    <a href="#" class="tool-link">عرض التقييم الكامل</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم مراجعات الدورات -->
+        <section>
+            <h2 class="section-title">🎓 مراجعات وتقييمات الدورات</h2>
+            <div class="courses-slider">
+                <div class="course-review">
+                    <div class="course-header">
+                        <div>
+                            <h4 class="course-title">دورة CEH العملي</h4>
+                            <span class="course-platform">منصة: EC-Council</span>
+                        </div>
+                    </div>
+                    <p class="review-text">"الدورة ممتازة من الناحية النظرية لكن تحتاج تحسين في الجانب العملي. المحتوى شامل لكن يحتاج تحديث ليشمل التقنيات الحديثة."</p>
+                    <div class="tool-rating">
+                        <div class="stars">★★★☆☆</div>
+                        <span class="rating-value">3.2/5</span>
+                    </div>
+                    <p class="reviewer">- أحمد، محلل أمني</p>
+                </div>
+
+                <div class="course-review">
+                    <div class="course-header">
+                        <div>
+                            <h4 class="course-title">OSCP Preparation</h4>
+                            <span class="course-platform">منصة: Offensive Security</span>
+                        </div>
+                    </div>
+                    <p class="review-text">"أفضل استثمار في مسيرتي المهنية. التحديات العملية ممتازة وتجهزك بشكل كامل للشهادة والعمل الميداني."</p>
+                    <div class="tool-rating">
+                        <div class="stars">★★★★★</div>
+                        <span class="rating-value">4.9/5</span>
+                    </div>
+                    <p class="reviewer">- سارة، أخصائية اختبار اختراق</p>
+                </div>
+
+                <div class="course-review">
+                    <div class="course-header">
+                        <div>
+                            <h4 class="course-title">SOC Level 1</h4>
+                            <span class="course-platform">منصة: Cybrary</span>
+                        </div>
+                    </div>
+                    <p class="review-text">"مقدمة رائعة لعالم الـ SOC. المحتوى مجاني وذو جودة عالية. أنصح به لكل مبتدئ في المسار الدفاعي."</p>
+                    <div class="tool-rating">
+                        <div class="stars">★★★★☆</div>
+                        <span class="rating-value">4.5/5</span>
+                    </div>
+                    <p class="reviewer">- محمد، محلل أمني مبتدئ</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم التنبيهات الأمنية -->
+        <section>
+            <h2 class="section-title">🚨 التنبيهات الأمنية العاجلة</h2>
+            <div class="alerts-container">
+                <div class="alert-header">
+                    <div class="alert-icon">⚠️</div>
+                    <h3 class="alert-title">ثغرات نشطة يتم استغلالها</h3>
+                </div>
+                <ul class="alert-list">
+                    <li class="alert-item">
+                        <span class="alert-name">CVE-2024-12345 - ثغرة في Apache Log4j</span>
+                        <span class="alert-severity severity-high">خطيرة</span>
+                    </li>
+                    <li class="alert-item">
+                        <span class="alert-name">CVE-2024-12346 - ثغرة في Microsoft Exchange</span>
+                        <span class="alert-severity severity-high">خطيرة</span>
+                    </li>
+                    <li class="alert-item">
+                        <span class="alert-name">CVE-2024-12347 - ثغرة في VMware vCenter</span>
+                        <span class="alert-severity severity-medium">متوسطة</span>
+                    </li>
+                    <li class="alert-item">
+                        <span class="alert-name">CVE-2024-12348 - ثغرة في Cisco Routers</span>
+                        <span class="alert-severity severity-medium">متوسطة</span>
+                    </li>
+                    <li class="alert-item">
+                        <span class="alert-name">CVE-2024-12349 - ثغرة في WordPress Plugins</span>
+                        <span class="alert-severity severity-low">منخفضة</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="cyber-security-hub.html#about">عن الموقع</a></li>
+                        <li><a href="cyber-security-hub.html#team">الفريق</a></li>
+                        <li><a href="cyber-security-hub.html#contact">اتصل بنا</a></li>
+                        <li><a href="cyber-security-hub.html#contribute">ساهم معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المصادر</h4>
+                    <ul class="footer-links">
+                        <li><a href="courses.html">الدورات</a></li>
+                        <li><a href="resources.html#books">الكتب</a></li>
+                        <li><a href="resources.html#videos">الفيديوهات المقترحة</a></li>
+                        <li><a href="platforms.html">مواقع ومنصات تعليمية</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>التقييم</h4>
+                    <ul class="footer-links">
+                        <li><a href="evaluation.html">الأخبار الأمنية</a></li>
+                        <li><a href="evaluation.html">تقييم الأدوات</a></li>
+                        <li><a href="evaluation.html">مراجعات الدورات</a></li>
+                        <li><a href="evaluation.html">التنبيهات العاجلة</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 
+                    <a href="https://www.moamenhaytham.com" target="_blank" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Moamen Haytham</a>.
+                    جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

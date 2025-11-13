@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مواقع ومنصات تعليمية - Cyber Security Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-black: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --primary-white: #FFFFFF;
+            --accent-silver: #F0F0F0;
+            --secondary-gray: #AAAAAA;
+            --hover-silver: #D0D0D0;
+            /* اللون الأحمر الوحيد للـ Accent */
+            --primary-red: #E03B3B; 
+        }
+
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #1A1A1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-silver);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #E03B3B;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* ------------------------------------------- */
+        /* ** Header & Navigation (التصميم الجديد) ** */
+        /* ------------------------------------------- */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between; /* توزيع العناصر على المساحة */
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            letter-spacing: 1px;
+            text-decoration: none;
+            /* إعطاء الشعار مساحة خاصة به في المنتصف */
+            flex-grow: 0; 
+            flex-shrink: 0;
+            padding: 0 1rem; /* مسافة حول الشعار */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            /* جعل القوائم تأخذ المساحة المتبقية بالتساوي */
+            flex: 1; 
+        }
+        
+        /* القائمة اليمنى (في RTL) */
+        .nav-links.nav-left {
+            justify-content: flex-start; 
+        }
+        
+        /* القائمة اليسرى (في RTL) */
+        .nav-links.nav-right {
+            justify-content: flex-end;
+        }
+
+
+        .nav-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red); 
+        }
+        
+        /* Dropdown specific styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg); 
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden; 
+            border: 1px solid #2A2A2A; 
+            top: 100%; 
+            right: 0; 
+            padding: 0.5rem 0; 
+        }
+
+        .dropdown-content a {
+            color: var(--accent-silver); 
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400; 
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-red); 
+            color: var(--primary-white); 
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Arrow indicator for dropdown */
+        .dropdown > a::after {
+            content: ' ▼'; 
+            font-size: 0.7em;
+            margin-right: 5px;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a::after {
+            transform: rotate(180deg); 
+        }
+
+        /* Hero Section for Platforms Page */
+        .page-hero {
+            padding: 12rem 2rem 6rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.5) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-white);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .page-hero p {
+            font-size: 1.3rem;
+            color: var(--secondary-gray);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Platforms Content Section */
+        .platforms-content {
+            padding: 2rem 2rem 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            margin: 4rem 0 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-red);
+            display: inline-block;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .platform-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2A2A2A;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            padding: 1.5rem;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            border-color: var(--primary-red);
+        }
+
+        .platform-logo {
+            width: 80px;
+            height: 80px;
+            background-color: #2A2A2A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-gray);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .platform-info h4 {
+            font-size: 1.3rem;
+            color: var(--primary-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .platform-description {
+            color: var(--secondary-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .platform-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .platform-tag {
+            background-color: #2A2A2A;
+            color: var(--accent-silver);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .platform-link {
+            display: inline-block;
+            background-color: var(--accent-silver);
+            color: var(--primary-black);
+            padding: 0.7rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent-silver);
+        }
+
+        .platform-link:hover {
+            background-color: transparent;
+            color: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--primary-red);
+        }
+
+        /* ------------------------------------------- */
+        /* تنسيقات الـ Footer (التصميم النهائي المدمج) */
+        /* ------------------------------------------- */
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--secondary-gray);
+        }
+
+        .footer-section {
+            margin: 20px;
+            min-width: 200px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-red);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            color: var(--secondary-gray);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom p a:hover {
+             color: var(--hover-silver);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            .page-hero {
+                padding: 12rem 2rem 4rem;
+            }
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            .page-hero p {
+                font-size: 1.1rem;
+            }
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+            .category-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        .colorcyber{
+            color: #E03B3B;
+        }
+
+        .cyber{
+            color: #E03B3B;
+        }
+
+        .back-box {
+    position: fixed;
+    top: 200px;
+    right: 360px;
+    background-color: var(--primary-red);
+    color: var(--primary-white);
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
+    z-index: 999;
+    border: 2px solid var(--primary-red);
+}
+
+.back-box:hover {
+    background-color: transparent;
+    color: var(--primary-red);
+    transform: translateX(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--primary-red);
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links nav-left">
+                <li><a href="../roadmap-html-new/roadmap-html-new.html">خريطة الطريق</a></li>
+                <li class="dropdown">
+                    <a href="">المصادر المصنفة</a>
+                    <div class="dropdown-content">
+                        <a href="../courses/courses.html">الدورات</a>
+                        <a href="../books/books.html">الكتب</a>
+                        <a href="../videos/videos.html">الفيديوهات المقترحة</a>
+                        <a href="../podcasts/podcasts.html">البودكاست</a>
+                        <a href="../platforms/platforms.html">مواقع ومنصات تعليمية</a>
+                    </div>
+                </li>
+            </ul>
+
+            <a href="../cyber-security-hub.html" class="logo">Cyber Security Hub</a>
+
+            <ul class="nav-links nav-right">
+                <li><a href="../expertise-guide/expertise-guide.html">دليل الخبرات</a></li>
+                <li><a href="../evaluation/evaluation.html">التقييم والأخبار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>🌐 <span class="colorcyber">مواقع ومنصات تعليمية</span></h1>
+        <p>أفضل المنصات التفاعلية ومواقع التدريب العملي لبناء مهاراتك في الأمن السيبراني.</p>
+        <a href="../cyber-security-hub.html" class="back-box" title="العودة للصفحة الرئيسية">
+    →
+</a>
+    </section>
+
+    <main class="platforms-content">
+        <!-- قسم منصات التدريب العملي -->
+        <h2 class="category-title">منصات التدريب العملي (Labs)</h2>
+        <div class="platform-grid">
+            <!-- منصة 1 -->
+            <div class="platform-card">
+                <div class="platform-logo">HTB</div>
+                <div class="platform-info">
+                    <h4>Hack The Box</h4>
+                    <p class="platform-description">منصة تدريب عملي متقدمة تحتوي على آلات افتراضية وتحديات متنوعة لاختبار مهارات الاختراق.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">مختبرات</span>
+                        <span class="platform-tag">Red Team</span>
+                        <span class="platform-tag">مدفوع</span>
+                    </div>
+                    <a href="https://www.hackthebox.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 2 -->
+            <div class="platform-card">
+                <div class="platform-logo">THM</div>
+                <div class="platform-info">
+                    <h4>TryHackMe</h4>
+                    <p class="platform-description">منصة تعليمية تفاعلية مع مسارات منظمة ومختبرات عملية للمبتدئين والمحترفين.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">مختبرات</span>
+                        <span class="platform-tag">مسارات تعليمية</span>
+                        <span class="platform-tag">مجاني/مدفوع</span>
+                    </div>
+                    <a href="https://tryhackme.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 3 -->
+            <div class="platform-card">
+                <div class="platform-logo">VHL</div>
+                <div class="platform-info">
+                    <h4>VulnHub</h4>
+                    <p class="platform-description">مجموعة كبيرة من الآلات الافتراضية القابلة للتحميل لممارسة اختبارات الاختراق.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">مختبرات</span>
+                        <span class="platform-tag">VMs</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://www.vulnhub.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم منصات الدورات -->
+        <h2 class="category-title">منصات الدورات المجمعة (MOOCs)</h2>
+        <div class="platform-grid">
+            <!-- منصة 1 -->
+            <div class="platform-card">
+                <div class="platform-logo">CYB</div>
+                <div class="platform-info">
+                    <h4>Cybrary</h4>
+                    <p class="platform-description">منصة متخصصة في الأمن السيبراني تقدم دورات مجانية ومدفوعة مع مختبرات عملية.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">دورات</span>
+                        <span class="platform-tag">مختبرات</span>
+                        <span class="platform-tag">مجاني/مدفوع</span>
+                    </div>
+                    <a href="https://www.cybrary.it" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 2 -->
+            <div class="platform-card">
+                <div class="platform-logo">SEC</div>
+                <div class="platform-info">
+                    <h4>SecurityTube</h4>
+                    <p class="platform-description">يوتيوب الأمن السيبراني، يحتوي على آلاف الفيديوهات التعليمية في مختلف التخصصات.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">فيديوهات</span>
+                        <span class="platform-tag">تعليمي</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="http://www.securitytube.net" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 3 -->
+            <div class="platform-card">
+                <div class="platform-logo">INE</div>
+                <div class="platform-info">
+                    <h4>INE</h4>
+                    <p class="platform-description">منصة احترافية تقدم دورات متقدمة وتحضير لشهادات مثل eJPT، eCPPT، وغيرها.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">شهادات</span>
+                        <span class="platform-tag">متقدم</span>
+                        <span class="platform-tag">مدفوع</span>
+                    </div>
+                    <a href="https://ine.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم مواقع أخبار ومقالات -->
+        <h2 class="category-title">مواقع أخبار ومقالات تقنية</h2>
+        <div class="platform-grid">
+            <!-- منصة 1 -->
+            <div class="platform-card">
+                <div class="platform-logo">THN</div>
+                <div class="platform-info">
+                    <h4>The Hacker News</h4>
+                    <p class="platform-description">أحد أشهر مواقع أخبار الأمن السيبراني، يغطي آخر الثغرات والهجمات الإلكترونية.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">أخبار</span>
+                        <span class="platform-tag">مقالات</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://thehackernews.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 2 -->
+            <div class="platform-card">
+                <div class="platform-logo">KRE</div>
+                <div class="platform-info">
+                    <h4>Krebs on Security</h4>
+                    <p class="platform-description">مدونة متخصصة في التحقيقات الأمنية والتحليل العميق للهجمات الإلكترونية.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">تحقيقات</span>
+                        <span class="platform-tag">تحليل</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://krebsonsecurity.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 3 -->
+            <div class="platform-card">
+                <div class="platform-logo">SCH</div>
+                <div class="platform-info">
+                    <h4>Schneier on Security</h4>
+                    <p class="platform-description">مدونة بروس شناير، خبير أمني معروف، تناقش قضايا الأمن والخصوصية.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">تحليل</span>
+                        <span class="platform-tag">رأي خبير</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://www.schneier.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم مواقع التحديات -->
+        <h2 class="category-title">مواقع التحديات (Bug Bounty)</h2>
+        <div class="platform-grid">
+            <!-- منصة 1 -->
+            <div class="platform-card">
+                <div class="platform-logo">H1</div>
+                <div class="platform-info">
+                    <h4>HackerOne</h4>
+                    <p class="platform-description">أكبر منصة لبرامج مكافأة الباحثين عن الثغرات، تربط الباحثين بالشركات.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">Bug Bounty</span>
+                        <span class="platform-tag">ربح</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://www.hackerone.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 2 -->
+            <div class="platform-card">
+                <div class="platform-logo">BBP</div>
+                <div class="platform-info">
+                    <h4>Bugcrowd</h4>
+                    <p class="platform-description">منصة متكاملة لبرامج مكافأة الباحثين مع تحديات متنوعة ومكافآت مجزية.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">Bug Bounty</span>
+                        <span class="platform-tag">تحديات</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://www.bugcrowd.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم مواقع الأبحاث الأمنية -->
+        <h2 class="category-title">مواقع الأبحاث الأمنية</h2>
+        <div class="platform-grid">
+            <!-- منصة 1 -->
+            <div class="platform-card">
+                <div class="platform-logo">SAN</div>
+                <div class="platform-info">
+                    <h4>SANS Internet Storm Center</h4>
+                    <p class="platform-description">مركز لرصد وتحليل التهديدات الأمنية العالمية، يقدم تقارير يومية.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">أبحاث</span>
+                        <span class="platform-tag">رصد</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://isc.sans.edu" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 2 -->
+            <div class="platform-card">
+                <div class="platform-logo">ATT</div>
+                <div class="platform-info">
+                    <h4>ATT&CK Matrix</h4>
+                    <p class="platform-description">إطار عمل من MITRE لتصنيف وتوصيف تكتيكات وتقنيات المهاجمين.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">إطار عمل</span>
+                        <span class="platform-tag">تصنيف</span>
+                        <span class="platform-tag">مجاني</span>
+                    </div>
+                    <a href="https://attack.mitre.org" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم منصات التدريب المتخصص -->
+        <h2 class="category-title">منصات التدريب المتخصص</h2>
+        <div class="platform-grid">
+            <!-- منصة 1 -->
+            <div class="platform-card">
+                <div class="platform-logo">OSC</div>
+                <div class="platform-info">
+                    <h4>Offensive Security</h4>
+                    <p class="platform-description">مطورو Kali Linux، يقدمون دورات متقدمة وشهادات مثل OSCP، OSCE.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">متقدم</span>
+                        <span class="platform-tag">شهادات</span>
+                        <span class="platform-tag">مدفوع</span>
+                    </div>
+                    <a href="https://www.offensive-security.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+            
+            <!-- منصة 2 -->
+            <div class="platform-card">
+                <div class="platform-logo">PEN</div>
+                <div class="platform-info">
+                    <h4>PentesterLab</h4>
+                    <p class="platform-description">منصة تقدم تمارين عملية لتعلم اختبار اختراق تطبيقات الويب.</p>
+                    <div class="platform-tags">
+                        <span class="platform-tag">Web App</span>
+                        <span class="platform-tag">تمارين</span>
+                        <span class="platform-tag">مدفوع</span>
+                    </div>
+                    <a href="https://pentesterlab.com" target="_blank" class="platform-link">زيارة الموقع</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="cyber-security-hub.html#about">عن الموقع</a></li>
+                        <li><a href="cyber-security-hub.html#team">الفريق</a></li>
+                        <li><a href="cyber-security-hub.html#contact">اتصل بنا</a></li>
+                        <li><a href="cyber-security-hub.html#contribute">ساهم معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المصادر</h4>
+                    <ul class="footer-links">
+                        <li><a href="courses.html">الدورات</a></li>
+                        <li><a href="resources.html#books">الكتب</a></li>
+                        <li><a href="resources.html#videos">الفيديوهات المقترحة</a></li>
+                        <li><a href="platforms.html">مواقع ومنصات تعليمية</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المجتمع</h4>
+                    <ul class="footer-links">
+                        <li><a href="#forum">المنتدى</a></li>
+                        <li><a href="#discord">Discord</a></li>
+                        <li><a href="#blog">المدونة</a></li>
+                        <li><a href="#events">الفعاليات</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 
+                    <a href="https://www.moamenhaytham.com" target="_blank" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Moamen Haytham</a>.
+                    جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

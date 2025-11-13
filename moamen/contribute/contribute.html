@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساهمة بالمصادر - Cyber Security Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-black: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --primary-white: #FFFFFF;
+            --accent-silver: #F0F0F0;
+            --secondary-gray: #AAAAAA;
+            --hover-silver: #D0D0D0;
+            --primary-red: #E03B3B;
+        }
+
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #1A1A1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-silver);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #E03B3B;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            letter-spacing: 1px;
+            text-decoration: none;
+            flex-grow: 0; 
+            flex-shrink: 0;
+            padding: 0 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            flex: 1; 
+        }
+        
+        .nav-links.nav-left {
+            justify-content: flex-start; 
+        }
+        
+        .nav-links.nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red); 
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg); 
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden; 
+            border: 1px solid #2A2A2A; 
+            top: 100%; 
+            right: 0; 
+            padding: 0.5rem 0; 
+        }
+
+        .dropdown-content a {
+            color: var(--accent-silver); 
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400; 
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-red); 
+            color: var(--primary-white); 
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown > a::after {
+            content: ' ▼'; 
+            font-size: 0.7em;
+            margin-right: 5px;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a::after {
+            transform: rotate(180deg); 
+        }
+
+        /* Hero Section */
+        .page-hero {
+            padding: 12rem 2rem 6rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            background: radial-gradient(circle at center, rgba(30, 30, 30, 0.5) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-white);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .page-hero p {
+            font-size: 1.3rem;
+            color: var(--secondary-gray);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent-silver);
+            color: var(--primary-black);
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent-silver);
+        }
+
+        .cta-button:hover {
+            background-color: transparent;
+            color: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--primary-red);
+        }
+
+        /* Contribute Content */
+        .contribute-content {
+            padding: 2rem 2rem 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            margin: 4rem 0 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-red);
+            display: inline-block;
+        }
+
+        /* Resources Grid */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .resource-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            border: 1px solid #2A2A2A;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            text-align: center;
+            cursor: default;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+            border-color: var(--primary-red);
+        }
+
+        .resource-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-red);
+        }
+
+        .resource-title {
+            font-size: 1.5rem;
+            color: var(--primary-white);
+            margin-bottom: 1rem;
+        }
+
+        .resource-description {
+            color: var(--secondary-gray);
+            line-height: 1.7;
+        }
+
+        /* Google Forms Section */
+        .forms-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 3rem;
+            border: 1px solid #2A2A2A;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .forms-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-red);
+        }
+
+        .forms-title {
+            font-size: 2rem;
+            color: var(--primary-white);
+            margin-bottom: 1rem;
+        }
+
+        .forms-description {
+            color: var(--secondary-gray);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .forms-button {
+            display: inline-block;
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-red);
+        }
+
+        .forms-button:hover {
+            background-color: transparent;
+            color: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(224, 59, 59, 0.3);
+        }
+
+        /* Instructions Section */
+        .instructions-section {
+            margin: 3rem 0;
+        }
+
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .instruction-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #2A2A2A;
+            text-align: center;
+        }
+
+        .instruction-number {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            margin: 0 auto 1rem;
+        }
+
+        .instruction-text {
+            color: var(--secondary-gray);
+            line-height: 1.6;
+        }
+
+        /* Back to Home Button */
+        .back-box {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+            z-index: 999;
+            border: 2px solid var(--primary-red);
+        }
+
+        .back-box:hover {
+            background-color: transparent;
+            color: var(--primary-red);
+            transform: translateX(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--primary-red);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--secondary-gray);
+        }
+
+        .footer-section {
+            margin: 20px;
+            min-width: 200px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-red);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            color: var(--secondary-gray);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom p a:hover {
+             color: var(--hover-silver);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            .page-hero {
+                padding: 12rem 2rem 4rem;
+            }
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            .page-hero p {
+                font-size: 1.1rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+            .instructions-grid {
+                grid-template-columns: 1fr;
+            }
+            .forms-section {
+                padding: 2rem 1rem;
+            }
+            .back-box {
+                top: 90px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+        }
+
+        .colorcyber{
+            color: #E03B3B;
+        }
+
+        .cyber{
+            color: #E03B3B;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links nav-left">
+                <li><a href="roadmap-html-new.html">خريطة الطريق</a></li>
+                <li class="dropdown">
+                    <a href="resources.html">المصادر المصنفة</a>
+                    <div class="dropdown-content">
+                        <a href="courses.html">الدورات</a>
+                        <a href="books.html">الكتب</a>
+                        <a href="videos.html">الفيديوهات المقترحة</a>
+                        <a href="podcasts.html">البودكاست</a>
+                        <a href="platforms.html">مواقع ومنصات تعليمية</a>
+                    </div>
+                </li>
+            </ul>
+
+            <a href="cyber-security-hub.html" class="logo">Cyber Security Hub</a>
+
+            <ul class="nav-links nav-right">
+                <li><a href="expertise-guide.html">دليل الخبرات</a></li>
+                <li><a href="evaluation.html">التقييم والأخبار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>📚 <span class="colorcyber">المساهمة بالمصادر</span></h1>
+        <p>ساهم معنا في إثراء المحتوى التعليمي العربي في مجال الأمن السيبراني من خلال إضافة مصادر جديدة ومفيدة.</p>
+        
+    </section>
+
+    <main class="contribute-content">
+        <!-- أنواع المصادر الرئيسية -->
+        <section id="resources">
+            <h2 class="section-title">المصادر التعليمية الرئيسية</h2>
+            <div class="resources-grid">
+                <!-- الدورات -->
+                <div class="resource-card">
+                    <div class="resource-icon">🎓</div>
+                    <h3 class="resource-title">الدورات التعليمية</h3>
+                    <p class="resource-description">
+                        ساهم بإضافة دورات تعليمية جديدة في مختلف مجالات الأمن السيبراني
+                    </p>
+                </div>
+
+                <!-- الكتب -->
+                <div class="resource-card">
+                    <div class="resource-icon">📖</div>
+                    <h3 class="resource-title">الكتب</h3>
+                    <p class="resource-description">
+                        أضف كتباً قيمة ومفيدة للمتعلمين في مجال الأمن السيبراني
+                    </p>
+                </div>
+
+                <!-- الفيديوهات -->
+                <div class="resource-card">
+                    <div class="resource-icon">🎬</div>
+                    <h3 class="resource-title">الفيديوهات المقترحة</h3>
+                    <p class="resource-description">
+                        شارك فيديوهات تعليمية مفيدة من يوتيوب وقنوات أخرى
+                    </p>
+                </div>
+
+                <!-- البودكاست -->
+                <div class="resource-card">
+                    <div class="resource-icon">🎙️</div>
+                    <h3 class="resource-title">البودكاست</h3>
+                    <p class="resource-description">
+                        أضف برامج بودكاست تعليمية وتثقيفية في الأمن السيبراني
+                    </p>
+                </div>
+
+                <!-- المنصات -->
+                <div class="resource-card">
+                    <div class="resource-icon">🌐</div>
+                    <h3 class="resource-title">مواقع ومنصات تعليمية</h3>
+                    <p class="resource-description">
+                        ساهم بإضافة منصات تعليمية ومختبرات عملية مفيدة
+                    </p>
+                </div>
+
+                <!-- مصادر أخرى -->
+                <div class="resource-card">
+                    <div class="resource-icon">📚</div>
+                    <h3 class="resource-title">مصادر أخرى</h3>
+                    <p class="resource-description">
+                        أضف مصادر تعليمية متنوعة أخرى لمختلف التخصصات
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم Google Forms -->
+        <section id="forms" class="forms-section">
+            <div class="forms-icon">📝</div>
+            <h2 class="forms-title">أضف مصدر جديد</h2>
+            <p class="forms-description">
+                استخدم النموذج أدناه لإضافة مصادر جديدة للموقع. سنقوم بمراجعة المصدر وإضافته في أقرب وقت ممكن.
+            </p>
+            <a href="https://forms.gle/iFxBUQ2eNSKRR5PP8" class="forms-button" target="_blank">
+                فتح نموذج إضافة المصدر
+            </a>
+        </section>
+
+        <!-- قسم التعليمات -->
+        <section class="instructions-section">
+            <h2 class="section-title">كيفية إضافة المصادر</h2>
+            <div class="instructions-grid">
+                <div class="instruction-card">
+                    <div class="instruction-number">1</div>
+                    <p class="instruction-text">اختر نوع المصدر الذي تريد إضافته من القائمة أعلاه</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">2</div>
+                    <p class="instruction-text">انقر على زر "فتح نموذج إضافة المصدر"</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">3</div>
+                    <p class="instruction-text">املأ المعلومات المطلوبة في النموذج</p>
+                </div>
+                <div class="instruction-card">
+                    <div class="instruction-number">4</div>
+                    <p class="instruction-text">أرسل النموذج وسنقوم بمراجعة المصدر</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- زر العودة للصفحة الرئيسية -->
+    <a href="cyber-security-hub.html" class="back-box" title="العودة للصفحة الرئيسية">
+        →
+    </a>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="cyber-security-hub.html#about">عن الموقع</a></li>
+                        <li><a href="cyber-security-hub.html#team">الفريق</a></li>
+                        <li><a href="cyber-security-hub.html#contact">اتصل بنا</a></li>
+                        <li><a href="contribute.html">ساهم معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المصادر</h4>
+                    <ul class="footer-links">
+                        <li><a href="courses.html">الدورات</a></li>
+                        <li><a href="books.html">الكتب</a></li>
+                        <li><a href="videos.html">الفيديوهات المقترحة</a></li>
+                        <li><a href="platforms.html">مواقع ومنصات تعليمية</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المجتمع</h4>
+                    <ul class="footer-links">
+                        <li><a href="share-experience.html">شارك خبرتك</a></li>
+                        <li><a href="expertise-guide.html">دليل الخبرات</a></li>
+                        <li><a href="evaluation.html">التقييم والأخبار</a></li>
+                        <li><a href="contribute.html">المساهمة</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 
+                    <a href="https://www.moamenhaytham.com" target="_blank" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Moamen Haytham</a>.
+                    جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

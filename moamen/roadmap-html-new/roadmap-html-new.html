@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خريطة الطريق - Cyber Security Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-black: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --primary-white: #FFFFFF;
+            --accent-silver: #F0F0F0;
+            --secondary-gray: #AAAAAA;
+            --hover-silver: #D0D0D0;
+            /* اللون الأحمر الوحيد للـ Accent */
+            --primary-red: #E03B3B; 
+        }
+
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--primary-black);
+            color: var(--primary-white);
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #1A1A1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-silver);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #E03B3B;
+        }
+
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-silver);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-red); /* تم التغيير للأحمر */
+        }
+        
+        /* Dropdown specific styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg); /* لون خلفية القائمة المنسدلة */
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden; /* لإخفاء الحواف الزائدة */
+            border: 1px solid #2A2A2A; /* إطار خفيف */
+            top: 100%; /* لكي تظهر تحت العنصر الرئيسي */
+            right: 0; /* لكي تتماشى مع اتجاه RTL */
+            padding: 0.5rem 0; /* مسافة داخلية */
+        }
+
+        .dropdown-content a {
+            color: var(--accent-silver); /* لون النص داخل القائمة */
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400; /* لجعل الخط أخف */
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-red); /* خلفية حمراء عند التمرير */
+            color: var(--primary-white); /* نص أبيض عند التمرير */
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Arrow indicator for dropdown */
+        .dropdown > a::after {
+            content: ' ▼'; /* سهم صغير للأسفل */
+            font-size: 0.7em;
+            margin-right: 5px;
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a::after {
+            transform: rotate(180deg); /* تدوير السهم عند التمرير */
+        }
+
+        /* Page Hero Section */
+        .page-hero {
+            padding: 8rem 2rem 3rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* ------------------------------------------- */
+        /* تنسيق النص التمهيدي (الآية) - مأخوذ من الصفحة الرئيسية */
+        /* ------------------------------------------- */
+        
+        .motivational-box {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-silver);
+            line-height: 2.0;
+            
+            /* تحويلها إلى مربع/بوكس */
+            background-color: var(--card-bg); /* لون خلفية داكن */
+            border: 2px solid #538aff; /* إطار خفيف */
+            border-radius: 8px; /* حواف دائرية */
+            padding: 1.5rem 2.5rem; /* مسافة داخلية */
+            display: inline-block; /* ليأخذ حجم المحتوى */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* ظل خفيف */
+            
+            margin-bottom: 100px; /* المسافة المطلوبة بينه وبين العنوان الرئيسي */
+            max-width: 90%; /* تحديد عرض أقصى */
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            /* استخدام اللون الأحمر */
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            
+        }
+        
+        /* Roadmap Content */
+        .roadmap-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 5rem;
+        }
+        
+        /* تنسيق قسم الفيديو التوضيحي */
+       .instruction-video {
+            max-width: 1100px; 
+            margin: 3rem auto 5rem;
+            padding: 2rem;
+            background-color: var(--card-bg);
+            /* استخدام اللون الأحمر في الإطار */
+            border: 1px solid var(--primary-red);
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s ease;
+        }
+        /* تطبيق ظل أسود على الـ hover */
+        .instruction-video:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+        }
+
+
+        .instruction-video h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 1rem;
+        }
+
+        .instruction-video p {
+            color: var(--secondary-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        /* إطار الفيديو الجاهز لاستقبال iframe */
+        .video-placeholder {
+            width: 100%;
+            /* نسبة أبعاد 16:9 */
+            padding-top: 56.25%; 
+            background-color: transparent;
+            /* استخدام اللون الأحمر في إطار الفيديو */
+            border: 3px solid var(--primary-red);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* جعل أي فيديو iframe يملأ مساحة الـ placeholder */
+        .video-placeholder iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* إزالة العناصر الوهمية التي تمثل علامة التشغيل والنص لجعله جاهزًا لـ iframe */
+        .video-placeholder .content {
+            display: none; 
+        }
+
+        /* Phase Section */
+        .phase-section {
+            margin-bottom: 5rem;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            /* استخدام اللون الأحمر في الخط الفاصل */
+            border-bottom: 2px solid var(--primary-red);
+            /* توسيط المربع الأبيض والعنوان معًا */
+            justify-content: center; 
+        }
+
+        .phase-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-silver);
+            /* استخدام اللون الأحمر داخل الدائرة */
+            color: var(--primary-red);
+            font-size: 1.8rem;
+            font-weight: 900;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .phase-title {
+            /* توسيط نص العنوان للتأكد */
+            text-align: center;
+        }
+
+        .phase-title h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 0.3rem;
+        }
+
+        .phase-title p {
+            font-size: 1rem;
+            color: var(--secondary-gray);
+        }
+
+        /* تنسيق ملاحظة المسار البديل */
+        .alternative-track-note {
+            background-color: var(--card-bg); /* خلفية داكنة */
+            color: var(--accent-silver); /* نص فاتح */
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            /* استخدام اللون الأحمر في الخط الجانبي */
+            border-right: 5px solid var(--primary-red);
+            border-radius: 4px;
+            font-size: 1rem;
+            text-align: right;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .alternative-track-note p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* تنسيق العناوين الفرعية داخل المراحل */
+        .subsection-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 2rem;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #2A2A2A;
+            width: fit-content; /* يجعل العرض يتناسب مع المحتوى */
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 3rem;
+        }
+
+        /* لا نريد خط فاصل في أول عنوان فرعي داخل مرحلة */
+        .phase-section .subsection-title:first-of-type {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        /* Skills Grid */
+        .skill-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 350px);
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        /* ------------------------------------------- */
+        /* ** تنسيق الشارة (Badge) إجباري/إختياري ** */
+        /* ------------------------------------------- */
+        .course-status {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 10;
+            border-radius: 0 8px 0 8px; /* حافة مستديرة في الزاوية اليمنى السفلية */
+            text-align: center;
+        }
+
+        /* الإجباري - لون فضي بارز */
+        .course-status.required {
+            background-color: var(--accent-silver);
+            color: #e03b3b;
+        }
+
+        /* الإختياري - لون رمادي ثانوي */
+        .course-status.optional {
+            background-color: var(--secondary-gray);
+            color: var(--primary-white);
+        }
+
+        /* إضافة رمز المثلث لـ 'إجباري' */
+        .course-status.required::before {
+            content: "⚠️";
+            margin-left: 0.5rem;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+        /* ------------------------------------------- */
+
+        /* ------------------------------------------- */
+        /* ** تنسيق رقم الترتيب (Order Badge) ** */
+        /* ------------------------------------------- */
+        .course-order {
+            position: absolute;
+            top: 0; /* Align with the top edge */
+            left: 0; /* Align with the left edge */
+            padding: 0.4rem 1rem;
+            font-size: 1rem;
+            font-weight: 900;
+            z-index: 10;
+            background-color: var(--accent-silver); /* White/Silver background */
+            color: var(--primary-black); /* Black text */
+            border-radius: 0 0 8px 0; /* Rounded bottom-right corner */
+            min-width: 45px;
+            text-align: center;
+        }
+        /* ------------------------------------------- */
+
+
+        /* Skill Card */
+        .skill-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent-silver);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            text-align: center; 
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .skill-card:hover {
+            /* استخدام اللون الأحمر في الإطار */
+            border-color: var(--primary-red);
+            /* تطبيق الظل الأسود الموحد */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            transform: translateY(-5px);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--accent-silver);
+            margin-bottom: 1rem;
+            display: block; 
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .skill-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 0.8rem;
+        }
+
+        .skill-card p {
+            font-size: 0.95rem;
+            color: var(--secondary-gray);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .course-link {
+            display: inline-block;
+            /* استخدام اللون الأحمر في النص */
+            color: var(--primary-red);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            /* استخدام اللون الأحمر في الإطار */
+            border: 1px solid var(--primary-red);
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .course-link:hover {
+            /* قلب الألوان عند الـ hover */
+            background: var(--primary-red);
+            color: var(--primary-white);
+            /* تطبيق الظل الأسود الموحد */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .instructor {
+            font-size: 0.85rem;
+            color: #aaaaaa;
+            margin-top: 0.5rem;
+        }
+
+        /* ------------------------------------------- */
+        /* ** تنسيقات الـ Footer (تم توحيده مع الصفحة الرئيسية) ** */
+        /* ------------------------------------------- */
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            padding-bottom: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .page-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .page-hero p {
+                font-size: 1.1rem;
+            }
+            
+            
+            
+            .phase-header {
+                flex-direction: column;
+                align-items: center; 
+                justify-content: center;
+            }
+            
+            .phase-title {
+                text-align: center; 
+                margin-top: 1rem;
+            }
+
+            .phase-title h2 {
+                font-size: 1.6rem;
+            }
+
+            .skill-cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .subsection-title {
+                font-size: 1.4rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .motivational-box {
+                font-size: 1.1rem;
+                padding: 1rem 1.5rem;
+            }
+
+            .page-hero {
+                padding: 8rem 1.5rem 2rem;
+            }
+
+            .page-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .roadmap-content {
+                padding: 2rem 1.5rem 3rem;
+            }
+            .subsection-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        .colorcyber{
+            color: #E03B3B;
+        }
+
+        .cyber{
+            color: #E03B3B;
+        }
+
+        .bake{
+            color: #aaaaaa;
+        }
+
+        footer {
+            background-color: var(--card-bg);
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+            border-top: 5px solid var(--primary-red);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--secondary-gray);
+        }
+
+        .footer-section {
+            margin: 20px;
+            min-width: 200px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-red);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--secondary-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            color: var(--secondary-gray);
+            font-size: 0.9em;
+        }
+
+        .footer-bottom p a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom p a:hover {
+             color: var(--hover-silver);
+        }
+
+        .back-box {
+    position: fixed;
+    top: 200px;
+    right: 360px;
+    background-color: var(--primary-red);
+    color: var(--primary-white);
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
+    z-index: 999;
+    border: 2px solid var(--primary-red);
+}
+
+.back-box:hover {
+    background-color: transparent;
+    color: var(--primary-red);
+    transform: translateX(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--primary-red);
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links nav-left">
+                <li><a href="../roadmap-html-new/roadmap-html-new.html">خريطة الطريق</a></li>
+                <li class="dropdown">
+                    <a href="">المصادر المصنفة</a>
+                    <div class="dropdown-content">
+                        <a href="../courses/courses.html">الدورات</a>
+                        <a href="../books/books.html">الكتب</a>
+                        <a href="../videos/videos.html">الفيديوهات المقترحة</a>
+                        <a href="../podcasts/podcasts.html">البودكاست</a>
+                        <a href="../platforms/platforms.html">مواقع ومنصات تعليمية</a>
+                    </div>
+                </li>
+            </ul>
+
+            <a href="../cyber-security-hub.html" class="logo">Cyber Security Hub</a>
+
+            <ul class="nav-links nav-right">
+                <li><a href="../expertise-guide/expertise-guide.html">دليل الخبرات</a></li>
+                <li><a href="../evaluation/evaluation.html">التقييم والأخبار</a></li>
+            </ul>
+            </nav>
+    </header>
+
+    <section class="page-hero">
+        <div class="motivational-box">
+           { لا تنتظر الظروف المثالية؛ ابدأ الآن واصنع ظروفك بنفسك }
+        </div>
+        
+        <h1>خريطة طريق <span class="colorcyber"> الأمن السيبراني </span></h1>
+        <p class="bake">مسارات منظمة ومهارات متسلسلة للوصول إلى الاحتراف</p>
+        <a href="../cyber-security-hub.html" class="back-box" title="العودة للصفحة الرئيسية">
+    →
+</a>
+    </section>
+
+    <section class="instruction-video" style="margin-top: 2rem;">
+    <h3>شرح استخدام خريطة الطريق</h3>
+    <p>شاهد هذا الفيديو لتعرف كيفية التنقل بين المراحل واختيار المسار المناسب لك لتحقيق أقصى استفادة.</p>
+    <div class="video-placeholder">
+        <iframe width="100%" height="100%" 
+            src="https://www.youtube-nocookie.com/embed/vZrF0yBaJAk" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+        </iframe>
+    </div>
+</section>
+    <main class="roadmap-content">
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">1</div>
+                <div class="phase-title">
+                    <h2>Computer Science</h2>
+                    <p>الأساسيات التقنية لأجهزة الحاسوب والأنظمة</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">💻</div>
+                    <h3>CompTIA A+</h3>
+                    <p>دورة شاملة لأساسيات الحاسوب والأجهزة وأنظمة التشغيل</p>
+                    <a href="https://www.youtube.com/playlist?list=PLH-n8YK76vIiDdOMRB-ylvns-_8Zl1euV" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب:  Sameh Ramadan</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">2</div>
+                <div class="phase-title">
+                    <h2>Network</h2>
+                    <p>فهم الشبكات والبروتوكولات والاتصالات</p>
+                </div>
+            </div>
+            
+            <div class="alternative-track-note">
+                <p>💡 ملحوظة: يجب عليك <span class="cyber">اختيار دورة واحدة فقط</span> من الدورات المعروضة أدناه (إما CompTIA Network+ أو CCNA) كمسار أساسي لفهم الشبكات</p>
+            </div>
+
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🌐</div>
+                    <h3>CompTIA Network+</h3>
+                    <p>أساسيات الشبكات والبروتوكولات وإعداد وصيانة الشبكات</p>
+                    <a href="https://www.youtube.com/playlist?list=PLH-n8YK76vIiuIZoWvHL7AvtrDV7hR3He" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: <span> Sameh Ramadan </span></div>
+                </div>
+                <div class="skill-card">
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">⚙️</div>
+                    <h3>CCNA (Cisco)</h3>
+                    <p>أساسيات شبكات سيسكو، توجيه، تبديل، وأمن الشبكات. (مسار بديل لـ Network+)</p>
+                    <a href="https://www.youtube.com/watch?v=kYv_zW81hA0" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Placeholder Instructor</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">3</div>
+                <div class="phase-title">
+                    <h2>Servers</h2>
+                    <p>إدارة الخوادم وأنظمة التشغيل المختلفة</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-order">1</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🪟</div>
+                    <h3>Windows Server 2019</h3>
+                    <p>إدارة وتكوين خوادم Windows Server 2019</p>
+                    <a href="https://www.youtube.com/playlist?list=PLDxVq3TlR9y2sMXaL_yLp-r6pUpevgC-w" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Mohamed Zohdy</div>
+                </div>
+                <div class="skill-card">
+                    <div class="course-order">2</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🐧</div>
+                    <h3>Linux System Administration</h3>
+                    <p>إدارة أنظمة Linux والخوادم وأساسيات الأوامر</p>
+                    <a href="https://www.youtube.com/playlist?list=PLy1Fx2HfcmWBpD_PI4AQpjeDK5-5q6TG7" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Arab Linux Community</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">4</div>
+                <div class="phase-title">
+                    <h2>Windows Commands   <span class="cyber"> & </span>  PowerShell</h2>
+                    <p>إتقان أوامر Windows و PowerShell للأتمتة والإدارة</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">⚡</div>
+                    <h3>PowerShell</h3>
+                    <p>تعلم PowerShell للأتمتة وإدارة الأنظمة</p>
+                    <a href="https://www.youtube.com/watch?v=6hgBFDTTwEk" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: تكنيا دوت نت</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">5</div>
+                <div class="phase-title">
+                    <h2>Programming</h2>
+                    <p>تعلم البرمجة وتطوير تطبيقات الويب الآمنة</p>
+                </div>
+            </div>
+            
+            <div class="alternative-track-note">
+                <p>💡 ملحوظة: يشمل هذا القسم مسارين مختلفين: <span class="cyber">برمجة الويب</span> (الضرورية لاختبار تطبيقات الويب) و  <span class="cyber">البرمجة العامة</span> (Python) (اللازمة للأتمتة والأمن السيبراني). يُنصح بإتقان المسارين لضمان التخصص الشامل في المجال</p>
+            </div>
+            
+            <h3 class="subsection-title">برمجة الويب (Web Programming)</h3>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-order">1</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🌍</div>
+                    <h3>HTML & CSS</h3>
+                    <p>أساسيات تطوير الويب والتصميم</p>
+                    <a href="https://www.youtube.com/playlist?list=PLDoPjvoNmBAypWmEHEy3awR6Ek9sUe5ZS" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Elzero Web School</div>
+                </div>
+                <div class="skill-card">
+                    <div class="course-order">2</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">📜</div>
+                    <h3>JavaScript</h3>
+                    <p>لغة البرمجة الأساسية للويب التفاعلي</p>
+                    <a href="https://www.youtube.com/watch?v=6hgBFDTTwEk" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Nour Homsi</div>
+                </div>
+                <div class="skill-card">
+                    <div class="course-order">3</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🐘</div>
+                    <h3>PHP</h3>
+                    <p>تطوير الواجهة الخلفية لتطبيقات الويب</p>
+                    <a href="https://www.youtube.com/watch?v=N-WPYk417yE" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Korsat X Parmaga</div>
+                </div>
+                <div class="skill-card">
+                    <div class="course-order">4</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🗄️</div>
+                    <h3>MySQL</h3>
+                    <p>إدارة قواعد البيانات وكتابة استعلامات SQL</p>
+                    <a href="https://www.youtube.com/watch?v=pszZMzI9a7A" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Nour Homsi</div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">برمجة عامة (General Programming)</h3>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-order">1</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🐍</div>
+                    <h3>Python</h3>
+                    <p>لغة برمجة قوية للأمن السيبراني والأتمتة</p>
+                    <a href="https://www.youtube.com/playlist?list=PLknwEmKsW8OsG8dnisr_-2WGyx7lpgGEE" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Abdelrahman Gamal</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">6</div>
+                <div class="phase-title">
+                    <h2>Security Basics</h2>
+                    <p>أساسيات الأمن السيبراني والمفاهيم الأساسية</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🛡️</div>
+                    <h3>Security+ SY0-601</h3>
+                    <p>دورة مجانية مع شهادة لأساسيات الأمن السيبراني</p>
+                    <a href="https://netriders.academy/courses/security/" target="_blank" class="course-link">الدخول للدورة</a>
+                    <div class="instructor">المدرب: Ahmed Sultan - Netriders Academy</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">7</div>
+                <div class="phase-title">
+                    <h2>Penetration Testing</h2>
+                    <p>اختبار الاختراق واكتشاف الثغرات الأمنية</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🎯</div>
+                    <h3>eJPTv1 Prep</h3>
+                    <p>دورة مجانية مع شهادة للتحضير لشهادة eJPT</p>
+                    <a href="https://netriders.academy/courses/penetration-testing-student" target="_blank" class="course-link">الدخول للدورة</a>
+                    <div class="instructor">المدرب: Ahmed Sultan - Netriders Academy</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">8</div>
+                <div class="phase-title">
+                    <h2>Web Application Penetration Testing (WAPT)</h2>
+                    <p>اختبار اختراق تطبيقات الويب وأدوات الاختبار</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-order">1</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🔓</div>
+                    <h3>Web App Basics + Burp Suite + ZAProxy</h3>
+                    <p>أساسيات تطبيقات الويب وأدوات اختبار الاختراق</p>
+                    <a href="https://www.youtube.com/playlist?list=PLX621demLUSaA7ngeN7UfVzYJihHnEfv0" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: GenTiL Security</div>
+                </div>
+                <div class="skill-card">
+                    <div class="course-order">2</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🌐</div>
+                    <h3>WAPT Course</h3>
+                    <p>دورة متكاملة لاختبار اختراق تطبيقات الويب</p>
+                    <a href="https://www.youtube.com/watch?v=MFanMkTGJSo" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: GenTiL Security</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">🔵</div>
+                <div class="phase-title">
+                    <h2>Blue Team - المسار الدفاعي</h2>
+                    <p>حماية الأنظمة والاستجابة للحوادث الأمنية</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-order">1</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🚨</div>
+                    <h3>Incident Response (eCIR)</h3>
+                    <p>دورة مجانية مع شهادة للاستجابة للحوادث الأمنية</p>
+                    <a href="https://netriders.academy/courses/incident-response" target="_blank" class="course-link">الدخول للدورة</a>
+                    <div class="instructor">المدرب: Ahmed Sultan - Netriders Academy</div>
+                </div>
+                <div class="skill-card">
+                    <div class="course-order">2</div>
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">🔐</div>
+                    <h3>Network Security (CCNP SCOR)</h3>
+                    <p>دورة مجانية مع شهادة لأمن الشبكات</p>
+                    <a href="https://netriders.academy/courses/scor" target="_blank" class="course-link">الدخول للدورة</a>
+                    <div class="instructor">المدرب: Ahmed Sultan - Netriders Academy</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-section">
+            <div class="phase-header">
+                <div class="phase-number">🔴</div>
+                <div class="phase-title">
+                    <h2>Red Team - المسار الهجومي المتقدم</h2>
+                    <p>الاختراق الأخلاقي المتقدم وعمليات Red Team</p>
+                </div>
+            </div>
+            <div class="skill-cards-grid">
+                <div class="skill-card">
+                    <div class="course-status required">إجباري</div>
+                    <div class="skill-icon">⚔️</div>
+                    <h3>Offensive Security (OSCP)</h3>
+                    <p>التحضير لشهادة OSCP واختبار الاختراق المتقدم</p>
+                    <a href="https://www.youtube.com/playlist?list=PL_yseowcuqYJc7wXtGIsshYp1B_W0M-ZK" target="_blank" class="course-link">مشاهدة الدورة</a>
+                    <div class="instructor">المدرب: Nakerah Network</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+   <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="cyber-security-hub.html#about">عن الموقع</a></li>
+                        <li><a href="cyber-security-hub.html#team">الفريق</a></li>
+                        <li><a href="cyber-security-hub.html#contact">اتصل بنا</a></li>
+                        <li><a href="cyber-security-hub.html#contribute">ساهم معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المصادر</h4>
+                    <ul class="footer-links">
+                        <li><a href="resources.html#courses">الدورات</a></li>
+                        <li><a href="resources.html#books">الكتب</a></li>
+                        <li><a href="resources.html#videos">الفيديوهات المقترحة</a></li>
+                        <li><a href="resources.html#podcasts">البودكاست</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>المجتمع</h4>
+                    <ul class="footer-links">
+                        <li><a href="cyber-security-hub.html#forum">المنتدى</a></li>
+                        <li><a href="cyber-security-hub.html#discord">Discord</a></li>
+                        <li><a href="cyber-security-hub.html#blog">المدونة</a></li>
+                        <li><a href="cyber-security-hub.html#events">الفعاليات</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 
+                    <a href="https://www.moamenhaytham.com" target="_blank" style="color: var(--primary-red); text-decoration: none; font-weight: 700;">Moamen Haytham</a>.
+                    جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
