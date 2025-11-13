@@ -1,24 +1,37 @@
 import type { Metadata } from 'next'
-import { Cairo } from 'next/font/google'
+import { Inter, Orbitron } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Providers } from '@/components/Providers'
 import { OfflineIndicator } from '@/components/OfflineIndicator'
 
-const cairo = Cairo({
-  subsets: ['arabic', 'latin'],
-  variable: '--font-cairo',
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
   display: 'swap',
   fallback: ['system-ui', 'arial'],
   preload: true,
-  weight: ['300', '400', '600', '700', '900'],
+  adjustFontFallback: true,
+  // Reduce font loading time
+  weight: ['400', '500', '600', '700'],
+})
+
+const orbitron = Orbitron({ 
+  subsets: ['latin'],
+  variable: '--font-orbitron',
+  display: 'swap',
+  fallback: ['monospace'],
+  preload: true,
+  adjustFontFallback: true,
+  // Only load weights we actually use
+  weight: ['400', '700', '900'],
 })
 
 export const metadata: Metadata = {
-  title: 'Cyber TMSAH - منصة الجدول والمواد التعليمية',
-  description: 'منصة جامعية توفر الجدول الدراسي والمواد التعليمية بشكل منظم مع تصميم حديث وتجربة سلسة.',
-  keywords: ['التعليم', 'الجدول', 'مواد تعليمية', 'منصة', 'سايبر تمساح', 'cyber tmsah'],
+  title: 'Cyber TMSAH - Advanced Academic Learning Platform',
+  description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
+  keywords: ['education', 'programming', 'technology', 'learning', 'university', 'academic', 'cyber', 'tmsah', 'computer science'],
   authors: [{ name: 'ZEYAD MOHAMED' }],
   creator: 'ZEYAD MOHAMED',
   publisher: 'Cyber TMSAH',
@@ -31,13 +44,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
     languages: {
-      'ar-EG': '/',
       'en-US': '/en',
     },
   },
   openGraph: {
-    title: 'Cyber TMSAH - منصة الجدول والمواد التعليمية',
-    description: 'منصة متكاملة للطلاب لعرض الجدول الدراسي والوصول للمواد التعليمية بسهولة.',
+    title: 'Cyber TMSAH - Advanced Academic Learning Platform',
+    description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
     url: 'https://cyber-tmsah.vercel.app',
     siteName: 'Cyber TMSAH',
     images: [
@@ -45,16 +57,16 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Cyber TMSAH - منصة الجدول والمواد التعليمية',
+        alt: 'Cyber TMSAH - Advanced Academic Learning Platform',
       },
     ],
-    locale: 'ar_EG',
+    locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cyber TMSAH - منصة الجدول والمواد التعليمية',
-    description: 'منصة متكاملة للطلاب لعرض الجدول الدراسي والوصول للمواد التعليمية بسهولة.',
+    title: 'Cyber TMSAH - Advanced Academic Learning Platform',
+    description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
     images: ['/og-image.jpg'],
     creator: '@cyber_tmsah',
   },
@@ -80,14 +92,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl" className={cairo.variable} suppressHydrationWarning>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0a0a0a" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
-      <body className={`${cairo.className} bg-body text-body` }>
+      <body className={`${inter.className} bg-cyber-dark text-dark-100 antialiased`}>
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Navbar />

@@ -3,99 +3,94 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Menu, X, Calendar, BookOpen, Info, Home } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
-
-interface NavItem {
-  href: string
-  label: string
-  icon: LucideIcon
-}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const leftLinks: NavItem[] = [
-    { href: '/schedule', label: 'الجدول الدراسي', icon: Calendar },
-    { href: '/materials', label: 'المواد التعليمية', icon: BookOpen },
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
+
+  const closeMenu = () => {
+    setIsOpen(false)
+  }
+
+  const navItems = [
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/schedule', label: 'Schedule', icon: Calendar },
+    { href: '/materials', label: 'Materials', icon: BookOpen },
+    { href: '/about', label: 'About', icon: Info },
   ]
-
-  const rightLinks: NavItem[] = [
-    { href: '/about', label: 'عن المنصة', icon: Info },
-  ]
-
-  const mobileLinks: NavItem[] = [
-    { href: '/', label: 'الرئيسية', icon: Home },
-    ...leftLinks,
-    ...rightLinks,
-  ]
-
-  const toggleMenu = () => setIsOpen((prev) => !prev)
-  const closeMenu = () => setIsOpen(false)
-
-  const renderLinks = (links: NavItem[]) => (
-    links.map((item) => {
-      const Icon = item.icon
-      return (
-        <li key={item.href}>
-          <Link
-            href={item.href}
-            prefetch={false}
-            onClick={closeMenu}
-            className="nav-link"
-          >
-            <Icon className="w-4 h-4" />
-            <span>{item.label}</span>
-          </Link>
-        </li>
-      )
-    })
-  )
 
   return (
-    <header className="main-header">
-      <nav className="nav-container">
-        <button
-          onClick={toggleMenu}
-          className="mobile-menu-button"
-          aria-label="فتح القائمة"
-        >
-          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+    <nav className="bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-neon/20 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-3 text-cyber-neon hover:text-cyber-violet transition-colors group">
+            <div className="flex flex-col">
+              <span className="font-orbitron font-bold text-2xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent group-hover:from-cyber-violet group-hover:via-cyber-green group-hover:to-cyber-neon transition-all duration-300">
+                Cyber TMSAH
+              </span>
+              <span className="text-sm text-cyber-neon/70 font-medium">Advanced Academic Platform</span>
+            </div>
+          </Link>
 
-        <ul className="nav-links nav-left">
-          {renderLinks(leftLinks)}
-        </ul>
-
-        <Link href="/" className="logo" prefetch={false}>
-          <span>Cyber</span>
-          <span style={{ marginRight: '6px', color: 'inherit' }}>TMSAH</span>
-        </Link>
-
-        <ul className="nav-links nav-right">
-          {renderLinks(rightLinks)}
-        </ul>
-      </nav>
-
-      <div className={`mobile-menu-panel ${isOpen ? 'is-open' : ''}`}>
-        <ul>
-          {mobileLinks.map((item) => {
-            const Icon = item.icon
-            return (
-              <li key={item.href}>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              return (
                 <Link
+                  key={item.href}
                   href={item.href}
                   prefetch={false}
-                  onClick={closeMenu}
-                  className="nav-link"
+                  className="flex items-center space-x-6 px-3 py-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
                 >
-                  <Icon className="w-5 h-5" />
-                  <span>{item.label}</span>
+                  <Icon className="w-4 h-4 text-cyber-neon group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium">{item.label}</span>
                 </Link>
-              </li>
-            )
-          })}
-        </ul>
+              )
+            })}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden p-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-cyber-dark/95 backdrop-blur-md border-t border-cyber-neon/20">
+              {navItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    prefetch={false}
+                    onClick={closeMenu}
+                    className="flex items-center space-x-6 px-3 py-3 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
+                  >
+                    <Icon className="w-5 h-5 text-cyber-neon group-hover:scale-110 transition-transform" />
+                    <span className="text-base font-medium">{item.label}</span>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
-    </header>
+    </nav>
   )
 }
