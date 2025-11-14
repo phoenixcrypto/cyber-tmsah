@@ -346,15 +346,11 @@ export default function SchedulePage() {
     if (normalizedTime.includes('AM') || normalizedTime.includes('PM')) {
       normalizedTime = normalizedTime.replace(' AM', '').replace(' PM', '')
     }
+    normalizedTime = normalizedTime.trim()
     
     // Match exact period start time
     for (const period of periods) {
-      const periodStart = period.start.replace(':', '')
-      const timeWithoutColon = normalizedTime.replace(':', '')
-      
-      // Check if time matches period start (with some tolerance)
-      if (normalizedTime.startsWith(period.start.substring(0, 4)) || 
-          timeWithoutColon.startsWith(periodStart.substring(0, 4))) {
+      if (normalizedTime === period.start) {
         return period.number
       }
     }
@@ -676,9 +672,10 @@ export default function SchedulePage() {
                 
                 const rows = sectionsToShow.map(sectionNum => {
                   const cells = periods.map(period => {
-                    const match = labs.find(item => 
-                      item.sectionNumber === sectionNum && getPeriodFromTime(item.time) === period.number
-                    )
+                    const match = labs.find(item => {
+                      const itemPeriod = getPeriodFromTime(item.time)
+                      return item.sectionNumber === sectionNum && itemPeriod === period.number
+                    })
                     return match || null
                   })
                   return { sectionNum, cells }
@@ -686,7 +683,10 @@ export default function SchedulePage() {
                 
                 const lectureRow = showLecturesInMatrix
                   ? periods.map(period => {
-                      const match = lectures.find(item => getPeriodFromTime(item.time) === period.number)
+                      const match = lectures.find(item => {
+                        const itemPeriod = getPeriodFromTime(item.time)
+                        return itemPeriod === period.number
+                      })
                       return match || null
                     })
                   : null
@@ -705,8 +705,8 @@ export default function SchedulePage() {
                       return index !== undefined && periodHasContent(index)
                     })
                 
-                const hasContent = (lectureRow && lectureRow.some(Boolean)) ||
-                  rows.some(row => row.cells.some(Boolean))
+                // Ensure we always have at least one period to display the table structure
+                const periodsToDisplay = filteredPeriods.length > 0 ? filteredPeriods : periods
                 
                 return (
                   <div key={day} className="enhanced-card overflow-hidden">
@@ -732,13 +732,6 @@ export default function SchedulePage() {
                         <h4 className="text-2xl font-semibold text-dark-200 mb-2">Holiday</h4>
                         <p className="text-dark-400">No classes scheduled for this day.</p>
                       </div>
-                    ) : !hasContent && !showEmptyPeriods ? (
-                      <div className="p-8 text-center text-dark-300">
-                        <p className="text-lg font-semibold text-dark-100 mb-2">لا توجد حصص معروضة في هذا اليوم.</p>
-                        <p className="text-sm text-dark-400">
-                          تأكد من اختيار القسم الصحيح أو فعّل خيار إظهار الفترات الفارغة/المحاضرات لعرض كل التفاصيل.
-                        </p>
-                      </div>
                     ) : (
                       <>
                         {/* Desktop Matrix View */}
@@ -753,7 +746,7 @@ export default function SchedulePage() {
                                       <span className="text-cyber-neon tracking-wide">SECTION</span>
                                     </div>
                                   </th>
-                                  {filteredPeriods.map(period => (
+                                  {periodsToDisplay.map(period => (
                                     <th key={period.number} className="px-3 py-4 bg-gradient-to-br from-cyber-dark/95 via-cyber-dark/90 to-cyber-dark/85 text-cyber-neon font-semibold text-xs border-2 border-cyber-neon/50 min-w-[160px] relative overflow-hidden">
                                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyber-neon/5 to-transparent animate-shimmer"></div>
                                       <div className="flex flex-col items-center gap-1.5 relative z-10">
@@ -770,7 +763,7 @@ export default function SchedulePage() {
                                     <td className="px-4 py-4 text-cyber-neon font-semibold text-sm sticky left-0 bg-cyber-dark/40">
                                       Group {scheduleView} Lecture
                                     </td>
-                                    {filteredPeriods.map(period => {
+                                    {periodsToDisplay.map(period => {
                                       const idx = periodIndexMap[period.number]
                                       const cellData = idx !== undefined && lectureRow ? lectureRow[idx] : null
                                       if (!cellData && !showEmptyPeriods) {
@@ -813,7 +806,7 @@ export default function SchedulePage() {
                                         S{row.sectionNum}
                                       </span>
                                     </td>
-                                    {filteredPeriods.map(period => {
+                                    {periodsToDisplay.map(period => {
                                       const idx = periodIndexMap[period.number]
                                       const cellData = idx !== undefined ? row.cells[idx] : null
                                       if (!cellData && !showEmptyPeriods) {
@@ -930,7 +923,7 @@ export default function SchedulePage() {
                           )}
 
                           {rows.map(row => {
-                            const rowHasEntries = filteredPeriods.some(period => {
+                            const rowHasEntries = periodsToDisplay.some(period => {
                               const idx = periodIndexMap[period.number]
                               return idx !== undefined && row.cells[idx]
                             })
@@ -948,7 +941,7 @@ export default function SchedulePage() {
                                       No classes scheduled for this section in this day.
                                     </div>
                                   )}
-                                  {filteredPeriods.map(period => {
+                                  {periodsToDisplay.map(period => {
                                     const idx = periodIndexMap[period.number]
                                     const cellData = idx !== undefined ? row.cells[idx] : null
                                     
