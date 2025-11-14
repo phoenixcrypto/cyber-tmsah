@@ -1,7 +1,7 @@
 'use client'
 
 import { Calendar, Clock, MapPin, User, Search, BookOpen } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 
 export default function SchedulePage() {
   const [selectedSection, setSelectedSection] = useState('')
@@ -384,15 +384,12 @@ export default function SchedulePage() {
       grouped[day].push(item)
     })
     return grouped
-  }
+  };
 
-  const sections = Array.from({length: 15}, (_, i) => i + 1)
+  const sections = Array.from({length: 15}, (_, i) => i + 1);
   
-  const allScheduleData = [...scheduleData, ...sectionsData]
-  const baseSchedule = filteredSchedule.length > 0 ? filteredSchedule : allScheduleData
-  
-  // Period times mapping (8 periods)
-  const periods = [
+  // Period times mapping (8 periods) - defined first as it's used in other computations
+  const periods = useMemo(() => [
     { number: 1, time: '09:00 AM - 10:00 AM', start: '09:00' },
     { number: 2, time: '10:10 AM - 11:10 AM', start: '10:10' },
     { number: 3, time: '11:20 AM - 12:20 PM', start: '11:20' },
@@ -401,14 +398,17 @@ export default function SchedulePage() {
     { number: 6, time: '02:50 PM - 03:50 PM', start: '02:50' },
     { number: 7, time: '04:00 PM - 05:00 PM', start: '04:00' },
     { number: 8, time: '05:10 PM - 06:10 PM', start: '05:10' }
-  ]
-  const periodIndexMap = periods.reduce<Record<number, number>>((acc, period, index) => {
-    acc[period.number] = index
-    return acc
-  }, {})
+  ], []);
+  
+  const periodIndexMap = useMemo(() => {
+    return periods.reduce<Record<number, number>>((acc, period, index) => {
+      acc[period.number] = index
+      return acc
+    }, {});
+  }, [periods]);
 
   // Convert time string to period number
-  const getPeriodFromTime = (timeStr: string): number => {
+  const getPeriodFromTime = useCallback((timeStr: string): number => {
     if (!timeStr) return 0
     const startTime = timeStr.split(' - ')[0] || ''
     // Normalize time format (handle AM/PM)
@@ -430,7 +430,7 @@ export default function SchedulePage() {
     }
     
     return 0
-  }
+  }, [periods]);
   
   // View mode state: 'list' or 'matrix'
   const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list')
@@ -439,9 +439,21 @@ export default function SchedulePage() {
   const [showLecturesInMatrix, setShowLecturesInMatrix] = useState(true)
   const [showEmptyPeriods, setShowEmptyPeriods] = useState(true)
 
-  const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2';
-  const scheduleForCurrentGroup = baseSchedule.filter(item => item.group === groupFilter);
-  const groupSectionsList: number[] = scheduleView === 'A' ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14, 15];
+  const allScheduleData = useMemo(() => [...scheduleData, ...sectionsData], [scheduleData, sectionsData]);
+  const baseSchedule = useMemo(() => filteredSchedule.length > 0 ? filteredSchedule : allScheduleData, [filteredSchedule, allScheduleData]);
+
+  // Compute derived values
+  const groupFilter = useMemo(() => {
+    return scheduleView === 'A' ? 'Group 1' : 'Group 2';
+  }, [scheduleView]);
+  
+  const scheduleForCurrentGroup = useMemo(() => {
+    return baseSchedule.filter(item => item.group === groupFilter);
+  }, [baseSchedule, groupFilter]);
+  
+  const groupSectionsList: number[] = scheduleView === 'A' 
+    ? [1, 2, 3, 4, 5, 6, 7] 
+    : [8, 9, 10, 11, 12, 13, 14, 15];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
@@ -643,7 +655,9 @@ export default function SchedulePage() {
               const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
               const holidayDays = ['Sunday', 'Thursday', 'Friday']
               
-              return dayOrder.map(day => {
+              return (
+                <>
+                  {dayOrder.map(day => {
                 const isHoliday = holidayDays.includes(day)
                 const dayEntries = scheduleForCurrentGroup.filter(item => item.day === day)
                 const lectures = dayEntries.filter(item => !item.sectionNumber)
@@ -683,7 +697,10 @@ export default function SchedulePage() {
 
                 const filteredPeriods = showEmptyPeriods
                   ? periods
-                  : periods.filter(period => periodHasContent(periodIndexMap[period.number]))
+                  : periods.filter(period => {
+                      const index = periodIndexMap[period.number]
+                      return index !== undefined && periodHasContent(index)
+                    })
                 
                 const hasContent = (lectureRow && lectureRow.some(Boolean)) ||
                   rows.some(row => row.cells.some(Boolean))
@@ -833,19 +850,19 @@ export default function SchedulePage() {
                                               {/* 1. المادة (Subject) */}
                                               <div className="font-bold text-dark-100 text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300">
                                                 {cellData.title || cellData.subject}
-                </div>
-                
+                                              </div>
+                                              
                                               {/* 2. صاحب المادة (Instructor) */}
                                               <div className="text-dark-300 text-[10px] opacity-90 flex items-center gap-1 truncate">
                                                 <User className="w-3 h-3 text-cyber-neon/60 flex-shrink-0" />
                                                 <span className="truncate">{cellData.instructor}</span>
-                </div>
+                                              </div>
 
                                               {/* 3. الموعد (Time) */}
                                               <div className="flex items-center gap-1 text-[9px] text-dark-300">
                                                 <Clock className="w-3 h-3 text-cyber-neon/70 flex-shrink-0" />
                                                 <span className="font-medium">{cellData.time}</span>
-                </div>
+                                              </div>
 
                                               {/* 4. مكان الحضور (Location) & Type */}
                                               <div className="flex items-center justify-between gap-2 pt-0.5">
@@ -872,8 +889,8 @@ export default function SchedulePage() {
                                 ))}
                               </tbody>
                             </table>
-                </div>
-              </div>
+                          </div>
+                        </div>
 
                         {/* Mobile Card View */}
                         <div className="lg:hidden p-4 space-y-3">
@@ -988,7 +1005,9 @@ export default function SchedulePage() {
                     )}
                   </div>
                 )
-              })
+              })}
+                </>
+              )
             })()}
           </div>
         )}
@@ -1217,7 +1236,7 @@ export default function SchedulePage() {
             </p>
           </div>
         )}
-          </div>
       </div>
+    </div>
   )
 }
