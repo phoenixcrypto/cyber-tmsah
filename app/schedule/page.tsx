@@ -318,7 +318,6 @@ export default function SchedulePage() {
 
   const handleSearch = () => {
     // Filter by selected group (A or B) from toggle
-    const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2'
     
     // If section is selected, validate it
     if (selectedSection) {
@@ -332,9 +331,6 @@ export default function SchedulePage() {
     
     // Clear error if validation passes
     setValidationError('')
-    
-    // Combine lectures and sections data
-    const allScheduleData = [...scheduleData, ...sectionsData]
     
     let filtered = allScheduleData.filter(item => {
       const matchesGroup = item.group === groupFilter
@@ -392,6 +388,9 @@ export default function SchedulePage() {
 
   const sections = Array.from({length: 15}, (_, i) => i + 1)
   
+  const allScheduleData = [...scheduleData, ...sectionsData]
+  const baseSchedule = filteredSchedule.length > 0 ? filteredSchedule : allScheduleData
+  
   // Period times mapping (8 periods)
   const periods = [
     { number: 1, time: '09:00 AM - 10:00 AM', start: '09:00' },
@@ -403,7 +402,11 @@ export default function SchedulePage() {
     { number: 7, time: '04:00 PM - 05:00 PM', start: '04:00' },
     { number: 8, time: '05:10 PM - 06:10 PM', start: '05:10' }
   ]
-  
+  const periodIndexMap = periods.reduce<Record<number, number>>((acc, period, index) => {
+    acc[period.number] = index
+    return acc
+  }, {})
+
   // Convert time string to period number
   const getPeriodFromTime = (timeStr: string): number => {
     if (!timeStr) return 0
@@ -435,61 +438,10 @@ export default function SchedulePage() {
   // Matrix view options
   const [showLecturesInMatrix, setShowLecturesInMatrix] = useState(true)
   const [showEmptyPeriods, setShowEmptyPeriods] = useState(true)
-  
-  // Build matrix schedule for a specific day
-  const buildMatrixSchedule = (day: string): { [section: number]: { [period: number]: any } } => {
-    const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2'
-    // Use filteredSchedule if available (when filter is active), otherwise use all data
-    const dataSource = filteredSchedule.length > 0 && selectedSection 
-      ? filteredSchedule 
-      : [...scheduleData, ...sectionsData]
-    const dayData = dataSource.filter(item => 
-      item.day === day && 
-      item.group === groupFilter &&
-      (!selectedSection || item.sectionNumber === parseInt(selectedSection))
-    )
-    
-    // Create matrix: [section][period] = schedule item
-    const matrix: { [section: number]: { [period: number]: any } } = {}
-    
-    // Initialize all sections
-    for (let i = 1; i <= 15; i++) {
-      matrix[i] = {}
-    }
-    
-    // Fill matrix with data
-    dayData.forEach(item => {
-      if (item.sectionNumber) {
-        const period = getPeriodFromTime(item.time)
-        const sectionNum = item.sectionNumber
-        if (period > 0 && matrix[sectionNum]) {
-          matrix[sectionNum][period] = item
-        }
-      }
-    })
-    
-    // Add lectures (which don't have sectionNumber, but apply to all sections in the group)
-    const groupSections = scheduleView === 'A' ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14, 15]
-    // If a section is filtered, only add lectures to that section, otherwise add to all group sections
-    const sectionsToAddLectures = selectedSection && filteredSchedule.length > 0 
-      ? [parseInt(selectedSection)] 
-      : groupSections
-    dayData.forEach(item => {
-      if (!item.sectionNumber && item.type === 'lecture') {
-        const period = getPeriodFromTime(item.time)
-        if (period > 0) {
-          sectionsToAddLectures.forEach(section => {
-            if (matrix[section] && !matrix[section][period]) {
-              matrix[section][period] = { ...item, isLecture: true }
-            }
-          })
-        }
-      }
-    })
-    
-    return matrix
-  }
 
+  const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2';
+  const scheduleForCurrentGroup = baseSchedule.filter(item => item.group === groupFilter);
+  const groupSectionsList: number[] = scheduleView === 'A' ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14, 15];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
@@ -520,14 +472,12 @@ export default function SchedulePage() {
                 
                 <button
                   onClick={() => setScheduleView(scheduleView === 'A' ? 'B' : 'A')}
-                  className={`relative w-20 h-10 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 focus:ring-offset-cyber-dark ${
-                    scheduleView === 'A' 
-                      ? 'bg-gradient-to-r from-cyber-neon to-cyber-green' 
-                      : 'bg-gradient-to-r from-cyber-violet to-cyber-blue'
+                  className={`relative w-20 h-10 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 focus:ring-offset-cyber-dark switch-track switch-track--compact ${
+                    scheduleView === 'A' ? 'switch-track--active' : 'switch-track--inactive'
                   }`}
                 >
                   <span
-                    className={`absolute top-1 left-1 bg-white w-8 h-8 rounded-full shadow-lg transform transition-transform duration-300 ${
+                    className={`absolute top-1 left-1 w-8 h-8 rounded-full shadow-lg transform transition-transform duration-300 switch-knob ${
                       scheduleView === 'A' ? 'translate-x-0' : 'translate-x-10'
                     }`}
                   />
@@ -585,7 +535,7 @@ export default function SchedulePage() {
                 </button>
               </div>
                 </div>
-
+                
             {validationError && (
               <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg max-w-2xl mx-auto">
                 <div className="flex items-start gap-3">
@@ -612,24 +562,22 @@ export default function SchedulePage() {
               </span>
               <button
                 onClick={() => setViewMode(viewMode === 'list' ? 'matrix' : 'list')}
-                className={`relative w-16 h-8 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon ${
-                  viewMode === 'matrix'
-                    ? 'bg-gradient-to-r from-cyber-neon to-cyber-green'
-                    : 'bg-cyber-dark border border-cyber-neon/30'
+                className={`relative w-16 h-8 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon switch-track switch-track--compact ${
+                  viewMode === 'matrix' ? 'switch-track--active' : 'switch-track--inactive'
                 }`}
               >
                 <span
-                  className={`absolute top-1 left-1 bg-white w-6 h-6 rounded-full shadow-lg transform transition-transform duration-300 ${
+                  className={`absolute top-1 left-1 w-6 h-6 rounded-full shadow-lg transform transition-transform duration-300 switch-knob ${
                     viewMode === 'matrix' ? 'translate-x-8' : 'translate-x-0'
                   }`}
                 />
               </button>
               <span className={`text-sm font-medium ${viewMode === 'matrix' ? 'text-cyber-neon' : 'text-dark-400'}`}>
                 Matrix View
-              </span>
-            </div>
-                </div>
+                </span>
               </div>
+                </div>
+                </div>
 
         {/* Matrix View Options */}
         {viewMode === 'matrix' && (
@@ -692,36 +640,53 @@ export default function SchedulePage() {
         {viewMode === 'matrix' && (
           <div className="space-y-6 mb-8">
             {(() => {
-              const dayOrder = ['Saturday', 'Monday', 'Tuesday', 'Wednesday']
+              const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
               const holidayDays = ['Sunday', 'Thursday', 'Friday']
               
               return dayOrder.map(day => {
                 const isHoliday = holidayDays.includes(day)
-                const matrix = buildMatrixSchedule(day)
-                const groupSections = scheduleView === 'A' ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14, 15]
-                // Show selected section if filter is active, otherwise show all group sections
-                let sectionsToShow = (selectedSection && filteredSchedule.length > 0) ? [parseInt(selectedSection)] : groupSections
+                const dayEntries = scheduleForCurrentGroup.filter(item => item.day === day)
+                const lectures = dayEntries.filter(item => !item.sectionNumber)
+                const labs = dayEntries.filter(item => item.sectionNumber)
                 
-                // Filter and sort sections: only show sections that have data for this day, sorted ascending
-                sectionsToShow = sectionsToShow
-                  .filter(sectionNum => {
-                    // Check if section has any data in the matrix for this day
-                    const sectionMatrix = matrix[sectionNum]
-                    if (!sectionMatrix) return false
-                    return Object.keys(sectionMatrix).length > 0
+                let sectionsToShow = selectedSection
+                  ? [parseInt(selectedSection, 10)].filter(num => !Number.isNaN(num))
+                  : groupSectionsList
+                
+                if (sectionsToShow.length === 0) {
+                  sectionsToShow = groupSectionsList
+                }
+                
+                const rows = sectionsToShow.map(sectionNum => {
+                  const cells = periods.map(period => {
+                    const match = labs.find(item => 
+                      item.sectionNumber === sectionNum && getPeriodFromTime(item.time) === period.number
+                    )
+                    return match || null
                   })
-                  .sort((a, b) => a - b) // Sort ascending: 1, 3, 7, 9...
+                  return { sectionNum, cells }
+                })
                 
-                // Filter periods based on options (periods are already sorted ascending 1-8)
-                const filteredPeriods = showEmptyPeriods 
-                  ? periods 
-                  : periods.filter(period => {
-                      return sectionsToShow.some(sectionNum => {
-                        const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
-                        return cellData && (!cellData.isLecture || showLecturesInMatrix)
-                      })
+                const lectureRow = showLecturesInMatrix
+                  ? periods.map(period => {
+                      const match = lectures.find(item => getPeriodFromTime(item.time) === period.number)
+                      return match || null
                     })
-                // filteredPeriods remains sorted since it's filtered from already-sorted periods array
+                  : null
+
+                const periodHasContent = (index: number) => {
+                  if (index === undefined || index < 0) return false
+                  const lectureHas = lectureRow ? lectureRow[index] : null
+                  if (lectureHas) return true
+                  return rows.some(row => row.cells[index])
+                }
+
+                const filteredPeriods = showEmptyPeriods
+                  ? periods
+                  : periods.filter(period => periodHasContent(periodIndexMap[period.number]))
+                
+                const hasContent = (lectureRow && lectureRow.some(Boolean)) ||
+                  rows.some(row => row.cells.some(Boolean))
                 
                 return (
                   <div key={day} className="enhanced-card overflow-hidden">
@@ -736,7 +701,7 @@ export default function SchedulePage() {
                         {isHoliday && (
                           <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold">
                             🎉 Holiday
-                </span>
+                          </span>
                         )}
                       </div>
                     </div>
@@ -746,6 +711,13 @@ export default function SchedulePage() {
                         <div className="text-6xl mb-4">🎉</div>
                         <h4 className="text-2xl font-semibold text-dark-200 mb-2">Holiday</h4>
                         <p className="text-dark-400">No classes scheduled for this day.</p>
+                      </div>
+                    ) : !hasContent && !showEmptyPeriods ? (
+                      <div className="p-8 text-center text-dark-300">
+                        <p className="text-lg font-semibold text-dark-100 mb-2">لا توجد حصص معروضة في هذا اليوم.</p>
+                        <p className="text-sm text-dark-400">
+                          تأكد من اختيار القسم الصحيح أو فعّل خيار إظهار الفترات الفارغة/المحاضرات لعرض كل التفاصيل.
+                        </p>
                       </div>
                     ) : (
                       <>
@@ -773,20 +745,66 @@ export default function SchedulePage() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {sectionsToShow.map(sectionNum => (
-                                  <tr key={sectionNum} className="hover:bg-cyber-neon/5 transition-all duration-300 group">
-                                    <td className="px-4 py-4 bg-gradient-to-r from-cyber-dark/70 via-cyber-dark/60 to-cyber-dark/50 text-cyber-neon font-bold text-base border-2 border-cyber-neon/50 sticky left-0 z-10 shadow-2xl backdrop-blur-md group-hover:from-cyber-neon/25 group-hover:via-cyber-neon/20 group-hover:to-cyber-neon/15 transition-all duration-300">
-                                      <span className="px-4 py-2 bg-gradient-to-r from-cyber-neon/50 via-cyber-neon/40 to-cyber-neon/30 rounded-lg font-extrabold text-sm shadow-lg shadow-cyber-neon/20 hover:shadow-xl hover:shadow-cyber-neon/30 transition-all duration-300 inline-block">
-                                        S{sectionNum}
-                </span>
+                                {lectureRow && lectureRow.some(cell => cell) && (
+                                  <tr className="bg-cyber-dark/40 border-b border-cyber-neon/20">
+                                    <td className="px-4 py-4 text-cyber-neon font-semibold text-sm sticky left-0 bg-cyber-dark/40">
+                                      Group {scheduleView} Lecture
                                     </td>
                                     {filteredPeriods.map(period => {
-                                      const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
-                                      const isLecture = cellData && (cellData.isLecture || !cellData.sectionNumber)
+                                      const idx = periodIndexMap[period.number]
+                                      const cellData = idx !== undefined && lectureRow ? lectureRow[idx] : null
+                                      if (!cellData && !showEmptyPeriods) {
+                                        return (
+                                          <td key={`lecture-empty-${period.number}`} className="px-2 py-2 border border-dark-200/25 min-w-[160px] h-24 bg-cyber-dark/20"></td>
+                                        )
+                                      }
                                       
                                       if (!cellData) {
                                         return (
-                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[160px] h-28 bg-gradient-to-br from-cyber-dark/30 to-cyber-dark/20 group/empty hover:from-cyber-dark/40 hover:to-cyber-dark/30 transition-all duration-300">
+                                          <td key={`lecture-empty-${period.number}`} className="px-2 py-2 border border-dark-200/25 min-w-[160px] h-24 bg-cyber-dark/20">
+                                            <div className="text-center text-dark-500/20 text-xs">—</div>
+                                          </td>
+                                        )
+                                      }
+                                      
+                                      return (
+                                        <td key={`lecture-${period.number}`} className="px-2 py-2.5 border border-dark-200/30 min-w-[160px] h-28">
+                                          <div className="h-full p-3 rounded-xl bg-gradient-to-br from-cyber-violet/35 to-cyber-violet/20 border border-cyber-violet/50 text-xs text-dark-100">
+                                            <div className="font-semibold text-sm mb-1">{cellData.title || cellData.subject}</div>
+                                            <div className="text-[11px] text-dark-300 flex items-center gap-1">
+                                              <Clock className="w-3 h-3 text-cyber-neon" />
+                                              <span>{cellData.time}</span>
+                                            </div>
+                                            <div className="text-[11px] text-dark-300 flex items-center gap-1">
+                                              <MapPin className="w-3 h-3 text-cyber-green" />
+                                              <span>{cellData.location || cellData.room}</span>
+                                            </div>
+                                          </div>
+                                        </td>
+                                      )
+                                    })}
+                                  </tr>
+                                )}
+
+                                {rows.map(row => (
+                                  <tr key={row.sectionNum} className="hover:bg-cyber-neon/5 transition-all duration-300 group">
+                                    <td className="px-4 py-4 bg-gradient-to-r from-cyber-dark/70 via-cyber-dark/60 to-cyber-dark/50 text-cyber-neon font-bold text-base border-2 border-cyber-neon/50 sticky left-0 z-10 shadow-2xl backdrop-blur-md group-hover:from-cyber-neon/25 group-hover:via-cyber-neon/20 group-hover:to-cyber-neon/15 transition-all duration-300">
+                                      <span className="px-4 py-2 bg-gradient-to-r from-cyber-neon/50 via-cyber-neon/40 to-cyber-neon/30 rounded-lg font-extrabold text-sm shadow-lg shadow-cyber-neon/20 hover:shadow-xl hover:shadow-cyber-neon/30 transition-all duration-300 inline-block">
+                                        S{row.sectionNum}
+                                      </span>
+                                    </td>
+                                    {filteredPeriods.map(period => {
+                                      const idx = periodIndexMap[period.number]
+                                      const cellData = idx !== undefined ? row.cells[idx] : null
+                                      if (!cellData && !showEmptyPeriods) {
+                                        return (
+                                          <td key={`${row.sectionNum}-${period.number}`} className="px-2 py-2 border border-dark-200/25 min-w-[160px] h-28 bg-cyber-dark/15"></td>
+                                        )
+                                      }
+                                      
+                                      if (!cellData) {
+                                        return (
+                                          <td key={`${row.sectionNum}-${period.number}`} className="px-2 py-2 border border-dark-200/25 min-w-[160px] h-28 bg-gradient-to-br from-cyber-dark/30 to-cyber-dark/20 group/empty hover:from-cyber-dark/40 hover:to-cyber-dark/30 transition-all duration-300">
                                             {showEmptyPeriods && (
                                               <div className="p-2 text-center text-dark-500/15 text-xs font-light">—</div>
                                             )}
@@ -794,19 +812,11 @@ export default function SchedulePage() {
                                         )
                                       }
                                       
-                                      if (isLecture && !showLecturesInMatrix) {
-                                        return (
-                                          <td key={period.number} className="px-2 py-2 border border-dark-200/25 align-middle min-w-[160px] h-28 bg-cyber-dark/25">
-                                            <div className="p-2 text-center text-dark-500/20 text-xs">—</div>
-                                          </td>
-                                        )
-                                      }
-                                      
                                       return (
-                                        <td key={period.number} className="px-2 py-2.5 border border-dark-200/30 align-middle min-w-[160px] h-32">
+                                        <td key={`${row.sectionNum}-${period.number}`} className="px-2 py-2.5 border border-dark-200/30 min-w-[160px] h-32">
                                           <div 
                                             className={`h-full p-2.5 rounded-xl text-xs cursor-pointer hover:scale-[1.03] transition-all duration-300 shadow-xl hover:shadow-2xl relative overflow-hidden group/cell ${
-                                              isLecture
+                                              cellData.type === 'lecture'
                                                 ? 'bg-gradient-to-br from-cyber-violet/50 via-cyber-violet/35 to-cyber-violet/25 border-2 border-cyber-violet/70 hover:border-cyber-violet hover:shadow-cyber-violet/30'
                                                 : 'bg-gradient-to-br from-cyber-green/50 via-cyber-green/35 to-cyber-green/25 border-2 border-cyber-green/70 hover:border-cyber-green hover:shadow-cyber-green/30'
                                             }`}
@@ -814,7 +824,7 @@ export default function SchedulePage() {
                                           >
                                             {/* Animated background shimmer */}
                                             <div className={`absolute inset-0 opacity-0 group-hover/cell:opacity-100 transition-opacity duration-500 ${
-                                              isLecture 
+                                              cellData.type === 'lecture'
                                                 ? 'bg-gradient-to-r from-transparent via-cyber-violet/20 to-transparent' 
                                                 : 'bg-gradient-to-r from-transparent via-cyber-green/20 to-transparent'
                                             } animate-shimmer`}></div>
@@ -823,20 +833,20 @@ export default function SchedulePage() {
                                               {/* 1. المادة (Subject) */}
                                               <div className="font-bold text-dark-100 text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300">
                                                 {cellData.title || cellData.subject}
-                                              </div>
-                                              
+                </div>
+                
                                               {/* 2. صاحب المادة (Instructor) */}
                                               <div className="text-dark-300 text-[10px] opacity-90 flex items-center gap-1 truncate">
                                                 <User className="w-3 h-3 text-cyber-neon/60 flex-shrink-0" />
                                                 <span className="truncate">{cellData.instructor}</span>
-              </div>
+                </div>
 
                                               {/* 3. الموعد (Time) */}
                                               <div className="flex items-center gap-1 text-[9px] text-dark-300">
                                                 <Clock className="w-3 h-3 text-cyber-neon/70 flex-shrink-0" />
                                                 <span className="font-medium">{cellData.time}</span>
-                                              </div>
-                                              
+                </div>
+
                                               {/* 4. مكان الحضور (Location) & Type */}
                                               <div className="flex items-center justify-between gap-2 pt-0.5">
                                                 {(cellData.location || cellData.room) && (
@@ -846,11 +856,11 @@ export default function SchedulePage() {
                                                   </div>
                                                 )}
                                                 <span className={`px-2 py-0.5 rounded-full text-[8px] font-bold shadow-md flex-shrink-0 ${
-                                                  isLecture
+                                                  cellData.type === 'lecture'
                                                     ? 'bg-gradient-to-r from-cyber-violet/60 to-cyber-violet/50 text-white border border-cyber-violet/40'
                                                     : 'bg-gradient-to-r from-cyber-green/60 to-cyber-green/50 text-white border border-cyber-green/40'
                                                 }`}>
-                                                  {isLecture ? '📚' : '🔬'}
+                                                  {cellData.type === 'lecture' ? '📚' : '🔬'}
                                                 </span>
                                               </div>
                                             </div>
@@ -862,79 +872,114 @@ export default function SchedulePage() {
                                 ))}
                               </tbody>
                             </table>
-                          </div>
-                </div>
-                
-                        {/* Mobile Card View */}
-                        <div className="lg:hidden p-4 space-y-3">
-                          {sectionsToShow.map(sectionNum => {
-                            const sectionData = filteredPeriods
-                              .map(period => {
-                                const cellData = matrix[sectionNum] && matrix[sectionNum][period.number]
-                                if (!cellData) return null
-                                const isLecture = cellData.isLecture || !cellData.sectionNumber
-                                if (isLecture && !showLecturesInMatrix) return null
-                                return { period, cellData, isLecture }
-                              })
-                              .filter((item): item is { period: typeof periods[0], cellData: any, isLecture: boolean } => item !== null)
-                              .sort((a, b) => a.period.number - b.period.number) // Sort by period number ascending
-                            
-                            if (sectionData.length === 0) return null
-                            
-                            return (
-                              <div key={sectionNum} className="enhanced-card p-4">
-                                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-cyber-neon/20">
-                                  <span className="px-3 py-1.5 bg-gradient-to-r from-cyber-neon/40 to-cyber-neon/30 rounded-lg font-bold text-sm text-cyber-neon">Section {sectionNum}</span>
-                                </div>
-                                <div className="space-y-2">
-                                  {sectionData.map(({ period, cellData, isLecture }) => (
-                                    <div
-                                      key={period.number}
-                                      className={`p-4 rounded-lg border-2 transition-all ${
-                                        isLecture
-                                          ? 'bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-cyber-violet/50'
-                                          : 'bg-gradient-to-r from-cyber-green/30 to-cyber-green/20 border-cyber-green/50'
-                                      }`}
-                                    >
-                                      {/* 1. المادة (Subject) */}
-                                      <div className="font-bold text-dark-100 text-base mb-2">
-                                        {cellData.title || cellData.subject}
-                </div>
-
-                                      {/* 2. صاحب المادة (Instructor) */}
-                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
-                                        <User className="w-4 h-4 text-cyber-neon/70" />
-                                        <span>{cellData.instructor}</span>
-                </div>
-
-                                      {/* 3. الموعد (Time) & 4. مكان الحضور (Location) */}
-                                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2 text-xs">
-                                        <div className="flex items-center gap-2 text-dark-300">
-                                          <Clock className="w-4 h-4 text-cyber-neon" />
-                                          <span className="font-medium">{cellData.time}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-dark-300">
-                                          <MapPin className="w-4 h-4 text-cyber-green" />
-                                          <span>{cellData.location || cellData.room}</span>
                 </div>
               </div>
 
-                                      {/* Period & Type Badge */}
-                                      <div className="flex items-center justify-between pt-2 border-t border-dark-200/20">
-                                        <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-cyber-dark/50 text-cyber-neon">
+                        {/* Mobile Card View */}
+                        <div className="lg:hidden p-4 space-y-3">
+                          {lectureRow && lectureRow.some(cell => cell) && (
+                            <div className="enhanced-card p-4">
+                              <div className="flex items-center gap-2 mb-3 pb-3 border-b border-cyber-neon/20">
+                                <span className="px-3 py-1.5 bg-cyber-violet/20 text-cyber-violet rounded-lg text-sm font-semibold">
+                                  Group {scheduleView} Lectures
+                                </span>
+                              </div>
+                              <div className="space-y-2">
+                                {lectureRow.map((cellData, idx) => {
+                                  if (!cellData) return null
+                                  return (
+                                    <div key={`mobile-lecture-${idx}`} className="p-4 rounded-lg border-2 border-cyber-violet/40 bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20">
+                                      <div className="font-bold text-dark-100 mb-2">{cellData.title || cellData.subject}</div>
+                                      <div className="text-sm text-dark-300 flex items-center gap-2 mb-1">
+                                        <Clock className="w-4 h-4 text-cyber-neon" />
+                                        <span>{cellData.time}</span>
+                                      </div>
+                                      <div className="text-sm text-dark-300 flex items-center gap-2 mb-1">
+                                        <MapPin className="w-4 h-4 text-cyber-green" />
+                                        <span>{cellData.location || cellData.room}</span>
+                                      </div>
+                                      <div className="text-sm text-dark-300 flex items-center gap-2">
+                                        <User className="w-4 h-4 text-cyber-neon/80" />
+                                        <span>{cellData.instructor}</span>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                          {rows.map(row => {
+                            const rowHasEntries = filteredPeriods.some(period => {
+                              const idx = periodIndexMap[period.number]
+                              return idx !== undefined && row.cells[idx]
+                            })
+                            
+                            return (
+                              <div key={`mobile-section-${row.sectionNum}`} className="enhanced-card p-4">
+                                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-cyber-neon/20">
+                                  <span className="px-3 py-1.5 bg-gradient-to-r from-cyber-neon/40 to-cyber-neon/30 rounded-lg font-bold text-sm text-cyber-neon">
+                                    Section {row.sectionNum}
+                                  </span>
+                                </div>
+                                <div className="space-y-2">
+                                  {!rowHasEntries && showEmptyPeriods && (
+                                    <div className="p-4 rounded-lg border-2 border-dark-200/20 bg-cyber-dark/30 text-center text-dark-400 text-sm">
+                                      No classes scheduled for this section in this day.
+                                    </div>
+                                  )}
+                                  {filteredPeriods.map(period => {
+                                    const idx = periodIndexMap[period.number]
+                                    const cellData = idx !== undefined ? row.cells[idx] : null
+                                    
+                                    if (!cellData) {
+                                      if (!showEmptyPeriods) return null
+                                      return (
+                                        <div key={`mobile-empty-${row.sectionNum}-${period.number}`} className="p-3 rounded-lg border border-dark-200/15 text-center text-dark-500/40 text-sm">
+                                          — No class in this period —
+                                        </div>
+                                      )
+                                    }
+                                    
+                                    return (
+                                      <div
+                                        key={`mobile-cell-${row.sectionNum}-${period.number}`}
+                                        className={`p-4 rounded-lg border-2 transition-all ${
+                                          cellData.type === 'lecture'
+                                            ? 'bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-cyber-violet/50'
+                                            : 'bg-gradient-to-r from-cyber-green/30 to-cyber-green/20 border-cyber-green/50'
+                                        }`}
+                                      >
+                                      <div className="font-bold text-dark-100 text-base mb-2">
+                                        {cellData.title || cellData.subject}
+                                      </div>
+                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
+                                        <User className="w-4 h-4 text-cyber-neon/70" />
+                                        <span>{cellData.instructor}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
+                                        <Clock className="w-4 h-4 text-cyber-neon" />
+                                        <span>{cellData.time}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
+                                        <MapPin className="w-4 h-4 text-cyber-green" />
+                                        <span>{cellData.location || cellData.room}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between text-xs font-semibold">
+                                        <span className="px-2 py-1 rounded-full bg-cyber-dark/40 text-cyber-neon">
                                           Period {period.number}
                                         </span>
-                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                          isLecture
-                                            ? 'bg-cyber-violet/40 text-cyber-violet'
-                                            : 'bg-cyber-green/40 text-cyber-green'
+                                        <span className={`px-3 py-1 rounded-full ${
+                                          cellData.type === 'lecture'
+                                            ? 'bg-cyber-violet/30 text-cyber-violet'
+                                            : 'bg-cyber-green/30 text-cyber-green'
                                         }`}>
-                                          {isLecture ? '📚 Lecture' : '🔬 Lab'}
+                                          {cellData.type === 'lecture' ? '📚 Lecture' : '🔬 Lab'}
                                         </span>
                                       </div>
                                     </div>
-                                  ))}
-                                </div>
+                                  )
+                                })}
                               </div>
                             )
                           })}
@@ -952,12 +997,7 @@ export default function SchedulePage() {
         {viewMode === 'list' && (
           <div className="space-y-6">
             {(() => {
-              // Filter by selected group from toggle
-              const groupFilter = scheduleView === 'A' ? 'Group 1' : 'Group 2'
-              const allScheduleData = [...scheduleData, ...sectionsData]
-              const scheduleToShow = filteredSchedule.length > 0 
-                ? filteredSchedule.filter(item => item.group === groupFilter)
-                : allScheduleData.filter(item => item.group === groupFilter)
+              const scheduleToShow = scheduleForCurrentGroup
               
               const groupedByDay = groupByDay(scheduleToShow)
               const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']

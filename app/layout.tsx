@@ -1,88 +1,56 @@
 import type { Metadata } from 'next'
-import { Inter, Orbitron } from 'next/font/google'
+import { Cairo } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import { Providers } from '@/components/Providers'
 import { OfflineIndicator } from '@/components/OfflineIndicator'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-inter',
+const cairo = Cairo({
+  subsets: ['arabic', 'latin'],
+  variable: '--font-cairo',
   display: 'swap',
   fallback: ['system-ui', 'arial'],
   preload: true,
-  adjustFontFallback: true,
-  // Reduce font loading time
-  weight: ['400', '500', '600', '700'],
-})
-
-const orbitron = Orbitron({ 
-  subsets: ['latin'],
-  variable: '--font-orbitron',
-  display: 'swap',
-  fallback: ['monospace'],
-  preload: true,
-  adjustFontFallback: true,
-  // Only load weights we actually use
-  weight: ['400', '700', '900'],
+  weight: ['300', '400', '600', '700', '900'],
 })
 
 export const metadata: Metadata = {
-  title: 'Cyber TMSAH - Advanced Academic Learning Platform',
-  description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
-  keywords: ['education', 'programming', 'technology', 'learning', 'university', 'academic', 'cyber', 'tmsah', 'computer science'],
+  title: 'Cyber TMSAH | المنصة الأكاديمية الشاملة',
+  description:
+    'منصة Cyber TMSAH تجمع بين الجداول الدراسية والمصادر التعليمية ودليل الأمن السيبراني في تجربة عربية حديثة.',
+  keywords: [
+    'Cyber TMSAH',
+    'الأمن السيبراني',
+    'جدول المحاضرات',
+    'مصادر تعليمية',
+    'موارد جامعية',
+  ],
   authors: [{ name: 'ZEYAD MOHAMED' }],
   creator: 'ZEYAD MOHAMED',
   publisher: 'Cyber TMSAH',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
   metadataBase: new URL('https://cyber-tmsah.vercel.app'),
   alternates: {
     canonical: '/',
     languages: {
+      'ar-EG': '/',
       'en-US': '/en',
     },
   },
   openGraph: {
-    title: 'Cyber TMSAH - Advanced Academic Learning Platform',
-    description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
+    title: 'Cyber TMSAH | المنصة الأكاديمية الشاملة',
+    description:
+      'جميع أدوات الدراسة والأمن السيبراني في مكان واحد: جدول المحاضرات، المواد التعليمية، ومسارات التعلم.',
     url: 'https://cyber-tmsah.vercel.app',
     siteName: 'Cyber TMSAH',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Cyber TMSAH - Advanced Academic Learning Platform',
-      },
-    ],
-    locale: 'en_US',
+    locale: 'ar_EG',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cyber TMSAH - Advanced Academic Learning Platform',
-    description: 'A comprehensive university-level educational platform integrating cutting-edge technology with academic excellence for superior learning experiences',
-    images: ['/og-image.jpg'],
-    creator: '@cyber_tmsah',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: 'your-google-verification-code',
+    title: 'Cyber TMSAH | المنصة الأكاديمية الشاملة',
+    description:
+      'منصة عربية حديثة تجمع الجداول الدراسية والمصادر التعليمية ودليل الأمن السيبراني.',
   },
 }
 
@@ -92,20 +60,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" dir="ltr" className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={cairo.variable} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0a0a0a" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
-      <body className={`${inter.className} bg-cyber-dark text-dark-100 antialiased`}>
+      <body className="font-cairo bg-primary-black text-primary-white">
         <Providers>
-          <div className="min-h-screen flex flex-col">
+          <div className="app-wrapper">
             <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
+            <main className="main-content">{children}</main>
             <Footer />
           </div>
         </Providers>

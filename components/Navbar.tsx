@@ -2,94 +2,161 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, Calendar, BookOpen, Info, Home } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
+
+interface NavItem {
+  label: string
+  href: string
+}
+
+interface DropdownItem {
+  label: string
+  href: string
+}
+
+// تعريف البيانات خارج المكون لتجنب مشاكل hydration
+const securityGuideLinks: NavItem[] = [
+  { label: 'خريطة الطريق', href: '/roadmap' },
+]
+
+const resourcesDropdown: { label: string; items: DropdownItem[] } = {
+  label: 'المصادر المصنفة',
+  items: [
+    { label: 'الدورات', href: '/courses' },
+    { label: 'الكتب', href: '/books' },
+    { label: 'الفيديوهات المقترحة', href: '/videos' },
+    { label: 'البودكاست', href: '/podcasts' },
+    { label: 'مواقع ومنصات تعليمية', href: '/platforms' },
+  ],
+}
+
+const additionalLinks: NavItem[] = [
+  { label: 'دليل الخبرات', href: '/expertise-guide' },
+  { label: 'التقييم والأخبار', href: '/evaluation' },
+  { label: 'ساهم معنا', href: '/contribute' },
+]
+
+const tmsahLinks: NavItem[] = [
+  { label: 'الجدول الدراسي', href: '/schedule' },
+  { label: 'المواد التعليمية', href: '/materials' },
+  { label: 'عن المنصة', href: '/about' },
+]
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const closeMenu = () => {
-    setIsOpen(false)
-  }
-
-  const navItems = [
-    { href: '/', label: 'Home', icon: Home },
-    { href: '/schedule', label: 'Schedule', icon: Calendar },
-    { href: '/materials', label: 'Materials', icon: BookOpen },
-    { href: '/about', label: 'About', icon: Info },
-  ]
+  const toggle = () => setOpen((prev) => !prev)
+  const close = () => setOpen(false)
 
   return (
-    <nav className="bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-neon/20 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 text-cyber-neon hover:text-cyber-violet transition-colors group">
-            <div className="flex flex-col">
-              <span className="font-orbitron font-bold text-2xl bg-gradient-to-r from-cyber-neon via-cyber-violet to-cyber-green bg-clip-text text-transparent group-hover:from-cyber-violet group-hover:via-cyber-green group-hover:to-cyber-neon transition-all duration-300">
-                Cyber TMSAH
-              </span>
-              <span className="text-sm text-cyber-neon/70 font-medium">Advanced Academic Platform</span>
-            </div>
-          </Link>
+    <nav className="main-header">
+      <div className="nav-container">
+        <button className="mobile-menu-button" onClick={toggle} aria-label="القائمة">
+          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => {
-              const Icon = item.icon
-              return (
+        {/* أقسام دليل الأمن السيبراني - على اليمين (nav-left في RTL) */}
+        <ul className="nav-links nav-left">
+          {securityGuideLinks.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          
+          {/* Dropdown للمصادر المصنفة */}
+          <li className="dropdown">
+            <Link href="#" prefetch={false} className="nav-link" onClick={(e) => e.preventDefault()}>
+              {resourcesDropdown.label}
+              <ChevronDown className="w-4 h-4" style={{ marginRight: '0.25rem', display: 'inline' }} />
+            </Link>
+            <div className="dropdown-content">
+              {resourcesDropdown.items.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   prefetch={false}
-                  className="flex items-center space-x-6 px-3 py-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
+                  className="dropdown-link"
+                  onClick={close}
                 >
-                  <Icon className="w-4 h-4 text-cyber-neon group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-medium">{item.label}</span>
+                  {item.label}
                 </Link>
-              )
-            })}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden p-2 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-cyber-dark/95 backdrop-blur-md border-t border-cyber-neon/20">
-              {navItems.map((item) => {
-                const Icon = item.icon
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    prefetch={false}
-                    onClick={closeMenu}
-                    className="flex items-center space-x-6 px-3 py-3 rounded-lg text-dark-200 hover:text-cyber-neon hover:bg-cyber-neon/10 transition-all duration-300 group"
-                  >
-                    <Icon className="w-5 h-5 text-cyber-neon group-hover:scale-110 transition-transform" />
-                    <span className="text-base font-medium">{item.label}</span>
-                  </Link>
-                )
-              })}
+              ))}
             </div>
-          </div>
-        )}
+          </li>
+          
+          {/* أقسام إضافية */}
+          {additionalLinks.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* اسم الموقع في المنتصف */}
+        <Link href="/" className="logo" prefetch={false} onClick={close}>
+          <span>Cyber</span> TMSAH
+        </Link>
+
+        {/* أقسام Cyber TMSAH - على اليسار (nav-right في RTL) */}
+        <ul className="nav-links nav-right">
+          {tmsahLinks.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={open ? 'mobile-menu-panel is-open' : 'mobile-menu-panel'}>
+        <ul>
+          <li>
+            <Link href="/" prefetch={false} className="nav-link" onClick={close}>
+              الرئيسية
+            </Link>
+          </li>
+          <li className="mobile-section-title">دليل الأمن السيبراني</li>
+          {securityGuideLinks.map((item) => (
+            <li key={`mobile-${item.href}`}>
+              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <span className="mobile-dropdown-title">{resourcesDropdown.label}</span>
+            <ul className="mobile-dropdown-list">
+              {resourcesDropdown.items.map((item) => (
+                <li key={`mobile-${item.href}`}>
+                  <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </li>
+          {additionalLinks.map((item) => (
+            <li key={`mobile-${item.href}`}>
+              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          <li className="mobile-section-title">سايبر تمساح</li>
+          {tmsahLinks.map((item) => (
+            <li key={`mobile-${item.href}`}>
+              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </nav>
   )
