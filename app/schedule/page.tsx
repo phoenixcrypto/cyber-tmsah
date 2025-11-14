@@ -659,7 +659,10 @@ export default function SchedulePage() {
                 <>
                   {dayOrder.map(day => {
                 const isHoliday = holidayDays.includes(day)
-                const dayEntries = scheduleForCurrentGroup.filter(item => item.day === day)
+                // Always use allScheduleData filtered by group and day to ensure data is available
+                const dayEntries = allScheduleData.filter(item => 
+                  item.group === groupFilter && item.day === day
+                )
                 const lectures = dayEntries.filter(item => !item.sectionNumber)
                 const labs = dayEntries.filter(item => item.sectionNumber)
                 
@@ -787,14 +790,14 @@ export default function SchedulePage() {
                                       return (
                                         <td key={`lecture-${period.number}`} className="px-2 py-2.5 border border-dark-200/30 min-w-[160px] h-28">
                                           <div className="h-full p-3 rounded-xl bg-gradient-to-br from-cyber-violet/35 to-cyber-violet/20 border border-cyber-violet/50 text-xs text-dark-100">
-                                            <div className="font-semibold text-sm mb-1">{cellData.title || cellData.subject}</div>
+                                            <div className="font-semibold text-sm mb-1">{cellData.title}</div>
                                             <div className="text-[11px] text-dark-300 flex items-center gap-1">
                                               <Clock className="w-3 h-3 text-cyber-neon" />
                                               <span>{cellData.time}</span>
                                             </div>
                                             <div className="text-[11px] text-dark-300 flex items-center gap-1">
                                               <MapPin className="w-3 h-3 text-cyber-green" />
-                                              <span>{cellData.location || cellData.room}</span>
+                                              <span>{cellData.location}</span>
                                             </div>
                                           </div>
                                         </td>
@@ -837,7 +840,7 @@ export default function SchedulePage() {
                                                 ? 'bg-gradient-to-br from-cyber-violet/50 via-cyber-violet/35 to-cyber-violet/25 border-2 border-cyber-violet/70 hover:border-cyber-violet hover:shadow-cyber-violet/30'
                                                 : 'bg-gradient-to-br from-cyber-green/50 via-cyber-green/35 to-cyber-green/25 border-2 border-cyber-green/70 hover:border-cyber-green hover:shadow-cyber-green/30'
                                             }`}
-                                            title={`${cellData.title || cellData.subject} | ${cellData.instructor} | ${cellData.location || cellData.room} | ${cellData.time}`}
+                                            title={`${cellData.title} | ${cellData.instructor} | ${cellData.location} | ${cellData.time}`}
                                           >
                                             {/* Animated background shimmer */}
                                             <div className={`absolute inset-0 opacity-0 group-hover/cell:opacity-100 transition-opacity duration-500 ${
@@ -849,7 +852,7 @@ export default function SchedulePage() {
                                             <div className="relative z-10 space-y-1.5">
                                               {/* 1. المادة (Subject) */}
                                               <div className="font-bold text-dark-100 text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300">
-                                                {cellData.title || cellData.subject}
+                                                {cellData.title}
                 </div>
                 
                                               {/* 2. صاحب المادة (Instructor) */}
@@ -866,10 +869,10 @@ export default function SchedulePage() {
 
                                               {/* 4. مكان الحضور (Location) & Type */}
                                               <div className="flex items-center justify-between gap-2 pt-0.5">
-                                                {(cellData.location || cellData.room) && (
+                                                {cellData.location && (
                                                   <div className="flex items-center gap-1 text-[9px] text-dark-300 truncate flex-1">
                                                     <MapPin className="w-3 h-3 text-cyber-green/70 flex-shrink-0" />
-                                                    <span className="truncate">{cellData.location || cellData.room}</span>
+                                                    <span className="truncate">{cellData.location}</span>
                                                   </div>
                                                 )}
                                                 <span className={`px-2 py-0.5 rounded-full text-[8px] font-bold shadow-md flex-shrink-0 ${
@@ -906,14 +909,14 @@ export default function SchedulePage() {
                                   if (!cellData) return null
                                   return (
                                     <div key={`mobile-lecture-${idx}`} className="p-4 rounded-lg border-2 border-cyber-violet/40 bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20">
-                                      <div className="font-bold text-dark-100 mb-2">{cellData.title || cellData.subject}</div>
+                                      <div className="font-bold text-dark-100 mb-2">{cellData.title}</div>
                                       <div className="text-sm text-dark-300 flex items-center gap-2 mb-1">
                                         <Clock className="w-4 h-4 text-cyber-neon" />
                                         <span>{cellData.time}</span>
                                       </div>
                                       <div className="text-sm text-dark-300 flex items-center gap-2 mb-1">
                                         <MapPin className="w-4 h-4 text-cyber-green" />
-                                        <span>{cellData.location || cellData.room}</span>
+                                        <span>{cellData.location}</span>
                                       </div>
                                       <div className="text-sm text-dark-300 flex items-center gap-2">
                                         <User className="w-4 h-4 text-cyber-neon/80" />
@@ -968,7 +971,7 @@ export default function SchedulePage() {
                                         }`}
                                       >
                                         <div className="font-bold text-dark-100 text-base mb-2">
-                                          {cellData.title || cellData.subject}
+                                          {cellData.title}
                                         </div>
                                         <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
                                           <User className="w-4 h-4 text-cyber-neon/70" />
@@ -980,7 +983,7 @@ export default function SchedulePage() {
                                         </div>
                                         <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
                                           <MapPin className="w-4 h-4 text-cyber-green" />
-                                          <span>{cellData.location || cellData.room}</span>
+                                          <span>{cellData.location}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-xs font-semibold">
                                           <span className="px-2 py-1 rounded-full bg-cyber-dark/40 text-cyber-neon">
