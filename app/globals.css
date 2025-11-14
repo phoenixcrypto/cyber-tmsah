@@ -1944,33 +1944,54 @@ footer {
   background-color: rgba(224, 59, 59, 0.1);
 }
 
-/* Schedule Matrix Table - Base Styles - No Horizontal Scroll */
+/* Schedule Matrix Table - Professional Design */
 .schedule-matrix-table {
   width: 100%;
   table-layout: fixed;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-/* First column (Section) - Responsive width */
+/* Enhanced table borders and shadows */
+.schedule-matrix-table th,
+.schedule-matrix-table td {
+  border: 1px solid rgba(255, 59, 64, 0.2);
+}
+
+.schedule-matrix-table th {
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.schedule-matrix-table td {
+  vertical-align: top;
+  position: relative;
+}
+
+/* First column (Section) - Responsive width with better spacing */
 .schedule-matrix-table th:first-child,
 .schedule-matrix-table td:first-child {
-  width: 12%;
-  max-width: 12%;
+  width: 11%;
+  max-width: 11%;
+  min-width: 60px;
 }
 
 @media (min-width: 640px) {
   .schedule-matrix-table th:first-child,
   .schedule-matrix-table td:first-child {
-    width: 10%;
-    max-width: 10%;
+    width: 9%;
+    max-width: 9%;
+    min-width: 70px;
   }
 }
 
 @media (min-width: 1024px) {
   .schedule-matrix-table th:first-child,
   .schedule-matrix-table td:first-child {
-    width: 8%;
-    max-width: 8%;
+    width: 7%;
+    max-width: 7%;
+    min-width: 80px;
   }
 }
 
@@ -1982,20 +2003,33 @@ footer {
 }
 
 /* Calculate width for 8 periods: (100% - first column) / 8 */
-.schedule-matrix-table th:not(:first-child) {
-  width: calc((100% - 12%) / 8);
+.schedule-matrix-table th:not(:first-child),
+.schedule-matrix-table td:not(:first-child) {
+  width: calc((100% - 11%) / 8);
 }
 
 @media (min-width: 640px) {
-  .schedule-matrix-table th:not(:first-child) {
-    width: calc((100% - 10%) / 8);
+  .schedule-matrix-table th:not(:first-child),
+  .schedule-matrix-table td:not(:first-child) {
+    width: calc((100% - 9%) / 8);
   }
 }
 
 @media (min-width: 1024px) {
-  .schedule-matrix-table th:not(:first-child) {
-    width: calc((100% - 8%) / 8);
+  .schedule-matrix-table th:not(:first-child),
+  .schedule-matrix-table td:not(:first-child) {
+    width: calc((100% - 7%) / 8);
   }
+}
+
+/* Enhanced cell hover effects */
+.schedule-matrix-table tbody tr:hover {
+  background: rgba(255, 59, 64, 0.03);
+}
+
+.schedule-matrix-table tbody td:hover {
+  background: rgba(255, 59, 64, 0.05);
+  transition: background 0.2s ease;
 }
 
 @media (max-width: 640px) {
