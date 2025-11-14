@@ -735,7 +735,7 @@ export default function SchedulePage() {
                     ) : (
                       <>
                         {/* Desktop Matrix View */}
-                        <div className="hidden lg:block overflow-x-auto p-4 sm:p-6">
+                        <div className="block overflow-x-auto p-4 sm:p-6">
                           <div className="inline-block min-w-full">
                             <table className="w-full border-collapse">
                               <thead>
@@ -758,7 +758,7 @@ export default function SchedulePage() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {lectureRow && lectureRow.some(cell => cell) && (
+                                {showLecturesInMatrix && (
                                   <tr className="bg-cyber-dark/40 border-b border-cyber-neon/20">
                                     <td className="px-4 py-4 text-cyber-neon font-semibold text-sm sticky left-0 bg-cyber-dark/40">
                                       Group {scheduleView} Lecture
@@ -799,7 +799,7 @@ export default function SchedulePage() {
                                   </tr>
                                 )}
 
-                                {rows.map(row => (
+                                {rows.length > 0 ? rows.map(row => (
                                   <tr key={row.sectionNum} className="hover:bg-cyber-neon/5 transition-all duration-300 group">
                                     <td className="px-4 py-4 bg-gradient-to-r from-cyber-dark/70 via-cyber-dark/60 to-cyber-dark/50 text-cyber-neon font-bold text-base border-2 border-cyber-neon/50 sticky left-0 z-10 shadow-2xl backdrop-blur-md group-hover:from-cyber-neon/25 group-hover:via-cyber-neon/20 group-hover:to-cyber-neon/15 transition-all duration-300">
                                       <span className="px-4 py-2 bg-gradient-to-r from-cyber-neon/50 via-cyber-neon/40 to-cyber-neon/30 rounded-lg font-extrabold text-sm shadow-lg shadow-cyber-neon/20 hover:shadow-xl hover:shadow-cyber-neon/30 transition-all duration-300 inline-block">
@@ -882,14 +882,20 @@ export default function SchedulePage() {
                                       )
                                     })}
                                   </tr>
-                                ))}
+                                )) : (
+                                  <tr>
+                                    <td colSpan={periodsToDisplay.length + 1} className="px-4 py-8 text-center text-dark-400">
+                                      <p className="text-sm">لا توجد أقسام لعرضها. تأكد من اختيار المجموعة الصحيحة.</p>
+                                    </td>
+                                  </tr>
+                                )}
                               </tbody>
                             </table>
                 </div>
               </div>
 
-                        {/* Mobile Card View */}
-                        <div className="lg:hidden p-4 space-y-3">
+                        {/* Mobile Card View - Hidden for now, using table on all sizes */}
+                        <div className="hidden p-4 space-y-3">
                           {lectureRow && lectureRow.some(cell => cell) && (
                             <div className="enhanced-card p-4">
                               <div className="flex items-center gap-2 mb-3 pb-3 border-b border-cyber-neon/20">
