@@ -741,19 +741,19 @@ export default function SchedulePage() {
                               <table className="w-full border-collapse schedule-matrix-table" style={{ tableLayout: 'fixed', width: '100%' }}>
                                 <thead>
                                   <tr>
-                                    <th className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4 lg:px-5 lg:py-5 bg-gradient-to-br from-cyber-neon/20 via-cyber-neon/15 to-cyber-neon/20 text-cyber-neon font-bold text-[10px] sm:text-xs md:text-sm lg:text-base border-2 border-cyber-neon/50 z-20 shadow-lg backdrop-blur-md relative">
-                                      <div className="flex items-center justify-center gap-1.5 sm:gap-2 md:gap-2.5">
-                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-cyber-neon animate-pulse shadow-lg shadow-cyber-neon/50"></div>
-                                        <span className="text-cyber-neon tracking-wider font-extrabold hidden sm:inline">SECTION</span>
-                                        <span className="text-cyber-neon tracking-wider font-extrabold sm:hidden text-[9px]">SEC</span>
+                                    <th className="px-2.5 py-3 sm:px-3 sm:py-3.5 md:px-4 md:py-4 lg:px-5 lg:py-5 bg-gradient-to-br from-cyber-neon/20 via-cyber-neon/15 to-cyber-neon/20 text-cyber-neon font-bold text-xs sm:text-sm md:text-base lg:text-lg border-2 border-cyber-neon/50 z-20 shadow-lg backdrop-blur-md relative">
+                                      <div className="flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3">
+                                        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-cyber-neon animate-pulse shadow-lg shadow-cyber-neon/50"></div>
+                                        <span className="text-cyber-neon tracking-wider font-extrabold hidden sm:inline leading-tight">SECTION</span>
+                                        <span className="text-cyber-neon tracking-wider font-extrabold sm:hidden text-xs leading-tight">SEC</span>
                                       </div>
                                     </th>
                                     {periodsToDisplay.map(period => (
-                                      <th key={period.number} className="px-1 py-2 sm:px-1.5 sm:py-2.5 md:px-2 md:py-3 lg:px-3 lg:py-4 bg-gradient-to-br from-cyber-neon/15 via-cyber-neon/10 to-cyber-neon/15 text-cyber-neon font-bold text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs border-2 border-cyber-neon/40 relative overflow-hidden group/header">
+                                      <th key={period.number} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 bg-gradient-to-br from-cyber-neon/15 via-cyber-neon/10 to-cyber-neon/15 text-cyber-neon font-bold text-[10px] sm:text-[11px] md:text-xs lg:text-sm border-2 border-cyber-neon/40 relative overflow-hidden group/header">
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyber-neon/10 to-transparent opacity-0 group-hover/header:opacity-100 transition-opacity duration-300"></div>
-                                        <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1 md:gap-1.5 relative z-10">
-                                          <span className="font-extrabold text-[11px] sm:text-xs md:text-sm lg:text-base bg-gradient-to-r from-cyber-neon via-cyber-green to-cyber-neon bg-clip-text text-transparent drop-shadow-lg">P{period.number}</span>
-                                          <span className="text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] opacity-80 font-mono text-cyber-neon/90 font-semibold hidden sm:inline">{period.start}</span>
+                                        <div className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 md:gap-2 relative z-10">
+                                          <span className="font-extrabold text-xs sm:text-sm md:text-base lg:text-lg bg-gradient-to-r from-cyber-neon via-cyber-green to-cyber-neon bg-clip-text text-transparent drop-shadow-lg leading-tight">P{period.number}</span>
+                                          <span className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm opacity-80 font-mono text-cyber-neon/90 font-semibold hidden sm:inline leading-tight">{period.start}</span>
                                         </div>
                                       </th>
                                     ))}
@@ -762,10 +762,10 @@ export default function SchedulePage() {
                               <tbody>
                                 {showLecturesInMatrix && (
                                   <tr className="bg-gradient-to-r from-cyber-violet/20 via-cyber-violet/15 to-cyber-violet/20 border-b-2 border-cyber-violet/30 hover:from-cyber-violet/25 hover:via-cyber-violet/20 hover:to-cyber-violet/25 transition-all duration-300">
-                                    <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4 lg:px-5 lg:py-5 text-cyber-violet font-bold text-[9px] sm:text-[10px] md:text-xs lg:text-sm bg-gradient-to-r from-cyber-violet/25 via-cyber-violet/20 to-cyber-violet/25 border-r-2 border-cyber-violet/40">
+                                    <td className="px-2.5 py-3 sm:px-3 sm:py-3.5 md:px-4 md:py-4 lg:px-5 lg:py-5 text-cyber-violet font-bold text-xs sm:text-sm md:text-base lg:text-lg bg-gradient-to-r from-cyber-violet/25 via-cyber-violet/20 to-cyber-violet/25 border-r-2 border-cyber-violet/40">
                                       <div className="flex items-center justify-center gap-1.5">
-                                        <span className="hidden sm:inline font-extrabold">Group {scheduleView} Lecture</span>
-                                        <span className="sm:hidden font-extrabold">G{scheduleView} L</span>
+                                        <span className="hidden sm:inline font-extrabold leading-tight">Group {scheduleView} Lecture</span>
+                                        <span className="sm:hidden font-extrabold leading-tight">G{scheduleView} L</span>
                                       </div>
                                     </td>
                                     {periodsToDisplay.map(period => {
@@ -773,29 +773,29 @@ export default function SchedulePage() {
                                       const cellData = idx !== undefined && lectureRow ? lectureRow[idx] : null
                                       if (!cellData && !showEmptyPeriods) {
                                         return (
-                                          <td key={`lecture-empty-${period.number}`} className="px-1 py-2 sm:px-1.5 sm:py-2.5 md:px-2 md:py-3 border border-cyber-neon/20 h-16 sm:h-18 md:h-20 lg:h-24 bg-cyber-dark/25"></td>
+                                          <td key={`lecture-empty-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32 bg-cyber-dark/25"></td>
                                         )
                                       }
                                       
                                       if (!cellData) {
                                         return (
-                                          <td key={`lecture-empty-${period.number}`} className="px-1 py-2 sm:px-1.5 sm:py-2.5 md:px-2 md:py-3 border border-cyber-neon/20 h-16 sm:h-18 md:h-20 lg:h-24 bg-cyber-dark/25">
-                                            <div className="text-center text-dark-500/30 text-[8px] sm:text-[9px] md:text-[10px] font-light">—</div>
+                                          <td key={`lecture-empty-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32 bg-cyber-dark/25">
+                                            <div className="text-center text-dark-500/30 text-xs sm:text-sm font-light">—</div>
                                           </td>
                                         )
                                       }
                                       
                                       return (
-                                        <td key={`lecture-${period.number}`} className="px-1 py-2 sm:px-1.5 sm:py-2.5 md:px-2 md:py-3 border border-cyber-neon/20 h-18 sm:h-20 md:h-22 lg:h-28">
-                                          <div className="h-full p-2 sm:p-2.5 md:p-3 lg:p-3.5 rounded-lg sm:rounded-xl bg-gradient-to-br from-cyber-violet/50 via-cyber-violet/40 to-cyber-violet/50 border-2 border-cyber-violet/60 shadow-lg shadow-cyber-violet/20 hover:shadow-xl hover:shadow-cyber-violet/30 hover:border-cyber-violet transition-all duration-300 text-dark-100">
-                                            <div className="font-bold text-[10px] sm:text-xs md:text-sm lg:text-base mb-1 sm:mb-1.5 line-clamp-1 text-cyber-violet drop-shadow-sm">{cellData.title}</div>
-                                            <div className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs text-dark-200 flex items-center gap-1 sm:gap-1.5 mb-0.5 sm:mb-1">
-                                              <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 text-cyber-neon flex-shrink-0" />
-                                              <span className="truncate font-medium">{cellData.time}</span>
+                                        <td key={`lecture-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32">
+                                          <div className="h-full p-2.5 sm:p-3 md:p-3.5 lg:p-4 rounded-lg sm:rounded-xl bg-gradient-to-br from-cyber-violet/50 via-cyber-violet/40 to-cyber-violet/50 border-2 border-cyber-violet/60 shadow-lg shadow-cyber-violet/20 hover:shadow-xl hover:shadow-cyber-violet/30 hover:border-cyber-violet transition-all duration-300 text-dark-100">
+                                            <div className="font-bold text-xs sm:text-sm md:text-base lg:text-lg mb-1.5 sm:mb-2 leading-tight text-cyber-violet drop-shadow-sm break-words">{cellData.title}</div>
+                                            <div className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200 flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5">
+                                              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-neon flex-shrink-0" />
+                                              <span className="font-semibold break-words">{cellData.time}</span>
                                             </div>
-                                            <div className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs text-dark-200 flex items-center gap-1 sm:gap-1.5">
-                                              <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 text-cyber-green flex-shrink-0" />
-                                              <span className="truncate font-medium">{cellData.location}</span>
+                                            <div className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200 flex items-center gap-1.5 sm:gap-2">
+                                              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-green flex-shrink-0" />
+                                              <span className="font-semibold break-words">{cellData.location}</span>
                                             </div>
                                           </div>
                                         </td>
@@ -806,9 +806,9 @@ export default function SchedulePage() {
 
                                 {rows.length > 0 ? rows.map(row => (
                                   <tr key={row.sectionNum} className="hover:bg-cyber-neon/8 transition-all duration-300 group border-b border-cyber-neon/10">
-                                    <td className="px-2 py-2.5 sm:px-3 sm:py-3 md:px-4 md:py-4 lg:px-5 lg:py-5 bg-gradient-to-r from-cyber-neon/20 via-cyber-neon/15 to-cyber-neon/20 text-cyber-neon font-extrabold text-[10px] sm:text-xs md:text-sm lg:text-base border-r-2 border-cyber-neon/50 z-10 shadow-lg backdrop-blur-md group-hover:from-cyber-neon/30 group-hover:via-cyber-neon/25 group-hover:to-cyber-neon/30 transition-all duration-300">
+                                    <td className="px-2.5 py-3 sm:px-3 sm:py-3.5 md:px-4 md:py-4 lg:px-5 lg:py-5 bg-gradient-to-r from-cyber-neon/20 via-cyber-neon/15 to-cyber-neon/20 text-cyber-neon font-extrabold text-xs sm:text-sm md:text-base lg:text-lg border-r-2 border-cyber-neon/50 z-10 shadow-lg backdrop-blur-md group-hover:from-cyber-neon/30 group-hover:via-cyber-neon/25 group-hover:to-cyber-neon/30 transition-all duration-300">
                                       <div className="flex items-center justify-center">
-                                        <span className="px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-2.5 lg:px-5 lg:py-3 bg-gradient-to-r from-cyber-neon/60 via-cyber-neon/50 to-cyber-neon/60 rounded-lg sm:rounded-xl font-black text-[9px] sm:text-[10px] md:text-xs lg:text-sm shadow-xl shadow-cyber-neon/30 hover:shadow-2xl hover:shadow-cyber-neon/40 transition-all duration-300 inline-block border-2 border-cyber-neon/70">
+                                        <span className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3.5 bg-gradient-to-r from-cyber-neon/60 via-cyber-neon/50 to-cyber-neon/60 rounded-lg sm:rounded-xl font-black text-xs sm:text-sm md:text-base lg:text-lg shadow-xl shadow-cyber-neon/30 hover:shadow-2xl hover:shadow-cyber-neon/40 transition-all duration-300 inline-block border-2 border-cyber-neon/70 leading-tight">
                                           S{row.sectionNum}
                 </span>
               </div>
@@ -818,24 +818,24 @@ export default function SchedulePage() {
                                       const cellData = idx !== undefined ? row.cells[idx] : null
                                       if (!cellData && !showEmptyPeriods) {
                                         return (
-                                          <td key={`${row.sectionNum}-${period.number}`} className="px-1 py-2 sm:px-1.5 sm:py-2.5 md:px-2 md:py-3 border border-cyber-neon/20 h-18 sm:h-20 md:h-22 lg:h-26 bg-cyber-dark/20"></td>
+                                          <td key={`${row.sectionNum}-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32 bg-cyber-dark/20"></td>
                                         )
                                       }
                                       
                                       if (!cellData) {
                                         return (
-                                          <td key={`${row.sectionNum}-${period.number}`} className="px-1 py-2 sm:px-1.5 sm:py-2.5 md:px-2 md:py-3 border border-cyber-neon/20 h-18 sm:h-20 md:h-22 lg:h-26 bg-gradient-to-br from-cyber-dark/25 via-cyber-dark/20 to-cyber-dark/25 group/empty hover:from-cyber-dark/35 hover:via-cyber-dark/30 hover:to-cyber-dark/35 transition-all duration-300">
+                                          <td key={`${row.sectionNum}-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32 bg-gradient-to-br from-cyber-dark/25 via-cyber-dark/20 to-cyber-dark/25 group/empty hover:from-cyber-dark/35 hover:via-cyber-dark/30 hover:to-cyber-dark/35 transition-all duration-300">
                                             {showEmptyPeriods && (
-                                              <div className="p-1 sm:p-1.5 text-center text-dark-500/25 text-[8px] sm:text-[9px] md:text-[10px] font-light">—</div>
+                                              <div className="p-1.5 sm:p-2 text-center text-dark-500/25 text-xs sm:text-sm font-light">—</div>
                                             )}
                                           </td>
                                         )
                                       }
                                       
                                       return (
-                                        <td key={`${row.sectionNum}-${period.number}`} className="px-1 py-2 sm:px-1.5 sm:py-2.5 md:px-2 md:py-3 border border-cyber-neon/20 h-20 sm:h-22 md:h-24 lg:h-28">
+                                        <td key={`${row.sectionNum}-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32">
                                           <div 
-                                            className={`h-full p-2 sm:p-2.5 md:p-3 lg:p-3.5 rounded-lg sm:rounded-xl text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs cursor-pointer hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group/cell ${
+                                            className={`h-full p-2.5 sm:p-3 md:p-3.5 lg:p-4 rounded-lg sm:rounded-xl cursor-pointer hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group/cell ${
                                               cellData.type === 'lecture'
                                                 ? 'bg-gradient-to-br from-cyber-violet/55 via-cyber-violet/45 to-cyber-violet/55 border-2 border-cyber-violet/70 hover:border-cyber-violet hover:shadow-cyber-violet/40'
                                                 : 'bg-gradient-to-br from-cyber-green/55 via-cyber-green/45 to-cyber-green/55 border-2 border-cyber-green/70 hover:border-cyber-green hover:shadow-cyber-green/40'
@@ -849,35 +849,35 @@ export default function SchedulePage() {
                                                 : 'bg-gradient-to-r from-transparent via-cyber-green/25 to-transparent'
                                             } animate-shimmer`}></div>
                                             
-                                            <div className="relative z-10 space-y-1 sm:space-y-1.5">
+                                            <div className="relative z-10 space-y-1.5 sm:space-y-2">
                                               {/* 1. المادة (Subject) */}
-                                              <div className={`font-extrabold text-dark-100 text-[9px] sm:text-[10px] md:text-xs lg:text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300 ${
+                                              <div className={`font-extrabold text-dark-100 text-xs sm:text-sm md:text-base lg:text-lg leading-snug break-words group-hover/cell:text-cyber-neon transition-colors duration-300 ${
                                                 cellData.type === 'lecture' ? 'text-cyber-violet' : 'text-cyber-green'
                                               } drop-shadow-sm`}>
                                                 {cellData.title}
                 </div>
                 
                                               {/* 2. صاحب المادة (Instructor) */}
-                                              <div className="text-dark-200 text-[8px] sm:text-[8px] md:text-[9px] lg:text-[10px] opacity-95 flex items-center gap-1 truncate">
-                                                <User className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-cyber-neon/70 flex-shrink-0" />
-                                                <span className="truncate font-medium">{cellData.instructor}</span>
+                                              <div className="text-dark-200 text-[10px] sm:text-xs md:text-sm lg:text-base opacity-95 flex items-start gap-1.5">
+                                                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-neon/70 flex-shrink-0 mt-0.5" />
+                                                <span className="font-semibold break-words leading-tight">{cellData.instructor}</span>
                 </div>
 
                                               {/* 3. الموعد (Time) */}
-                                              <div className="flex items-center gap-1 text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] text-dark-200">
-                                                <Clock className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-cyber-neon/80 flex-shrink-0" />
-                                                <span className="font-semibold truncate">{cellData.time}</span>
+                                              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200">
+                                                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-neon/80 flex-shrink-0" />
+                                                <span className="font-semibold break-words">{cellData.time}</span>
                 </div>
 
                                               {/* 4. مكان الحضور (Location) & Type */}
-                                              <div className="flex items-center justify-between gap-1 pt-0.5">
+                                              <div className="flex items-start justify-between gap-1.5 pt-1">
                                                 {cellData.location && (
-                                                  <div className="flex items-center gap-1 text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] text-dark-200 truncate flex-1">
-                                                    <MapPin className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-cyber-green/80 flex-shrink-0" />
-                                                    <span className="truncate font-medium">{cellData.location}</span>
+                                                  <div className="flex items-start gap-1.5 text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200 flex-1 min-w-0">
+                                                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-green/80 flex-shrink-0 mt-0.5" />
+                                                    <span className="font-semibold break-words leading-tight">{cellData.location}</span>
                                                   </div>
                                                 )}
-                                                <span className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[7px] sm:text-[8px] md:text-[9px] font-black shadow-md flex-shrink-0 ${
+                                                <span className={`px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs md:text-sm font-black shadow-md flex-shrink-0 ${
                                                   cellData.type === 'lecture'
                                                     ? 'bg-gradient-to-r from-cyber-violet/70 to-cyber-violet/60 text-white border-2 border-cyber-violet/50'
                                                     : 'bg-gradient-to-r from-cyber-green/70 to-cyber-green/60 text-white border-2 border-cyber-green/50'
