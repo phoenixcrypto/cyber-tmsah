@@ -15,20 +15,14 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
-  // Font optimization
-  optimizeFonts: true,
-  
   // Compression
   compress: true,
   
-  // SWC minification
-  swcMinify: true,
+  // Static page generation timeout (in seconds)
+  staticPageGenerationTimeout: 60,
   
-  // Output configuration
-  output: 'standalone',
-  
-  // Static page generation timeout
-  staticPageGenerationTimeout: 0,
+  // Turbopack configuration (Next.js 16+)
+  turbopack: {},
   
   // Headers for security
   async headers() {
@@ -77,45 +71,9 @@ const nextConfig = {
     ];
   },
   
-  // Webpack configuration
-  webpack: (config, { dev, isServer }) => {
-    // Optimize for production
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: {
-            minChunks: 2,
-            priority: -20,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: -10,
-            chunks: 'all',
-          },
-          react: {
-            test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
-            name: 'react',
-            priority: 10,
-            chunks: 'all',
-          },
-        },
-      };
-    }
-    
-    return config;
-  },
-  
   // TypeScript configuration
   typescript: {
     ignoreBuildErrors: false,
-  },
-  
-  // ESLint configuration
-  eslint: {
-    ignoreDuringBuilds: false,
   },
   
   // Trailing slash

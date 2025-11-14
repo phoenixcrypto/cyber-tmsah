@@ -316,76 +316,6 @@ export default function SchedulePage() {
     return ''
   }
 
-  const handleSearch = () => {
-    // Filter by selected group (A or B) from toggle
-    
-    // If section is selected, validate it
-    if (selectedSection) {
-      const error = validateGroupAndSection(groupFilter, selectedSection)
-      if (error) {
-        setValidationError(error)
-        setFilteredSchedule([])
-        return
-      }
-    }
-    
-    // Clear error if validation passes
-    setValidationError('')
-    
-    let filtered = allScheduleData.filter(item => {
-      const matchesGroup = item.group === groupFilter
-      // If section is selected: show that section's labs AND all group lectures
-      // If no section selected: show all sections and lectures
-      if (selectedSection) {
-        // Include: labs for the selected section OR lectures (no sectionNumber)
-        return matchesGroup && (item.sectionNumber === parseInt(selectedSection) || !item.sectionNumber)
-      } else {
-        // Include: all items in the group
-        return matchesGroup
-      }
-    })
-    
-    // Sort by day order and then by time
-    const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-    filtered.sort((a, b) => {
-      const dayA = dayOrder.indexOf(a.day || '')
-      const dayB = dayOrder.indexOf(b.day || '')
-      if (dayA !== dayB) return dayA - dayB
-      
-      // If same day, sort by time
-      const timeA = a.time.split(' - ')[0] || ''
-      const timeB = b.time.split(' - ')[0] || ''
-      return timeA.localeCompare(timeB)
-    })
-    
-    setFilteredSchedule(filtered)
-  }
-
-  // Auto-filter when scheduleView or selectedSection changes
-  useEffect(() => {
-    if (selectedSection) {
-      handleSearch()
-    } else {
-      // If no section selected, clear filtered schedule to show all
-      setFilteredSchedule([])
-      setValidationError('')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleView, selectedSection])
-
-  // Group schedule by day
-  const groupByDay = (items: any[]) => {
-    const grouped: { [key: string]: any[] } = {}
-    items.forEach(item => {
-      const day = item.day || 'Other'
-      if (!grouped[day]) {
-        grouped[day] = []
-      }
-      grouped[day].push(item)
-    })
-    return grouped
-  };
-
   const sections = Array.from({length: 15}, (_, i) => i + 1);
   
   // Period times mapping (8 periods) - defined first as it's used in other computations
@@ -433,11 +363,11 @@ export default function SchedulePage() {
   }, [periods]);
   
   // View mode state: 'list' or 'matrix'
-  const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list')
+  const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list');
   
   // Matrix view options
-  const [showLecturesInMatrix, setShowLecturesInMatrix] = useState(true)
-  const [showEmptyPeriods, setShowEmptyPeriods] = useState(true)
+  const [showLecturesInMatrix, setShowLecturesInMatrix] = useState(true);
+  const [showEmptyPeriods, setShowEmptyPeriods] = useState(true);
 
   const allScheduleData = useMemo(() => [...scheduleData, ...sectionsData], [scheduleData, sectionsData]);
   const baseSchedule = useMemo(() => filteredSchedule.length > 0 ? filteredSchedule : allScheduleData, [filteredSchedule, allScheduleData]);
@@ -454,6 +384,76 @@ export default function SchedulePage() {
   const groupSectionsList: number[] = scheduleView === 'A' 
     ? [1, 2, 3, 4, 5, 6, 7] 
     : [8, 9, 10, 11, 12, 13, 14, 15];
+
+  const handleSearch = () => {
+    // Filter by selected group (A or B) from toggle
+    
+    // If section is selected, validate it
+    if (selectedSection) {
+      const error = validateGroupAndSection(groupFilter, selectedSection)
+      if (error) {
+        setValidationError(error)
+        setFilteredSchedule([])
+        return
+      }
+    }
+    
+    // Clear error if validation passes
+    setValidationError('')
+    
+    let filtered = allScheduleData.filter(item => {
+      const matchesGroup = item.group === groupFilter
+      // If section is selected: show that section's labs AND all group lectures
+      // If no section selected: show all sections and lectures
+      if (selectedSection) {
+        // Include: labs for the selected section OR lectures (no sectionNumber)
+        return matchesGroup && (item.sectionNumber === parseInt(selectedSection) || !item.sectionNumber)
+      } else {
+        // Include: all items in the group
+        return matchesGroup
+      }
+    })
+    
+    // Sort by day order and then by time
+    const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    filtered.sort((a, b) => {
+      const dayA = dayOrder.indexOf(a.day || '')
+      const dayB = dayOrder.indexOf(b.day || '')
+      if (dayA !== dayB) return dayA - dayB
+      
+      // If same day, sort by time
+      const timeA = a.time.split(' - ')[0] || ''
+      const timeB = b.time.split(' - ')[0] || ''
+      return timeA.localeCompare(timeB)
+    })
+    
+    setFilteredSchedule(filtered)
+  }
+
+  // Group schedule by day
+  const groupByDay = (items: any[]) => {
+    const grouped: { [key: string]: any[] } = {}
+    items.forEach(item => {
+      const day = item.day || 'Other'
+      if (!grouped[day]) {
+        grouped[day] = []
+      }
+      grouped[day].push(item)
+    })
+    return grouped
+  }
+
+  // Auto-filter when scheduleView or selectedSection changes
+  useEffect(() => {
+    if (selectedSection) {
+      handleSearch()
+    } else {
+      // If no section selected, clear filtered schedule to show all
+      setFilteredSchedule([])
+      setValidationError('')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleView, selectedSection])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
@@ -850,19 +850,19 @@ export default function SchedulePage() {
                                               {/* 1. المادة (Subject) */}
                                               <div className="font-bold text-dark-100 text-sm leading-tight line-clamp-1 group-hover/cell:text-cyber-neon transition-colors duration-300">
                                                 {cellData.title || cellData.subject}
-                                              </div>
-                                              
+                </div>
+                
                                               {/* 2. صاحب المادة (Instructor) */}
                                               <div className="text-dark-300 text-[10px] opacity-90 flex items-center gap-1 truncate">
                                                 <User className="w-3 h-3 text-cyber-neon/60 flex-shrink-0" />
                                                 <span className="truncate">{cellData.instructor}</span>
-                                              </div>
+                </div>
 
                                               {/* 3. الموعد (Time) */}
                                               <div className="flex items-center gap-1 text-[9px] text-dark-300">
                                                 <Clock className="w-3 h-3 text-cyber-neon/70 flex-shrink-0" />
                                                 <span className="font-medium">{cellData.time}</span>
-                                              </div>
+                </div>
 
                                               {/* 4. مكان الحضور (Location) & Type */}
                                               <div className="flex items-center justify-between gap-2 pt-0.5">
@@ -889,8 +889,8 @@ export default function SchedulePage() {
                                 ))}
                               </tbody>
                             </table>
-                          </div>
-                        </div>
+                </div>
+              </div>
 
                         {/* Mobile Card View */}
                         <div className="lg:hidden p-4 space-y-3">
@@ -967,36 +967,37 @@ export default function SchedulePage() {
                                             : 'bg-gradient-to-r from-cyber-green/30 to-cyber-green/20 border-cyber-green/50'
                                         }`}
                                       >
-                                      <div className="font-bold text-dark-100 text-base mb-2">
-                                        {cellData.title || cellData.subject}
+                                        <div className="font-bold text-dark-100 text-base mb-2">
+                                          {cellData.title || cellData.subject}
+                                        </div>
+                                        <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
+                                          <User className="w-4 h-4 text-cyber-neon/70" />
+                                          <span>{cellData.instructor}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
+                                          <Clock className="w-4 h-4 text-cyber-neon" />
+                                          <span>{cellData.time}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
+                                          <MapPin className="w-4 h-4 text-cyber-green" />
+                                          <span>{cellData.location || cellData.room}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-xs font-semibold">
+                                          <span className="px-2 py-1 rounded-full bg-cyber-dark/40 text-cyber-neon">
+                                            Period {period.number}
+                                          </span>
+                                          <span className={`px-3 py-1 rounded-full ${
+                                            cellData.type === 'lecture'
+                                              ? 'bg-cyber-violet/30 text-cyber-violet'
+                                              : 'bg-cyber-green/30 text-cyber-green'
+                                          }`}>
+                                            {cellData.type === 'lecture' ? '📚 Lecture' : '🔬 Lab'}
+                                          </span>
+                                        </div>
                                       </div>
-                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
-                                        <User className="w-4 h-4 text-cyber-neon/70" />
-                                        <span>{cellData.instructor}</span>
-                                      </div>
-                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
-                                        <Clock className="w-4 h-4 text-cyber-neon" />
-                                        <span>{cellData.time}</span>
-                                      </div>
-                                      <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
-                                        <MapPin className="w-4 h-4 text-cyber-green" />
-                                        <span>{cellData.location || cellData.room}</span>
-                                      </div>
-                                      <div className="flex items-center justify-between text-xs font-semibold">
-                                        <span className="px-2 py-1 rounded-full bg-cyber-dark/40 text-cyber-neon">
-                                          Period {period.number}
-                                        </span>
-                                        <span className={`px-3 py-1 rounded-full ${
-                                          cellData.type === 'lecture'
-                                            ? 'bg-cyber-violet/30 text-cyber-violet'
-                                            : 'bg-cyber-green/30 text-cyber-green'
-                                        }`}>
-                                          {cellData.type === 'lecture' ? '📚 Lecture' : '🔬 Lab'}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  )
-                                })}
+                                    )
+                                  })}
+                                </div>
                               </div>
                             )
                           })}
@@ -1006,9 +1007,9 @@ export default function SchedulePage() {
                   </div>
                 )
               })}
-                </>
-              )
-            })()}
+            </>
+          )
+        })()}
           </div>
         )}
 
@@ -1236,7 +1237,7 @@ export default function SchedulePage() {
             </p>
           </div>
         )}
+          </div>
       </div>
-    </div>
   )
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import Link from 'next/link'
 import { Home, RefreshCw, AlertTriangle } from 'lucide-react'
 
@@ -11,11 +10,11 @@ export default function GlobalError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  useEffect(() => {
-    // Log the error
+  // Log error in development
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     console.error('Global Error:', error)
     console.error('Error stack:', error.stack)
-  }, [error])
+  }
 
   return (
     <html lang="en" dir="ltr">
