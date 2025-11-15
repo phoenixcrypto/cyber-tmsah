@@ -55,16 +55,16 @@ export default function Navbar() {
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
-        {/* الأقسام على اليمين (nav-left في RTL) - بعد اللوجو */}
+        {/* الأقسام على اليمين (nav-left في RTL) */}
         <ul className="nav-links nav-left">
           {/* الجدول الدراسي أولاً */}
           <li>
             <Link href="/schedule" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              {primaryLinks[0]?.label || 'الجدول الدراسي'}
+              الجدول الدراسي
             </Link>
           </li>
           
-          {/* باقي الأقسام */}
+          {/* خريطة الطريق */}
           {securityGuideLinks.map((item) => (
             <li key={item.href}>
               <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
@@ -94,14 +94,12 @@ export default function Navbar() {
             </div>
           </li>
           
-          {/* أقسام إضافية */}
-          {additionalLinks.map((item) => (
-            <li key={item.href}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {/* دليل الخبرات */}
+          <li>
+            <Link href="/expertise-guide" prefetch={false} className="nav-link" onClick={close}>
+              دليل الخبرات
+            </Link>
+          </li>
         </ul>
 
         {/* اسم الموقع في المنتصف - ثابت */}
@@ -109,12 +107,26 @@ export default function Navbar() {
           <span>Cyber</span> TMSAH
         </Link>
 
-        {/* الأقسام على اليسار (nav-right في RTL) - قبل اللوجو */}
+        {/* الأقسام على اليسار (nav-right في RTL) */}
         <ul className="nav-links nav-right">
           {/* المواد التعليمية أولاً */}
           <li>
             <Link href="/materials" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              {primaryLinks[1]?.label || 'المواد التعليمية'}
+              المواد التعليمية
+            </Link>
+          </li>
+          
+          {/* التقييم والأخبار */}
+          <li>
+            <Link href="/evaluation" prefetch={false} className="nav-link" onClick={close}>
+              التقييم والأخبار
+            </Link>
+          </li>
+          
+          {/* ساهم معنا */}
+          <li>
+            <Link href="/contribute" prefetch={false} className="nav-link" onClick={close}>
+              ساهم معنا
             </Link>
           </li>
           
