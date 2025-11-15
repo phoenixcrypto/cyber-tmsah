@@ -507,12 +507,12 @@ export default function SchedulePage() {
         <div className="mb-8 animate-slide-up">
           <div className="enhanced-card p-6">
             <h2 className="text-xl font-semibold text-dark-100 mb-4 text-center">
-              تصفية حسب رقم القسم (اختياري)
+              تصفية حسب رقم السكشن (اختياري)
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end max-w-2xl mx-auto">
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  رقم القسم
+                      رقم السكشن
                 </label>
                 <select
                   value={selectedSection}
@@ -566,7 +566,7 @@ export default function SchedulePage() {
           <div className="enhanced-card p-4">
             <div className="flex items-center justify-center gap-4">
               <span className={`text-sm font-medium ${viewMode === 'list' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                عرض القائمة
+                البطاقات
               </span>
               <button
                 onClick={() => setViewMode(viewMode === 'list' ? 'matrix' : 'list')}
@@ -581,7 +581,7 @@ export default function SchedulePage() {
                 />
               </button>
               <span className={`text-sm font-medium ${viewMode === 'matrix' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                عرض المصفوفة
+                الجدول
                 </span>
               </div>
                 </div>
@@ -754,8 +754,8 @@ export default function SchedulePage() {
                                     <th className="px-2.5 py-3 sm:px-3 sm:py-3.5 md:px-4 md:py-4 lg:px-5 lg:py-5 bg-gradient-to-br from-cyber-neon/20 via-cyber-neon/15 to-cyber-neon/20 text-cyber-neon font-bold text-xs sm:text-sm md:text-base lg:text-lg border-2 border-cyber-neon/50 z-20 shadow-lg backdrop-blur-md relative">
                                       <div className="flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3">
                                         <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-cyber-neon animate-pulse shadow-lg shadow-cyber-neon/50"></div>
-                                        <span className="text-cyber-neon tracking-wider font-extrabold hidden sm:inline leading-tight">SECTION</span>
-                                        <span className="text-cyber-neon tracking-wider font-extrabold sm:hidden text-xs leading-tight">SEC</span>
+                                        <span className="text-cyber-neon tracking-wider font-extrabold hidden sm:inline leading-tight">السكشن</span>
+                                        <span className="text-cyber-neon tracking-wider font-extrabold sm:hidden text-xs leading-tight">س</span>
                                       </div>
                                     </th>
                                     {periodsToDisplay.map(period => (
@@ -819,7 +819,7 @@ export default function SchedulePage() {
                                     <td className="px-2.5 py-3 sm:px-3 sm:py-3.5 md:px-4 md:py-4 lg:px-5 lg:py-5 bg-gradient-to-r from-cyber-neon/20 via-cyber-neon/15 to-cyber-neon/20 text-cyber-neon font-extrabold text-xs sm:text-sm md:text-base lg:text-lg border-r-2 border-cyber-neon/50 z-10 shadow-lg backdrop-blur-md group-hover:from-cyber-neon/30 group-hover:via-cyber-neon/25 group-hover:to-cyber-neon/30 transition-all duration-300">
                                       <div className="flex items-center justify-center">
                                         <span className="px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3 lg:px-5 lg:py-3.5 bg-gradient-to-r from-cyber-neon/60 via-cyber-neon/50 to-cyber-neon/60 rounded-lg sm:rounded-xl font-black text-xs sm:text-sm md:text-base lg:text-lg shadow-xl shadow-cyber-neon/30 hover:shadow-2xl hover:shadow-cyber-neon/40 transition-all duration-300 inline-block border-2 border-cyber-neon/70 leading-tight">
-                                          S{row.sectionNum}
+                                          السكشن {row.sectionNum}
                 </span>
               </div>
                                     </td>
@@ -904,7 +904,7 @@ export default function SchedulePage() {
                                 )) : (
                                   <tr>
                                     <td colSpan={periodsToDisplay.length + 1} className="px-2 sm:px-4 py-4 sm:py-8 text-center text-dark-400">
-                                      <p className="text-xs sm:text-sm">لا توجد أقسام لعرضها. تأكد من اختيار المجموعة الصحيحة.</p>
+                                      <p className="text-xs sm:text-sm">لا توجد سكاشن لعرضها. تأكد من اختيار المجموعة الصحيحة.</p>
                                     </td>
                                   </tr>
                                 )}
@@ -956,7 +956,7 @@ export default function SchedulePage() {
                                   <div key={row.sectionNum} className="enhanced-card p-4 border-2 border-cyber-green/40 bg-gradient-to-br from-cyber-green/15 via-cyber-dark/50 to-cyber-green/15">
                                     <div className="mb-3 pb-2 border-b border-cyber-neon/20">
                                       <span className="px-3 py-1.5 bg-cyber-green/30 text-cyber-green rounded-lg text-sm font-bold">
-                                        القسم {row.sectionNum}
+                                        السكشن {row.sectionNum}
                                       </span>
                                     </div>
                                     <div className="space-y-2">
@@ -966,30 +966,30 @@ export default function SchedulePage() {
                                         if (!period) return null
                                         
                                         return (
-                                          <div key={`${row.sectionNum}-${idx}`} className="p-3 rounded-lg bg-cyber-dark/30 border border-cyber-green/20">
-                                            <div className="flex items-start justify-between gap-2 mb-2">
-                                              <h6 className="text-sm font-bold text-dark-100 flex-1">{cellData.title}</h6>
-                                              <span className="text-xs text-cyber-neon font-semibold">P{period.number}</span>
+                                          <div key={`${row.sectionNum}-${idx}`} className="p-3.5 rounded-lg bg-cyber-dark/30 border border-cyber-green/20 hover:bg-cyber-dark/40 transition-colors">
+                                            <div className="flex items-start justify-between gap-2 mb-2.5">
+                                              <h6 className="text-sm font-bold text-dark-100 flex-1 leading-tight">{cellData.title}</h6>
+                                              <span className="text-xs text-cyber-neon font-semibold px-2 py-0.5 bg-cyber-neon/10 rounded flex-shrink-0">P{period.number}</span>
                                             </div>
-                                            <div className="space-y-1.5 text-xs text-dark-200">
+                                            <div className="space-y-2 text-xs text-dark-200">
                                               <div className="flex items-center gap-1.5">
-                                                <User className="w-3 h-3 text-cyber-violet flex-shrink-0" />
-                                                <span>{cellData.instructor}</span>
+                                                <User className="w-3.5 h-3.5 text-cyber-violet flex-shrink-0" />
+                                                <span className="font-medium">{cellData.instructor}</span>
                                               </div>
                                               <div className="flex items-center gap-1.5">
-                                                <Clock className="w-3 h-3 text-cyber-neon flex-shrink-0" />
-                                                <span>{cellData.time}</span>
+                                                <Clock className="w-3.5 h-3.5 text-cyber-neon flex-shrink-0" />
+                                                <span className="font-semibold">{cellData.time}</span>
                                               </div>
                                               <div className="flex items-center gap-1.5">
-                                                <MapPin className="w-3 h-3 text-cyber-green flex-shrink-0" />
-                                                <span>{cellData.location}</span>
+                                                <MapPin className="w-3.5 h-3.5 text-cyber-green flex-shrink-0" />
+                                                <span className="font-medium">{cellData.location}</span>
                                               </div>
                                             </div>
                                           </div>
                                         )
                                       })}
                                       {!hasContent && showEmptyPeriods && (
-                                        <p className="text-xs text-dark-400 text-center py-2">لا توجد محاضرات لهذا القسم في هذا اليوم</p>
+                                        <p className="text-xs text-dark-400 text-center py-2">لا توجد سكاشن لهذا القسم في هذا اليوم</p>
                                       )}
                                     </div>
                                   </div>
@@ -1093,7 +1093,7 @@ export default function SchedulePage() {
                                         </h4>
                                         {item.sectionNumber && (
                                           <span className="inline-block px-2 py-1 bg-cyber-green/30 text-cyber-green rounded text-xs font-bold mr-2">
-                                            القسم {item.sectionNumber}
+                                            السكشن {item.sectionNumber}
                                           </span>
                                         )}
                                       </div>
@@ -1107,21 +1107,21 @@ export default function SchedulePage() {
                                     </div>
 
                                     {/* Details Grid */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                                       {/* Instructor */}
-                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200">
+                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200 bg-cyber-dark/30 px-3 py-2 rounded-lg">
                                         <User className="w-4 h-4 text-cyber-violet flex-shrink-0" />
                                         <span className="font-medium">{item.instructor}</span>
                                       </div>
 
                                       {/* Time */}
-                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200">
+                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200 bg-cyber-dark/30 px-3 py-2 rounded-lg">
                                         <Clock className="w-4 h-4 text-cyber-neon flex-shrink-0" />
                                         <span className="font-semibold">{item.time}</span>
                                       </div>
 
                                       {/* Location */}
-                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200 sm:col-span-2">
+                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200 bg-cyber-dark/30 px-3 py-2 rounded-lg sm:col-span-2">
                                         <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
                                         <span className="font-medium">{item.location || item.room}</span>
                                       </div>

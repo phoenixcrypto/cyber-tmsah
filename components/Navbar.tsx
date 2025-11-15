@@ -55,8 +55,16 @@ export default function Navbar() {
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
-        {/* أقسام دليل الأمن السيبراني - على اليمين (nav-left في RTL) */}
+        {/* الأقسام على اليمين (nav-left في RTL) - بعد اللوجو */}
         <ul className="nav-links nav-left">
+          {/* الجدول الدراسي أولاً */}
+          <li>
+            <Link href="/schedule" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
+              {primaryLinks[0]?.label || 'الجدول الدراسي'}
+            </Link>
+          </li>
+          
+          {/* باقي الأقسام */}
           {securityGuideLinks.map((item) => (
             <li key={item.href}>
               <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
@@ -96,53 +104,21 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* اسم الموقع في المنتصف */}
-        <Link href="/" className="logo" prefetch={false} onClick={close}>
+        {/* اسم الموقع في المنتصف - ثابت */}
+        <Link href="/" className="logo logo-center" prefetch={false} onClick={close}>
           <span>Cyber</span> TMSAH
         </Link>
 
-        {/* الأقسام الرئيسية - على اليسار (nav-right في RTL) */}
+        {/* الأقسام على اليسار (nav-right في RTL) - قبل اللوجو */}
         <ul className="nav-links nav-right">
-          {primaryLinks.map((item) => (
-            <li key={item.href}>
-              <Link href={item.href} prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
-          {securityGuideLinks.map((item) => (
-            <li key={item.href}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
-          <li className="dropdown">
-            <Link href="#" prefetch={false} className="nav-link" onClick={(e) => e.preventDefault()}>
-              {resourcesDropdown.label}
-              <ChevronDown className="w-4 h-4" style={{ marginRight: '0.25rem', display: 'inline' }} />
+          {/* المواد التعليمية أولاً */}
+          <li>
+            <Link href="/materials" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
+              {primaryLinks[1]?.label || 'المواد التعليمية'}
             </Link>
-            <div className="dropdown-content">
-              {resourcesDropdown.items.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  className="dropdown-link"
-                  onClick={close}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
           </li>
-          {additionalLinks.map((item) => (
-            <li key={item.href}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          
+          {/* عن المنصة في النهاية */}
           <li>
             <Link href="/about" prefetch={false} className="nav-link" onClick={close}>
               عن المنصة
