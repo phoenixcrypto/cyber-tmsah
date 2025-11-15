@@ -24,7 +24,7 @@ const aboutFeatures = [
   {
     icon: '💼',
     title: 'توجيه مهني واضح',
-    description: 'تعرف على المهارات المطلوبة في سوق العمل عبر دليل الخبرات والمسارات الوظيفية.',
+    description: 'تعرف على المهارات المطلوبة في سوق العمل عبر دليل المهارات المهنية والمسارات الوظيفية.',
   },
 ]
 
@@ -36,7 +36,7 @@ const teamMembers = [
     description: 'مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، أعمل على تطوير منصات تعليمية متقدمة وتصميم تجارب مستخدم استثنائية.',
     responsibilities: [
       'الجدول الدراسي',
-      'المواد التعليمية',
+      'المحتوى التعليمي',
       'نشر المقالات',
     ],
     socials: [
@@ -52,11 +52,11 @@ const teamMembers = [
     responsibilities: [
       'دليل الأمن السيبراني',
       'خريطة الطريق',
-      'المصادر المصنفة',
+      'الموارد التعليمية',
       'المحتوى التعليمي الشامل',
     ],
     socials: [
-      { label: 'المواد التعليمية', href: '/materials' },
+      { label: 'المحتوى التعليمي', href: '/materials' },
       { label: 'خريطة الطريق', href: '/roadmap' },
     ],
   },
@@ -85,7 +85,7 @@ export default function HomePage() {
           </Link>
           <Link href="/materials" className="btn-secondary">
             <BookOpen className="w-5 h-5" />
-            تصفح المواد التعليمية
+            تصفح المحتوى التعليمي
           </Link>
         </div>
       </section>
@@ -153,10 +153,10 @@ export default function HomePage() {
               <div className="security-card-arrow">→</div>
             </Link>
 
-            {/* المصادر المصنفة */}
+            {/* الموارد التعليمية */}
             <div className="security-card-enhanced security-card-dropdown">
               <div className="security-card-icon">📚</div>
-              <h3 className="security-card-title">المصادر المصنفة</h3>
+              <h3 className="security-card-title">الموارد التعليمية</h3>
               <div className="security-card-links">
                 <Link href="/courses" prefetch={false} className="security-card-link">
                   <GraduationCap className="w-4 h-4" /> الدورات
@@ -176,20 +176,20 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* دليل الخبرات */}
+            {/* دليل المهارات المهنية */}
             <Link href="/expertise-guide" className="security-card-enhanced security-card-hover" prefetch={false}>
               <div className="security-card-icon">💼</div>
-              <h3 className="security-card-title">دليل الخبرات</h3>
+              <h3 className="security-card-title">دليل المهارات المهنية</h3>
               <p className="security-card-description">
                 تعلم من تجارب المحترفين ونصائح عملية من خبراء ميدانيين
               </p>
               <div className="security-card-arrow">→</div>
             </Link>
 
-            {/* التقييم والأخبار */}
+            {/* الأخبار والتحديثات */}
             <Link href="/evaluation" className="security-card-enhanced security-card-hover" prefetch={false}>
               <div className="security-card-icon">📊</div>
-              <h3 className="security-card-title">التقييم والأخبار</h3>
+              <h3 className="security-card-title">الأخبار والتحديثات</h3>
               <p className="security-card-description">
                 تابع آخر الأخبار والتقييمات في مجال الأمن السيبراني
               </p>

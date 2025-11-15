@@ -5,7 +5,7 @@ export default function EvaluationPage() {
     <div className="courses-page">
       <section className="page-hero">
         <h1>
-          📊 <span className="gradient-text">التقييم والأخبار</span>
+          📊 <span className="gradient-text">الأخبار والتحديثات</span>
         </h1>
         <p>تابع آخر الأخبار والتقييمات في مجال الأمن السيبراني</p>
       </section>

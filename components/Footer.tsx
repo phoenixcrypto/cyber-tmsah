@@ -12,7 +12,7 @@ export default function Footer() {
 
   const resources = [
     { label: 'الجدول الدراسي', href: '/schedule' },
-    { label: 'المواد التعليمية', href: '/materials' },
+    { label: 'المحتوى التعليمي', href: '/materials' },
     { label: 'خريطة الطريق', href: '/roadmap' },
   ]
 

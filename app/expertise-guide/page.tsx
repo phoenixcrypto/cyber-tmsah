@@ -5,7 +5,7 @@ export default function ExpertiseGuidePage() {
     <div className="courses-page">
       <section className="page-hero">
         <h1>
-          💼 <span className="gradient-text">دليل الخبرات والتجارب العملية</span>
+          💼 <span className="gradient-text">دليل المهارات المهنية والتجارب العملية</span>
         </h1>
         <p>تعلم من تجارب المحترفين في مجال الأمن السيبراني. نصائح عملية، أخطاء شائعة، وطرق تجنبها من خبراء ميدانيين.</p>
       </section>

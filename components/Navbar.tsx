@@ -20,7 +20,7 @@ const securityGuideLinks: NavItem[] = [
 ]
 
 const resourcesDropdown: { label: string; items: DropdownItem[] } = {
-  label: 'المصادر المصنفة',
+  label: 'الموارد التعليمية',
   items: [
     { label: 'الدورات', href: '/courses' },
     { label: 'الكتب', href: '/books' },
@@ -31,15 +31,15 @@ const resourcesDropdown: { label: string; items: DropdownItem[] } = {
 }
 
 const additionalLinks: NavItem[] = [
-  { label: 'دليل الخبرات', href: '/expertise-guide' },
-  { label: 'التقييم والأخبار', href: '/evaluation' },
+  { label: 'دليل المهارات المهنية', href: '/expertise-guide' },
+  { label: 'الأخبار والتحديثات', href: '/evaluation' },
   { label: 'ساهم معنا', href: '/contribute' },
 ]
 
 // إعادة ترتيب الأقسام: الرئيسية، الجدول، المواد، ثم باقي الصفحات، وأخيراً About
 const primaryLinks: NavItem[] = [
   { label: 'الجدول الدراسي', href: '/schedule' },
-  { label: 'المواد التعليمية', href: '/materials' },
+  { label: 'المحتوى التعليمي', href: '/materials' },
 ]
 
 export default function Navbar() {
@@ -64,10 +64,10 @@ export default function Navbar() {
             </Link>
           </li>
           
-          {/* المواد التعليمية */}
+          {/* المحتوى التعليمي */}
           <li>
             <Link href="/materials" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              المواد التعليمية
+              المحتوى التعليمي
             </Link>
           </li>
           
@@ -109,17 +109,17 @@ export default function Navbar() {
 
         {/* الأقسام على اليسار (nav-right في RTL) - 4 أقسام */}
         <ul className="nav-links nav-right">
-          {/* دليل الخبرات */}
+          {/* دليل المهارات المهنية */}
           <li>
             <Link href="/expertise-guide" prefetch={false} className="nav-link" onClick={close}>
-              دليل الخبرات
+              دليل المهارات المهنية
             </Link>
           </li>
           
-          {/* التقييم والأخبار */}
+          {/* الأخبار والتحديثات */}
           <li>
             <Link href="/evaluation" prefetch={false} className="nav-link" onClick={close}>
-              التقييم والأخبار
+              الأخبار والتحديثات
             </Link>
           </li>
           

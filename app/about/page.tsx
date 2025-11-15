@@ -244,7 +244,7 @@ export default function AboutPage() {
               <div className="primary-section-icon-about">
                 <BookOpen className="w-8 h-8" />
               </div>
-              <h3 className="primary-section-title-about">المواد التعليمية</h3>
+              <h3 className="primary-section-title-about">المحتوى التعليمي</h3>
               <p className="primary-section-description-about">
                 مكتبة شاملة للمواد التعليمية والمراجع لجميع المواد الدراسية
               </p>

@@ -91,11 +91,11 @@ export default function MaterialsPage() {
               <BookOpen className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              المواد التعليمية
+              المحتوى التعليمي
             </h1>
           </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            الوصول إلى المواد التعليمية والموارد الشاملة لجميع المواد الدراسية
+            الوصول إلى المحتوى التعليمي والموارد الشاملة لجميع المواد الدراسية
           </p>
         </div>
 

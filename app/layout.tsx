@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Cyber TMSAH | المنصة الأكاديمية الشاملة',
     description:
-      'جميع أدوات الدراسة والأمن السيبراني في مكان واحد: جدول المحاضرات، المواد التعليمية، ومسارات التعلم.',
+      'جميع أدوات الدراسة والأمن السيبراني في مكان واحد: جدول المحاضرات، المحتوى التعليمي، ومسارات التعلم.',
     url: 'https://cyber-tmsah.vercel.app',
     siteName: 'Cyber TMSAH',
     locale: 'ar_EG',
