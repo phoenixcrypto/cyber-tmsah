@@ -17,66 +17,66 @@ interface Subject {
 const subjectsData: Subject[] = [
   {
     id: 'applied-physics',
-    title: 'Applied Physics',
-    description: 'Physics principles and applications in technology',
+    title: 'الفيزياء التطبيقية',
+    description: 'مبادئ الفيزياء وتطبيقاتها في التكنولوجيا',
     icon: Atom,
     color: 'from-blue-500 to-blue-600',
     articlesCount: 0,
-    lastUpdated: 'No articles yet'
+    lastUpdated: 'لا توجد مقالات بعد'
   },
   {
     id: 'mathematics',
-    title: 'Mathematics',
-    description: 'Mathematical foundations and problem solving',
+    title: 'الرياضيات',
+    description: 'أسس الرياضيات وحل المشكلات',
     icon: Calculator,
     color: 'from-green-500 to-green-600',
     articlesCount: 0,
-    lastUpdated: 'No articles yet'
+    lastUpdated: 'لا توجد مقالات بعد'
   },
   {
     id: 'entrepreneurship',
-    title: 'Entrepreneurship & Creative Thinking',
-    description: 'Business innovation and creative problem solving',
+    title: 'ريادة الأعمال والتفكير الإبداعي',
+    description: 'الابتكار في الأعمال وحل المشكلات الإبداعي',
     icon: Users,
     color: 'from-purple-500 to-purple-600',
     articlesCount: 0,
-    lastUpdated: 'No articles yet'
+    lastUpdated: 'لا توجد مقالات بعد'
   },
   {
     id: 'information-technology',
-    title: 'Information Technology',
-    description: 'IT fundamentals and modern technologies',
+    title: 'تكنولوجيا المعلومات',
+    description: 'أساسيات تكنولوجيا المعلومات والتقنيات الحديثة',
     icon: Globe,
     color: 'from-cyan-500 to-cyan-600',
     articlesCount: 0,
-    lastUpdated: 'No articles yet'
+    lastUpdated: 'لا توجد مقالات بعد'
   },
   {
     id: 'database-systems',
-    title: 'Database Systems',
-    description: 'Database design, implementation and management',
+    title: 'قواعد البيانات',
+    description: 'تصميم وتنفيذ وإدارة قواعد البيانات',
     icon: Database,
     color: 'from-orange-500 to-orange-600',
     articlesCount: 0,
-    lastUpdated: 'No articles yet'
+    lastUpdated: 'لا توجد مقالات بعد'
   },
   {
     id: 'english-language',
-    title: 'English Language',
-    description: 'English communication and technical writing',
+    title: 'اللغة الإنجليزية',
+    description: 'التواصل باللغة الإنجليزية والكتابة التقنية',
     icon: BookOpen,
     color: 'from-red-500 to-red-600',
     articlesCount: 0,
-    lastUpdated: 'No articles yet'
+    lastUpdated: 'لا توجد مقالات بعد'
   },
   {
     id: 'information-systems',
-    title: 'Information Systems',
-    description: 'IS analysis, design and implementation',
+    title: 'نظم المعلومات',
+    description: 'تحليل وتصميم وتنفيذ نظم المعلومات',
     icon: BookOpen,
     color: 'from-indigo-500 to-indigo-600',
     articlesCount: 0,
-    lastUpdated: 'No articles yet'
+    lastUpdated: 'لا توجد مقالات بعد'
   }
 ]
 
@@ -91,11 +91,11 @@ export default function MaterialsPage() {
               <BookOpen className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              Learning Materials
+              المواد التعليمية
             </h1>
           </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            Access comprehensive course materials and resources for all subjects
+            الوصول إلى المواد التعليمية والموارد الشاملة لجميع المواد الدراسية
           </p>
         </div>
 
@@ -130,10 +130,10 @@ export default function MaterialsPage() {
                   
                   <div className="flex items-center justify-between text-sm text-dark-400">
                     <span>
-                      {subject.articlesCount} {subject.articlesCount === 1 ? 'article' : 'articles'}
+                      {subject.articlesCount} {subject.articlesCount === 1 ? 'مقال' : 'مقالات'}
                     </span>
                     <span>
-                      {subject.lastUpdated !== 'No articles yet' ? `Updated ${subject.lastUpdated}` : 'No articles yet'}
+                      {subject.lastUpdated !== 'لا توجد مقالات بعد' ? `تم التحديث: ${subject.lastUpdated}` : 'لا توجد مقالات بعد'}
                     </span>
                   </div>
                 </div>

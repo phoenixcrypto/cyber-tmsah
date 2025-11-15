@@ -23,45 +23,45 @@ export default function Footer() {
   ]
 
   return (
-    <footer>
+    <footer className="border-t-2 border-cyber-neon/30">
       <div className="footer-content">
         <div className="footer-section">
-          <h4>روابط سريعة</h4>
+          <h4 className="text-cyber-neon mb-4 font-bold">روابط سريعة</h4>
           <ul className="footer-links">
             {quickLinks.map((item) => (
               <li key={item.label}>
-                <Link href={item.href} prefetch={false}>{item.label}</Link>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors">{item.label}</Link>
               </li>
             ))}
           </ul>
         </div>
 
         <div className="footer-section">
-          <h4>المصادر</h4>
+          <h4 className="text-cyber-neon mb-4 font-bold">المصادر</h4>
           <ul className="footer-links">
             {resources.map((item) => (
               <li key={item.label}>
-                <Link href={item.href} prefetch={false}>{item.label}</Link>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors">{item.label}</Link>
               </li>
             ))}
           </ul>
         </div>
 
         <div className="footer-section">
-          <h4>تواصل معنا</h4>
+          <h4 className="text-cyber-neon mb-4 font-bold">تواصل معنا</h4>
           <ul className="footer-links">
             {contact.map((item) => (
               <li key={item.label}>
-                <Link href={item.href} prefetch={false}>{item.label}</Link>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors">{item.label}</Link>
               </li>
             ))}
           </ul>
         </div>
       </div>
 
-      <div className="footer-bottom">
-        <p>
-          © {new Date().getFullYear()} سايبر تمساح. جميع الحقوق محفوظة. صُمم وطُوِّر بحُب.
+      <div className="footer-bottom border-t border-cyber-neon/20 pt-4">
+        <p className="text-center">
+          © {new Date().getFullYear()} <span className="text-cyber-neon font-bold">سايبر تمساح</span>. جميع الحقوق محفوظة. صُمم وطُوِّر بحُب ❤️
         </p>
       </div>
     </footer>

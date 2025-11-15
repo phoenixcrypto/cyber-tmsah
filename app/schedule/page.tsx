@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Clock, MapPin, User, Search, BookOpen } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Search } from 'lucide-react'
 import { useState, useEffect, useMemo, useCallback } from 'react'
 
 export default function SchedulePage() {
@@ -302,14 +302,14 @@ export default function SchedulePage() {
     // Group A (Group 1) → Sections 1-7 only
     if (group === 'Group 1') {
       if (sectionNum < 1 || sectionNum > 7) {
-        return 'Group A only includes Sections 1-7. Please select a valid section number.'
+        return 'المجموعة أ تشمل الأقسام 1-7 فقط. يرجى اختيار رقم قسم صحيح.'
       }
     }
     
     // Group B (Group 2) → Sections 8-15 only
     if (group === 'Group 2') {
       if (sectionNum < 8 || sectionNum > 15) {
-        return 'Group B only includes Sections 8-15. Please select a valid section number.'
+        return 'المجموعة ب تشمل الأقسام 8-15 فقط. يرجى اختيار رقم قسم صحيح.'
       }
     }
     
@@ -475,7 +475,7 @@ export default function SchedulePage() {
               {/* Toggle Switch */}
               <div className="flex items-center gap-4">
                 <span className={`text-lg font-semibold transition-colors ${scheduleView === 'A' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                  Group A
+                  المجموعة أ
                 </span>
                 
                 <button
@@ -492,7 +492,7 @@ export default function SchedulePage() {
                 </button>
                 
                 <span className={`text-lg font-semibold transition-colors ${scheduleView === 'B' ? 'text-cyber-violet' : 'text-dark-400'}`}>
-                  Group B
+                  المجموعة ب
                 </span>
         </div>
 
@@ -549,10 +549,10 @@ export default function SchedulePage() {
                 <div className="flex items-start gap-3">
                   <div className="text-red-400 font-bold text-lg">⚠</div>
                   <div>
-                    <h4 className="text-red-400 font-semibold mb-1">Invalid Selection</h4>
+                    <h4 className="text-red-400 font-semibold mb-1">اختيار غير صحيح</h4>
                     <p className="text-red-300 text-sm">{validationError}</p>
                     <p className="text-dark-300 text-xs mt-2">
-                      <strong>Group A:</strong> Sections 1-7 | <strong>Group B:</strong> Sections 8-15
+                      <strong>المجموعة أ:</strong> الأقسام 1-7 | <strong>المجموعة ب:</strong> الأقسام 8-15
                     </p>
                   </div>
                 </div>
@@ -649,6 +649,15 @@ export default function SchedulePage() {
           <div className="space-y-6 mb-8">
             {(() => {
               const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+              const dayNames: Record<string, string> = {
+                'Saturday': 'السبت',
+                'Sunday': 'الأحد',
+                'Monday': 'الإثنين',
+                'Tuesday': 'الثلاثاء',
+                'Wednesday': 'الأربعاء',
+                'Thursday': 'الخميس',
+                'Friday': 'الجمعة'
+              }
               const holidayDays = ['Sunday', 'Thursday', 'Friday']
               
               return (
@@ -717,10 +726,10 @@ export default function SchedulePage() {
                     }`}>
                       <div className="flex items-center gap-3">
                         <Calendar className={`w-5 h-5 ${isHoliday ? 'text-yellow-400' : 'text-cyber-neon'}`} />
-                        <h3 className="text-lg sm:text-xl font-bold text-dark-100">{day}</h3>
+                        <h3 className="text-lg sm:text-xl font-bold text-dark-100">{dayNames[day] || day}</h3>
                         {isHoliday && (
                           <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold">
-                            🎉 Holiday
+                            🎉 عطلة
                 </span>
                         )}
                       </div>
@@ -729,13 +738,14 @@ export default function SchedulePage() {
                     {isHoliday ? (
                       <div className="p-8 sm:p-12 text-center">
                         <div className="text-6xl mb-4">🎉</div>
-                        <h4 className="text-2xl font-semibold text-dark-200 mb-2">Holiday</h4>
-                        <p className="text-dark-400">No classes scheduled for this day.</p>
+                        <h4 className="text-2xl font-semibold text-dark-200 mb-2">عطلة</h4>
+                        <p className="text-dark-400">لا توجد محاضرات مجدولة لهذا اليوم.</p>
                       </div>
                     ) : (
                       <>
-                        {/* Matrix View - Professional Design */}
-                        <div className="w-full max-w-full mx-auto px-2 sm:px-3 md:px-4 lg:px-6">
+                        {/* Matrix View - Desktop Table, Mobile Card */}
+                        {/* Desktop Matrix Table */}
+                        <div className="hidden md:block w-full max-w-full mx-auto px-2 sm:px-3 md:px-4 lg:px-6">
                           <div className="schedule-matrix-container overflow-x-hidden overflow-y-auto max-h-[60vh] sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh] xl:max-h-[80vh] p-2 sm:p-3 md:p-4 lg:p-5 border-2 border-cyber-neon/30 rounded-xl bg-gradient-to-br from-cyber-dark/40 via-cyber-dark/30 to-cyber-dark/40 shadow-2xl shadow-cyber-neon/20 backdrop-blur-sm">
                             <div className="w-full">
                               <table className="w-full border-collapse schedule-matrix-table" style={{ tableLayout: 'fixed', width: '100%' }}>
@@ -901,118 +911,92 @@ export default function SchedulePage() {
                               </tbody>
                             </table>
                 </div>
+                </div>
               </div>
 
-                        {/* Mobile Card View - Hidden for now, using table on all sizes */}
-                        <div className="hidden p-4 space-y-3">
-                          {lectureRow && lectureRow.some(cell => cell) && (
-                            <div className="enhanced-card p-4">
-                              <div className="flex items-center gap-2 mb-3 pb-3 border-b border-cyber-neon/20">
-                                <span className="px-3 py-1.5 bg-cyber-violet/20 text-cyber-violet rounded-lg text-sm font-semibold">
-                                  محاضرات المجموعة {scheduleView}
-                                </span>
-                              </div>
-                              <div className="space-y-2">
-                                {lectureRow.map((cellData, idx) => {
-                                  if (!cellData) return null
-                                  return (
-                                    <div key={`mobile-lecture-${idx}`} className="p-4 rounded-lg border-2 border-cyber-violet/40 bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20">
-                                      <div className="font-bold text-dark-100 mb-2">{cellData.title}</div>
-                                      <div className="text-sm text-dark-300 flex items-center gap-2 mb-1">
-                                        <Clock className="w-4 h-4 text-cyber-neon" />
+                        {/* Mobile Matrix Card View */}
+                        <div className="md:hidden space-y-4 p-2">
+                          {/* Lectures */}
+                          {showLecturesInMatrix && lectureRow && lectureRow.some(cell => cell) && (
+                            <div className="space-y-3">
+                              <h4 className="text-lg font-bold text-cyber-violet mb-3 px-2">محاضرات المجموعة {scheduleView}</h4>
+                              {lectureRow.map((cellData, idx) => {
+                                if (!cellData) return null
+                                return (
+                                  <div key={`mobile-lecture-${idx}`} className="enhanced-card p-4 border-2 border-cyber-violet/40 bg-gradient-to-br from-cyber-violet/15 via-cyber-dark/50 to-cyber-violet/15">
+                                    <div className="space-y-2">
+                                      <div className="flex items-start justify-between gap-2">
+                                        <h5 className="text-base font-bold text-dark-100 flex-1">{cellData.title}</h5>
+                                        <span className="px-2 py-1 bg-cyber-violet/30 text-cyber-violet rounded text-xs font-bold">📚 محاضرة</span>
+                                      </div>
+                                      <div className="flex items-center gap-2 text-sm text-dark-200">
+                                        <Clock className="w-4 h-4 text-cyber-neon flex-shrink-0" />
                                         <span>{cellData.time}</span>
                                       </div>
-                                      <div className="text-sm text-dark-300 flex items-center gap-2 mb-1">
-                                        <MapPin className="w-4 h-4 text-cyber-green" />
+                                      <div className="flex items-center gap-2 text-sm text-dark-200">
+                                        <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
                                         <span>{cellData.location}</span>
                                       </div>
-                                      <div className="text-sm text-dark-300 flex items-center gap-2">
-                                        <User className="w-4 h-4 text-cyber-neon/80" />
-                                        <span>{cellData.instructor}</span>
-                                      </div>
                                     </div>
-                                  )
-                                })}
-                              </div>
+                                  </div>
+                                )
+                              })}
                             </div>
                           )}
 
-                          {rows.map(row => {
-                            const rowHasEntries = periodsToDisplay.some(period => {
-                              const idx = periodIndexMap[period.number]
-                              return idx !== undefined && row.cells[idx]
-                            })
-                            
-                            return (
-                              <div key={`mobile-section-${row.sectionNum}`} className="enhanced-card p-4">
-                                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-cyber-neon/20">
-                                  <span className="px-3 py-1.5 bg-gradient-to-r from-cyber-neon/40 to-cyber-neon/30 rounded-lg font-bold text-sm text-cyber-neon">
-                                    Section {row.sectionNum}
-                                  </span>
-                                </div>
-                                <div className="space-y-2">
-                                  {!rowHasEntries && showEmptyPeriods && (
-                                    <div className="p-4 rounded-lg border-2 border-dark-200/20 bg-cyber-dark/30 text-center text-dark-400 text-sm">
-                                      No classes scheduled for this section in this day.
+                          {/* Sections */}
+                          {rows.length > 0 && (
+                            <div className="space-y-4">
+                              <h4 className="text-lg font-bold text-cyber-green mb-3 px-2">المختبرات</h4>
+                              {rows.map(row => {
+                                const hasContent = row.cells.some(cell => cell !== null)
+                                if (!hasContent && !showEmptyPeriods) return null
+                                
+                                return (
+                                  <div key={row.sectionNum} className="enhanced-card p-4 border-2 border-cyber-green/40 bg-gradient-to-br from-cyber-green/15 via-cyber-dark/50 to-cyber-green/15">
+                                    <div className="mb-3 pb-2 border-b border-cyber-neon/20">
+                                      <span className="px-3 py-1.5 bg-cyber-green/30 text-cyber-green rounded-lg text-sm font-bold">
+                                        القسم {row.sectionNum}
+                                      </span>
                                     </div>
-                                  )}
-                                  {periodsToDisplay.map(period => {
-                                    const idx = periodIndexMap[period.number]
-                                    const cellData = idx !== undefined ? row.cells[idx] : null
-                                    
-                                    if (!cellData) {
-                                      if (!showEmptyPeriods) return null
-                                      return (
-                                        <div key={`mobile-empty-${row.sectionNum}-${period.number}`} className="p-3 rounded-lg border border-dark-200/15 text-center text-dark-500/40 text-sm">
-                                          — No class in this period —
-                                        </div>
-                                      )
-                                    }
-                                    
-                                    return (
-                                      <div
-                                        key={`mobile-cell-${row.sectionNum}-${period.number}`}
-                                        className={`p-4 rounded-lg border-2 transition-all ${
-                                          cellData.type === 'lecture'
-                                            ? 'bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-cyber-violet/50'
-                                            : 'bg-gradient-to-r from-cyber-green/30 to-cyber-green/20 border-cyber-green/50'
-                                        }`}
-                                      >
-                                        <div className="font-bold text-dark-100 text-base mb-2">
-                                          {cellData.title}
-                                        </div>
-                                        <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
-                                          <User className="w-4 h-4 text-cyber-neon/70" />
-                                          <span>{cellData.instructor}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
-                                          <Clock className="w-4 h-4 text-cyber-neon" />
-                                          <span>{cellData.time}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 mb-2 text-sm text-dark-300">
-                                          <MapPin className="w-4 h-4 text-cyber-green" />
-                                          <span>{cellData.location}</span>
-                                        </div>
-                                        <div className="flex items-center justify-between text-xs font-semibold">
-                                          <span className="px-2 py-1 rounded-full bg-cyber-dark/40 text-cyber-neon">
-                                            Period {period.number}
-                                          </span>
-                                          <span className={`px-3 py-1 rounded-full ${
-                                            cellData.type === 'lecture'
-                                              ? 'bg-cyber-violet/30 text-cyber-violet'
-                                              : 'bg-cyber-green/30 text-cyber-green'
-                                          }`}>
-                                            {cellData.type === 'lecture' ? '📚 Lecture' : '🔬 Lab'}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    )
-                                  })}
-                                </div>
-                              </div>
-                            )
-                          })}
-                        </div>
+                                    <div className="space-y-2">
+                                      {row.cells.map((cellData, idx) => {
+                                        if (!cellData) return null
+                                        const period = periods[idx]
+                                        if (!period) return null
+                                        
+                                        return (
+                                          <div key={`${row.sectionNum}-${idx}`} className="p-3 rounded-lg bg-cyber-dark/30 border border-cyber-green/20">
+                                            <div className="flex items-start justify-between gap-2 mb-2">
+                                              <h6 className="text-sm font-bold text-dark-100 flex-1">{cellData.title}</h6>
+                                              <span className="text-xs text-cyber-neon font-semibold">P{period.number}</span>
+                                            </div>
+                                            <div className="space-y-1.5 text-xs text-dark-200">
+                                              <div className="flex items-center gap-1.5">
+                                                <User className="w-3 h-3 text-cyber-violet flex-shrink-0" />
+                                                <span>{cellData.instructor}</span>
+                                              </div>
+                                              <div className="flex items-center gap-1.5">
+                                                <Clock className="w-3 h-3 text-cyber-neon flex-shrink-0" />
+                                                <span>{cellData.time}</span>
+                                              </div>
+                                              <div className="flex items-center gap-1.5">
+                                                <MapPin className="w-3 h-3 text-cyber-green flex-shrink-0" />
+                                                <span>{cellData.location}</span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )
+                                      })}
+                                      {!hasContent && showEmptyPeriods && (
+                                        <p className="text-xs text-dark-400 text-center py-2">لا توجد محاضرات لهذا القسم في هذا اليوم</p>
+                                      )}
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          )}
                         </div>
                       </>
                     )}
@@ -1022,7 +1006,7 @@ export default function SchedulePage() {
             </>
           )
         })()}
-          </div>
+      </div>
         )}
 
         {/* List Schedule View - Original */}
@@ -1033,6 +1017,15 @@ export default function SchedulePage() {
               
               const groupedByDay = groupByDay(scheduleToShow)
               const dayOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+              const dayNames: Record<string, string> = {
+                'Saturday': 'السبت',
+                'Sunday': 'الأحد',
+                'Monday': 'الإثنين',
+                'Tuesday': 'الثلاثاء',
+                'Wednesday': 'الأربعاء',
+                'Thursday': 'الخميس',
+                'Friday': 'الجمعة'
+              }
               const holidayDays = ['Sunday', 'Thursday', 'Friday']
               
               return dayOrder.map(day => {
@@ -1049,10 +1042,10 @@ export default function SchedulePage() {
                     }`}>
                       <div className="flex items-center gap-3">
                         <Calendar className={`w-5 h-5 ${isHoliday ? 'text-yellow-400' : 'text-cyber-neon'}`} />
-                        <h3 className="text-xl font-bold text-dark-100">{day}</h3>
+                        <h3 className="text-xl font-bold text-dark-100">{dayNames[day] || day}</h3>
                         {isHoliday ? (
                           <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold">
-                            🎉 Holiday
+                            🎉 عطلة
                           </span>
                         ) : (
                           <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
@@ -1066,231 +1059,90 @@ export default function SchedulePage() {
                     {isHoliday ? (
                       <div className="p-12 text-center">
                         <div className="text-6xl mb-4">🎉</div>
-                        <h4 className="text-2xl font-semibold text-dark-200 mb-2">Holiday</h4>
-                        <p className="text-dark-400">No lectures scheduled for this day.</p>
+                        <h4 className="text-2xl font-semibold text-dark-200 mb-2">عطلة</h4>
+                        <p className="text-dark-400">لا توجد محاضرات مجدولة لهذا اليوم.</p>
                       </div>
                     ) : dayLectures.length > 0 ? (
-                      <div>
-                        {/* Lectures - Stacked Cards */}
+                      <div className="p-4 sm:p-6">
+                        {/* Unified Card Design for All Items */}
                         {(() => {
-                          // Filter and sort lectures by time
-                          const lectures = dayLectures
-                            .filter(item => item.type === 'lecture')
-                            .sort((a, b) => {
-                              const periodA = getPeriodFromTime(a.time)
-                              const periodB = getPeriodFromTime(b.time)
-                              return periodA - periodB // Sort by period ascending
-                            })
-                          
-                          // Filter and sort labs: first by section number ascending, then by time
-                          const labs = dayLectures
-                            .filter(item => item.type !== 'lecture')
-                            .sort((a, b) => {
-                              // First sort by section number (ascending)
-                              const sectionA = a.sectionNumber || 0
-                              const sectionB = b.sectionNumber || 0
-                              if (sectionA !== sectionB) {
-                                return sectionA - sectionB
-                              }
-                              // If same section, sort by time (period)
-                              const periodA = getPeriodFromTime(a.time)
-                              const periodB = getPeriodFromTime(b.time)
-                              return periodA - periodB
-                            })
+                          // Sort all items by time
+                          const sortedItems = dayLectures.sort((a, b) => {
+                            const periodA = getPeriodFromTime(a.time)
+                            const periodB = getPeriodFromTime(b.time)
+                            return periodA - periodB
+                          })
                           
                           return (
-                            <>
-                              {lectures.length > 0 && (
-                                <div className="overflow-hidden rounded-lg">
-                                  {lectures.map((item, index) => (
-                                    <div
-                                      key={item.id || `lecture-${index}`}
-                                      className={`px-6 py-5 bg-gradient-to-r from-cyber-violet/30 to-cyber-violet/20 border-l-4 border-cyber-violet hover:from-cyber-violet/40 hover:to-cyber-violet/30 transition-all ${
-                                        index < lectures.length - 1 ? 'border-b border-cyber-violet/20' : ''
-                                      }`}
-                                    >
-                                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                        <div className="flex-1 space-y-2">
-                                          {/* 1. المادة (Subject) */}
-                                          <h4 className="text-lg font-bold text-dark-100">{item.title || item.subject}</h4>
-                                          {/* 2. صاحب المادة (Instructor) */}
-                                          <div className="flex items-center gap-2 text-sm text-dark-300">
-                                            <User className="w-4 h-4 text-cyber-neon/70" />
-                                            <span>{item.instructor}</span>
-                                          </div>
-                                        </div>
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                                          {/* 3. الموعد (Time) */}
-                                          <div className="flex items-center gap-2 text-sm text-dark-300 bg-cyber-dark/30 px-3 py-2 rounded-lg">
-                                            <Clock className="w-4 h-4 text-cyber-neon" />
-                                            <span className="font-medium">{item.time}</span>
-                                          </div>
-                                          {/* 4. مكان الحضور (Location) */}
-                                          <div className="flex items-center gap-2 text-sm text-dark-300 bg-cyber-dark/30 px-3 py-2 rounded-lg">
-                                            <MapPin className="w-4 h-4 text-cyber-green" />
-                                            <span>{item.location || item.room}</span>
-                                          </div>
-                                          <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-cyber-violet/40 text-cyber-violet flex items-center gap-1.5">
-                                            <BookOpen className="w-3 h-3" />
-                                            محاضرة
+                            <div className="space-y-3 sm:space-y-4">
+                              {sortedItems.map((item, index) => (
+                                <div
+                                  key={item.id || `item-${index}`}
+                                  className={`enhanced-card p-4 sm:p-5 border-2 ${
+                                    item.type === 'lecture'
+                                      ? 'border-cyber-violet/40 bg-gradient-to-br from-cyber-violet/15 via-cyber-dark/50 to-cyber-violet/15'
+                                      : 'border-cyber-green/40 bg-gradient-to-br from-cyber-green/15 via-cyber-dark/50 to-cyber-green/15'
+                                  } hover:scale-[1.02] transition-all duration-300`}
+                                >
+                                  <div className="space-y-3">
+                                    {/* Header: Subject & Type */}
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div className="flex-1">
+                                        <h4 className="text-lg sm:text-xl font-bold text-dark-100 mb-1">
+                                          {item.title || item.subject}
+                                        </h4>
+                                        {item.sectionNumber && (
+                                          <span className="inline-block px-2 py-1 bg-cyber-green/30 text-cyber-green rounded text-xs font-bold mr-2">
+                                            القسم {item.sectionNumber}
                                           </span>
-                                        </div>
+                                        )}
+                                      </div>
+                                      <span className={`px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 ${
+                                        item.type === 'lecture'
+                                          ? 'bg-cyber-violet/30 text-cyber-violet'
+                                          : 'bg-cyber-green/30 text-cyber-green'
+                                      }`}>
+                                        {item.type === 'lecture' ? '📚 محاضرة' : '🔬 مختبر'}
+                                      </span>
+                                    </div>
+
+                                    {/* Details Grid */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                      {/* Instructor */}
+                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200">
+                                        <User className="w-4 h-4 text-cyber-violet flex-shrink-0" />
+                                        <span className="font-medium">{item.instructor}</span>
+                                      </div>
+
+                                      {/* Time */}
+                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200">
+                                        <Clock className="w-4 h-4 text-cyber-neon flex-shrink-0" />
+                                        <span className="font-semibold">{item.time}</span>
+                                      </div>
+
+                                      {/* Location */}
+                                      <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200 sm:col-span-2">
+                                        <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
+                                        <span className="font-medium">{item.location || item.room}</span>
                                       </div>
                                     </div>
-                                  ))}
-                                </div>
-                              )}
-                              
-                              {/* Labs - Card View on Mobile, Table on Desktop */}
-                              {labs.length > 0 && (
-                                <div className={`${lectures.length > 0 ? 'mt-6 pt-6 border-t border-cyber-neon/20' : ''}`}>
-                                  {/* Desktop Table View */}
-                                  <div className="hidden md:block overflow-x-hidden">
-                                    <table className="w-full">
-                                      <thead className="bg-cyber-dark/50">
-                                        <tr>
-                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">الوقت</th>
-                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المادة</th>
-                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المحاضر</th>
-                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المكان</th>
-                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">النوع</th>
-                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">القسم</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {labs.map((item, index) => (
-                                          <tr 
-                                            key={item.id || index} 
-                                            className={`hover:bg-cyber-neon/5 transition-colors ${
-                                              index < labs.length - 1 ? 'border-b border-dark-200/10' : ''
-                                            }`}
-                                          >
-                                            <td className="px-4 py-4 text-dark-300">
-                                              <div className="flex items-center justify-end gap-2">
-                                                <Clock className="w-4 h-4 text-cyber-neon flex-shrink-0" />
-                                                <span className="font-medium">{item.time}</span>
-                                              </div>
-                                            </td>
-                                            <td className="px-4 py-4 text-dark-100 font-semibold text-right">
-                                              {item.title || item.subject}
-                                              {item.sectionNumber && (
-                                                <span className="mr-2 text-xs text-cyber-neon font-normal">
-                                                  (القسم {item.sectionNumber})
-                                                </span>
-                                              )}
-                                            </td>
-                                            <td className="px-4 py-4 text-dark-300 text-right">
-                                              <div className="flex items-center justify-end gap-2">
-                                                <User className="w-4 h-4 text-cyber-violet flex-shrink-0" />
-                                                <span>{item.instructor}</span>
-                                              </div>
-                                            </td>
-                                            <td className="px-4 py-4 text-dark-300 text-right">
-                                              <div className="flex items-center justify-end gap-2">
-                                                <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
-                                                <span>{item.location || item.room}</span>
+                                  </div>
               </div>
-                                            </td>
-                                            <td className="px-4 py-4">
-                                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                                item.type === 'lecture' 
-                                                  ? 'bg-cyber-violet/20 text-cyber-violet' 
-                                                  : 'bg-cyber-green/20 text-cyber-green'
-                                              }`}>
-                                                {item.type === 'lecture' ? 'محاضرة' : item.type === 'lab' ? 'مختبر' : 'تطبيق'}
-                                              </span>
-                                            </td>
-                                            <td className="px-4 py-4 text-dark-300 text-right">
-                                              {item.sectionNumber ? (
-                                                <span className="px-2 py-1 bg-cyber-green/20 text-cyber-green rounded text-xs font-medium">
-                                                  القسم {item.sectionNumber}
-                                                </span>
-                                              ) : (
-                                                <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
-                                                  {item.group === 'Group 1' ? 'أ' : item.group === 'Group 2' ? 'ب' : item.group}
-                                                </span>
-                                              )}
-                                            </td>
-                                          </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  </div>
-
-                                  {/* Mobile Card View */}
-                                  <div className="md:hidden space-y-3">
-                                    {labs.map((item, index) => (
-                                      <div
-                                        key={item.id || index}
-                                        className="enhanced-card p-4 border-2 border-cyber-green/30 bg-gradient-to-br from-cyber-green/10 via-cyber-dark/50 to-cyber-green/10"
-                                      >
-                                        <div className="space-y-3">
-                                          {/* Subject & Section */}
-                                          <div className="flex items-start justify-between gap-2">
-                                            <h4 className="text-lg font-bold text-dark-100 flex-1">
-                                              {item.title || item.subject}
-                                            </h4>
-                                            {item.sectionNumber && (
-                                              <span className="px-2 py-1 bg-cyber-green/30 text-cyber-green rounded text-xs font-bold flex-shrink-0">
-                                                القسم {item.sectionNumber}
-                                              </span>
-                                            )}
-                                          </div>
-
-                                          {/* Time */}
-                                          <div className="flex items-center gap-2 text-dark-200">
-                                            <Clock className="w-4 h-4 text-cyber-neon flex-shrink-0" />
-                                            <span className="font-semibold">{item.time}</span>
-                                          </div>
-
-                                          {/* Instructor */}
-                                          <div className="flex items-center gap-2 text-dark-200">
-                                            <User className="w-4 h-4 text-cyber-violet flex-shrink-0" />
-                                            <span>{item.instructor}</span>
-                                          </div>
-
-                                          {/* Location */}
-                                          <div className="flex items-center gap-2 text-dark-200">
-                                            <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
-                                            <span>{item.location || item.room}</span>
-                                          </div>
-
-                                          {/* Type Badge */}
-                                          <div className="pt-2 border-t border-cyber-neon/20">
-                                            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
-                                              item.type === 'lecture' 
-                                                ? 'bg-cyber-violet/30 text-cyber-violet' 
-                                                : 'bg-cyber-green/30 text-cyber-green'
-                                            }`}>
-                                              {item.type === 'lecture' ? 'محاضرة' : item.type === 'lab' ? 'مختبر' : 'تطبيق'}
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                              
-                              {lectures.length === 0 && labs.length === 0 && (
-                                <div className="p-8 text-center">
-                                  <p className="text-dark-400">No classes scheduled for this day.</p>
-                                </div>
-                              )}
-                            </>
+                              ))}
+                            </div>
                           )
                         })()}
                       </div>
                     ) : (
                       <div className="p-8 text-center">
-                        <p className="text-dark-400">No lectures scheduled for this day.</p>
+                        <p className="text-dark-400">لا توجد محاضرات مجدولة لهذا اليوم.</p>
                       </div>
                     )}
                   </div>
                 )
               })
             })()}
-          </div>
+              </div>
         )}
 
         {/* Empty State */}
