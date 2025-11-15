@@ -786,16 +786,16 @@ export default function SchedulePage() {
                                       }
                                       
                                       return (
-                                        <td key={`lecture-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32">
-                                          <div className="h-full p-2.5 sm:p-3 md:p-3.5 lg:p-4 rounded-lg sm:rounded-xl bg-gradient-to-br from-cyber-violet/50 via-cyber-violet/40 to-cyber-violet/50 border-2 border-cyber-violet/60 shadow-lg shadow-cyber-violet/20 hover:shadow-xl hover:shadow-cyber-violet/30 hover:border-cyber-violet transition-all duration-300 text-dark-100">
-                                            <div className="font-bold text-xs sm:text-sm md:text-base lg:text-lg mb-1.5 sm:mb-2 leading-tight text-cyber-violet drop-shadow-sm break-words">{cellData.title}</div>
-                                            <div className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200 flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5">
-                                              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-neon flex-shrink-0" />
-                                              <span className="font-semibold break-words">{cellData.time}</span>
+                                        <td key={`lecture-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-auto min-h-[80px] sm:min-h-[100px] md:min-h-[120px]">
+                                          <div className="h-full p-2 sm:p-2.5 md:p-3 lg:p-3.5 rounded-lg sm:rounded-xl bg-gradient-to-br from-cyber-violet/50 via-cyber-violet/40 to-cyber-violet/50 border-2 border-cyber-violet/60 shadow-lg shadow-cyber-violet/20 hover:shadow-xl hover:shadow-cyber-violet/30 hover:border-cyber-violet transition-all duration-300 text-dark-100">
+                                            <div className="font-bold text-[11px] sm:text-xs md:text-sm lg:text-base mb-1.5 sm:mb-1.5 leading-tight text-cyber-violet drop-shadow-sm break-words line-clamp-2" style={{ writingMode: 'horizontal-tb', textOrientation: 'mixed' }}>{cellData.title}</div>
+                                            <div className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-dark-200 flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-1">
+                                              <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-cyber-neon flex-shrink-0" />
+                                              <span className="font-semibold break-words text-[9px] sm:text-[10px] md:text-xs">{cellData.time}</span>
                                             </div>
-                                            <div className="text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200 flex items-center gap-1.5 sm:gap-2">
-                                              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-green flex-shrink-0" />
-                                              <span className="font-semibold break-words">{cellData.location}</span>
+                                            <div className="text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-dark-200 flex items-center gap-1 sm:gap-1.5">
+                                              <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-cyber-green flex-shrink-0" />
+                                              <span className="font-semibold break-words text-[9px] sm:text-[10px] md:text-xs">{cellData.location}</span>
                                             </div>
                                           </div>
                                         </td>
@@ -833,9 +833,9 @@ export default function SchedulePage() {
                                       }
                                       
                                       return (
-                                        <td key={`${row.sectionNum}-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-24 sm:h-26 md:h-28 lg:h-32">
+                                        <td key={`${row.sectionNum}-${period.number}`} className="px-1.5 py-2.5 sm:px-2 sm:py-3 md:px-2.5 md:py-3.5 lg:px-3 lg:py-4 border border-cyber-neon/20 h-auto min-h-[80px] sm:min-h-[100px] md:min-h-[120px]">
                                           <div 
-                                            className={`h-full p-2.5 sm:p-3 md:p-3.5 lg:p-4 rounded-lg sm:rounded-xl cursor-pointer hover:scale-[1.03] transition-all duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group/cell ${
+                                            className={`h-full p-2 sm:p-2.5 md:p-3 lg:p-3.5 rounded-lg sm:rounded-xl cursor-pointer hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group/cell ${
                                               cellData.type === 'lecture'
                                                 ? 'bg-gradient-to-br from-cyber-violet/55 via-cyber-violet/45 to-cyber-violet/55 border-2 border-cyber-violet/70 hover:border-cyber-violet hover:shadow-cyber-violet/40'
                                                 : 'bg-gradient-to-br from-cyber-green/55 via-cyber-green/45 to-cyber-green/55 border-2 border-cyber-green/70 hover:border-cyber-green hover:shadow-cyber-green/40'
@@ -849,35 +849,35 @@ export default function SchedulePage() {
                                                 : 'bg-gradient-to-r from-transparent via-cyber-green/25 to-transparent'
                                             } animate-shimmer`}></div>
                                             
-                                            <div className="relative z-10 space-y-1.5 sm:space-y-2">
+                                            <div className="relative z-10 space-y-1 sm:space-y-1.5">
                                               {/* 1. المادة (Subject) */}
-                                              <div className={`font-extrabold text-dark-100 text-xs sm:text-sm md:text-base lg:text-lg leading-snug break-words group-hover/cell:text-cyber-neon transition-colors duration-300 ${
+                                              <div className={`font-extrabold text-dark-100 text-[11px] sm:text-xs md:text-sm lg:text-base leading-tight break-words line-clamp-2 group-hover/cell:text-cyber-neon transition-colors duration-300 ${
                                                 cellData.type === 'lecture' ? 'text-cyber-violet' : 'text-cyber-green'
-                                              } drop-shadow-sm`}>
+                                              } drop-shadow-sm`} style={{ writingMode: 'horizontal-tb', textOrientation: 'mixed' }}>
                                                 {cellData.title}
                 </div>
                 
                                               {/* 2. صاحب المادة (Instructor) */}
-                                              <div className="text-dark-200 text-[10px] sm:text-xs md:text-sm lg:text-base opacity-95 flex items-start gap-1.5">
-                                                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-neon/70 flex-shrink-0 mt-0.5" />
-                                                <span className="font-semibold break-words leading-tight">{cellData.instructor}</span>
+                                              <div className="text-dark-200 text-[9px] sm:text-[10px] md:text-xs lg:text-sm opacity-95 flex items-start gap-1">
+                                                <User className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-cyber-neon/70 flex-shrink-0 mt-0.5" />
+                                                <span className="font-semibold break-words leading-tight text-[9px] sm:text-[10px] md:text-xs line-clamp-1">{cellData.instructor}</span>
                 </div>
 
                                               {/* 3. الموعد (Time) */}
-                                              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200">
-                                                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-neon/80 flex-shrink-0" />
-                                                <span className="font-semibold break-words">{cellData.time}</span>
+                                              <div className="flex items-center gap-1 text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-dark-200">
+                                                <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-cyber-neon/80 flex-shrink-0" />
+                                                <span className="font-semibold break-words text-[9px] sm:text-[10px] md:text-xs">{cellData.time}</span>
                 </div>
 
                                               {/* 4. مكان الحضور (Location) & Type */}
-                                              <div className="flex items-start justify-between gap-1.5 pt-1">
+                                              <div className="flex items-start justify-between gap-1 pt-0.5">
                                                 {cellData.location && (
-                                                  <div className="flex items-start gap-1.5 text-[10px] sm:text-xs md:text-sm lg:text-base text-dark-200 flex-1 min-w-0">
-                                                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 text-cyber-green/80 flex-shrink-0 mt-0.5" />
-                                                    <span className="font-semibold break-words leading-tight">{cellData.location}</span>
+                                                  <div className="flex items-start gap-1 text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-dark-200 flex-1 min-w-0">
+                                                    <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-cyber-green/80 flex-shrink-0 mt-0.5" />
+                                                    <span className="font-semibold break-words leading-tight text-[9px] sm:text-[10px] md:text-xs line-clamp-1">{cellData.location}</span>
                                                   </div>
                                                 )}
-                                                <span className={`px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs md:text-sm font-black shadow-md flex-shrink-0 ${
+                                                <span className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-black shadow-md flex-shrink-0 ${
                                                   cellData.type === 'lecture'
                                                     ? 'bg-gradient-to-r from-cyber-violet/70 to-cyber-violet/60 text-white border-2 border-cyber-violet/50'
                                                     : 'bg-gradient-to-r from-cyber-green/70 to-cyber-green/60 text-white border-2 border-cyber-green/50'
@@ -1141,78 +1141,134 @@ export default function SchedulePage() {
                                 </div>
                               )}
                               
-                              {/* Labs - Table Format */}
+                              {/* Labs - Card View on Mobile, Table on Desktop */}
                               {labs.length > 0 && (
-                                <div className={`${lectures.length > 0 ? 'mt-6 pt-6 border-t border-cyber-neon/20' : ''} overflow-x-hidden`}>
-                                  <table className="w-full">
-                                    <thead className="bg-cyber-dark/50">
-                                      <tr>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">الوقت</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المادة</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المحاضر</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المكان</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">النوع</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">القسم</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {labs.map((item, index) => (
-                                        <tr 
-                                          key={item.id || index} 
-                                          className={`hover:bg-cyber-neon/5 transition-colors ${
-                                            index < labs.length - 1 ? 'border-b border-dark-200/10' : ''
-                                          }`}
-                                        >
-                                          <td className="px-6 py-4 text-dark-300">
-                                            <div className="flex items-center gap-2">
-                                              <Clock className="w-4 h-4 text-cyber-neon" />
-                                              <span className="font-medium">{item.time}</span>
-                                            </div>
-                                          </td>
-                                          <td className="px-6 py-4 text-dark-100 font-semibold">
-                                            {item.title || item.subject}
+                                <div className={`${lectures.length > 0 ? 'mt-6 pt-6 border-t border-cyber-neon/20' : ''}`}>
+                                  {/* Desktop Table View */}
+                                  <div className="hidden md:block overflow-x-hidden">
+                                    <table className="w-full">
+                                      <thead className="bg-cyber-dark/50">
+                                        <tr>
+                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">الوقت</th>
+                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المادة</th>
+                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المحاضر</th>
+                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">المكان</th>
+                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">النوع</th>
+                                          <th className="px-4 py-3 text-right text-sm font-semibold text-cyber-neon border-b border-cyber-neon/20">القسم</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {labs.map((item, index) => (
+                                          <tr 
+                                            key={item.id || index} 
+                                            className={`hover:bg-cyber-neon/5 transition-colors ${
+                                              index < labs.length - 1 ? 'border-b border-dark-200/10' : ''
+                                            }`}
+                                          >
+                                            <td className="px-4 py-4 text-dark-300">
+                                              <div className="flex items-center justify-end gap-2">
+                                                <Clock className="w-4 h-4 text-cyber-neon flex-shrink-0" />
+                                                <span className="font-medium">{item.time}</span>
+                                              </div>
+                                            </td>
+                                            <td className="px-4 py-4 text-dark-100 font-semibold text-right">
+                                              {item.title || item.subject}
+                                              {item.sectionNumber && (
+                                                <span className="mr-2 text-xs text-cyber-neon font-normal">
+                                                  (القسم {item.sectionNumber})
+                                                </span>
+                                              )}
+                                            </td>
+                                            <td className="px-4 py-4 text-dark-300 text-right">
+                                              <div className="flex items-center justify-end gap-2">
+                                                <User className="w-4 h-4 text-cyber-violet flex-shrink-0" />
+                                                <span>{item.instructor}</span>
+                                              </div>
+                                            </td>
+                                            <td className="px-4 py-4 text-dark-300 text-right">
+                                              <div className="flex items-center justify-end gap-2">
+                                                <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
+                                                <span>{item.location || item.room}</span>
+              </div>
+                                            </td>
+                                            <td className="px-4 py-4">
+                                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                item.type === 'lecture' 
+                                                  ? 'bg-cyber-violet/20 text-cyber-violet' 
+                                                  : 'bg-cyber-green/20 text-cyber-green'
+                                              }`}>
+                                                {item.type === 'lecture' ? 'محاضرة' : item.type === 'lab' ? 'مختبر' : 'تطبيق'}
+                                              </span>
+                                            </td>
+                                            <td className="px-4 py-4 text-dark-300 text-right">
+                                              {item.sectionNumber ? (
+                                                <span className="px-2 py-1 bg-cyber-green/20 text-cyber-green rounded text-xs font-medium">
+                                                  القسم {item.sectionNumber}
+                                                </span>
+                                              ) : (
+                                                <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
+                                                  {item.group === 'Group 1' ? 'أ' : item.group === 'Group 2' ? 'ب' : item.group}
+                                                </span>
+                                              )}
+                                            </td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+
+                                  {/* Mobile Card View */}
+                                  <div className="md:hidden space-y-3">
+                                    {labs.map((item, index) => (
+                                      <div
+                                        key={item.id || index}
+                                        className="enhanced-card p-4 border-2 border-cyber-green/30 bg-gradient-to-br from-cyber-green/10 via-cyber-dark/50 to-cyber-green/10"
+                                      >
+                                        <div className="space-y-3">
+                                          {/* Subject & Section */}
+                                          <div className="flex items-start justify-between gap-2">
+                                            <h4 className="text-lg font-bold text-dark-100 flex-1">
+                                              {item.title || item.subject}
+                                            </h4>
                                             {item.sectionNumber && (
-                                              <span className="ml-2 text-xs text-cyber-neon font-normal">
-                                                (Section {item.sectionNumber})
+                                              <span className="px-2 py-1 bg-cyber-green/30 text-cyber-green rounded text-xs font-bold flex-shrink-0">
+                                                القسم {item.sectionNumber}
                                               </span>
                                             )}
-                                          </td>
-                                          <td className="px-6 py-4 text-dark-300">
-                                            <div className="flex items-center gap-2">
-                                              <User className="w-4 h-4 text-cyber-violet" />
-                                              <span>{item.instructor}</span>
-                                            </div>
-                                          </td>
-                                          <td className="px-6 py-4 text-dark-300">
-                                            <div className="flex items-center gap-2">
-                                              <MapPin className="w-4 h-4 text-cyber-green" />
-                                              <span>{item.location || item.room}</span>
-              </div>
-                                          </td>
-                                          <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                          </div>
+
+                                          {/* Time */}
+                                          <div className="flex items-center gap-2 text-dark-200">
+                                            <Clock className="w-4 h-4 text-cyber-neon flex-shrink-0" />
+                                            <span className="font-semibold">{item.time}</span>
+                                          </div>
+
+                                          {/* Instructor */}
+                                          <div className="flex items-center gap-2 text-dark-200">
+                                            <User className="w-4 h-4 text-cyber-violet flex-shrink-0" />
+                                            <span>{item.instructor}</span>
+                                          </div>
+
+                                          {/* Location */}
+                                          <div className="flex items-center gap-2 text-dark-200">
+                                            <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
+                                            <span>{item.location || item.room}</span>
+                                          </div>
+
+                                          {/* Type Badge */}
+                                          <div className="pt-2 border-t border-cyber-neon/20">
+                                            <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
                                               item.type === 'lecture' 
-                                                ? 'bg-cyber-violet/20 text-cyber-violet' 
-                                                : 'bg-cyber-green/20 text-cyber-green'
+                                                ? 'bg-cyber-violet/30 text-cyber-violet' 
+                                                : 'bg-cyber-green/30 text-cyber-green'
                                             }`}>
                                               {item.type === 'lecture' ? 'محاضرة' : item.type === 'lab' ? 'مختبر' : 'تطبيق'}
                                             </span>
-                                          </td>
-                                          <td className="px-6 py-4 text-dark-300">
-                                            {item.sectionNumber ? (
-                                              <span className="px-2 py-1 bg-cyber-green/20 text-cyber-green rounded text-xs font-medium">
-                                                القسم {item.sectionNumber}
-                                              </span>
-                                            ) : (
-                                              <span className="px-2 py-1 bg-cyber-neon/10 text-cyber-neon rounded text-xs font-medium">
-                                                {item.group === 'Group 1' ? 'أ' : item.group === 'Group 2' ? 'ب' : item.group}
-                                              </span>
-                                            )}
-                                          </td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
                               )}
                               

@@ -2217,6 +2217,10 @@ footer {
 .schedule-matrix-table td {
   vertical-align: top;
   position: relative;
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+  white-space: normal;
+  word-break: break-word;
 }
 
 /* First column (Section) - Responsive width with better spacing */
@@ -2313,6 +2317,27 @@ footer {
     padding: 0.5rem !important;
     font-size: 0.75rem !important;
     line-height: 1.4 !important;
+  }
+  
+  /* Force horizontal text in Matrix view cells */
+  .schedule-matrix-container table td {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+  }
+  
+  .schedule-matrix-container table td > div,
+  .schedule-matrix-container table td > div > div {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  
+  /* Ensure cells have enough height */
+  .schedule-matrix-container table td {
+    vertical-align: top !important;
+    height: auto !important;
+    min-height: 80px !important;
   }
   
   /* Better touch targets on mobile */
