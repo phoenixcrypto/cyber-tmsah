@@ -16,21 +16,15 @@ export default function Footer() {
     { label: 'خريطة الطريق', href: '/roadmap' },
   ]
 
-  const contact = [
-    { label: 'support@cyber-tmsah.com', href: 'mailto:support@cyber-tmsah.com' },
-    { label: 'WhatsApp', href: 'https://wa.me/201553450232' },
-    { label: 'GitHub', href: 'https://github.com/phoenixcrypto/cyber-tmsah' },
-  ]
-
   return (
     <footer className="border-t-2 border-cyber-neon/30">
-      <div className="footer-content">
+      <div className="footer-content footer-content-two-columns">
         <div className="footer-section">
           <h4 className="text-cyber-neon mb-4 font-bold">روابط سريعة</h4>
           <ul className="footer-links">
             {quickLinks.map((item) => (
               <li key={item.label}>
-                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors">{item.label}</Link>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{item.label}</Link>
               </li>
             ))}
           </ul>
@@ -41,18 +35,7 @@ export default function Footer() {
           <ul className="footer-links">
             {resources.map((item) => (
               <li key={item.label}>
-                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors">{item.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h4 className="text-cyber-neon mb-4 font-bold">تواصل معنا</h4>
-          <ul className="footer-links">
-            {contact.map((item) => (
-              <li key={item.label}>
-                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors">{item.label}</Link>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{item.label}</Link>
               </li>
             ))}
           </ul>

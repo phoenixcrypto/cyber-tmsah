@@ -90,33 +90,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* الأقسام الرئيسية المميزة - الجدول والمواد */}
-      <section className="section-wrapper primary-sections">
-        <div className="primary-sections-grid">
-          <Link href="/schedule" className="primary-section-card primary-section-schedule">
-            <div className="primary-section-icon">
-              <Calendar className="w-8 h-8" />
-            </div>
-            <h3 className="primary-section-title">الجدول الدراسي</h3>
-            <p className="primary-section-description">
-              جدول شامل للمحاضرات والمختبرات مع إمكانية التصفية حسب المجموعة والقسم
-            </p>
-            <div className="primary-section-arrow">→</div>
-          </Link>
-
-          <Link href="/materials" className="primary-section-card primary-section-materials">
-            <div className="primary-section-icon">
-              <BookOpen className="w-8 h-8" />
-            </div>
-            <h3 className="primary-section-title">المواد التعليمية</h3>
-            <p className="primary-section-description">
-              مكتبة شاملة للمواد التعليمية والمراجع لجميع المواد الدراسية
-            </p>
-            <div className="primary-section-arrow">→</div>
-          </Link>
-        </div>
-      </section>
-
       <section className="section-wrapper">
         <div className="stats-grid">
           {stats.map((item) => (
@@ -131,22 +104,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="about" className="about-section">
-        <div className="about-content">
-          <h2>
-            ما هي <strong className="gradient-text">سايبر تمساح</strong>؟
-          </h2>
-          <p>
+      <section id="about" className="about-section-enhanced">
+        <div className="about-content-enhanced">
+          <div className="about-header-enhanced">
+            <h2 className="about-title-enhanced">
+              ما هي <strong className="gradient-text">سايبر تمساح</strong>؟
+            </h2>
+            <div className="about-title-underline"></div>
+          </div>
+          <p className="about-description-enhanced">
             سايبر تمساح ليست مجرد صفحة لعرض الجداول، بل هي مرجع متكامل لتنظيم الدراسة وتحفيز التعلم الذاتي. تجمع المنصة بين
             واجهة مرنة للجدول، مكتبة مواد تعليمية جاهزة، وبين دليل الأمن السيبراني المستوحى من المجتمع العربي المتخصص.
           </p>
 
-          <div className="about-features">
-            {aboutFeatures.map((feature) => (
-              <div key={feature.title} className="feature-item">
-                <span className="feature-icon">{feature.icon}</span>
-                <h4>{feature.title}</h4>
-                <p>{feature.description}</p>
+          <div className="about-features-enhanced">
+            {aboutFeatures.map((feature, index) => (
+              <div key={feature.title} className="feature-item-enhanced" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="feature-icon-enhanced">{feature.icon}</div>
+                <h4 className="feature-title-enhanced">{feature.title}</h4>
+                <p className="feature-description-enhanced">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -154,204 +130,132 @@ export default function HomePage() {
       </section>
 
       {/* دليل الأمن السيبراني */}
-      <section id="security-guide" className="security-guide-section" style={{ padding: '5rem 2rem', backgroundColor: 'var(--card-bg)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--primary-white)', marginBottom: '1rem' }}>
+      <section id="security-guide" className="security-guide-section-enhanced">
+        <div className="security-guide-container">
+          <div className="security-guide-header">
+            <h2 className="security-guide-title">
               <span className="gradient-text">دليل الأمن السيبراني</span>
             </h2>
-            <p style={{ fontSize: '1.2rem', color: 'var(--secondary-gray)', maxWidth: '800px', margin: '0 auto' }}>
+            <div className="security-guide-title-underline"></div>
+            <p className="security-guide-subtitle">
               مسارات تعليمية منظمة ومصادر شاملة لمساعدتك في رحلتك في مجال الأمن السيبراني
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
+          <div className="security-guide-grid">
             {/* خريطة الطريق */}
-            <Link href="/roadmap" className="security-card" style={{ 
-              backgroundColor: 'var(--card-bg)', 
-              border: '1px solid var(--border-dark)', 
-              borderRadius: '12px', 
-              padding: '2rem', 
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              display: 'block'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🗺️</div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-white)', marginBottom: '0.5rem' }}>
-                خريطة الطريق
-              </h3>
-              <p style={{ color: 'var(--secondary-gray)', lineHeight: '1.6' }}>
+            <Link href="/roadmap" className="security-card-enhanced security-card-hover" prefetch={false}>
+              <div className="security-card-icon">🗺️</div>
+              <h3 className="security-card-title">خريطة الطريق</h3>
+              <p className="security-card-description">
                 مسار تعليمي منظم من الأساسيات إلى الاحتراف في الأمن السيبراني
               </p>
+              <div className="security-card-arrow">→</div>
             </Link>
 
             {/* المصادر المصنفة */}
-            <div className="security-card" style={{ 
-              backgroundColor: 'var(--card-bg)', 
-              border: '1px solid var(--border-dark)', 
-              borderRadius: '12px', 
-              padding: '2rem'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-white)', marginBottom: '1rem' }}>
-                المصادر المصنفة
-              </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <Link href="/courses" style={{ color: 'var(--accent-silver)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="security-card-enhanced security-card-dropdown">
+              <div className="security-card-icon">📚</div>
+              <h3 className="security-card-title">المصادر المصنفة</h3>
+              <div className="security-card-links">
+                <Link href="/courses" prefetch={false} className="security-card-link">
                   <GraduationCap className="w-4 h-4" /> الدورات
                 </Link>
-                <Link href="/books" style={{ color: 'var(--accent-silver)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Link href="/books" prefetch={false} className="security-card-link">
                   <BookOpen className="w-4 h-4" /> الكتب
                 </Link>
-                <Link href="/videos" style={{ color: 'var(--accent-silver)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Link href="/videos" prefetch={false} className="security-card-link">
                   <Video className="w-4 h-4" /> الفيديوهات المقترحة
                 </Link>
-                <Link href="/podcasts" style={{ color: 'var(--accent-silver)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Link href="/podcasts" prefetch={false} className="security-card-link">
                   <Headphones className="w-4 h-4" /> البودكاست
                 </Link>
-                <Link href="/platforms" style={{ color: 'var(--accent-silver)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Link href="/platforms" prefetch={false} className="security-card-link">
                   <Globe className="w-4 h-4" /> مواقع ومنصات تعليمية
                 </Link>
               </div>
             </div>
 
             {/* دليل الخبرات */}
-            <Link href="/expertise-guide" className="security-card" style={{ 
-              backgroundColor: 'var(--card-bg)', 
-              border: '1px solid var(--border-dark)', 
-              borderRadius: '12px', 
-              padding: '2rem', 
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              display: 'block'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💼</div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-white)', marginBottom: '0.5rem' }}>
-                دليل الخبرات
-              </h3>
-              <p style={{ color: 'var(--secondary-gray)', lineHeight: '1.6' }}>
+            <Link href="/expertise-guide" className="security-card-enhanced security-card-hover" prefetch={false}>
+              <div className="security-card-icon">💼</div>
+              <h3 className="security-card-title">دليل الخبرات</h3>
+              <p className="security-card-description">
                 تعلم من تجارب المحترفين ونصائح عملية من خبراء ميدانيين
               </p>
+              <div className="security-card-arrow">→</div>
             </Link>
 
             {/* التقييم والأخبار */}
-            <Link href="/evaluation" className="security-card" style={{ 
-              backgroundColor: 'var(--card-bg)', 
-              border: '1px solid var(--border-dark)', 
-              borderRadius: '12px', 
-              padding: '2rem', 
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              display: 'block'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-white)', marginBottom: '0.5rem' }}>
-                التقييم والأخبار
-              </h3>
-              <p style={{ color: 'var(--secondary-gray)', lineHeight: '1.6' }}>
+            <Link href="/evaluation" className="security-card-enhanced security-card-hover" prefetch={false}>
+              <div className="security-card-icon">📊</div>
+              <h3 className="security-card-title">التقييم والأخبار</h3>
+              <p className="security-card-description">
                 تابع آخر الأخبار والتقييمات في مجال الأمن السيبراني
               </p>
+              <div className="security-card-arrow">→</div>
             </Link>
 
             {/* ساهم معنا */}
-            <Link href="/contribute" className="security-card" style={{ 
-              backgroundColor: 'var(--card-bg)', 
-              border: '1px solid var(--border-dark)', 
-              borderRadius: '12px', 
-              padding: '2rem', 
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              display: 'block'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤝</div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-white)', marginBottom: '0.5rem' }}>
-                ساهم معنا
-              </h3>
-              <p style={{ color: 'var(--secondary-gray)', lineHeight: '1.6' }}>
+            <Link href="/contribute" className="security-card-enhanced security-card-hover" prefetch={false}>
+              <div className="security-card-icon">🤝</div>
+              <h3 className="security-card-title">ساهم معنا</h3>
+              <p className="security-card-description">
                 انضم إلينا وساهم في إثراء المحتوى التعليمي العربي
               </p>
+              <div className="security-card-arrow">→</div>
             </Link>
           </div>
         </div>
       </section>
 
-      <section id="team" className="team-section">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: '900', color: 'var(--primary-white)', marginBottom: '1rem' }}>
+      <section id="team" className="team-section-enhanced">
+        <div className="team-container-enhanced">
+          <div className="team-header-enhanced">
+            <h2 className="team-title-enhanced">
               فريق العمل <span className="gradient-text">والمساهمون</span>
             </h2>
-            <p style={{ fontSize: '1.2rem', color: 'var(--secondary-gray)', maxWidth: '800px', margin: '0 auto' }}>
+            <div className="team-title-underline"></div>
+            <p className="team-subtitle-enhanced">
               مجموعة من المطورين والطلاب المتحمسين يعملون معاً لتوفير أفضل تجربة دراسية عربية رقمية.
             </p>
           </div>
 
-          <div className="team-cards-grid" style={{ 
-            maxWidth: '100%',
-            width: '100%',
-            boxSizing: 'border-box'
-          }}>
-            {teamMembers.map((member) => (
-              <div key={member.name} className="about-me-card" style={{ 
-                backgroundColor: 'var(--card-bg)', 
-                border: '1px solid var(--border-dark)', 
-                borderRadius: '12px', 
-                padding: '1.5rem',
-                boxShadow: '0 16px 30px rgba(0, 0, 0, 0.45)',
-                transition: 'all 0.3s ease',
-                maxWidth: '100%',
-                width: '100%',
-                boxSizing: 'border-box'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                  <div style={{ 
-                    width: '60px', 
-                    height: '60px', 
-                    borderRadius: '50%', 
-                    backgroundColor: 'rgba(224, 59, 59, 0.15)', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    color: 'var(--primary-white)',
-                    fontSize: '1.5rem',
-                    fontWeight: '700'
-                  }}>
+          <div className="team-cards-grid-enhanced">
+            {teamMembers.map((member, index) => (
+              <div key={member.name} className="team-card-enhanced" style={{ animationDelay: `${index * 0.15}s` }}>
+                <div className="team-card-header">
+                  <div className="team-card-avatar">
                     {member.initials}
                   </div>
-                  <div>
-                    <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-white)', marginBottom: '0.25rem' }}>
-                      {member.name}
-                    </h3>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--accent-silver)' }}>
-                      {member.role}
-                    </p>
+                  <div className="team-card-info">
+                    <h3 className="team-card-name">{member.name}</h3>
+                    <p className="team-card-role">{member.role}</p>
                   </div>
                 </div>
-                <p style={{ fontSize: '1rem', color: 'var(--secondary-gray)', lineHeight: '1.8', marginBottom: '1.5rem' }}>
+                <p className="team-card-description">
                   {member.description}
                 </p>
                 {member.responsibilities && (
-                  <div style={{ borderTop: '1px solid var(--border-dark)', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--accent-silver)', marginBottom: '0.75rem', fontWeight: '600' }}>
-                      مسؤولياتي:
-                    </p>
-                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                      {member.responsibilities.map((responsibility, index) => (
-                        <li key={index} style={{ color: 'var(--secondary-gray)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <span style={{ color: 'var(--primary-red)' }}>•</span>
+                  <div className="team-card-responsibilities">
+                    <p className="team-card-responsibilities-title">مسؤولياتي:</p>
+                    <ul className="team-card-responsibilities-list">
+                      {member.responsibilities.map((responsibility, idx) => (
+                        <li key={idx} className="team-card-responsibility-item">
+                          <span className="team-card-responsibility-bullet">•</span>
                           {responsibility}
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
-                <div style={{ borderTop: '1px solid var(--border-dark)', paddingTop: '1.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <div className="team-card-socials">
                   {member.socials.map((social) => (
                     <Link 
                       key={social.label} 
                       href={social.href} 
                       prefetch={false}
-                      className="team-social-link"
+                      className="team-social-link-enhanced"
                     >
                       {social.label}
                     </Link>

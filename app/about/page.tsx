@@ -1,6 +1,7 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star } from 'lucide-react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Calendar } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AboutPage() {
 
@@ -219,20 +220,36 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Team Section */}
-        <div className="animate-slide-up">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100 mb-8 text-center">
-            عني
-          </h2>
-          <div className="enhanced-card p-8 text-center">
-            <h3 className="text-xl font-semibold text-dark-100 mb-4">
-              مطور ومصمم المنصة
-            </h3>
-            <p className="text-dark-300 leading-relaxed max-w-3xl mx-auto">
-              أنا مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، 
-              أعمل على تطوير منصات تعليمية متقدمة وتصميم تجارب مستخدم استثنائية. 
-              لدي خبرة واسعة في تطوير المنصات التعليمية وتصميم المحتوى التعليمي التفاعلي.
-            </p>
+        {/* Primary Sections - Schedule & Materials */}
+        <div className="animate-slide-up mb-16">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <Target className="w-6 h-6 text-cyber-neon" />
+            <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
+              الأقسام الرئيسية
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <Link href="/schedule" className="primary-section-card-about primary-section-schedule-about" prefetch={false}>
+              <div className="primary-section-icon-about">
+                <Calendar className="w-8 h-8" />
+              </div>
+              <h3 className="primary-section-title-about">الجدول الدراسي</h3>
+              <p className="primary-section-description-about">
+                جدول شامل للمحاضرات والمختبرات مع إمكانية التصفية حسب المجموعة والسكشن
+              </p>
+              <div className="primary-section-arrow-about">→</div>
+            </Link>
+
+            <Link href="/materials" className="primary-section-card-about primary-section-materials-about" prefetch={false}>
+              <div className="primary-section-icon-about">
+                <BookOpen className="w-8 h-8" />
+              </div>
+              <h3 className="primary-section-title-about">المواد التعليمية</h3>
+              <p className="primary-section-description-about">
+                مكتبة شاملة للمواد التعليمية والمراجع لجميع المواد الدراسية
+              </p>
+              <div className="primary-section-arrow-about">→</div>
+            </Link>
           </div>
         </div>
       </div>

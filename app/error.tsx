@@ -56,7 +56,7 @@ export default function Error({
             <div className="glass-card p-6 mb-8 text-right">
               <h3 className="text-lg font-semibold text-dark-100 mb-4 flex items-center gap-2">
                 <Bug className="w-5 h-5 text-cyber-neon" />
-                Error Details (Development Mode)
+                تفاصيل الخطأ (وضع التطوير)
               </h3>
               <div className="bg-cyber-dark/50 p-4 rounded-lg border border-red-500/20">
                 <p className="text-red-400 font-mono text-sm break-all">
@@ -64,7 +64,7 @@ export default function Error({
                 </p>
                 {error.digest && (
                   <p className="text-dark-400 text-xs mt-2">
-                    Error ID: {error.digest}
+                    معرف الخطأ: {error.digest}
                   </p>
                 )}
               </div>
