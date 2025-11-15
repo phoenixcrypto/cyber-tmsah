@@ -55,12 +55,24 @@ export default function Navbar() {
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
-        {/* الأقسام على اليمين (nav-left في RTL) */}
-        <ul className="nav-links nav-left">
+        {/* اسم الموقع */}
+        <Link href="/" className="logo" prefetch={false} onClick={close}>
+          <span>Cyber</span> TMSAH
+        </Link>
+
+        {/* جميع الأقسام في صف واحد أفقي */}
+        <ul className="nav-links nav-links-horizontal">
           {/* الجدول الدراسي أولاً */}
           <li>
             <Link href="/schedule" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
               الجدول الدراسي
+            </Link>
+          </li>
+          
+          {/* المواد التعليمية */}
+          <li>
+            <Link href="/materials" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
+              المواد التعليمية
             </Link>
           </li>
           
@@ -98,21 +110,6 @@ export default function Navbar() {
           <li>
             <Link href="/expertise-guide" prefetch={false} className="nav-link" onClick={close}>
               دليل الخبرات
-            </Link>
-          </li>
-        </ul>
-
-        {/* اسم الموقع في المنتصف - ثابت */}
-        <Link href="/" className="logo logo-center" prefetch={false} onClick={close}>
-          <span>Cyber</span> TMSAH
-        </Link>
-
-        {/* الأقسام على اليسار (nav-right في RTL) */}
-        <ul className="nav-links nav-right">
-          {/* المواد التعليمية أولاً */}
-          <li>
-            <Link href="/materials" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              المواد التعليمية
             </Link>
           </li>
           

@@ -120,14 +120,13 @@ button, input, textarea, select {
 }
 
 .nav-container {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 1.25rem 2rem;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 2rem;
-  position: relative;
 }
 
 .logo {
@@ -136,16 +135,7 @@ button, input, textarea, select {
   color: var(--accent-silver);
   letter-spacing: 1px;
   white-space: nowrap;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-}
-
-.logo-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  flex-shrink: 0;
 }
 
 .logo span {
@@ -158,6 +148,20 @@ button, input, textarea, select {
   list-style: none;
   gap: 1.5rem;
   flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.nav-links-horizontal {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-left {
@@ -458,47 +462,30 @@ button, input, textarea, select {
 /* Responsive Navbar */
 @media (max-width: 1024px) {
   .nav-container {
-    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+  }
+  
+  .nav-links-horizontal {
     gap: 1rem;
+    font-size: 0.9rem;
   }
   
   .logo {
-    position: static;
-    transform: none;
-    order: 2;
-  }
-  
-  .nav-left {
-    order: 1;
-    justify-content: flex-start;
-  }
-  
-  .nav-right {
-    order: 3;
-    justify-content: flex-end;
-  }
-  
-  .nav-links {
-    gap: 1rem;
-    font-size: 0.9rem;
+    font-size: 1.3rem;
   }
 }
 
 @media (max-width: 768px) {
   .nav-container {
-    display: flex;
     justify-content: space-between;
-    align-items: center;
   }
   
-  .nav-links {
+  .nav-links-horizontal {
     display: none;
   }
   
   .logo {
-    position: static;
-    transform: none;
-    order: 0;
+    font-size: 1.2rem;
   }
 }
 
