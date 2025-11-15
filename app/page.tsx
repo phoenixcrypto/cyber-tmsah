@@ -90,6 +90,33 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* الأقسام الرئيسية المميزة - الجدول والمواد */}
+      <section className="section-wrapper primary-sections">
+        <div className="primary-sections-grid">
+          <Link href="/schedule" className="primary-section-card primary-section-schedule">
+            <div className="primary-section-icon">
+              <Calendar className="w-8 h-8" />
+            </div>
+            <h3 className="primary-section-title">الجدول الدراسي</h3>
+            <p className="primary-section-description">
+              جدول شامل للمحاضرات والمختبرات مع إمكانية التصفية حسب المجموعة والقسم
+            </p>
+            <div className="primary-section-arrow">→</div>
+          </Link>
+
+          <Link href="/materials" className="primary-section-card primary-section-materials">
+            <div className="primary-section-icon">
+              <BookOpen className="w-8 h-8" />
+            </div>
+            <h3 className="primary-section-title">المواد التعليمية</h3>
+            <p className="primary-section-description">
+              مكتبة شاملة للمواد التعليمية والمراجع لجميع المواد الدراسية
+            </p>
+            <div className="primary-section-arrow">→</div>
+          </Link>
+        </div>
+      </section>
+
       <section className="section-wrapper">
         <div className="stats-grid">
           {stats.map((item) => (

@@ -36,10 +36,10 @@ const additionalLinks: NavItem[] = [
   { label: 'ساهم معنا', href: '/contribute' },
 ]
 
-const tmsahLinks: NavItem[] = [
+// إعادة ترتيب الأقسام: الرئيسية، الجدول، المواد، ثم باقي الصفحات، وأخيراً About
+const primaryLinks: NavItem[] = [
   { label: 'الجدول الدراسي', href: '/schedule' },
   { label: 'المواد التعليمية', href: '/materials' },
-  { label: 'عن المنصة', href: '/about' },
 ]
 
 export default function Navbar() {
@@ -101,26 +101,76 @@ export default function Navbar() {
           <span>Cyber</span> TMSAH
         </Link>
 
-        {/* أقسام Cyber TMSAH - على اليسار (nav-right في RTL) */}
+        {/* الأقسام الرئيسية - على اليسار (nav-right في RTL) */}
         <ul className="nav-links nav-right">
-          {tmsahLinks.map((item) => (
+          {primaryLinks.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} prefetch={false} className="nav-link nav-link-primary" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          {securityGuideLinks.map((item) => (
             <li key={item.href}>
               <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
                 {item.label}
               </Link>
             </li>
           ))}
+          <li className="dropdown">
+            <Link href="#" prefetch={false} className="nav-link" onClick={(e) => e.preventDefault()}>
+              {resourcesDropdown.label}
+              <ChevronDown className="w-4 h-4" style={{ marginRight: '0.25rem', display: 'inline' }} />
+            </Link>
+            <div className="dropdown-content">
+              {resourcesDropdown.items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  prefetch={false}
+                  className="dropdown-link"
+                  onClick={close}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </li>
+          {additionalLinks.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <Link href="/about" prefetch={false} className="nav-link" onClick={close}>
+              عن المنصة
+            </Link>
+          </li>
         </ul>
       </div>
 
       {/* Mobile Menu */}
       <div className={open ? 'mobile-menu-panel is-open' : 'mobile-menu-panel'}>
         <ul>
+          {/* الصفحة الرئيسية أولاً */}
           <li>
-            <Link href="/" prefetch={false} className="nav-link" onClick={close}>
+            <Link href="/" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
               الرئيسية
             </Link>
           </li>
+          
+          {/* الأقسام الرئيسية المميزة */}
+          {primaryLinks.map((item) => (
+            <li key={`mobile-${item.href}`}>
+              <Link href={item.href} prefetch={false} className="nav-link nav-link-primary" onClick={close}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          
+          {/* باقي الأقسام */}
           <li className="mobile-section-title">دليل الأمن السيبراني</li>
           {securityGuideLinks.map((item) => (
             <li key={`mobile-${item.href}`}>
@@ -148,14 +198,13 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-          <li className="mobile-section-title">سايبر تمساح</li>
-          {tmsahLinks.map((item) => (
-            <li key={`mobile-${item.href}`}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          
+          {/* عن المنصة في النهاية */}
+          <li>
+            <Link href="/about" prefetch={false} className="nav-link" onClick={close}>
+              عن المنصة
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
