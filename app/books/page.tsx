@@ -16,7 +16,7 @@ interface Category {
 
 const categories: Category[] = [
   {
-    title: '💻 كتب البرمجة (Programming Books)',
+    title: '💻 كتب البرمجة',
     books: [
       {
         cover: '🐍',
@@ -53,7 +53,7 @@ const categories: Category[] = [
     ],
   },
   {
-    title: '🌐 كتب الشبكات (Networking Books)',
+    title: '🌐 كتب الشبكات',
     books: [
       {
         cover: '📡',
@@ -90,7 +90,7 @@ const categories: Category[] = [
     ],
   },
   {
-    title: '🎯 كتب اختبار الاختراق (Penetration Testing)',
+    title: '🎯 كتب اختبار الاختراق',
     books: [
       {
         cover: '🔓',

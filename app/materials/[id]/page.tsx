@@ -18,45 +18,45 @@ const staticArticles: { [key: string]: any[] } = {
 // Subject data mapping
 const subjectData = {
   'applied-physics': {
-    title: 'Applied Physics',
-    description: 'Physics principles and applications in technology',
-    instructor: 'Dr. Ahmed Bakr',
+    title: 'الفيزياء التطبيقية',
+    description: 'مبادئ الفيزياء وتطبيقاتها في التكنولوجيا',
+    instructor: 'د. أحمد بكر',
     color: 'from-blue-500 to-blue-600',
   },
   'mathematics': {
-    title: 'Mathematics',
-    description: 'Mathematical foundations and problem solving',
-    instructor: 'Dr. Simon Ezzat',
+    title: 'الرياضيات',
+    description: 'أسس الرياضيات وحل المشكلات',
+    instructor: 'د. سيمون عزت',
     color: 'from-green-500 to-green-600',
   },
   'entrepreneurship': {
-    title: 'Entrepreneurship & Creative Thinking',
-    description: 'Business innovation and creative problem solving',
-    instructor: 'Dr. Abeer Hassan',
+    title: 'ريادة الأعمال والتفكير الإبداعي',
+    description: 'الابتكار التجاري وحل المشكلات الإبداعي',
+    instructor: 'د. عبير حسن',
     color: 'from-purple-500 to-purple-600',
   },
   'information-technology': {
-    title: 'Information Technology',
-    description: 'IT fundamentals and modern technologies',
-    instructor: 'Dr. Shaima Ahmed',
+    title: 'تكنولوجيا المعلومات',
+    description: 'أساسيات تكنولوجيا المعلومات والتقنيات الحديثة',
+    instructor: 'د. شيماء أحمد',
     color: 'from-cyan-500 to-cyan-600',
   },
   'database-systems': {
-    title: 'Database Systems',
-    description: 'Database design, implementation and management',
-    instructor: 'Dr. Abeer Hassan',
+    title: 'قواعد البيانات',
+    description: 'تصميم وتنفيذ وإدارة قواعد البيانات',
+    instructor: 'د. عبير حسن',
     color: 'from-orange-500 to-orange-600',
   },
   'english-language': {
-    title: 'English Language',
-    description: 'English communication and technical writing',
-    instructor: 'Dr. Sabreen',
+    title: 'اللغة الإنجليزية',
+    description: 'التواصل باللغة الإنجليزية والكتابة التقنية',
+    instructor: 'د. صابرين',
     color: 'from-red-500 to-red-600',
   },
   'information-systems': {
-    title: 'Information Systems',
-    description: 'IS analysis, design and implementation',
-    instructor: 'Dr. Hind Ziada',
+    title: 'نظم المعلومات',
+    description: 'تحليل وتصميم وتنفيذ نظم المعلومات',
+    instructor: 'د. هند زيادة',
     color: 'from-indigo-500 to-indigo-600',
   }
 }
@@ -71,9 +71,9 @@ export default function SubjectPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-dark-100 mb-4">Subject Not Found</h1>
+          <h1 className="text-2xl font-semibold text-dark-100 mb-4">المادة غير موجودة</h1>
           <Link href="/materials" className="btn-primary">
-            Back to Materials
+            العودة للمواد
           </Link>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function SubjectPage() {
             className="inline-flex items-center gap-2 text-cyber-neon hover:text-cyber-green transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Materials
+            العودة للمواد
           </Link>
           
           <div className="flex items-center gap-4 mb-6">
@@ -108,11 +108,11 @@ export default function SubjectPage() {
           <div className="flex items-center gap-6 text-sm text-dark-400">
             <div className="flex items-center gap-2">
               <User className="w-4 h-4" />
-              <span>Instructor: {subject.instructor}</span>
+              <span>المحاضر: {subject.instructor}</span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span>{articles.length} lectures</span>
+              <span>{articles.length} محاضرة</span>
             </div>
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function SubjectPage() {
                         ? 'bg-green-500/20 text-green-400' 
                         : 'bg-yellow-500/20 text-yellow-400'
                     }`}>
-                      {article.status === 'published' ? 'Available' : 'Coming Soon'}
+                      {article.status === 'published' ? 'متاح' : 'قريباً'}
                     </span>
                   </div>
                   
@@ -165,10 +165,10 @@ export default function SubjectPage() {
             <div className="text-center py-12">
               <BookOpen className="w-16 h-16 text-dark-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-dark-200 mb-2">
-                No lectures available
+                لا توجد محاضرات متاحة
               </h3>
               <p className="text-dark-400 mb-6">
-                Lectures for this subject will be published soon.
+                سيتم نشر محاضرات هذه المادة قريباً.
               </p>
             </div>
           )}
@@ -178,10 +178,10 @@ export default function SubjectPage() {
         <div className="mt-12 text-center">
           <div className="glass-card p-6 max-w-2xl mx-auto">
             <h3 className="text-lg font-semibold text-dark-100 mb-2">
-              More Content Coming Soon
+              محتوى إضافي قريباً
             </h3>
             <p className="text-dark-300">
-              Additional lectures and materials will be added regularly. Check back for updates!
+              سيتم إضافة محاضرات ومواد إضافية بانتظام. تابعونا للحصول على التحديثات!
             </p>
           </div>
         </div>
