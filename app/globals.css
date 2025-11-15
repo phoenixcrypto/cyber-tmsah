@@ -127,6 +127,7 @@ button, input, textarea, select {
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
+  position: relative;
 }
 
 .logo {
@@ -136,6 +137,13 @@ button, input, textarea, select {
   letter-spacing: 1px;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.logo-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 }
 
 .logo span {
@@ -149,7 +157,6 @@ button, input, textarea, select {
   gap: 1.5rem;
   flex-wrap: wrap;
   flex: 1;
-  justify-content: flex-start;
 }
 
 .nav-links-horizontal {
@@ -167,11 +174,13 @@ button, input, textarea, select {
 .nav-left {
   justify-content: flex-end;
   margin-left: auto;
+  padding-left: 2rem;
 }
 
 .nav-right {
   justify-content: flex-start;
   margin-right: auto;
+  padding-right: 2rem;
 }
 
 .nav-link {
@@ -465,9 +474,17 @@ button, input, textarea, select {
     gap: 1.5rem;
   }
   
-  .nav-links-horizontal {
+  .nav-links {
     gap: 1rem;
     font-size: 0.9rem;
+  }
+  
+  .nav-left {
+    padding-left: 1rem;
+  }
+  
+  .nav-right {
+    padding-right: 1rem;
   }
   
   .logo {
@@ -480,8 +497,13 @@ button, input, textarea, select {
     justify-content: space-between;
   }
   
-  .nav-links-horizontal {
+  .nav-links {
     display: none;
+  }
+  
+  .logo-center {
+    position: static;
+    transform: none;
   }
   
   .logo {

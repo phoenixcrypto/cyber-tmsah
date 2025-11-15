@@ -55,13 +55,8 @@ export default function Navbar() {
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
-        {/* اسم الموقع */}
-        <Link href="/" className="logo" prefetch={false} onClick={close}>
-          <span>Cyber</span> TMSAH
-        </Link>
-
-        {/* جميع الأقسام في صف واحد أفقي */}
-        <ul className="nav-links nav-links-horizontal">
+        {/* الأقسام على اليمين (nav-left في RTL) */}
+        <ul className="nav-links nav-left">
           {/* الجدول الدراسي أولاً */}
           <li>
             <Link href="/schedule" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
@@ -112,7 +107,15 @@ export default function Navbar() {
               دليل الخبرات
             </Link>
           </li>
-          
+        </ul>
+
+        {/* اسم الموقع في المنتصف - ثابت */}
+        <Link href="/" className="logo logo-center" prefetch={false} onClick={close}>
+          <span>Cyber</span> TMSAH
+        </Link>
+
+        {/* الأقسام على اليسار (nav-right في RTL) */}
+        <ul className="nav-links nav-right">
           {/* التقييم والأخبار */}
           <li>
             <Link href="/evaluation" prefetch={false} className="nav-link" onClick={close}>
