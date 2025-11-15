@@ -259,15 +259,22 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
+          <div className="team-cards-grid" style={{ 
+            maxWidth: '100%',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}>
             {teamMembers.map((member) => (
               <div key={member.name} className="about-me-card" style={{ 
                 backgroundColor: 'var(--card-bg)', 
                 border: '1px solid var(--border-dark)', 
                 borderRadius: '12px', 
-                padding: '2.5rem',
+                padding: '1.5rem',
                 boxShadow: '0 16px 30px rgba(0, 0, 0, 0.45)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                maxWidth: '100%',
+                width: '100%',
+                boxSizing: 'border-box'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem' }}>
                   <div style={{ 

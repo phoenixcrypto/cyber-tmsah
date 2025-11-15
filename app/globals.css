@@ -52,6 +52,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  width: 100%;
+}
+
+* {
+  max-width: 100%;
 }
 
 body {
@@ -63,7 +70,9 @@ body {
   font-family: var(--font-cairo, 'Cairo', system-ui, sans-serif);
   line-height: 1.7;
   direction: rtl;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  width: 100%;
   min-height: 100vh;
   color-scheme: dark;
 }
@@ -553,6 +562,38 @@ button, input, textarea, select {
   background-color: var(--primary-black);
 }
 
+/* Team Cards Grid - Responsive */
+.team-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .team-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .team-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+.team-cards-grid .about-me-card {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
 
 /* Contribute */
 .contribute-section {
@@ -741,14 +782,28 @@ footer {
 }
 
 .footer-content {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
   gap: 2rem;
-  padding-bottom: 2.5rem;
+  padding: 2rem 1.5rem 2.5rem;
   border-bottom: 1px solid var(--secondary-gray);
+}
+
+@media (min-width: 640px) {
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-content {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    padding: 2.5rem 2rem 3rem;
+  }
 }
 
 .footer-section h4 {
@@ -866,10 +921,7 @@ footer {
     padding: 0 1rem;
   }
 
-  .footer-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  /* Footer already responsive via grid */
 
   .mobile-menu-panel ul {
     padding: 1.25rem 1.5rem;
@@ -2041,9 +2093,28 @@ footer {
     scroll-behavior: smooth;
     scrollbar-width: thin;
     scrollbar-color: var(--primary-red) var(--surface-2);
-    width: 100%;
-    max-width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     padding: 0.75rem !important;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure table cells are not too compressed */
+  .schedule-matrix-container table {
+    font-size: 0.8rem !important;
+  }
+  
+  .schedule-matrix-container table th,
+  .schedule-matrix-container table td {
+    padding: 0.5rem 0.25rem !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Better spacing in cells */
+  .schedule-matrix-container table td > div {
+    padding: 0.5rem !important;
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
   }
   
   /* Better touch targets on mobile */
