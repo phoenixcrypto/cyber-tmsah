@@ -123,11 +123,12 @@ button, input, textarea, select {
   max-width: 1600px;
   margin: 0 auto;
   padding: 1.25rem 2rem;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 2rem;
   position: relative;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -137,13 +138,14 @@ button, input, textarea, select {
   letter-spacing: 1px;
   white-space: nowrap;
   text-align: center;
-  grid-column: 2;
-  z-index: 10;
+  flex-shrink: 0;
+  order: 5;
+  margin: 0 1rem;
 }
 
 .logo-center {
-  grid-column: 2;
-  text-align: center;
+  order: 5;
+  margin: 0 1rem;
 }
 
 .logo span {
@@ -156,6 +158,8 @@ button, input, textarea, select {
   list-style: none;
   gap: 1.5rem;
   flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links-horizontal {
@@ -172,12 +176,16 @@ button, input, textarea, select {
 
 .nav-left {
   justify-content: flex-end;
-  grid-column: 1;
+  order: 1;
+  flex: 1;
+  max-width: 45%;
 }
 
 .nav-right {
   justify-content: flex-start;
-  grid-column: 3;
+  order: 6;
+  flex: 1;
+  max-width: 45%;
 }
 
 .nav-link {
@@ -468,7 +476,6 @@ button, input, textarea, select {
 /* Responsive Navbar */
 @media (max-width: 1024px) {
   .nav-container {
-    grid-template-columns: 1fr auto 1fr;
     gap: 1.5rem;
   }
   
@@ -479,12 +486,17 @@ button, input, textarea, select {
   
   .logo {
     font-size: 1.3rem;
+    margin: 0 0.5rem;
+  }
+  
+  .nav-left,
+  .nav-right {
+    max-width: 42%;
   }
 }
 
 @media (max-width: 768px) {
   .nav-container {
-    display: flex;
     justify-content: space-between;
     align-items: center;
   }
@@ -495,11 +507,13 @@ button, input, textarea, select {
   
   .logo {
     font-size: 1.2rem;
-    grid-column: auto;
+    order: 0;
+    margin: 0;
   }
   
   .logo-center {
-    grid-column: auto;
+    order: 0;
+    margin: 0;
   }
 }
 
