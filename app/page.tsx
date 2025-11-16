@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, BookOpen, Target, Users, Award, GraduationCap, Video, Headphones, Globe } from 'lucide-react'
+import { Calendar, BookOpen, Target, Award, GraduationCap, Video, Headphones, Globe } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function HomePage() {
@@ -301,10 +301,6 @@ const teamMembers = [
           <p>
             {t('home.contribute.description')}
           </p>
-          <Link href="/contact" className="cta-button">
-            <Users className="w-5 h-5" />
-            {t('home.contribute.button')}
-          </Link>
         </div>
       </section>
 
