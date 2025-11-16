@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Menu, X, ChevronDown, Languages, Home } from 'lucide-react'
+import { Menu, X, ChevronDown, Home } from 'lucide-react'
 
 interface NavItem {
   label: string
@@ -47,26 +47,9 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up')
   const [lastScrollY, setLastScrollY] = useState(0)
-  const [isEnglish, setIsEnglish] = useState(false)
 
   const toggle = () => setOpen((prev) => !prev)
   const close = () => setOpen(false)
-
-  // Load language from localStorage on mount
-  useEffect(() => {
-    const savedLang = localStorage.getItem('site-language')
-    if (savedLang === 'en') {
-      setIsEnglish(true)
-      const html = document.documentElement
-      html.lang = 'en'
-      html.dir = 'ltr'
-    } else {
-      setIsEnglish(false)
-      const html = document.documentElement
-      html.lang = 'ar'
-      html.dir = 'rtl'
-    }
-  }, [])
 
   // Handle scroll for navbar visibility
   useEffect(() => {
@@ -92,26 +75,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [lastScrollY])
 
-  // Handle language toggle
-  const toggleLanguage = () => {
-    setIsEnglish((prev) => {
-      const newLang = !prev
-      const html = document.documentElement
-      
-      if (newLang) {
-        html.lang = 'en'
-        html.dir = 'ltr'
-        localStorage.setItem('site-language', 'en')
-      } else {
-        html.lang = 'ar'
-        html.dir = 'rtl'
-        localStorage.setItem('site-language', 'ar')
-      }
-      
-      return newLang
-    })
-  }
-
   const scrollOpacity = Math.min(1, lastScrollY / 200)
   const headerClass = `main-header-new ${scrollDirection === 'down' && isScrolled ? 'header-hidden' : ''} ${isScrolled ? 'header-scrolled' : ''}`
 
@@ -119,8 +82,6 @@ export default function Navbar() {
     <nav 
       className={headerClass} 
       style={{ opacity: isScrolled ? 1 - scrollOpacity * 0.3 : 1 }}
-      dir={isEnglish ? 'ltr' : 'rtl'}
-      lang={isEnglish ? 'en' : 'ar'}
     >
       {/* Main Header - Logo & Navigation */}
       <div className="header-main-bar">
@@ -129,12 +90,8 @@ export default function Navbar() {
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          {/* Left Actions - Language Toggle */}
-          <div className="header-left-actions">
-            <button className="header-action-btn" onClick={toggleLanguage} aria-label="الترجمة">
-              <Languages className="w-5 h-5" />
-            </button>
-          </div>
+          {/* Left Actions - Empty */}
+          <div className="header-left-actions"></div>
 
           {/* Center Section - Quick Links & Logo */}
           <div className="header-center-section">
