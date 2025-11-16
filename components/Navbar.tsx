@@ -122,21 +122,32 @@ export default function Navbar() {
 
           {/* Logo Center - SVG Logo */}
           <Link href="/" className="logo-new" prefetch={false} onClick={close}>
-            <svg className="logo-svg" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+            <svg className="logo-svg" viewBox="0 0 300 70" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" style={{ stopColor: '#FF3B40', stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: '#00FF88', stopOpacity: 1 }} />
+                  <stop offset="0%" style={{ stopColor: '#ff3b40', stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: '#ff1f28', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#ff3b40', stopOpacity: 1 }} />
                 </linearGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <filter id="logoGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
                   <feMerge>
                     <feMergeNode in="coloredBlur"/>
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
               </defs>
-              <text x="100" y="35" fontFamily="Arial, sans-serif" fontSize="28" fontWeight="900" textAnchor="middle" fill="url(#logoGradient)" filter="url(#glow)">
+              <text 
+                x="150" 
+                y="40" 
+                fontFamily="Arial, sans-serif" 
+                fontSize="32" 
+                fontWeight="900" 
+                textAnchor="middle" 
+                fill="url(#logoGradient)" 
+                filter="url(#logoGlow)"
+                style={{ letterSpacing: '2px' }}
+              >
                 Cyber TMSAH
               </text>
             </svg>

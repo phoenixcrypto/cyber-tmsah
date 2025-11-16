@@ -116,10 +116,10 @@ button, input, textarea, select {
   right: 0;
   width: 100%;
   z-index: 1000;
-  background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(15, 15, 20, 0.98) 50%, rgba(20, 20, 30, 0.98) 100%);
+  background: var(--surface-1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
-  border-bottom: 1px solid rgba(255, 59, 64, 0.2);
+  border-bottom: 1px solid var(--border-dark);
 }
 
 .main-header-new.header-hidden {
@@ -127,14 +127,15 @@ button, input, textarea, select {
 }
 
 .main-header-new.header-scrolled {
-  background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(15, 15, 20, 0.95) 50%, rgba(20, 20, 30, 0.95) 100%);
+  background: rgba(4, 4, 4, 0.95);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 /* Top Bar - Social & Quick Links */
 .header-top-bar {
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(255, 59, 64, 0.1);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-dark);
   padding: 0.5rem 0;
 }
 
@@ -163,16 +164,18 @@ button, input, textarea, select {
   text-decoration: none;
   transition: color 0.3s ease;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .quick-link:hover {
   color: var(--primary-red);
+  text-shadow: 0 0 8px rgba(255, 59, 64, 0.5);
 }
 
 /* Main Header Bar - Logo & Actions */
 .header-main-bar {
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 59, 64, 0.1);
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border-dark);
   padding: 1rem 0;
 }
 
@@ -200,8 +203,8 @@ button, input, textarea, select {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 59, 64, 0.2);
+  background: var(--surface-2);
+  border: 1px solid var(--border-dark);
   color: var(--accent-silver);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -212,7 +215,7 @@ button, input, textarea, select {
   border-color: var(--primary-red);
   color: var(--primary-white);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.4);
+  box-shadow: var(--glow-soft);
 }
 
 .header-right-actions {
@@ -254,14 +257,15 @@ button, input, textarea, select {
 }
 
 .logo-svg {
-  width: 200px;
-  height: 60px;
+  width: 240px;
+  height: 70px;
   transition: all 0.3s ease;
+  overflow: visible;
 }
 
 .logo-new:hover .logo-svg {
   transform: scale(1.05);
-  filter: brightness(1.2);
+  filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 59, 64, 0.6));
 }
 
 .logo-sub-text {
@@ -273,9 +277,10 @@ button, input, textarea, select {
 
 /* Bottom Navigation Bar */
 .header-bottom-bar {
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--surface-2);
   border-bottom: 2px solid var(--primary-red);
   padding: 0.75rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .header-bottom-content {
@@ -304,8 +309,9 @@ button, input, textarea, select {
 }
 
 .bottom-nav-link:hover {
-  background: rgba(255, 59, 64, 0.2);
+  background: var(--surface-3);
   color: var(--primary-red);
+  text-shadow: 0 0 8px rgba(255, 59, 64, 0.5);
 }
 
 .bottom-nav-home {
@@ -314,8 +320,8 @@ button, input, textarea, select {
   justify-content: center;
   padding: 0.5rem;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-3);
+  border: 1px solid var(--border-dark);
   transition: all 0.3s ease;
 }
 
@@ -323,19 +329,23 @@ button, input, textarea, select {
   background: var(--primary-red);
   border-color: var(--primary-red);
   color: var(--primary-white);
+  box-shadow: var(--glow-soft);
 }
 
 .bottom-nav-primary {
   color: var(--primary-red);
   font-weight: 700;
-  background: rgba(255, 59, 64, 0.1);
-  border: 1px solid rgba(255, 59, 64, 0.3);
+  background: var(--surface-3);
+  border: 1px solid var(--primary-red);
+  box-shadow: 0 0 10px rgba(255, 59, 64, 0.3);
 }
 
 .bottom-nav-primary:hover {
   background: var(--primary-red);
   color: var(--primary-white);
   border-color: var(--primary-red);
+  box-shadow: var(--glow-soft);
+  transform: translateY(-2px);
 }
 
 .bottom-nav-dropdown {
@@ -846,8 +856,8 @@ button, input, textarea, select {
   }
   
   .logo-svg {
-    width: 150px;
-    height: 45px;
+    width: 180px;
+    height: 52px;
   }
   
   .nav-links {
@@ -1653,8 +1663,8 @@ footer {
   }
   
   .logo-svg {
-    width: 120px;
-    height: 36px;
+    width: 140px;
+    height: 40px;
   }
   
   .logo-sub-text {
