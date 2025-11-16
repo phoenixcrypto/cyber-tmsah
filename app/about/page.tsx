@@ -1,7 +1,6 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Calendar } from 'lucide-react'
-import Link from 'next/link'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star } from 'lucide-react'
 
 export default function AboutPage() {
 
@@ -220,36 +219,77 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Primary Sections - Schedule & Materials */}
+        {/* Team Members Section */}
         <div className="animate-slide-up mb-16">
           <div className="flex items-center justify-center gap-4 mb-8">
-            <Target className="w-6 h-6 text-cyber-neon" />
+            <Users className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              الأقسام الرئيسية
+              فريق التطوير
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <Link href="/schedule" className="primary-section-card-about primary-section-schedule-about" prefetch={false}>
-              <div className="primary-section-icon-about">
-                <Calendar className="w-8 h-8" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* زياد محمد */}
+            <div className="team-member-card-about">
+              <div className="team-member-image-container-about">
+                <div className="team-member-image-placeholder-about">
+                  <Users className="w-16 h-16 text-cyber-neon/50" />
+                </div>
               </div>
-              <h3 className="primary-section-title-about">الجدول الدراسي</h3>
-              <p className="primary-section-description-about">
-                جدول شامل للمحاضرات والمختبرات مع إمكانية التصفية حسب المجموعة والسكشن
-              </p>
-              <div className="primary-section-arrow-about">→</div>
-            </Link>
+              <div className="team-member-info-about">
+                <h3 className="team-member-name-about">زياد محمد</h3>
+                <p className="team-member-role-about">مؤسس ومطور المنصة</p>
+                <p className="team-member-description-about">
+                  مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، أعمل على تطوير منصات تعليمية متقدمة وتصميم تجارب مستخدم استثنائية.
+                </p>
+                <div className="team-member-responsibilities-about">
+                  <div className="team-member-responsibility-item-about">الجدول الدراسي</div>
+                  <div className="team-member-responsibility-item-about">المحتوى التعليمي</div>
+                  <div className="team-member-responsibility-item-about">نشر المقالات</div>
+                </div>
+              </div>
+            </div>
 
-            <Link href="/materials" className="primary-section-card-about primary-section-materials-about" prefetch={false}>
-              <div className="primary-section-icon-about">
-                <BookOpen className="w-8 h-8" />
+            {/* يوسف وليد */}
+            <div className="team-member-card-about">
+              <div className="team-member-image-container-about">
+                <div className="team-member-image-placeholder-about">
+                  <Users className="w-16 h-16 text-cyber-neon/50" />
+                </div>
               </div>
-              <h3 className="primary-section-title-about">المحتوى التعليمي</h3>
-              <p className="primary-section-description-about">
-                مكتبة شاملة للمواد التعليمية والمراجع لجميع المواد الدراسية
-              </p>
-              <div className="primary-section-arrow-about">→</div>
-            </Link>
+              <div className="team-member-info-about">
+                <h3 className="team-member-name-about">يوسف وليد</h3>
+                <p className="team-member-role-about">مطور المنصة</p>
+                <p className="team-member-description-about">
+                  مطور متخصص في تطوير الواجهات والتطبيقات التعليمية، أساهم في بناء تجارب مستخدم متميزة.
+                </p>
+                <div className="team-member-responsibilities-about">
+                  <div className="team-member-responsibility-item-about">تطوير الواجهات</div>
+                  <div className="team-member-responsibility-item-about">تحسين الأداء</div>
+                  <div className="team-member-responsibility-item-about">ضمان الجودة</div>
+                </div>
+              </div>
+            </div>
+
+            {/* مؤمن هيثم */}
+            <div className="team-member-card-about">
+              <div className="team-member-image-container-about">
+                <div className="team-member-image-placeholder-about">
+                  <Users className="w-16 h-16 text-cyber-neon/50" />
+                </div>
+              </div>
+              <div className="team-member-info-about">
+                <h3 className="team-member-name-about">مؤمن هيثم</h3>
+                <p className="team-member-role-about">مطور ومصمم المنصة</p>
+                <p className="team-member-description-about">
+                  مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، أعمل على تطوير منصات تعليمية متقدمة وتصميم تجارب مستخدم استثنائية.
+                </p>
+                <div className="team-member-responsibilities-about">
+                  <div className="team-member-responsibility-item-about">دليل الأمن السيبراني</div>
+                  <div className="team-member-responsibility-item-about">خريطة الطريق</div>
+                  <div className="team-member-responsibility-item-about">الموارد التعليمية</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
