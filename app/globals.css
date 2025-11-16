@@ -848,7 +848,7 @@ button, input, textarea, select {
 @media (max-width: 768px) {
   .main-content {
     padding-top: 120px;
-    padding-bottom: 120px; /* Accommodate bottom navigation */
+    padding-bottom: 60px;
   }
   
   .header-main-content {
@@ -868,7 +868,7 @@ button, input, textarea, select {
 /* Main Content */
 .main-content {
   padding-top: 120px;
-  padding-bottom: 120px; /* Increased to accommodate bottom navigation */
+  padding-bottom: 80px;
   min-height: calc(100vh - 200px);
   position: relative;
   z-index: 1;
@@ -1968,13 +1968,13 @@ footer {
 }
 
 .footer-content-compact {
-  max-width: 800px !important;
+  max-width: 1000px !important;
   margin: 0 auto;
   display: flex !important;
   justify-content: center;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 0.75rem 1rem 0.5rem;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem 1rem;
 }
 
 .footer-content-compact .footer-section {
@@ -1982,16 +1982,16 @@ footer {
 }
 
 .footer-content-compact .footer-section h4 {
-  font-size: 0.75rem !important;
-  margin-bottom: 0.25rem !important;
+  font-size: 0.9rem !important;
+  margin-bottom: 0.5rem !important;
 }
 
 .footer-content-compact .footer-links {
-  gap: 0.25rem !important;
+  gap: 0.5rem !important;
 }
 
 .footer-content-compact .footer-links a {
-  font-size: 0.7rem !important;
+  font-size: 0.85rem !important;
 }
 
 .footer-section {
@@ -2033,51 +2033,51 @@ footer {
 }
 
 .footer-bottom {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   border-top: 1px solid rgba(255, 59, 64, 0.2);
   text-align: center;
 }
 
 .footer-bottom p {
   color: var(--secondary-gray);
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 @media (max-width: 768px) {
   footer {
-    padding: 0.5rem 0.75rem 0.25rem;
+    padding: 1rem 1rem 0.75rem;
   }
   
   .footer-content-compact {
-    padding: 0.5rem 0.75rem 0.25rem !important;
-    gap: 0.75rem !important;
+    padding: 1rem 1rem 0.75rem !important;
+    gap: 1rem !important;
   }
   
   .footer-content-compact .footer-section h4 {
-    font-size: 0.7rem !important;
-    margin-bottom: 0.2rem !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 0.4rem !important;
   }
   
   .footer-content-compact .footer-links {
-    gap: 0.2rem !important;
+    gap: 0.4rem !important;
   }
   
   .footer-content-compact .footer-links a {
-    font-size: 0.65rem !important;
+    font-size: 0.8rem !important;
   }
   
   .footer-bottom {
-    padding-top: 0.4rem !important;
-    padding-bottom: 0.4rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
   }
   
   .footer-bottom p {
-    font-size: 0.6rem !important;
+    font-size: 0.75rem !important;
   }
   
   .footer-content {

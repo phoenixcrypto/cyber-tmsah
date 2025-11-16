@@ -65,7 +65,6 @@ export const translations = {
     'footer.copyright': 'جميع الحقوق محفوظة. صُمم وطُوِّر بحُب ❤️',
     'footer.privacy': 'سياسة الخصوصية',
     'footer.terms': 'اتفاقية الاستخدام',
-    'footer.adsense': 'إعلانات Google',
     
     // Privacy
     'privacy.title': 'سياسة الخصوصية',
@@ -76,11 +75,6 @@ export const translations = {
     'terms.title': 'اتفاقية الاستخدام',
     'terms.description': 'شروط وأحكام استخدام المنصة',
     'terms.content': 'اتفاقية الاستخدام الخاصة بمنصة سايبر تمساح...',
-    
-    // AdSense
-    'adsense.title': 'إعلانات Google',
-    'adsense.description': 'معلومات حول الإعلانات على المنصة',
-    'adsense.content': 'معلومات حول إعلانات Google AdSense على المنصة...',
     
     // Schedule
     'schedule.title': 'الجدول الدراسي',
@@ -358,7 +352,6 @@ export const translations = {
     'footer.copyright': 'All rights reserved. Designed and developed with love ❤️',
     'footer.privacy': 'Privacy Policy',
     'footer.terms': 'Terms of Service',
-    'footer.adsense': 'Google Ads',
     
     // Privacy
     'privacy.title': 'Privacy Policy',
@@ -369,11 +362,6 @@ export const translations = {
     'terms.title': 'Terms of Service',
     'terms.description': 'Terms and conditions for using the platform',
     'terms.content': 'Cyber TMSAH Platform Terms of Service...',
-    
-    // AdSense
-    'adsense.title': 'Google Ads',
-    'adsense.description': 'Information about ads on the platform',
-    'adsense.content': 'Information about Google AdSense ads on the platform...',
     
     // Schedule
     'schedule.title': 'Study Schedule',

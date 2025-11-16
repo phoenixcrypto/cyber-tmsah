@@ -11,18 +11,17 @@ export default function Footer() {
     { labelKey: 'nav.aboutPlatform', href: '/about' },
     { labelKey: 'footer.privacy', href: '/privacy' },
     { labelKey: 'footer.terms', href: '/terms' },
-    { labelKey: 'footer.adsense', href: '/adsense' },
   ]
 
   return (
     <footer>
       <div className="footer-content footer-content-compact">
         <div className="footer-section">
-          <h4 className="text-cyber-neon mb-3 font-bold text-sm">{t('footer.quickLinks')}</h4>
+          <h4 className="text-cyber-neon mb-2 font-bold">{t('footer.quickLinks')}</h4>
           <ul className="footer-links">
             {quickLinks.map((item) => (
               <li key={item.labelKey}>
-                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95 text-sm">{t(item.labelKey)}</Link>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{t(item.labelKey)}</Link>
               </li>
             ))}
           </ul>
@@ -30,7 +29,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p className="text-xs">
+        <p>
           © {new Date().getFullYear()} <Link href="/" prefetch={false} className="text-cyber-neon font-bold hover:text-cyber-green transition-colors active:scale-95 inline-block">Cyber TMSAH</Link>. {t('footer.copyright')}
         </p>
       </div>
