@@ -20,7 +20,7 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="border-t-2 border-cyber-neon/30">
+    <footer>
       <div className="footer-content footer-content-two-columns">
         <div className="footer-section">
           <h4 className="text-cyber-neon mb-4 font-bold">{t('footer.quickLinks')}</h4>
@@ -45,8 +45,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="footer-bottom border-t border-cyber-neon/20 pt-4">
-        <p className="text-center">
+      <div className="footer-bottom">
+        <p>
           © {new Date().getFullYear()} <Link href="/" prefetch={false} className="text-cyber-neon font-bold hover:text-cyber-green transition-colors active:scale-95 inline-block">Cyber TMSAH</Link>. {t('footer.copyright')}
         </p>
       </div>

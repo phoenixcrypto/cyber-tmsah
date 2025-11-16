@@ -873,12 +873,9 @@ button, input, textarea, select {
 
 /* Page Transitions */
 .page-transition {
+  width: 100%;
+  min-height: 100%;
   animation: fadeInUp 0.4s ease-out;
-}
-
-.page-transition.transitioning {
-  opacity: 0;
-  transform: translateY(20px);
 }
 
 @keyframes fadeInUp {
@@ -1941,5 +1938,159 @@ button, input, textarea, select {
   }
 }
 
-/* Continue with remaining CSS... */
-/* (I'll continue with the rest of the CSS file in the next part due to length) */
+/* ============================================
+   FOOTER STYLES
+   ============================================ */
+footer {
+  background: var(--surface-2);
+  border-top: 2px solid rgba(255, 59, 64, 0.3);
+  padding: 3rem 2rem 1.5rem;
+  margin-top: 4rem;
+  position: relative;
+}
+
+.footer-content {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  padding-bottom: 2rem;
+}
+
+.footer-content-two-columns {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-section h4 {
+  color: var(--primary-red);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin: 0;
+}
+
+.footer-links a {
+  color: var(--accent-silver);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: var(--primary-red);
+  transform: translateX(-4px);
+}
+
+.footer-bottom {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 59, 64, 0.2);
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: var(--secondary-gray);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  footer {
+    padding: 2rem 1rem 1rem;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .footer-section h4 {
+    font-size: 1rem;
+  }
+  
+  .footer-links {
+    gap: 0.5rem;
+  }
+}
+
+/* ============================================
+   BOTTOM NAVIGATION DROPDOWN
+   ============================================ */
+.bottom-nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.bottom-nav-dropdown:hover .dropdown-content {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: var(--surface-3);
+  border: 1.5px solid rgba(255, 59, 64, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  min-width: 200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  flex-direction: column;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+.dropdown-link {
+  color: var(--accent-silver);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropdown-link:hover {
+  background: rgba(255, 59, 64, 0.15);
+  color: var(--primary-white);
+  transform: translateX(-4px);
+}
+
+[dir="ltr"] .dropdown-content {
+  right: auto;
+  left: 0;
+}
+
+[dir="ltr"] .dropdown-link:hover {
+  transform: translateX(4px);
+}
