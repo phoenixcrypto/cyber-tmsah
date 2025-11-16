@@ -1,6 +1,7 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star } from 'lucide-react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AboutPage() {
 
@@ -246,6 +247,20 @@ export default function AboutPage() {
                   <div className="team-member-responsibility-item-about">المحتوى التعليمي</div>
                   <div className="team-member-responsibility-item-about">نشر المقالات</div>
                 </div>
+                <div className="team-member-socials-about">
+                  <Link href="https://github.com/phoenixcrypto" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-github">
+                    <Github className="w-5 h-5" />
+                    <span>GitHub</span>
+                  </Link>
+                  <Link href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-linkedin">
+                    <Linkedin className="w-5 h-5" />
+                    <span>LinkedIn</span>
+                  </Link>
+                  <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-whatsapp">
+                    <MessageCircle className="w-5 h-5" />
+                    <span>WhatsApp</span>
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -267,6 +282,12 @@ export default function AboutPage() {
                   <div className="team-member-responsibility-item-about">تحسين الأداء</div>
                   <div className="team-member-responsibility-item-about">ضمان الجودة</div>
                 </div>
+                <div className="team-member-socials-about">
+                  <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-whatsapp">
+                    <MessageCircle className="w-5 h-5" />
+                    <span>WhatsApp</span>
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -287,6 +308,20 @@ export default function AboutPage() {
                   <div className="team-member-responsibility-item-about">دليل الأمن السيبراني</div>
                   <div className="team-member-responsibility-item-about">خريطة الطريق</div>
                   <div className="team-member-responsibility-item-about">الموارد التعليمية</div>
+                </div>
+                <div className="team-member-socials-about">
+                  <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-github">
+                    <Github className="w-5 h-5" />
+                    <span>GitHub</span>
+                  </Link>
+                  <Link href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-linkedin">
+                    <Linkedin className="w-5 h-5" />
+                    <span>LinkedIn</span>
+                  </Link>
+                  <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-whatsapp">
+                    <MessageCircle className="w-5 h-5" />
+                    <span>WhatsApp</span>
+                  </Link>
                 </div>
               </div>
             </div>

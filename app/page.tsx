@@ -40,8 +40,23 @@ const teamMembers = [
       'نشر المقالات',
     ],
     socials: [
-      { label: 'LinkedIn', href: 'https://www.linkedin.com' },
-      { label: 'GitHub', href: 'https://github.com/phoenixcrypto' },
+      { label: 'GitHub', href: 'https://github.com/phoenixcrypto', icon: 'github' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: 'linkedin' },
+      { label: 'WhatsApp', href: 'https://wa.me/', icon: 'whatsapp' },
+    ],
+  },
+  {
+    initials: 'YW',
+    name: 'يوسف وليد',
+    role: 'مطور المنصة',
+    description: 'مطور متخصص في تطوير الواجهات والتطبيقات التعليمية، أساهم في بناء تجارب مستخدم متميزة.',
+    responsibilities: [
+      'تطوير الواجهات',
+      'تحسين الأداء',
+      'ضمان الجودة',
+    ],
+    socials: [
+      { label: 'WhatsApp', href: 'https://wa.me/', icon: 'whatsapp' },
     ],
   },
   {
@@ -53,11 +68,11 @@ const teamMembers = [
       'دليل الأمن السيبراني',
       'خريطة الطريق',
       'الموارد التعليمية',
-      'المحتوى التعليمي الشامل',
     ],
     socials: [
-      { label: 'المحتوى التعليمي', href: '/materials' },
-      { label: 'خريطة الطريق', href: '/roadmap' },
+      { label: 'GitHub', href: 'https://github.com', icon: 'github' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: 'linkedin' },
+      { label: 'WhatsApp', href: 'https://wa.me/', icon: 'whatsapp' },
     ],
   },
 ]
