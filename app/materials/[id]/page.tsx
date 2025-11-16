@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, Clock, User, Calendar, FileText } from 'lucide-react'
 import { useParams } from 'next/navigation'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 // Static articles data - no API calls
 const staticArticles: { [key: string]: any[] } = {
@@ -62,6 +63,7 @@ const subjectData = {
 }
 
 export default function SubjectPage() {
+  const { t } = useLanguage()
   const params = useParams()
   const subjectId = params.id as string
   const articles = staticArticles[subjectId] || []
@@ -71,9 +73,9 @@ export default function SubjectPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-dark-100 mb-4">المادة غير موجودة</h1>
+          <h1 className="text-2xl font-semibold text-dark-100 mb-4">{t('materials.subject.notFound')}</h1>
           <Link href="/materials" className="btn-primary">
-            العودة للمواد
+            {t('materials.subject.backToMaterials')}
           </Link>
         </div>
       </div>
@@ -90,7 +92,7 @@ export default function SubjectPage() {
             className="inline-flex items-center gap-2 text-cyber-neon hover:text-cyber-green transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            العودة للمواد
+            {t('materials.subject.backToMaterials')}
           </Link>
           
           <div className="flex items-center gap-4 mb-6">
@@ -108,11 +110,11 @@ export default function SubjectPage() {
           <div className="flex items-center gap-6 text-sm text-dark-400">
             <div className="flex items-center gap-2">
               <User className="w-4 h-4" />
-              <span>المحاضر: {subject.instructor}</span>
+              <span>{t('materials.subject.instructor')}: {subject.instructor}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              <span>{articles.length} محاضرة</span>
+              <FileText className="w-4 h-4" />
+              <span>{articles.length} {articles.length === 1 ? t('materials.article') : t('materials.articles')}</span>
             </div>
           </div>
         </div>
@@ -136,7 +138,7 @@ export default function SubjectPage() {
                         ? 'bg-green-500/20 text-green-400' 
                         : 'bg-yellow-500/20 text-yellow-400'
                     }`}>
-                      {article.status === 'published' ? 'متاح' : 'قريباً'}
+                      {article.status === 'published' ? t('materials.subject.available') : t('materials.subject.comingSoon')}
                     </span>
                   </div>
                   
@@ -147,15 +149,15 @@ export default function SubjectPage() {
                   <div className="flex items-center gap-6 text-sm text-dark-400">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>{article.duration}</span>
+                      <span>{t('materials.subject.duration')}: {article.duration}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
+                      <span>{t('materials.subject.publishedAt')}: {new Date(article.publishedAt).toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-4" />
-                      <span className="capitalize">{article.type}</span>
+                      <span>{t('materials.subject.type')}: <span className="capitalize">{article.type}</span></span>
                     </div>
                   </div>
                 </div>
@@ -165,10 +167,10 @@ export default function SubjectPage() {
             <div className="text-center py-12">
               <BookOpen className="w-16 h-16 text-dark-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-dark-200 mb-2">
-                لا توجد محاضرات متاحة
+                {t('materials.subject.noArticles')}
               </h3>
               <p className="text-dark-400 mb-6">
-                سيتم نشر محاضرات هذه المادة قريباً.
+                {t('materials.subject.comingSoon')}
               </p>
             </div>
           )}
@@ -178,10 +180,10 @@ export default function SubjectPage() {
         <div className="mt-12 text-center">
           <div className="glass-card p-6 max-w-2xl mx-auto">
             <h3 className="text-lg font-semibold text-dark-100 mb-2">
-              محتوى إضافي قريباً
+              {t('materials.subject.comingSoon')}
             </h3>
             <p className="text-dark-300">
-              سيتم إضافة محاضرات ومواد إضافية بانتظام. تابعونا للحصول على التحديثات!
+              {t('materials.subject.comingSoon')}
             </p>
           </div>
         </div>

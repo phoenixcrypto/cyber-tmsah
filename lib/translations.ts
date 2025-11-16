@@ -66,11 +66,9 @@ export const translations = {
     
     // Schedule
     'schedule.title': 'الجدول الدراسي',
-    'schedule.description': 'استعرض الجدول الدراسي الكامل لجميع المواد والمجموعات',
     'schedule.filter.all': 'الكل',
     'schedule.view.list': 'البطاقات',
     'schedule.view.matrix': 'الجدول',
-    'schedule.noLectures': 'لا توجد سكاشن لهذا القسم في هذا اليوم',
     
     // Materials
     'materials.title': 'المحتوى التعليمي',
@@ -112,7 +110,7 @@ export const translations = {
     'materials.articles': 'مقالات',
     'materials.lastUpdated': 'تم التحديث:',
     
-    // Schedule Page - Additional translations
+    // Schedule Page - Additional translations (removed duplicate schedule.description)
     'schedule.filter.section': 'القسم',
     'schedule.filter.group': 'المجموعة',
     'schedule.day.monday': 'الإثنين',
@@ -167,10 +165,114 @@ export const translations = {
     'newsTicker.label': 'شريط الأخبار',
     'newsTicker.noArticles': 'لا توجد مقالات جديدة',
     
+    // Schedule Page
+    'schedule.intro': 'استعرض الجدول الدراسي الكامل لجميع المواد والمجموعات',
+    'schedule.description': 'جدول شامل للمحاضرات والمختبرات للفصل الدراسي الحالي',
+    'schedule.chooseView': 'اختر عرض الجدول',
+    'schedule.currentView': 'العرض الحالي',
+    'schedule.filterBySection': 'تصفية حسب رقم السكشن (اختياري)',
+    'schedule.sectionNumber': 'رقم السكشن',
+    'schedule.allSections': 'جميع الأقسام',
+    'schedule.filter': 'تصفية',
+    'schedule.clear': 'مسح',
+    'schedule.invalidSelection': 'اختيار غير صحيح',
+    'schedule.matrixOptions': 'خيارات عرض المصفوفة',
+    'schedule.showLectures': 'عرض المحاضرات',
+    'schedule.showEmptyPeriods': 'عرض الفترات الفارغة',
+    'schedule.viewMode.list': 'البطاقات',
+    'schedule.viewMode.matrix': 'الجدول',
+    'schedule.noSections': 'لا توجد سكاشن لعرضها. تأكد من اختيار المجموعة الصحيحة.',
+    'schedule.holiday': 'عطلة',
+    'schedule.subject': 'مادة',
+    'schedule.subjects': 'مواد',
+    'schedule.section': 'السكشن',
+    'schedule.lecture': 'محاضرة',
+    'schedule.lab': 'مختبر',
+    'schedule.groupA': 'المجموعة أ',
+    'schedule.groupB': 'المجموعة ب',
+    'schedule.instructor': 'المحاضر',
+    'schedule.location': 'المكان',
+    'schedule.time': 'الوقت',
+    'schedule.day': 'اليوم',
+    'schedule.noLectures': 'لا توجد سكاشن لهذا القسم في هذا اليوم',
+    
+    // Roadmap Page
+    'roadmap.title': 'خريطة الطريق',
+    'roadmap.description': 'مسار تعليمي منظم من الأساسيات إلى الاحتراف في الأمن السيبراني',
+    'roadmap.required': 'مطلوب',
+    'roadmap.optional': 'اختياري',
+    'roadmap.instructor': 'المحاضر',
+    'roadmap.viewCourse': 'عرض الدورة',
+    'roadmap.alternativeNote': 'ملحوظة: يجب عليك اختيار دورة واحدة فقط من الدورات المعروضة أدناه',
+    
+    // Contribute Page
+    'contribute.title': 'المساهمة بالمصادر',
+    'contribute.description': 'ساهم معنا في إثراء المحتوى التعليمي العربي في مجال الأمن السيبراني من خلال إضافة مصادر جديدة ومفيدة.',
+    'contribute.mainSources': 'المصادر التعليمية الرئيسية',
+    'contribute.courses': 'الدورات التعليمية',
+    'contribute.coursesDesc': 'ساهم بإضافة دورات تعليمية جديدة في مختلف مجالات الأمن السيبراني',
+    'contribute.books': 'الكتب',
+    'contribute.booksDesc': 'أضف كتباً قيمة ومفيدة للمتعلمين في مجال الأمن السيبراني',
+    'contribute.videos': 'الفيديوهات المقترحة',
+    'contribute.videosDesc': 'شارك فيديوهات تعليمية مفيدة من يوتيوب وقنوات أخرى',
+    'contribute.howTo': 'كيفية المساهمة',
+    'contribute.howToDesc': 'للمساهمة، يرجى التواصل معنا عبر البريد الإلكتروني أو من خلال النموذج في صفحة الاتصال.',
+    'contribute.contactUs': 'تواصل معنا',
+    
+    // Expertise Guide Page
+    'expertise.title': 'دليل المهارات المهنية والتجارب العملية',
+    'expertise.description': 'تعلم من تجارب المحترفين في مجال الأمن السيبراني. نصائح عملية، أخطاء شائعة، وطرق تجنبها من خبراء ميدانيين.',
+    'expertise.beginners': 'نصائح للمبتدئين',
+    'expertise.experience': 'سنوات خبرة',
+    'expertise.securityAnalyst': 'محلل أمني',
+    'expertise.securityEngineer': 'مهندسة أمن',
+    
+    // Evaluation Page
+    'evaluation.title': 'الأخبار والتحديثات',
+    'evaluation.description': 'تابع آخر الأخبار والتقييمات في مجال الأمن السيبراني',
+    'evaluation.latestNews': 'أحدث الأخبار',
+    'evaluation.comingSoon': 'سيتم إضافة آخر الأخبار والتقييمات قريباً. تابعونا للحصول على التحديثات.',
+    
+    // Materials Subject Page
+    'materials.subject.notFound': 'المادة غير موجودة',
+    'materials.subject.backToMaterials': 'العودة للمواد',
+    'materials.subject.instructor': 'المحاضر',
+    'materials.subject.articles': 'مقالات',
+    'materials.subject.noArticles': 'لا توجد مقالات متاحة حالياً',
+    'materials.subject.available': 'متاح',
+    'materials.subject.comingSoon': 'قريباً',
+    'materials.subject.duration': 'المدة',
+    'materials.subject.publishedAt': 'تاريخ النشر',
+    'materials.subject.type': 'النوع',
+    'materials.subject.viewArticle': 'عرض المقال',
+    
+    // Books Page
+    'books.title': 'الكتب',
+    'books.description': 'مجموعة مختارة من أفضل الكتب في مجال الأمن السيبراني',
+    
+    // Courses Page
+    'courses.title': 'الدورات',
+    'courses.description': 'دورات تعليمية شاملة في مختلف مجالات الأمن السيبراني',
+    
+    // Videos Page
+    'videos.title': 'الفيديوهات المقترحة',
+    'videos.description': 'مجموعة من الفيديوهات التعليمية المختارة في الأمن السيبراني',
+    
+    // Podcasts Page
+    'podcasts.title': 'البودكاست',
+    'podcasts.description': 'برامج صوتية تعليمية ومناقشات في مجال الأمن السيبراني',
+    
+    // Platforms Page
+    'platforms.title': 'مواقع ومنصات تعليمية',
+    'platforms.description': 'منصات تعليمية ومختبرات عملية لتعلم الأمن السيبراني',
+    
     // Common
     'common.loading': 'جاري التحميل...',
     'common.error': 'حدث خطأ',
     'common.retry': 'إعادة المحاولة',
+    'common.back': 'العودة',
+    'common.view': 'عرض',
+    'common.readMore': 'اقرأ المزيد',
   },
   en: {
     // Navbar
@@ -239,11 +341,9 @@ export const translations = {
     
     // Schedule
     'schedule.title': 'Study Schedule',
-    'schedule.description': 'View the complete study schedule for all subjects and groups',
     'schedule.filter.all': 'All',
     'schedule.view.list': 'Cards',
     'schedule.view.matrix': 'Table',
-    'schedule.noLectures': 'No sections for this group on this day',
     
     // Materials
     'materials.title': 'Educational Content',
@@ -340,10 +440,114 @@ export const translations = {
     'newsTicker.label': 'News Ticker',
     'newsTicker.noArticles': 'No new articles',
     
+    // Schedule Page
+    'schedule.intro': 'View the complete study schedule for all subjects and groups',
+    'schedule.description': 'Comprehensive schedule of lectures and labs for the current semester',
+    'schedule.chooseView': 'Choose Schedule View',
+    'schedule.currentView': 'Current View',
+    'schedule.filterBySection': 'Filter by Section Number (Optional)',
+    'schedule.sectionNumber': 'Section Number',
+    'schedule.allSections': 'All Sections',
+    'schedule.filter': 'Filter',
+    'schedule.clear': 'Clear',
+    'schedule.invalidSelection': 'Invalid Selection',
+    'schedule.matrixOptions': 'Matrix View Options',
+    'schedule.showLectures': 'Show Lectures',
+    'schedule.showEmptyPeriods': 'Show Empty Periods',
+    'schedule.viewMode.list': 'Cards',
+    'schedule.viewMode.matrix': 'Table',
+    'schedule.noSections': 'No sections to display. Make sure you selected the correct group.',
+    'schedule.holiday': 'Holiday',
+    'schedule.subject': 'subject',
+    'schedule.subjects': 'subjects',
+    'schedule.section': 'Section',
+    'schedule.lecture': 'Lecture',
+    'schedule.lab': 'Lab',
+    'schedule.groupA': 'Group A',
+    'schedule.groupB': 'Group B',
+    'schedule.instructor': 'Instructor',
+    'schedule.location': 'Location',
+    'schedule.time': 'Time',
+    'schedule.day': 'Day',
+    'schedule.noLectures': 'No sections for this group on this day',
+    
+    // Roadmap Page
+    'roadmap.title': 'Roadmap',
+    'roadmap.description': 'Organized learning path from basics to professionalism in cybersecurity',
+    'roadmap.required': 'Required',
+    'roadmap.optional': 'Optional',
+    'roadmap.instructor': 'Instructor',
+    'roadmap.viewCourse': 'View Course',
+    'roadmap.alternativeNote': 'Note: You must choose only one course from the courses shown below',
+    
+    // Contribute Page
+    'contribute.title': 'Contribute Resources',
+    'contribute.description': 'Help us enrich Arabic educational content in cybersecurity by adding new and useful resources.',
+    'contribute.mainSources': 'Main Educational Resources',
+    'contribute.courses': 'Educational Courses',
+    'contribute.coursesDesc': 'Contribute by adding new educational courses in various cybersecurity fields',
+    'contribute.books': 'Books',
+    'contribute.booksDesc': 'Add valuable and useful books for learners in cybersecurity',
+    'contribute.videos': 'Suggested Videos',
+    'contribute.videosDesc': 'Share useful educational videos from YouTube and other channels',
+    'contribute.howTo': 'How to Contribute',
+    'contribute.howToDesc': 'To contribute, please contact us via email or through the form on the contact page.',
+    'contribute.contactUs': 'Contact Us',
+    
+    // Expertise Guide Page
+    'expertise.title': 'Professional Skills Guide & Practical Experiences',
+    'expertise.description': 'Learn from professionals\' experiences in cybersecurity. Practical tips, common mistakes, and how to avoid them from field experts.',
+    'expertise.beginners': 'Tips for Beginners',
+    'expertise.experience': 'years of experience',
+    'expertise.securityAnalyst': 'Security Analyst',
+    'expertise.securityEngineer': 'Security Engineer',
+    
+    // Evaluation Page
+    'evaluation.title': 'News & Updates',
+    'evaluation.description': 'Follow the latest news and evaluations in cybersecurity',
+    'evaluation.latestNews': 'Latest News',
+    'evaluation.comingSoon': 'Latest news and evaluations will be added soon. Follow us for updates.',
+    
+    // Materials Subject Page
+    'materials.subject.notFound': 'Subject not found',
+    'materials.subject.backToMaterials': 'Back to Materials',
+    'materials.subject.instructor': 'Instructor',
+    'materials.subject.articles': 'Articles',
+    'materials.subject.noArticles': 'No articles available at the moment',
+    'materials.subject.available': 'Available',
+    'materials.subject.comingSoon': 'Coming Soon',
+    'materials.subject.duration': 'Duration',
+    'materials.subject.publishedAt': 'Published Date',
+    'materials.subject.type': 'Type',
+    'materials.subject.viewArticle': 'View Article',
+    
+    // Books Page
+    'books.title': 'Books',
+    'books.description': 'A curated collection of the best books in cybersecurity',
+    
+    // Courses Page
+    'courses.title': 'Courses',
+    'courses.description': 'Comprehensive educational courses in various cybersecurity fields',
+    
+    // Videos Page
+    'videos.title': 'Suggested Videos',
+    'videos.description': 'A collection of selected educational videos in cybersecurity',
+    
+    // Podcasts Page
+    'podcasts.title': 'Podcasts',
+    'podcasts.description': 'Educational audio programs and discussions in cybersecurity',
+    
+    // Platforms Page
+    'platforms.title': 'Educational Websites & Platforms',
+    'platforms.description': 'Educational platforms and practical labs for learning cybersecurity',
+    
     // Common
     'common.loading': 'Loading...',
     'common.error': 'An error occurred',
     'common.retry': 'Retry',
+    'common.back': 'Back',
+    'common.view': 'View',
+    'common.readMore': 'Read More',
   },
 }
 

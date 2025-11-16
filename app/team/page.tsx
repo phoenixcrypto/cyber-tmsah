@@ -3,8 +3,10 @@
 import { Users, Github, Linkedin, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function TeamPage() {
+  const { t } = useLanguage()
   const teamMembers = [
     {
       name: 'زياد محمد',
@@ -65,11 +67,11 @@ export default function TeamPage() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <Users className="w-8 h-8 text-cyber-neon" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              فريق العمل
+              {t('team.title')}
             </h1>
           </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            تعرف على الفريق الذي يعمل خلف الكواليس لبناء منصة سايبر تمساح
+            {t('team.description')}
           </p>
         </div>
 
@@ -97,7 +99,7 @@ export default function TeamPage() {
                     {member.description}
                   </p>
                   <div className="team-member-responsibilities-about">
-                    <div className="team-member-responsibility-title-about">المسؤوليات:</div>
+                    <div className="team-member-responsibility-title-about">{t('team.responsibilities')}</div>
                     {member.responsibilities.map((responsibility, idx) => (
                       <div key={idx} className="team-member-responsibility-item-about">
                         {responsibility}

@@ -1,5 +1,7 @@
 'use client'
 
+import { useLanguage } from '@/contexts/LanguageContext'
+
 interface Course {
   order?: number
   status: 'required' | 'optional'
@@ -263,21 +265,23 @@ const phases: Phase[] = [
 ]
 
 export default function RoadmapPage() {
+  const { t, language } = useLanguage()
+
   return (
     <div className="roadmap-page">
       <section className="page-hero">
         <div className="motivational-box">
-          لا تنتظر الظروف المثالية؛ ابدأ الآن واصنع ظروفك بنفسك
+          {language === 'ar' ? 'لا تنتظر الظروف المثالية؛ ابدأ الآن واصنع ظروفك بنفسك' : 'Don\'t wait for perfect conditions; start now and create your own conditions'}
         </div>
         <h1>
-          خريطة طريق <span className="gradient-text">الأمن السيبراني</span>
+          {t('roadmap.title')}
         </h1>
-        <p className="page-hero-subtitle">مسارات منظمة ومهارات متسلسلة للوصول إلى الاحتراف</p>
+        <p className="page-hero-subtitle">{t('roadmap.description')}</p>
       </section>
 
       <section className="instruction-video">
-        <h3>شرح استخدام خريطة الطريق</h3>
-        <p>شاهد هذا الفيديو لتعرف كيفية التنقل بين المراحل واختيار المسار المناسب لك لتحقيق أقصى استفادة.</p>
+        <h3>{language === 'ar' ? 'شرح استخدام خريطة الطريق' : 'How to Use the Roadmap'}</h3>
+        <p>{language === 'ar' ? 'شاهد هذا الفيديو لتعرف كيفية التنقل بين المراحل واختيار المسار المناسب لك لتحقيق أقصى استفادة.' : 'Watch this video to learn how to navigate between phases and choose the right path for you to maximize your benefit.'}</p>
         <div className="video-placeholder">
           <iframe
             width="100%"
@@ -304,7 +308,7 @@ export default function RoadmapPage() {
 
             {phase.alternativeNote && (
               <div className="alternative-track-note">
-                <p dangerouslySetInnerHTML={{ __html: phase.alternativeNote.replace(/<span class="cyber">(.*?)<\/span>/g, '<span class="gradient-text">$1</span>') }} />
+                <p>{t('roadmap.alternativeNote')}</p>
               </div>
             )}
 

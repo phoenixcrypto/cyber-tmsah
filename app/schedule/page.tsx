@@ -2,8 +2,10 @@
 
 import { Calendar, Clock, MapPin, User, Search } from 'lucide-react'
 import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function SchedulePage() {
+  const { t, language } = useLanguage()
   const [selectedSection, setSelectedSection] = useState('')
   const [filteredSchedule, setFilteredSchedule] = useState<any[]>([])
   const [validationError, setValidationError] = useState('')
@@ -294,7 +296,7 @@ export default function SchedulePage() {
   ]
 
   // Validation function
-  const validateGroupAndSection = (group: string, section: string): string => {
+  const validateGroupAndSection = useCallback((group: string, section: string): string => {
     if (!group || !section) return ''
     
     const sectionNum = parseInt(section)
@@ -302,19 +304,19 @@ export default function SchedulePage() {
     // Group A (Group 1) → Sections 1-7 only
     if (group === 'Group 1') {
       if (sectionNum < 1 || sectionNum > 7) {
-        return 'المجموعة أ تشمل الأقسام 1-7 فقط. يرجى اختيار رقم قسم صحيح.'
+        return t('schedule.groupA.sections')
       }
     }
     
     // Group B (Group 2) → Sections 8-15 only
     if (group === 'Group 2') {
       if (sectionNum < 8 || sectionNum > 15) {
-        return 'المجموعة ب تشمل الأقسام 8-15 فقط. يرجى اختيار رقم قسم صحيح.'
+        return t('schedule.groupB.sections')
       }
     }
     
     return ''
-  }
+  }, [t])
 
   const sections = Array.from({length: 15}, (_, i) => i + 1);
   
@@ -457,10 +459,10 @@ export default function SchedulePage() {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            الجدول الدراسي
+            {t('schedule.title')}
           </h1>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            جدول شامل للمحاضرات والمختبرات للفصل الدراسي الحالي
+            {t('schedule.description')}
           </p>
         </div>
 
@@ -469,13 +471,13 @@ export default function SchedulePage() {
           <div className="enhanced-card p-6">
             <div className="flex flex-col items-center gap-4">
               <h2 className="text-xl font-semibold text-dark-100 text-center">
-                اختر عرض الجدول
+                {t('schedule.chooseView')}
               </h2>
               
               {/* Toggle Switch */}
               <div className="flex items-center gap-4">
                 <span className={`text-lg font-semibold transition-colors ${scheduleView === 'A' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                  المجموعة أ
+                  {t('schedule.groupA')}
                 </span>
                 
                 <button
@@ -492,12 +494,12 @@ export default function SchedulePage() {
                 </button>
                 
                 <span className={`text-lg font-semibold transition-colors ${scheduleView === 'B' ? 'text-cyber-violet' : 'text-dark-400'}`}>
-                  المجموعة ب
+                  {t('schedule.groupB')}
                 </span>
         </div>
 
               <p className="text-sm text-dark-400 text-center">
-                العرض الحالي: <span className="text-cyber-neon font-semibold">المجموعة {scheduleView}</span>
+                {t('schedule.currentView')}: <span className="text-cyber-neon font-semibold">{scheduleView === 'A' ? t('schedule.groupA') : t('schedule.groupB')}</span>
               </p>
             </div>
           </div>
@@ -507,19 +509,19 @@ export default function SchedulePage() {
         <div className="mb-8 animate-slide-up">
           <div className="enhanced-card p-6">
             <h2 className="text-xl font-semibold text-dark-100 mb-4 text-center">
-              تصفية حسب رقم السكشن (اختياري)
+              {t('schedule.filterBySection')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end max-w-2xl mx-auto">
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                      رقم السكشن
+                      {t('schedule.sectionNumber')}
                 </label>
                 <select
                   value={selectedSection}
                   onChange={(e) => setSelectedSection(e.target.value)}
                   className="w-full px-3 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
                 >
-                  <option value="">جميع الأقسام</option>
+                  <option value="">{t('schedule.allSections')}</option>
                   {sections.map(section => (
                     <option key={section} value={section}>{section}</option>
                   ))}
@@ -539,7 +541,7 @@ export default function SchedulePage() {
                   className="w-full bg-gradient-to-r from-cyber-neon to-cyber-green hover:from-cyber-green hover:to-cyber-neon text-dark-100 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
                 >
                   <Search className="w-4 h-4" />
-                  {selectedSection ? 'تصفية' : 'مسح'}
+                  {selectedSection ? t('schedule.filter') : t('schedule.clear')}
                 </button>
               </div>
                 </div>
@@ -549,10 +551,10 @@ export default function SchedulePage() {
                 <div className="flex items-start gap-3">
                   <div className="text-red-400 font-bold text-lg">⚠</div>
                   <div>
-                    <h4 className="text-red-400 font-semibold mb-1">اختيار غير صحيح</h4>
+                    <h4 className="text-red-400 font-semibold mb-1">{t('schedule.invalidSelection')}</h4>
                     <p className="text-red-300 text-sm">{validationError}</p>
                     <p className="text-dark-300 text-xs mt-2">
-                      <strong>المجموعة أ:</strong> الأقسام 1-7 | <strong>المجموعة ب:</strong> الأقسام 8-15
+                      <strong>{t('schedule.groupA')}:</strong> {t('schedule.section')}s 1-7 | <strong>{t('schedule.groupB')}:</strong> {t('schedule.section')}s 8-15
                     </p>
                   </div>
                 </div>
@@ -566,7 +568,7 @@ export default function SchedulePage() {
           <div className="enhanced-card p-4">
             <div className="flex items-center justify-center gap-4">
               <span className={`text-sm font-medium ${viewMode === 'list' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                البطاقات
+                {t('schedule.viewMode.list')}
               </span>
               <button
                 onClick={() => setViewMode(viewMode === 'list' ? 'matrix' : 'list')}
@@ -581,7 +583,7 @@ export default function SchedulePage() {
                 />
               </button>
               <span className={`text-sm font-medium ${viewMode === 'matrix' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                الجدول
+                {t('schedule.viewMode.matrix')}
                 </span>
               </div>
                 </div>
@@ -754,8 +756,8 @@ export default function SchedulePage() {
                                     <th className="px-2.5 py-3 sm:px-3 sm:py-3.5 md:px-4 md:py-4 lg:px-5 lg:py-5 bg-gradient-to-br from-cyber-neon/20 via-cyber-neon/15 to-cyber-neon/20 text-cyber-neon font-bold text-xs sm:text-sm md:text-base lg:text-lg border-2 border-cyber-neon/50 z-20 shadow-lg backdrop-blur-md relative">
                                       <div className="flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3">
                                         <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-cyber-neon animate-pulse shadow-lg shadow-cyber-neon/50"></div>
-                                        <span className="text-cyber-neon tracking-wider font-extrabold hidden sm:inline leading-tight">السكشن</span>
-                                        <span className="text-cyber-neon tracking-wider font-extrabold sm:hidden text-xs leading-tight">س</span>
+                                        <span className="text-cyber-neon tracking-wider font-extrabold hidden sm:inline leading-tight">{t('schedule.section')}</span>
+                                        <span className="text-cyber-neon tracking-wider font-extrabold sm:hidden text-xs leading-tight">{language === 'ar' ? 'س' : 'S'}</span>
                                       </div>
                                     </th>
                                     {periodsToDisplay.map(period => (
@@ -774,8 +776,8 @@ export default function SchedulePage() {
                                   <tr className="bg-gradient-to-r from-cyber-violet/20 via-cyber-violet/15 to-cyber-violet/20 border-b-2 border-cyber-violet/30 hover:from-cyber-violet/25 hover:via-cyber-violet/20 hover:to-cyber-violet/25 transition-all duration-300">
                                     <td className="px-2.5 py-3 sm:px-3 sm:py-3.5 md:px-4 md:py-4 lg:px-5 lg:py-5 text-cyber-violet font-bold text-xs sm:text-sm md:text-base lg:text-lg bg-gradient-to-r from-cyber-violet/25 via-cyber-violet/20 to-cyber-violet/25 border-r-2 border-cyber-violet/40">
                                       <div className="flex items-center justify-center gap-1.5">
-                                        <span className="hidden sm:inline font-extrabold leading-tight">محاضرة المجموعة {scheduleView}</span>
-                                        <span className="sm:hidden font-extrabold leading-tight">م {scheduleView}</span>
+                                        <span className="hidden sm:inline font-extrabold leading-tight">{t('schedule.lecture')} {scheduleView === 'A' ? t('schedule.groupA') : t('schedule.groupB')}</span>
+                                        <span className="sm:hidden font-extrabold leading-tight">{language === 'ar' ? 'م' : 'L'} {scheduleView}</span>
                                       </div>
                                     </td>
                                     {periodsToDisplay.map(period => {
@@ -860,14 +862,14 @@ export default function SchedulePage() {
                                             } animate-shimmer`}></div>
                                             
                                             <div className="relative z-10 space-y-1 sm:space-y-1.5">
-                                              {/* 1. المادة (Subject) */}
+                                              {/* 1. Subject */}
                                               <div className={`font-extrabold text-dark-100 text-[11px] sm:text-xs md:text-sm lg:text-base leading-tight break-words line-clamp-2 group-hover/cell:text-cyber-neon transition-colors duration-300 ${
                                                 cellData.type === 'lecture' ? 'text-cyber-violet' : 'text-cyber-green'
                                               } drop-shadow-sm`} style={{ writingMode: 'horizontal-tb', textOrientation: 'mixed' }}>
                                                 {cellData.title}
                 </div>
                 
-                                              {/* 2. صاحب المادة (Instructor) */}
+                                              {/* 2. Instructor */}
                                               <div className="text-dark-200 text-[9px] sm:text-[10px] md:text-xs lg:text-sm opacity-95 flex items-start gap-1">
                                                 <User className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-cyber-neon/70 flex-shrink-0 mt-0.5" />
                                                 <span className="font-semibold break-words leading-tight text-[9px] sm:text-[10px] md:text-xs line-clamp-1">{cellData.instructor}</span>
@@ -904,7 +906,7 @@ export default function SchedulePage() {
                                 )) : (
                                   <tr>
                                     <td colSpan={periodsToDisplay.length + 1} className="px-2 sm:px-4 py-4 sm:py-8 text-center text-dark-400">
-                                      <p className="text-xs sm:text-sm">لا توجد سكاشن لعرضها. تأكد من اختيار المجموعة الصحيحة.</p>
+                                      <p className="text-xs sm:text-sm">{t('schedule.noSections')}</p>
                                     </td>
                                   </tr>
                                 )}
@@ -989,7 +991,7 @@ export default function SchedulePage() {
                                         )
                                       })}
                                       {!hasContent && showEmptyPeriods && (
-                                        <p className="text-xs text-dark-400 text-center py-2">لا توجد سكاشن لهذا القسم في هذا اليوم</p>
+                                        <p className="text-xs text-dark-400 text-center py-2">{t('schedule.noLectures')}</p>
                                       )}
                                     </div>
                                   </div>
@@ -1045,11 +1047,11 @@ export default function SchedulePage() {
                         <h3 className="text-xl font-bold text-dark-100">{dayNames[day] || day}</h3>
                         {isHoliday ? (
                           <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold">
-                            🎉 عطلة
+                            🎉 {t('schedule.holiday')}
                           </span>
                         ) : (
                           <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
-                            {dayLectures.length} {dayLectures.length === 1 ? 'مادة' : 'مواد'}
+                            {dayLectures.length} {dayLectures.length === 1 ? t('schedule.subject') : t('schedule.subjects')}
                           </span>
                         )}
                       </div>
@@ -1059,8 +1061,8 @@ export default function SchedulePage() {
                     {isHoliday ? (
                       <div className="p-12 text-center">
                         <div className="text-6xl mb-4">🎉</div>
-                        <h4 className="text-2xl font-semibold text-dark-200 mb-2">عطلة</h4>
-                        <p className="text-dark-400">لا توجد محاضرات مجدولة لهذا اليوم.</p>
+                        <h4 className="text-2xl font-semibold text-dark-200 mb-2">{t('schedule.holiday')}</h4>
+                        <p className="text-dark-400">{t('schedule.noLectures')}</p>
                       </div>
                     ) : dayLectures.length > 0 ? (
                       <div className="p-4 sm:p-6">
@@ -1093,7 +1095,7 @@ export default function SchedulePage() {
                                         </h4>
                                         {item.sectionNumber && (
                                           <span className="inline-block px-2 py-1 bg-cyber-green/30 text-cyber-green rounded text-xs font-bold mr-2">
-                                            السكشن {item.sectionNumber}
+                                            {t('schedule.section')} {item.sectionNumber}
                                           </span>
                                         )}
                                       </div>
@@ -1102,7 +1104,7 @@ export default function SchedulePage() {
                                           ? 'bg-cyber-violet/30 text-cyber-violet'
                                           : 'bg-cyber-green/30 text-cyber-green'
                                       }`}>
-                                        {item.type === 'lecture' ? '📚 محاضرة' : '🔬 مختبر'}
+                                        {item.type === 'lecture' ? `📚 ${t('schedule.lecture')}` : `🔬 ${t('schedule.lab')}`}
                                       </span>
                                     </div>
 
@@ -1135,7 +1137,7 @@ export default function SchedulePage() {
                       </div>
                     ) : (
                       <div className="p-8 text-center">
-                        <p className="text-dark-400">لا توجد محاضرات مجدولة لهذا اليوم.</p>
+                        <p className="text-dark-400">{t('schedule.noLectures')}</p>
                       </div>
                     )}
                   </div>
@@ -1150,10 +1152,10 @@ export default function SchedulePage() {
           <div className="text-center py-20 animate-fade-in">
             <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
             <h3 className="text-2xl font-semibold text-dark-100 mb-4">
-              لا توجد محاضرات متاحة
+              {t('schedule.noSections')}
             </h3>
             <p className="text-dark-300">
-              سيتم إضافة الجدول الدراسي قريباً. ترقبوا التحديثات!
+              {t('schedule.description')}
             </p>
           </div>
         )}

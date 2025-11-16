@@ -1,44 +1,52 @@
 'use client'
 
+import { useLanguage } from '@/contexts/LanguageContext'
+
 export default function ExpertiseGuidePage() {
+  const { t, language } = useLanguage()
+
   return (
     <div className="courses-page">
       <section className="page-hero">
         <h1>
-          💼 <span className="gradient-text">دليل المهارات المهنية والتجارب العملية</span>
+          💼 <span className="gradient-text">{t('expertise.title')}</span>
         </h1>
-        <p>تعلم من تجارب المحترفين في مجال الأمن السيبراني. نصائح عملية، أخطاء شائعة، وطرق تجنبها من خبراء ميدانيين.</p>
+        <p>{t('expertise.description')}</p>
       </section>
 
       <main className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
-          <h2 className="category-title">نصائح للمبتدئين</h2>
+          <h2 className="category-title">{t('expertise.beginners')}</h2>
           <div className="courses-grid">
             <div className="course-card">
               <div className="course-thumbnail" style={{ fontSize: '3rem' }}>👨‍💻</div>
               <div className="course-info">
-                <h4>أحمد محمود</h4>
-                <p className="course-instructor">محلل أمني - ٦ سنوات خبرة</p>
+                <h4>{language === 'ar' ? 'أحمد محمود' : 'Ahmed Mahmoud'}</h4>
+                <p className="course-instructor">{t('expertise.securityAnalyst')} - 6 {t('expertise.experience')}</p>
                 <p className="course-description">
-                  "أكبر خطأ ارتكبته في بدايتي هو القفز مباشرة إلى الأدوات المتقدمة دون فهم الأساسيات. أنصح كل مبتدئ بأن يبدأ بتعلم الشبكات وأنظمة التشغيل جيداً، ثم ينتقل إلى الأدوات."
+                  {language === 'ar' 
+                    ? '"أكبر خطأ ارتكبته في بدايتي هو القفز مباشرة إلى الأدوات المتقدمة دون فهم الأساسيات. أنصح كل مبتدئ بأن يبدأ بتعلم الشبكات وأنظمة التشغيل جيداً، ثم ينتقل إلى الأدوات."'
+                    : '"The biggest mistake I made at the beginning was jumping directly to advanced tools without understanding the basics. I advise every beginner to start by learning networks and operating systems well, then move on to tools."'}
                 </p>
                 <div className="course-tags">
-                  <span className="course-tag">أساسيات</span>
-                  <span className="course-tag">مسار تعليمي</span>
+                  <span className="course-tag">{language === 'ar' ? 'أساسيات' : 'Basics'}</span>
+                  <span className="course-tag">{language === 'ar' ? 'مسار تعليمي' : 'Learning Path'}</span>
                 </div>
               </div>
             </div>
             <div className="course-card">
               <div className="course-thumbnail" style={{ fontSize: '3rem' }}>👩‍🎓</div>
               <div className="course-info">
-                <h4>فاطمة عبدالرحمن</h4>
-                <p className="course-instructor">مهندسة أمن - ٤ سنوات خبرة</p>
+                <h4>{language === 'ar' ? 'فاطمة عبدالرحمن' : 'Fatima Abdelrahman'}</h4>
+                <p className="course-instructor">{t('expertise.securityEngineer')} - 4 {t('expertise.experience')}</p>
                 <p className="course-description">
-                  "لا تخف من ارتكاب الأخطاء في المختبرات. كل خطأ هو فرصة للتعلم. أنشئ مختبرك الخاص وكرر التجارب حتى تفهم تماماً ما يحدث."
+                  {language === 'ar'
+                    ? '"لا تخف من ارتكاب الأخطاء في المختبرات. كل خطأ هو فرصة للتعلم. أنشئ مختبرك الخاص وكرر التجارب حتى تفهم تماماً ما يحدث."'
+                    : '"Don\'t be afraid to make mistakes in labs. Every mistake is a learning opportunity. Create your own lab and repeat experiments until you fully understand what\'s happening."'}
                 </p>
                 <div className="course-tags">
-                  <span className="course-tag">مختبرات</span>
-                  <span className="course-tag">تعلم عملي</span>
+                  <span className="course-tag">{language === 'ar' ? 'مختبرات' : 'Labs'}</span>
+                  <span className="course-tag">{language === 'ar' ? 'تعلم عملي' : 'Practical Learning'}</span>
                 </div>
               </div>
             </div>
