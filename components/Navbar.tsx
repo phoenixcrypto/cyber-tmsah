@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Menu, X, ChevronDown, Home } from 'lucide-react'
+import { Menu, X, ChevronDown, Home, Youtube, Send, Instagram, Facebook, MessageCircle, Users, Star, Mail, User } from 'lucide-react'
 
 interface NavItem {
   label: string
@@ -83,6 +83,54 @@ export default function Navbar() {
       className={headerClass} 
       style={{ opacity: isScrolled ? 1 - scrollOpacity * 0.3 : 1 }}
     >
+      {/* Top Bar - Social Links & Quick Links */}
+      <div className="iTopBar">
+        <div className="iTopBar-content">
+          {/* Social Media Icons - Left Side */}
+          <div className="iTopBar-social">
+            <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
+              <Youtube className="w-5 h-5" />
+            </Link>
+            <Link href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
+              <Send className="w-5 h-5" />
+            </Link>
+            <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
+              <Instagram className="w-5 h-5" />
+            </Link>
+            <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
+              <Facebook className="w-5 h-5" />
+            </Link>
+            <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
+              <MessageCircle className="w-5 h-5" />
+            </Link>
+          </div>
+
+          {/* Quick Links with Icons - Right Side */}
+          <div className="iTopBar-links">
+            <Link href="/team" prefetch={false} className="iTopBar-link">
+              <Users className="w-4 h-4" />
+              <span>فريق العمل</span>
+            </Link>
+            <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="iTopBar-link" prefetch={false}>
+              <MessageCircle className="w-4 h-4" />
+              <span>واتساب</span>
+            </Link>
+            <Link href="/contribute" prefetch={false} className="iTopBar-link">
+              <Star className="w-4 h-4" />
+              <span>خدماتنا</span>
+            </Link>
+            <Link href="/contact" prefetch={false} className="iTopBar-link">
+              <Mail className="w-4 h-4" />
+              <span>اتصل بنا</span>
+            </Link>
+            <Link href="/about" prefetch={false} className="iTopBar-link">
+              <User className="w-4 h-4" />
+              <span>من نحن</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* Main Header - Logo & Navigation */}
       <div className="header-main-bar">
         <div className="header-main-content">
@@ -93,14 +141,8 @@ export default function Navbar() {
           {/* Left Actions - Empty */}
           <div className="header-left-actions"></div>
 
-          {/* Center Section - Quick Links & Logo */}
+          {/* Center Section - Logo */}
           <div className="header-center-section">
-            {/* Quick Links Above Logo */}
-            <div className="header-quick-links-center">
-              <Link href="/about" prefetch={false} className="quick-link-center">من نحن</Link>
-              <Link href="/contact" prefetch={false} className="quick-link-center">اتصل بنا</Link>
-              <Link href="/team" prefetch={false} className="quick-link-center">فريق العمل</Link>
-            </div>
 
             {/* Logo Center - SVG Logo with Color Gradient */}
             <Link href="/" className="logo-new" prefetch={false} onClick={close}>
