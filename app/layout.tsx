@@ -8,6 +8,7 @@ import Footer from '@/components/Footer'
 import FloatingLanguageButton from '@/components/FloatingLanguageButton'
 import FloatingMenuButton from '@/components/FloatingMenuButton'
 import SidebarQuickLinks from '@/components/SidebarQuickLinks'
+import BottomNavigation from '@/components/BottomNavigation'
 import PageTransition from '@/components/PageTransition'
 
 const cairo = Cairo({
@@ -76,6 +77,7 @@ export default function RootLayout({
           <div className="app-wrapper">
             <Navbar />
             <SidebarQuickLinks />
+            <BottomNavigation />
             <main className="main-content">
               <PageTransition>{children}</PageTransition>
             </main>
