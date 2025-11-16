@@ -52,6 +52,22 @@ export default function Navbar() {
   const toggle = () => setOpen((prev) => !prev)
   const close = () => setOpen(false)
 
+  // Load language from localStorage on mount
+  useEffect(() => {
+    const savedLang = localStorage.getItem('site-language')
+    if (savedLang === 'en') {
+      setIsEnglish(true)
+      const html = document.documentElement
+      html.lang = 'en'
+      html.dir = 'ltr'
+    } else {
+      setIsEnglish(false)
+      const html = document.documentElement
+      html.lang = 'ar'
+      html.dir = 'rtl'
+    }
+  }, [])
+
   // Handle scroll for navbar visibility
   useEffect(() => {
     const handleScroll = () => {
@@ -78,22 +94,34 @@ export default function Navbar() {
 
   // Handle language toggle
   const toggleLanguage = () => {
-    setIsEnglish(!isEnglish)
-    const html = document.documentElement
-    if (!isEnglish) {
-      html.lang = 'en'
-      html.dir = 'ltr'
-    } else {
-      html.lang = 'ar'
-      html.dir = 'rtl'
-    }
+    setIsEnglish((prev) => {
+      const newLang = !prev
+      const html = document.documentElement
+      
+      if (newLang) {
+        html.lang = 'en'
+        html.dir = 'ltr'
+        localStorage.setItem('site-language', 'en')
+      } else {
+        html.lang = 'ar'
+        html.dir = 'rtl'
+        localStorage.setItem('site-language', 'ar')
+      }
+      
+      return newLang
+    })
   }
 
   const scrollOpacity = Math.min(1, lastScrollY / 200)
   const headerClass = `main-header-new ${scrollDirection === 'down' && isScrolled ? 'header-hidden' : ''} ${isScrolled ? 'header-scrolled' : ''}`
 
   return (
-    <nav className={headerClass} style={{ opacity: isScrolled ? 1 - scrollOpacity * 0.3 : 1 }}>
+    <nav 
+      className={headerClass} 
+      style={{ opacity: isScrolled ? 1 - scrollOpacity * 0.3 : 1 }}
+      dir={isEnglish ? 'ltr' : 'rtl'}
+      lang={isEnglish ? 'en' : 'ar'}
+    >
       {/* Top Bar - Quick Links */}
       <div className="header-top-bar">
         <div className="header-top-content">
