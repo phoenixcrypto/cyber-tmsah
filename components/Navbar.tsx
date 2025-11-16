@@ -122,18 +122,6 @@ export default function Navbar() {
       dir={isEnglish ? 'ltr' : 'rtl'}
       lang={isEnglish ? 'en' : 'ar'}
     >
-      {/* Top Bar - Quick Links */}
-      <div className="header-top-bar">
-        <div className="header-top-content">
-          {/* Quick Links */}
-          <div className="header-quick-links">
-            <Link href="/about" prefetch={false} className="quick-link">من نحن</Link>
-            <Link href="/contact" prefetch={false} className="quick-link">اتصل بنا</Link>
-            <Link href="/team" prefetch={false} className="quick-link">فريق العمل</Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main Header - Logo & Navigation */}
       <div className="header-main-bar">
         <div className="header-main-content">
@@ -148,39 +136,59 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Logo Center - SVG Logo */}
-          <Link href="/" className="logo-new" prefetch={false} onClick={close}>
-            <svg className="logo-svg" viewBox="0 0 300 70" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" style={{ stopColor: '#ff3b40', stopOpacity: 1 }} />
-                  <stop offset="50%" style={{ stopColor: '#ff1f28', stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: '#ff3b40', stopOpacity: 1 }} />
-                </linearGradient>
-                <filter id="logoGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                  <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
-              <text 
-                x="150" 
-                y="40" 
-                fontFamily="Arial, sans-serif" 
-                fontSize="32" 
-                fontWeight="900" 
-                textAnchor="middle" 
-                fill="url(#logoGradient)" 
-                filter="url(#logoGlow)"
-                style={{ letterSpacing: '2px' }}
-              >
-                Cyber TMSAH
-              </text>
-            </svg>
-            <div className="logo-sub-text">منصة تعليمية متكاملة للأمن السيبراني</div>
-          </Link>
+          {/* Center Section - Quick Links & Logo */}
+          <div className="header-center-section">
+            {/* Quick Links Above Logo */}
+            <div className="header-quick-links-center">
+              <Link href="/about" prefetch={false} className="quick-link-center">من نحن</Link>
+              <Link href="/contact" prefetch={false} className="quick-link-center">اتصل بنا</Link>
+              <Link href="/team" prefetch={false} className="quick-link-center">فريق العمل</Link>
+            </div>
+
+            {/* Logo Center - SVG Logo with Color Gradient */}
+            <Link href="/" className="logo-new" prefetch={false} onClick={close}>
+              <svg className="logo-svg" viewBox="0 0 300 70" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="logoGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <text 
+                  x="80" 
+                  y="40" 
+                  fontFamily="Arial, sans-serif" 
+                  fontSize="32" 
+                  fontWeight="900" 
+                  textAnchor="middle" 
+                  fill="#ff3b40"
+                  filter="url(#logoGlow)"
+                  className="logo-text-cyber"
+                  style={{ letterSpacing: '2px' }}
+                >
+                  Cyber
+                </text>
+                <text 
+                  x="200" 
+                  y="40" 
+                  fontFamily="Arial, sans-serif" 
+                  fontSize="32" 
+                  fontWeight="900" 
+                  textAnchor="middle" 
+                  fill="#f9fafb"
+                  filter="url(#logoGlow)"
+                  className="logo-text-tmsah"
+                  style={{ letterSpacing: '2px' }}
+                >
+                  TMSAH
+                </text>
+              </svg>
+              <div className="logo-sub-text">منصة تعليمية متكاملة للأمن السيبراني</div>
+            </Link>
+          </div>
 
           {/* Right Actions - Empty for now */}
           <div className="header-right-actions"></div>
