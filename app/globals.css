@@ -108,7 +108,7 @@ button, input, textarea, select {
   color: var(--primary-white);
 }
 
-/* New Header Design - Multi-layer Header */
+/* New Header Design - Premium Full-Width with Gradient Border */
 .main-header-new {
   position: fixed;
   top: 0;
@@ -116,21 +116,62 @@ button, input, textarea, select {
   right: 0;
   width: 100%;
   z-index: 1000;
-  background-color: rgba(10, 10, 10, 0.9);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
-  border-bottom: 1px solid rgba(255, 59, 64, 0.1);
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.9) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 -1px 0 rgba(255, 59, 64, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 2px solid transparent;
+  background-image: 
+    linear-gradient(180deg, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.9) 100%),
+    linear-gradient(90deg, transparent 0%, rgba(255, 59, 64, 0.3) 50%, transparent 100%);
+  background-clip: padding-box, border-box;
+}
+
+.main-header-new::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 59, 64, 0.4) 20%, 
+    rgba(255, 59, 64, 0.6) 50%, 
+    rgba(255, 59, 64, 0.4) 80%, 
+    transparent 100%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .main-header-new.header-hidden {
   transform: translateY(-100%);
+  opacity: 0;
 }
 
 .main-header-new.header-scrolled {
-  background: rgba(4, 4, 4, 0.92);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255, 59, 64, 0.15);
+  background: linear-gradient(180deg, rgba(4, 4, 4, 0.98) 0%, rgba(4, 4, 4, 0.95) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(255, 59, 64, 0.3);
+}
+
+.main-header-new.header-scrolled::after {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 59, 64, 0.5) 20%, 
+    rgba(255, 59, 64, 0.7) 50%, 
+    rgba(255, 59, 64, 0.5) 80%, 
+    transparent 100%);
 }
 
 /* Sidebar Quick Links */
@@ -532,11 +573,12 @@ button, input, textarea, select {
   background: var(--surface-3);
 }
 
-/* Main Header Bar - Logo & Actions - Simplified */
+/* Main Header Bar - Premium Design */
 .header-main-bar {
   background: transparent;
   border-bottom: none;
-  padding: 0.75rem 0;
+  padding: 1rem 0;
+  position: relative;
 }
 
 .header-main-content {
@@ -612,41 +654,65 @@ button, input, textarea, select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  transition: all 0.2s ease;
+  gap: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
   max-width: 100%;
+  position: relative;
+}
+
+.logo-new::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(255, 59, 64, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.logo-new:hover::before {
+  opacity: 1;
 }
 
 .logo-svg {
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   height: auto;
-  min-height: 50px;
-  transition: all 0.2s ease;
+  min-height: 55px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: visible;
+  filter: drop-shadow(0 2px 8px rgba(255, 59, 64, 0.2));
 }
 
 .logo-text-cyber {
-  transition: fill 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 .logo-text-tmsah {
-  transition: fill 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 .logo-new:hover .logo-text-cyber {
   fill: #f9fafb;
+  filter: drop-shadow(0 0 12px rgba(249, 250, 251, 0.6));
 }
 
 .logo-new:hover .logo-text-tmsah {
   fill: #ff3b40;
+  filter: drop-shadow(0 0 12px rgba(255, 59, 64, 0.6));
 }
 
 .logo-new:hover .logo-svg {
-  opacity: 0.9;
+  transform: scale(1.02);
+  filter: drop-shadow(0 4px 16px rgba(255, 59, 64, 0.4));
 }
 
 .logo-sub-text {
@@ -654,7 +720,15 @@ button, input, textarea, select {
   color: var(--accent-silver);
   font-weight: 400;
   margin-top: 0;
-  opacity: 0.8;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.logo-new:hover .logo-sub-text {
+  opacity: 1;
+  color: var(--primary-white);
+  text-shadow: 0 0 8px rgba(255, 59, 64, 0.3);
 }
 
 /* Bottom Navigation Bar - Separated */
@@ -2062,7 +2136,7 @@ select:focus {
 /* Floating Menu Button */
 .floating-menu-btn {
   position: fixed;
-  bottom: 11rem;
+  bottom: 5.5rem;
   left: 2rem;
   z-index: 1001;
   width: 50px;
@@ -2232,6 +2306,7 @@ select:focus {
 [dir="rtl"] .floating-menu-btn {
   right: 2rem;
   left: auto;
+  bottom: 5.5rem;
 }
 
 [dir="rtl"] .floating-mobile-menu-panel {
@@ -2266,7 +2341,7 @@ select:focus {
 
 @media (max-width: 768px) {
   .floating-menu-btn {
-    bottom: 9.5rem;
+    bottom: 5rem;
     left: 1rem;
     width: 45px;
     height: 45px;
@@ -2288,6 +2363,7 @@ select:focus {
   [dir="rtl"] .floating-menu-btn {
     right: 1rem;
     left: auto;
+    bottom: 5rem;
   }
 }
 
