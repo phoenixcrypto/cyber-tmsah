@@ -138,9 +138,9 @@ button, input, textarea, select {
   width: 100%;
   overflow: hidden;
   margin: 0;
-  background: var(--primary-red);
   padding: 0.75rem 0;
   box-sizing: border-box;
+  background: transparent;
 }
 
 .iTopBar-content {
@@ -148,35 +148,14 @@ button, input, textarea, select {
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
-}
-
-.iTopBar-social {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.iTopBar-social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--primary-white);
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.iTopBar-social-icon:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  background: var(--primary-red);
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .iTopBar-links {
@@ -184,6 +163,7 @@ button, input, textarea, select {
   gap: 1.5rem;
   align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .iTopBar-link {
@@ -1143,15 +1123,6 @@ button, input, textarea, select {
     gap: 1rem;
   }
   
-  .iTopBar-social {
-    gap: 0.75rem;
-  }
-  
-  .iTopBar-social-icon {
-    width: 32px;
-    height: 32px;
-  }
-  
   .iTopBar-links {
     gap: 1rem;
   }
@@ -2091,17 +2062,6 @@ footer {
   .iTopBar-content {
     padding: 0 0.75rem;
     gap: 0.75rem;
-    flex-direction: column;
-  }
-  
-  .iTopBar-social {
-    gap: 0.5rem;
-    justify-content: center;
-  }
-  
-  .iTopBar-social-icon {
-    width: 28px;
-    height: 28px;
   }
   
   .iTopBar-links {

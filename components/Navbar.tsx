@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Menu, X, ChevronDown, Home, Youtube, Send, Instagram, Facebook, MessageCircle, Users, Star, Mail, User } from 'lucide-react'
+import { Menu, X, ChevronDown, Home, Users, Mail, User } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import NewsTicker from './NewsTicker'
 
@@ -87,49 +87,22 @@ export default function Navbar() {
       {/* News Ticker */}
       <NewsTicker />
 
-      {/* Top Bar - Social Links & Quick Links */}
+      {/* Top Bar - Quick Links Only */}
       <div className="iTopBar">
         <div className="iTopBar-content">
-          {/* Social Media Icons - Left Side */}
-          <div className="iTopBar-social">
-            <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
-              <Youtube className="w-5 h-5" />
-            </Link>
-            <Link href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
-              <Send className="w-5 h-5" />
-            </Link>
-            <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
-              <Instagram className="w-5 h-5" />
-            </Link>
-            <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
-              <Facebook className="w-5 h-5" />
-            </Link>
-            <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="iTopBar-social-icon" prefetch={false}>
-              <MessageCircle className="w-5 h-5" />
-            </Link>
-          </div>
-
-          {/* Quick Links with Icons - Right Side */}
+          {/* Quick Links - Centered */}
           <div className="iTopBar-links">
-            <Link href="/team" prefetch={false} className="iTopBar-link">
-              <Users className="w-4 h-4" />
-              <span>{t('nav.team')}</span>
-            </Link>
-            <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="iTopBar-link" prefetch={false}>
-              <MessageCircle className="w-4 h-4" />
-              <span>{t('nav.whatsapp')}</span>
-            </Link>
-            <Link href="/contribute" prefetch={false} className="iTopBar-link">
-              <Star className="w-4 h-4" />
-              <span>{t('nav.services')}</span>
+            <Link href="/about" prefetch={false} className="iTopBar-link">
+              <User className="w-4 h-4" />
+              <span>{t('nav.about')}</span>
             </Link>
             <Link href="/contact" prefetch={false} className="iTopBar-link">
               <Mail className="w-4 h-4" />
               <span>{t('nav.contact')}</span>
             </Link>
-            <Link href="/about" prefetch={false} className="iTopBar-link">
-              <User className="w-4 h-4" />
-              <span>{t('nav.about')}</span>
+            <Link href="/team" prefetch={false} className="iTopBar-link">
+              <Users className="w-4 h-4" />
+              <span>{t('nav.team')}</span>
             </Link>
           </div>
         </div>
