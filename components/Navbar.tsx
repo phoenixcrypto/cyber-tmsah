@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, Search, Settings, Bookmark, Home, Youtube, Send, Instagram, Facebook, MessageCircle } from 'lucide-react'
 
 interface NavItem {
   label: string
@@ -49,40 +49,91 @@ export default function Navbar() {
   const close = () => setOpen(false)
 
   return (
-    <nav className="main-header">
-      <div className="nav-container">
-        <button className="mobile-menu-button" onClick={toggle} aria-label="القائمة">
-          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+    <nav className="main-header-new">
+      {/* Top Bar - Social Links & Quick Links */}
+      <div className="header-top-bar">
+        <div className="header-top-content">
+          {/* Social Media Links */}
+          <div className="header-social-links">
+            <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
+              <Youtube className="w-4 h-4" />
+            </Link>
+            <Link href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
+              <Send className="w-4 h-4" />
+            </Link>
+            <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
+              <Instagram className="w-4 h-4" />
+            </Link>
+            <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
+              <Facebook className="w-4 h-4" />
+            </Link>
+            <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
+              <MessageCircle className="w-4 h-4" />
+            </Link>
+          </div>
 
-        {/* الأقسام على اليمين (nav-left في RTL) - 4 أقسام */}
-        <ul className="nav-links nav-left">
-          {/* الجدول الدراسي أولاً */}
-          <li>
-            <Link href="/schedule" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              الجدول الدراسي
+          {/* Quick Links */}
+          <div className="header-quick-links">
+            <Link href="/about" prefetch={false} className="quick-link">من نحن</Link>
+            <Link href="/#contact" prefetch={false} className="quick-link">اتصل بنا</Link>
+            <Link href="/#team" prefetch={false} className="quick-link">فريق العمل</Link>
+            <Link href="/contribute" prefetch={false} className="quick-link">خدماتنا</Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Header - Logo & Navigation */}
+      <div className="header-main-bar">
+        <div className="header-main-content">
+          <button className="mobile-menu-button" onClick={toggle} aria-label="القائمة">
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+
+          {/* Left Actions */}
+          <div className="header-left-actions">
+            <button className="header-action-btn" aria-label="بحث">
+              <Search className="w-5 h-5" />
+            </button>
+            <button className="header-action-btn" aria-label="الإعدادات">
+              <Settings className="w-5 h-5" />
+            </button>
+            <button className="header-action-btn" aria-label="المفضلة">
+              <Bookmark className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Logo Center */}
+          <Link href="/" className="logo-new" prefetch={false} onClick={close}>
+            <div className="logo-main-text">Cyber TMSAH</div>
+            <div className="logo-sub-text">منصة تعليمية متكاملة للأمن السيبراني</div>
+          </Link>
+
+          {/* Right Actions */}
+          <div className="header-right-actions">
+            <Link href="/" prefetch={false} className="header-action-link">
+              <Home className="w-5 h-5" />
+              <span>الرئيسية</span>
             </Link>
-          </li>
-          
-          {/* المحتوى التعليمي */}
-          <li>
-            <Link href="/materials" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              المحتوى التعليمي
-            </Link>
-          </li>
-          
-          {/* خريطة الطريق */}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation Bar */}
+      <div className="header-bottom-bar">
+        <div className="header-bottom-content">
+          <Link href="/schedule" prefetch={false} className="bottom-nav-link bottom-nav-primary" onClick={close}>
+            الجدول الدراسي
+          </Link>
+          <Link href="/materials" prefetch={false} className="bottom-nav-link bottom-nav-primary" onClick={close}>
+            المحتوى التعليمي
+          </Link>
           {securityGuideLinks.map((item) => (
-            <li key={item.href}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
+            <Link key={item.href} href={item.href} prefetch={false} className="bottom-nav-link" onClick={close}>
+              {item.label}
+            </Link>
           ))}
-          
-          {/* Dropdown للمصادر المصنفة */}
-          <li className="dropdown">
-            <Link href="#" prefetch={false} className="nav-link" onClick={(e) => e.preventDefault()}>
+          <div className="bottom-nav-dropdown">
+            <Link href="#" prefetch={false} className="bottom-nav-link" onClick={(e) => e.preventDefault()}>
               {resourcesDropdown.label}
               <ChevronDown className="w-4 h-4" style={{ marginRight: '0.25rem', display: 'inline' }} />
             </Link>
@@ -99,44 +150,16 @@ export default function Navbar() {
                 </Link>
               ))}
             </div>
-          </li>
-        </ul>
-
-        {/* اسم الموقع في المنتصف - ثابت */}
-        <Link href="/" className="logo logo-center" prefetch={false} onClick={close}>
-          <span>Cyber</span> TMSAH
-        </Link>
-
-        {/* الأقسام على اليسار (nav-right في RTL) - 4 أقسام */}
-        <ul className="nav-links nav-right">
-          {/* دليل المهارات المهنية */}
-          <li>
-            <Link href="/expertise-guide" prefetch={false} className="nav-link" onClick={close}>
-              دليل المهارات المهنية
+          </div>
+          {additionalLinks.map((item) => (
+            <Link key={item.href} href={item.href} prefetch={false} className="bottom-nav-link" onClick={close}>
+              {item.label}
             </Link>
-          </li>
-          
-          {/* الأخبار والتحديثات */}
-          <li>
-            <Link href="/evaluation" prefetch={false} className="nav-link" onClick={close}>
-              الأخبار والتحديثات
-            </Link>
-          </li>
-          
-          {/* ساهم معنا */}
-          <li>
-            <Link href="/contribute" prefetch={false} className="nav-link" onClick={close}>
-              ساهم معنا
-            </Link>
-          </li>
-          
-          {/* عن المنصة في النهاية */}
-          <li>
-            <Link href="/about" prefetch={false} className="nav-link" onClick={close}>
-              عن المنصة
-            </Link>
-          </li>
-        </ul>
+          ))}
+          <Link href="/about" prefetch={false} className="bottom-nav-link" onClick={close}>
+            عن المنصة
+          </Link>
+        </div>
       </div>
 
       {/* Mobile Menu */}
