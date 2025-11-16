@@ -9,6 +9,7 @@ import FloatingLanguageButton from '@/components/FloatingLanguageButton'
 import FloatingMenuButton from '@/components/FloatingMenuButton'
 import SidebarQuickLinks from '@/components/SidebarQuickLinks'
 import BottomNavigation from '@/components/BottomNavigation'
+import PageTransition from '@/components/PageTransition'
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -77,7 +78,9 @@ export default function RootLayout({
             <Navbar />
             <SidebarQuickLinks />
             <BottomNavigation />
-            <main className="main-content">{children}</main>
+            <main className="main-content">
+              <PageTransition>{children}</PageTransition>
+            </main>
             <Footer />
             <FloatingMenuButton />
             <FloatingLanguageButton />
