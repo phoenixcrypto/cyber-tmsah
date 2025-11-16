@@ -10,7 +10,7 @@ export default function BottomNavigation() {
   const securityGuideLinks = [
     { label: t('nav.roadmap'), href: '/roadmap' },
     { label: t('nav.expertise'), href: '/expertise-guide' },
-    { label: t('nav.evaluation'), href: '/evaluation' },
+    { label: t('nav.news'), href: '/evaluation' },
   ]
 
   const resourcesDropdown = {
