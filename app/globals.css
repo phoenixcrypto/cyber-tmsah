@@ -116,10 +116,11 @@ button, input, textarea, select {
   right: 0;
   width: 100%;
   z-index: 1000;
-  background: var(--surface-1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  background-color: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
-  border-bottom: 1px solid var(--border-dark);
+  border-bottom: 1px solid rgba(255, 59, 64, 0.1);
 }
 
 .main-header-new.header-hidden {
@@ -127,9 +128,9 @@ button, input, textarea, select {
 }
 
 .main-header-new.header-scrolled {
-  background: rgba(4, 4, 4, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-strong);
+  background: rgba(4, 4, 4, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 59, 64, 0.15);
 }
 
 /* Sidebar Quick Links */
@@ -531,11 +532,11 @@ button, input, textarea, select {
   background: var(--surface-3);
 }
 
-/* Main Header Bar - Logo & Actions */
+/* Main Header Bar - Logo & Actions - Simplified */
 .header-main-bar {
-  background: var(--surface-1);
-  border-bottom: 1px solid var(--border-dark);
-  padding: 1rem 0;
+  background: transparent;
+  border-bottom: none;
+  padding: 0.75rem 0;
 }
 
 .header-main-content {
@@ -543,7 +544,7 @@ button, input, textarea, select {
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 2rem;
   position: relative;
@@ -611,18 +612,18 @@ button, input, textarea, select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
   width: 100%;
   max-width: 100%;
 }
 
 .logo-svg {
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   height: auto;
-  min-height: 70px;
-  transition: all 0.3s ease;
+  min-height: 50px;
+  transition: all 0.2s ease;
   overflow: visible;
 }
 
@@ -645,15 +646,15 @@ button, input, textarea, select {
 }
 
 .logo-new:hover .logo-svg {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 10px rgba(255, 59, 64, 0.6));
+  opacity: 0.9;
 }
 
 .logo-sub-text {
   font-size: 0.85rem;
   color: var(--accent-silver);
   font-weight: 400;
-  margin-top: 0.25rem;
+  margin-top: 0;
+  opacity: 0.8;
 }
 
 /* Bottom Navigation Bar - Separated */
@@ -1914,21 +1915,21 @@ select:focus {
 
 .main-content {
   flex: 1;
-  padding-top: 140px;
+  padding-top: 120px;
   padding-bottom: 80px;
   min-height: 100vh;
 }
 
 @media (max-width: 1024px) {
   .main-content {
-    padding-top: 130px;
+    padding-top: 110px;
     padding-bottom: 70px;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
-    padding-top: 120px;
+    padding-top: 100px;
     padding-bottom: 60px;
   }
 }
@@ -2061,8 +2062,8 @@ select:focus {
 /* Floating Menu Button */
 .floating-menu-btn {
   position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
+  bottom: 11rem;
+  left: 2rem;
   z-index: 1001;
   width: 50px;
   height: 50px;
@@ -2229,8 +2230,8 @@ select:focus {
 }
 
 [dir="rtl"] .floating-menu-btn {
-  right: auto;
-  left: 1.5rem;
+  right: 2rem;
+  left: auto;
 }
 
 [dir="rtl"] .floating-mobile-menu-panel {
@@ -2265,8 +2266,8 @@ select:focus {
 
 @media (max-width: 768px) {
   .floating-menu-btn {
-    top: 1rem;
-    right: 1rem;
+    bottom: 9.5rem;
+    left: 1rem;
     width: 45px;
     height: 45px;
   }
@@ -2282,6 +2283,11 @@ select:focus {
   
   .floating-mobile-menu-panel ul {
     padding: 4rem 1rem 2rem;
+  }
+  
+  [dir="rtl"] .floating-menu-btn {
+    right: 1rem;
+    left: auto;
   }
 }
 
