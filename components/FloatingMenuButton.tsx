@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, Home, Calendar, BookOpen, Map, GraduationCap, Newspaper, Library, Video, Headphones, Globe, Heart } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function FloatingMenuButton() {
@@ -13,29 +13,30 @@ export default function FloatingMenuButton() {
   const close = () => setOpen(false)
 
   const primaryLinks = [
-    { label: t('nav.schedule'), href: '/schedule' },
-    { label: t('nav.materials'), href: '/materials' },
+    { label: t('nav.schedule'), href: '/schedule', icon: Calendar },
+    { label: t('nav.materials'), href: '/materials', icon: BookOpen },
   ]
 
   const securityGuideLinks = [
-    { label: t('nav.roadmap'), href: '/roadmap' },
-    { label: t('nav.expertise'), href: '/expertise-guide' },
-    { label: t('nav.news'), href: '/evaluation' },
+    { label: t('nav.roadmap'), href: '/roadmap', icon: Map },
+    { label: t('nav.expertise'), href: '/expertise-guide', icon: GraduationCap },
+    { label: t('nav.news'), href: '/evaluation', icon: Newspaper },
   ]
 
   const resourcesDropdown = {
     label: t('nav.resources'),
+    icon: Library,
     items: [
-      { label: t('nav.courses'), href: '/courses' },
-      { label: t('nav.books'), href: '/books' },
-      { label: t('nav.videos'), href: '/videos' },
-      { label: t('nav.podcasts'), href: '/podcasts' },
-      { label: t('nav.platforms'), href: '/platforms' },
+      { label: t('nav.courses'), href: '/courses', icon: GraduationCap },
+      { label: t('nav.books'), href: '/books', icon: BookOpen },
+      { label: t('nav.videos'), href: '/videos', icon: Video },
+      { label: t('nav.podcasts'), href: '/podcasts', icon: Headphones },
+      { label: t('nav.platforms'), href: '/platforms', icon: Globe },
     ],
   }
 
   const additionalLinks = [
-    { label: t('nav.contribute'), href: '/contribute' },
+    { label: t('nav.contribute'), href: '/contribute', icon: Heart },
   ]
 
   return (
@@ -56,52 +57,75 @@ export default function FloatingMenuButton() {
           {/* Home Page First */}
           <li>
             <Link href="/" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              {t('nav.home')}
+              <Home className="w-5 h-5" />
+              <span>{t('nav.home')}</span>
             </Link>
           </li>
           
           {/* Primary Sections */}
-          {primaryLinks.map((item) => (
-            <li key={`mobile-${item.href}`}>
-              <Link href={item.href} prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {primaryLinks.map((item) => {
+            const Icon = item.icon
+            return (
+              <li key={`mobile-${item.href}`}>
+                <Link href={item.href} prefetch={false} className="nav-link nav-link-primary" onClick={close}>
+                  <Icon className="w-5 h-5" />
+                  <span>{item.label}</span>
+                </Link>
+              </li>
+            )
+          })}
           
           {/* Other Sections */}
           <li className="mobile-section-title">{t('home.guide.title')}</li>
-          {securityGuideLinks.map((item) => (
-            <li key={`mobile-${item.href}`}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {securityGuideLinks.map((item) => {
+            const Icon = item.icon
+            return (
+              <li key={`mobile-${item.href}`}>
+                <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                  <Icon className="w-5 h-5" />
+                  <span>{item.label}</span>
+                </Link>
+              </li>
+            )
+          })}
           
           {/* Resources Dropdown */}
           <li className="mobile-dropdown-title">
-            <span>{resourcesDropdown.label}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              {(() => {
+                const Icon = resourcesDropdown.icon
+                return Icon ? <Icon className="w-5 h-5" /> : null
+              })()}
+              <span>{resourcesDropdown.label}</span>
+            </div>
             <ChevronDown className="w-4 h-4" />
           </li>
           <ul className="mobile-dropdown-list">
-            {resourcesDropdown.items.map((item) => (
-              <li key={`mobile-${item.href}`}>
-                <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {resourcesDropdown.items.map((item) => {
+              const Icon = item.icon
+              return (
+                <li key={`mobile-${item.href}`}>
+                  <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
           
           {/* Additional Links */}
-          {additionalLinks.map((item) => (
-            <li key={`mobile-${item.href}`}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {additionalLinks.map((item) => {
+            const Icon = item.icon
+            return (
+              <li key={`mobile-${item.href}`}>
+                <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                  <Icon className="w-5 h-5" />
+                  <span>{item.label}</span>
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </div>
 
