@@ -163,6 +163,10 @@ export const translations = {
     'team.member3.resp3': 'الموارد التعليمية',
     'team.member3.resp4': 'تصميم الواجهات',
     
+    // News Ticker
+    'newsTicker.label': 'شريط الأخبار',
+    'newsTicker.noArticles': 'لا توجد مقالات جديدة',
+    
     // Common
     'common.loading': 'جاري التحميل...',
     'common.error': 'حدث خطأ',
@@ -331,6 +335,10 @@ export const translations = {
     'team.member3.resp2': 'Roadmap',
     'team.member3.resp3': 'Educational Resources',
     'team.member3.resp4': 'Interface Design',
+    
+    // News Ticker
+    'newsTicker.label': 'News Ticker',
+    'newsTicker.noArticles': 'No new articles',
     
     // Common
     'common.loading': 'Loading...',

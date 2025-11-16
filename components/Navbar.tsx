@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Menu, X, ChevronDown, Home, Youtube, Send, Instagram, Facebook, MessageCircle, Users, Star, Mail, User } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import NewsTicker from './NewsTicker'
 
 interface NavItem {
   label: string
@@ -83,6 +84,9 @@ export default function Navbar() {
       className={headerClass} 
       style={{ opacity: isScrolled ? 1 - scrollOpacity * 0.3 : 1 }}
     >
+      {/* News Ticker */}
+      <NewsTicker />
+
       {/* Top Bar - Social Links & Quick Links */}
       <div className="iTopBar">
         <div className="iTopBar-content">

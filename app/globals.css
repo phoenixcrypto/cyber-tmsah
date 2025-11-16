@@ -209,6 +209,213 @@ button, input, textarea, select {
   flex-shrink: 0;
 }
 
+/* News Ticker - iNewsTicker Design */
+.iNewsTicker-container {
+  width: 100%;
+  background: var(--primary-red);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.iNewsTicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.iNewsTicker_icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  z-index: 2;
+  background: var(--primary-red);
+  padding-right: 1rem;
+}
+
+.iNewsTicker_icon svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--primary-white);
+  flex-shrink: 0;
+}
+
+.iNewsTicker_label {
+  color: var(--primary-white);
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.iNewsTicker_posts {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+  overflow: hidden;
+  animation: scrollTicker 30s linear infinite;
+  will-change: transform;
+}
+
+.iNewsTicker_posts.paused {
+  animation-play-state: paused;
+}
+
+.iNewsTicker_post {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.iNewsTicker_post-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--primary-white);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  padding: 0.25rem 0;
+}
+
+.iNewsTicker_post-link:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.iNewsTicker_post-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.iNewsTicker_post-separator {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+}
+
+.iNewsTicker_post-subject {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.iNewsTicker_post-arrow {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.iNewsTicker_post-link:hover .iNewsTicker_post-arrow {
+  transform: translateX(4px);
+}
+
+@keyframes scrollTicker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* RTL Support for News Ticker */
+[dir="rtl"] .iNewsTicker_posts {
+  animation: scrollTickerRTL 30s linear infinite;
+}
+
+[dir="rtl"] .iNewsTicker_posts.paused {
+  animation-play-state: paused;
+}
+
+@keyframes scrollTickerRTL {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
+/* Responsive News Ticker */
+@media (max-width: 1024px) {
+  .iNewsTicker {
+    padding: 0.6rem 1rem;
+    gap: 0.75rem;
+  }
+  
+  .iNewsTicker_icon {
+    padding-right: 0.75rem;
+  }
+  
+  .iNewsTicker_icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .iNewsTicker_label {
+    font-size: 0.85rem;
+  }
+  
+  .iNewsTicker_posts {
+    gap: 1.5rem;
+  }
+  
+  .iNewsTicker_post-title {
+    font-size: 0.85rem;
+  }
+  
+  .iNewsTicker_post-subject {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .iNewsTicker {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .iNewsTicker_icon {
+    padding-right: 0.5rem;
+  }
+  
+  .iNewsTicker_icon svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .iNewsTicker_label {
+    font-size: 0.8rem;
+  }
+  
+  .iNewsTicker_posts {
+    gap: 1rem;
+    animation-duration: 25s;
+  }
+  
+  .iNewsTicker_post-title {
+    font-size: 0.8rem;
+  }
+  
+  .iNewsTicker_post-separator {
+    display: none;
+  }
+  
+  .iNewsTicker_post-subject {
+    display: none;
+  }
+  
+  .iNewsTicker_post-arrow {
+    width: 12px;
+    height: 12px;
+  }
+}
+
 /* Center Section - Quick Links & Logo */
 .header-center-section {
   flex: 1;
