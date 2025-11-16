@@ -2,6 +2,7 @@
 
 import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function AboutPage() {
 
@@ -233,7 +234,14 @@ export default function AboutPage() {
             <div className="team-member-card-about">
               <div className="team-member-image-container-about">
                 <div className="team-member-image-placeholder-about">
-                  <Users className="w-16 h-16 text-cyber-neon/50" />
+                  <Image
+                    src="/images/zeyad-mohamed.jpg"
+                    alt="زياد محمد"
+                    width={200}
+                    height={200}
+                    className="team-member-image-about"
+                    priority
+                  />
                 </div>
               </div>
               <div className="team-member-info-about">
@@ -268,7 +276,14 @@ export default function AboutPage() {
             <div className="team-member-card-about">
               <div className="team-member-image-container-about">
                 <div className="team-member-image-placeholder-about">
-                  <Users className="w-16 h-16 text-cyber-neon/50" />
+                  <Image
+                    src="/images/youssef-waleed.jpg"
+                    alt="يوسف وليد"
+                    width={200}
+                    height={200}
+                    className="team-member-image-about"
+                    priority
+                  />
                 </div>
               </div>
               <div className="team-member-info-about">
@@ -295,7 +310,14 @@ export default function AboutPage() {
             <div className="team-member-card-about">
               <div className="team-member-image-container-about">
                 <div className="team-member-image-placeholder-about">
-                  <Users className="w-16 h-16 text-cyber-neon/50" />
+                  <Image
+                    src="/images/moamen-haytham.jpg"
+                    alt="مؤمن هيثم"
+                    width={200}
+                    height={200}
+                    className="team-member-image-about"
+                    priority
+                  />
                 </div>
               </div>
               <div className="team-member-info-about">

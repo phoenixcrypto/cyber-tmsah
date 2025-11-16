@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Calendar, BookOpen, Target, Users, Award, MessageCircle, Mail, GraduationCap, Video, Headphones, Globe } from 'lucide-react'
 
 const stats = [
@@ -33,6 +34,7 @@ const teamMembers = [
     initials: 'ZM',
     name: 'زياد محمد',
     role: 'مؤسس ومطور المنصة',
+    image: '/images/zeyad-mohamed.jpg',
     description: 'مؤسس المنصة ومطورها الرئيسي، متخصص في هندسة البرمجيات وتطوير الأنظمة التعليمية. أؤمن بقوة التكنولوجيا في تحويل التعليم وبناء منصات تعليمية مبتكرة تلبي احتياجات الطلاب العرب.',
     responsibilities: [
       'الجدول الدراسي',
@@ -49,6 +51,7 @@ const teamMembers = [
     initials: 'YW',
     name: 'يوسف وليد',
     role: 'مطور المنصة',
+    image: '/images/youssef-waleed.jpg',
     description: 'مطور متخصص في تطوير الواجهات والتطبيقات التعليمية، أساهم في بناء تجارب مستخدم متميزة.',
     responsibilities: [
       'تطوير الواجهات',
@@ -63,6 +66,7 @@ const teamMembers = [
     initials: 'MH',
     name: 'مؤمن هيثم',
     role: 'مطور ومصمم المنصة',
+    image: '/images/moamen-haytham.jpg',
     description: 'مطور ومصمم واجهات مستخدم متخصص في إنشاء تجارب تفاعلية وجذابة. أركز على دمج الجمالية مع الوظيفية لضمان تجربة مستخدم سلسة وممتعة في بيئة تعليمية احترافية.',
     responsibilities: [
       'دليل الأمن السيبراني',
@@ -241,7 +245,17 @@ export default function HomePage() {
               <div key={member.name} className="team-card-enhanced" style={{ animationDelay: `${index * 0.15}s` }}>
                 <div className="team-card-header">
                   <div className="team-card-avatar">
-                    {member.initials}
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        width={60}
+                        height={60}
+                        className="team-card-avatar-image"
+                      />
+                    ) : (
+                      member.initials
+                    )}
                   </div>
                   <div className="team-card-info">
                     <h3 className="team-card-name">{member.name}</h3>

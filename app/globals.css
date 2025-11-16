@@ -466,6 +466,31 @@ button, input, textarea, select {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-right: 0.5rem;
+}
+
+/* Custom Scrollbar for Mobile Dropdown */
+.mobile-dropdown-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mobile-dropdown-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.mobile-dropdown-list::-webkit-scrollbar-thumb {
+  background: var(--primary-red);
+  border-radius: 10px;
+}
+
+.mobile-dropdown-list::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-red-soft);
 }
 
 .mobile-dropdown-list li {
@@ -535,6 +560,11 @@ button, input, textarea, select {
   background-color: rgba(10, 10, 10, 0.98);
   border-top: 1px solid var(--border-dark);
   border-bottom: 1px solid var(--border-dark);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .mobile-menu-panel ul {
@@ -1288,6 +1318,11 @@ footer {
   
   .mobile-dropdown-list {
     grid-template-columns: 1fr;
+    max-height: 250px;
+  }
+  
+  .mobile-menu-panel {
+    max-height: calc(100vh - 70px);
   }
   
   .team-section {
@@ -3104,6 +3139,15 @@ footer {
   font-size: 1.5rem;
   font-weight: 600;
   border: 1px solid var(--primary-red);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.team-card-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .team-card-info {
@@ -3381,7 +3425,8 @@ footer {
   background: linear-gradient(135deg, rgba(255, 59, 64, 0.35), rgba(255, 59, 64, 0.25));
 }
 
-.team-member-image-placeholder-about img {
+.team-member-image-placeholder-about img,
+.team-member-image-about {
   width: 100%;
   height: 100%;
   object-fit: cover;
