@@ -17,7 +17,7 @@ export default function Footer() {
     <footer>
       <div className="footer-content footer-content-compact">
         <div className="footer-section">
-          <h4 className="text-cyber-neon mb-2 font-bold">{t('footer.quickLinks')}</h4>
+          <h4>{t('footer.quickLinks')}</h4>
           <ul className="footer-links">
             {quickLinks.map((item) => (
               <li key={item.labelKey}>
