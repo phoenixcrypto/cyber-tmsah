@@ -1,45 +1,14 @@
 'use client'
 
 import { Languages } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function FloatingLanguageButton() {
-  const [isEnglish, setIsEnglish] = useState(false)
+  const { language, setLanguage } = useLanguage()
+  const isEnglish = language === 'en'
 
-  // Load language from localStorage on mount
-  useEffect(() => {
-    const savedLang = localStorage.getItem('site-language')
-    if (savedLang === 'en') {
-      setIsEnglish(true)
-      const html = document.documentElement
-      html.lang = 'en'
-      html.dir = 'ltr'
-    } else {
-      setIsEnglish(false)
-      const html = document.documentElement
-      html.lang = 'ar'
-      html.dir = 'rtl'
-    }
-  }, [])
-
-  // Handle language toggle
   const toggleLanguage = () => {
-    setIsEnglish((prev) => {
-      const newLang = !prev
-      const html = document.documentElement
-      
-      if (newLang) {
-        html.lang = 'en'
-        html.dir = 'ltr'
-        localStorage.setItem('site-language', 'en')
-      } else {
-        html.lang = 'ar'
-        html.dir = 'rtl'
-        localStorage.setItem('site-language', 'ar')
-      }
-      
-      return newLang
-    })
+    setLanguage(isEnglish ? 'ar' : 'en')
   }
 
   return (

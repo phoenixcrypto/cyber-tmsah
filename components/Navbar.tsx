@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Menu, X, ChevronDown, Home, Youtube, Send, Instagram, Facebook, MessageCircle, Users, Star, Mail, User } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface NavItem {
   label: string
@@ -14,35 +15,34 @@ interface DropdownItem {
   href: string
 }
 
-// تعريف البيانات خارج المكون لتجنب مشاكل hydration
-const securityGuideLinks: NavItem[] = [
-  { label: 'خريطة الطريق', href: '/roadmap' },
-]
-
-const resourcesDropdown: { label: string; items: DropdownItem[] } = {
-  label: 'الموارد التعليمية',
-  items: [
-    { label: 'الدورات', href: '/courses' },
-    { label: 'الكتب', href: '/books' },
-    { label: 'الفيديوهات المقترحة', href: '/videos' },
-    { label: 'البودكاست', href: '/podcasts' },
-    { label: 'مواقع ومنصات تعليمية', href: '/platforms' },
-  ],
-}
-
-const additionalLinks: NavItem[] = [
-  { label: 'دليل المهارات المهنية', href: '/expertise-guide' },
-  { label: 'الأخبار والتحديثات', href: '/evaluation' },
-  { label: 'ساهم معنا', href: '/contribute' },
-]
-
-// إعادة ترتيب الأقسام: الرئيسية، الجدول، المواد، ثم باقي الصفحات، وأخيراً About
-const primaryLinks: NavItem[] = [
-  { label: 'الجدول الدراسي', href: '/schedule' },
-  { label: 'المحتوى التعليمي', href: '/materials' },
-]
-
 export default function Navbar() {
+  const { t } = useLanguage()
+  
+  const securityGuideLinks: NavItem[] = [
+    { label: t('nav.roadmap'), href: '/roadmap' },
+  ]
+
+  const resourcesDropdown: { label: string; items: DropdownItem[] } = {
+    label: t('nav.resources'),
+    items: [
+      { label: t('nav.courses'), href: '/courses' },
+      { label: t('nav.books'), href: '/books' },
+      { label: t('nav.videos'), href: '/videos' },
+      { label: t('nav.podcasts'), href: '/podcasts' },
+      { label: t('nav.platforms'), href: '/platforms' },
+    ],
+  }
+
+  const additionalLinks: NavItem[] = [
+    { label: t('nav.expertise'), href: '/expertise-guide' },
+    { label: t('nav.news'), href: '/evaluation' },
+    { label: t('nav.contribute'), href: '/contribute' },
+  ]
+
+  const primaryLinks: NavItem[] = [
+    { label: t('nav.schedule'), href: '/schedule' },
+    { label: t('nav.materials'), href: '/materials' },
+  ]
   const [open, setOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up')
@@ -109,23 +109,23 @@ export default function Navbar() {
           <div className="iTopBar-links">
             <Link href="/team" prefetch={false} className="iTopBar-link">
               <Users className="w-4 h-4" />
-              <span>فريق العمل</span>
+              <span>{t('nav.team')}</span>
             </Link>
             <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="iTopBar-link" prefetch={false}>
               <MessageCircle className="w-4 h-4" />
-              <span>واتساب</span>
+              <span>{t('nav.whatsapp')}</span>
             </Link>
             <Link href="/contribute" prefetch={false} className="iTopBar-link">
               <Star className="w-4 h-4" />
-              <span>خدماتنا</span>
+              <span>{t('nav.services')}</span>
             </Link>
             <Link href="/contact" prefetch={false} className="iTopBar-link">
               <Mail className="w-4 h-4" />
-              <span>اتصل بنا</span>
+              <span>{t('nav.contact')}</span>
             </Link>
             <Link href="/about" prefetch={false} className="iTopBar-link">
               <User className="w-4 h-4" />
-              <span>من نحن</span>
+              <span>{t('nav.about')}</span>
             </Link>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default function Navbar() {
                   TMSAH
                 </text>
               </svg>
-              <div className="logo-sub-text">منصة تعليمية متكاملة للأمن السيبراني</div>
+              <div className="logo-sub-text">{t('logo.subtitle')}</div>
             </Link>
           </div>
 
@@ -201,10 +201,10 @@ export default function Navbar() {
             <Home className="w-4 h-4" />
           </Link>
           <Link href="/schedule" prefetch={false} className="bottom-nav-link bottom-nav-primary" onClick={close}>
-            الجدول الدراسي
+            {t('nav.schedule')}
           </Link>
           <Link href="/materials" prefetch={false} className="bottom-nav-link bottom-nav-primary" onClick={close}>
-            المحتوى التعليمي
+            {t('nav.materials')}
           </Link>
           {securityGuideLinks.map((item) => (
             <Link key={item.href} href={item.href} prefetch={false} className="bottom-nav-link" onClick={close}>
@@ -241,14 +241,14 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div className={open ? 'mobile-menu-panel is-open' : 'mobile-menu-panel'}>
         <ul>
-          {/* الصفحة الرئيسية أولاً */}
+          {/* Home Page First */}
           <li>
             <Link href="/" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              الرئيسية
+              {t('nav.home')}
             </Link>
           </li>
           
-          {/* الأقسام الرئيسية المميزة */}
+          {/* Primary Sections */}
           {primaryLinks.map((item) => (
             <li key={`mobile-${item.href}`}>
               <Link href={item.href} prefetch={false} className="nav-link nav-link-primary" onClick={close}>
@@ -257,8 +257,8 @@ export default function Navbar() {
             </li>
           ))}
           
-          {/* باقي الأقسام */}
-          <li className="mobile-section-title">دليل الأمن السيبراني</li>
+          {/* Other Sections */}
+          <li className="mobile-section-title">{t('home.guide.title')}</li>
           {securityGuideLinks.map((item) => (
             <li key={`mobile-${item.href}`}>
               <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
@@ -286,10 +286,10 @@ export default function Navbar() {
             </li>
           ))}
           
-          {/* عن المنصة في النهاية */}
+          {/* About Platform at the end */}
           <li>
             <Link href="/about" prefetch={false} className="nav-link" onClick={close}>
-              عن المنصة
+              {t('nav.aboutPlatform')}
             </Link>
           </li>
         </ul>

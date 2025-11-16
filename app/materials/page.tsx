@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { BookOpen, Calculator, Atom, Database, Globe, Users, ArrowRight } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Subject {
   id: string
@@ -81,6 +82,8 @@ const subjectsData: Subject[] = [
 ]
 
 export default function MaterialsPage() {
+  const { t } = useLanguage()
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -91,11 +94,11 @@ export default function MaterialsPage() {
               <BookOpen className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              المحتوى التعليمي
+              {t('materials.title')}
             </h1>
           </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            الوصول إلى المحتوى التعليمي والموارد الشاملة لجميع المواد الدراسية
+            {t('materials.description')}
           </p>
         </div>
 

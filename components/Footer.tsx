@@ -1,41 +1,44 @@
 'use client'
 
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Footer() {
+  const { t } = useLanguage()
+
   const quickLinks = [
-    { label: 'عن المنصة', href: '/about' },
-    { label: 'الفريق', href: '/#team' },
-    { label: 'اتصل بنا', href: '/#contact' },
-    { label: 'ساهم معنا', href: '/#contribute' },
+    { labelKey: 'nav.aboutPlatform', href: '/about' },
+    { labelKey: 'nav.team', href: '/team' },
+    { labelKey: 'nav.contact', href: '/contact' },
+    { labelKey: 'nav.contribute', href: '/contribute' },
   ]
 
   const resources = [
-    { label: 'الجدول الدراسي', href: '/schedule' },
-    { label: 'المحتوى التعليمي', href: '/materials' },
-    { label: 'خريطة الطريق', href: '/roadmap' },
+    { labelKey: 'nav.schedule', href: '/schedule' },
+    { labelKey: 'nav.materials', href: '/materials' },
+    { labelKey: 'nav.roadmap', href: '/roadmap' },
   ]
 
   return (
     <footer className="border-t-2 border-cyber-neon/30">
       <div className="footer-content footer-content-two-columns">
         <div className="footer-section">
-          <h4 className="text-cyber-neon mb-4 font-bold">روابط سريعة</h4>
+          <h4 className="text-cyber-neon mb-4 font-bold">{t('footer.quickLinks')}</h4>
           <ul className="footer-links">
             {quickLinks.map((item) => (
-              <li key={item.label}>
-                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{item.label}</Link>
+              <li key={item.labelKey}>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{t(item.labelKey)}</Link>
               </li>
             ))}
           </ul>
         </div>
 
         <div className="footer-section">
-          <h4 className="text-cyber-neon mb-4 font-bold">المصادر</h4>
+          <h4 className="text-cyber-neon mb-4 font-bold">{t('footer.resources')}</h4>
           <ul className="footer-links">
             {resources.map((item) => (
-              <li key={item.label}>
-                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{item.label}</Link>
+              <li key={item.labelKey}>
+                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{t(item.labelKey)}</Link>
               </li>
             ))}
           </ul>
@@ -44,7 +47,7 @@ export default function Footer() {
 
       <div className="footer-bottom border-t border-cyber-neon/20 pt-4">
         <p className="text-center">
-          © {new Date().getFullYear()} <Link href="/" prefetch={false} className="text-cyber-neon font-bold hover:text-cyber-green transition-colors active:scale-95 inline-block">سايبر تمساح</Link>. جميع الحقوق محفوظة. صُمم وطُوِّر بحُب ❤️
+          © {new Date().getFullYear()} <Link href="/" prefetch={false} className="text-cyber-neon font-bold hover:text-cyber-green transition-colors active:scale-95 inline-block">Cyber TMSAH</Link>. {t('footer.copyright')}
         </p>
       </div>
     </footer>

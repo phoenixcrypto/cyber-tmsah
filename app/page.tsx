@@ -3,31 +3,35 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, BookOpen, Target, Users, Award, GraduationCap, Video, Headphones, Globe } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const stats = [
-  { icon: BookOpen, value: '7', label: 'مواد دراسية' },
-  { icon: Calendar, value: '15', label: 'مجموعات دراسية' },
-  { icon: Award, value: '6', label: 'أعضاء هيئة التدريس' },
-  { icon: Target, value: '100%', label: 'جاهزية المنصة' },
-]
+export default function HomePage() {
+  const { t } = useLanguage()
 
-const aboutFeatures = [
-  {
-    icon: '✅',
-    title: 'مسارات تعليمية منظمة',
-    description: 'ابدأ من الأساسيات ووصولاً إلى الاحتراف مع تغطية شاملة لمجالات الأمن السيبراني.',
-  },
-  {
-    icon: '⭐',
-    title: 'مصادر ومراجع منتقاة',
-    description: 'أفضل الدورات، الكتب، المنصات، والمختبرات العملية مجمعة في مكان واحد.',
-  },
-  {
-    icon: '💼',
-    title: 'توجيه مهني واضح',
-    description: 'تعرف على المهارات المطلوبة في سوق العمل عبر دليل المهارات المهنية والمسارات الوظيفية.',
-  },
-]
+  const stats = [
+    { icon: BookOpen, value: '7', labelKey: 'home.stats.subjects' },
+    { icon: Calendar, value: '15', labelKey: 'home.stats.groups' },
+    { icon: Award, value: '6', labelKey: 'home.stats.faculty' },
+    { icon: Target, value: '100%', labelKey: 'home.stats.ready' },
+  ]
+
+  const aboutFeatures = [
+    {
+      icon: '✅',
+      titleKey: 'home.about.feature1.title',
+      descriptionKey: 'home.about.feature1.desc',
+    },
+    {
+      icon: '⭐',
+      titleKey: 'home.about.feature2.title',
+      descriptionKey: 'home.about.feature2.desc',
+    },
+    {
+      icon: '💼',
+      titleKey: 'home.about.feature3.title',
+      descriptionKey: 'home.about.feature3.desc',
+    },
+  ]
 
 const teamMembers = [
   {
@@ -81,26 +85,24 @@ const teamMembers = [
   },
 ]
 
-export default function HomePage() {
   return (
     <>
       <section className="hero-section">
-        <div className="motivational-box">{`وَأَنْ لَيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَى • وَأَنَّ سَعْيَهُ سَوْفَ يُرَى`}</div>
+        <div className="motivational-box">{t('home.motivational')}</div>
         <h1>
-          منصة <span className="gradient-text">سايبر تمساح</span> الأكاديمية
+          {t('home.title')}
         </h1>
         <p>
-          مركز متكامل يوفّر لك الجداول الدراسية، المصادر التعليمية، والمسارات المتخصصة في الأمن السيبراني.
-          صُمم بالكامل باللغة العربية مع تجربة حديثة ومتجاوبة على جميع الأجهزة.
+          {t('home.description')}
         </p>
         <div className="hero-buttons">
           <Link href="/schedule" className="cta-button">
             <Calendar className="w-5 h-5" />
-            استعرض الجدول الدراسي
+            {t('home.viewSchedule')}
           </Link>
           <Link href="/materials" className="btn-secondary">
             <BookOpen className="w-5 h-5" />
-            تصفح المحتوى التعليمي
+            {t('home.viewMaterials')}
           </Link>
         </div>
       </section>
@@ -108,12 +110,12 @@ export default function HomePage() {
       <section className="section-wrapper">
         <div className="stats-grid">
           {stats.map((item) => (
-            <div key={item.label} className="stat-card">
+            <div key={item.labelKey} className="stat-card">
               <div className="stat-icon">
                 <item.icon className="w-6 h-6" />
               </div>
               <div className="stat-value">{item.value}</div>
-              <div className="stat-label">{item.label}</div>
+              <div className="stat-label">{t(item.labelKey)}</div>
             </div>
           ))}
         </div>
@@ -123,21 +125,20 @@ export default function HomePage() {
         <div className="about-content-enhanced">
           <div className="about-header-enhanced">
             <h2 className="about-title-enhanced">
-              ما هي <strong className="gradient-text">سايبر تمساح</strong>؟
+              {t('home.about.title')}
             </h2>
             <div className="about-title-underline"></div>
           </div>
           <p className="about-description-enhanced">
-            سايبر تمساح ليست مجرد صفحة لعرض الجداول، بل هي مرجع متكامل لتنظيم الدراسة وتحفيز التعلم الذاتي. تجمع المنصة بين
-            واجهة مرنة للجدول، مكتبة مواد تعليمية جاهزة، وبين دليل الأمن السيبراني المستوحى من المجتمع العربي المتخصص.
+            {t('home.about.description')}
           </p>
 
           <div className="about-features-enhanced">
             {aboutFeatures.map((feature, index) => (
-              <div key={feature.title} className="feature-item-enhanced" style={{ animationDelay: `${index * 0.1}s` }}>
+              <div key={feature.titleKey} className="feature-item-enhanced" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="feature-icon-enhanced">{feature.icon}</div>
-                <h4 className="feature-title-enhanced">{feature.title}</h4>
-                <p className="feature-description-enhanced">{feature.description}</p>
+                <h4 className="feature-title-enhanced">{t(feature.titleKey)}</h4>
+                <p className="feature-description-enhanced">{t(feature.descriptionKey)}</p>
               </div>
             ))}
           </div>
@@ -149,74 +150,74 @@ export default function HomePage() {
         <div className="security-guide-container">
           <div className="security-guide-header">
             <h2 className="security-guide-title">
-              <span className="gradient-text">دليل الأمن السيبراني</span>
+              <span className="gradient-text">{t('home.guide.title')}</span>
             </h2>
             <div className="security-guide-title-underline"></div>
             <p className="security-guide-subtitle">
-              مسارات تعليمية منظمة ومصادر شاملة لمساعدتك في رحلتك في مجال الأمن السيبراني
+              {t('home.guide.subtitle')}
             </p>
           </div>
 
           <div className="security-guide-grid">
-            {/* خريطة الطريق */}
+            {/* Roadmap */}
             <Link href="/roadmap" className="security-card-enhanced security-card-hover" prefetch={false}>
               <div className="security-card-icon">🗺️</div>
-              <h3 className="security-card-title">خريطة الطريق</h3>
+              <h3 className="security-card-title">{t('home.guide.roadmap')}</h3>
               <p className="security-card-description">
-                مسار تعليمي منظم من الأساسيات إلى الاحتراف في الأمن السيبراني
+                {t('home.guide.roadmapDesc')}
               </p>
               <div className="security-card-arrow">→</div>
             </Link>
 
-            {/* الموارد التعليمية */}
+            {/* Educational Resources */}
             <div className="security-card-enhanced security-card-dropdown">
               <div className="security-card-icon">📚</div>
-              <h3 className="security-card-title">الموارد التعليمية</h3>
+              <h3 className="security-card-title">{t('home.guide.resources')}</h3>
               <div className="security-card-links">
                 <Link href="/courses" prefetch={false} className="security-card-link">
-                  <GraduationCap className="w-4 h-4" /> الدورات
+                  <GraduationCap className="w-4 h-4" /> {t('nav.courses')}
                 </Link>
                 <Link href="/books" prefetch={false} className="security-card-link">
-                  <BookOpen className="w-4 h-4" /> الكتب
+                  <BookOpen className="w-4 h-4" /> {t('nav.books')}
                 </Link>
                 <Link href="/videos" prefetch={false} className="security-card-link">
-                  <Video className="w-4 h-4" /> الفيديوهات المقترحة
+                  <Video className="w-4 h-4" /> {t('nav.videos')}
                 </Link>
                 <Link href="/podcasts" prefetch={false} className="security-card-link">
-                  <Headphones className="w-4 h-4" /> البودكاست
+                  <Headphones className="w-4 h-4" /> {t('nav.podcasts')}
                 </Link>
                 <Link href="/platforms" prefetch={false} className="security-card-link">
-                  <Globe className="w-4 h-4" /> مواقع ومنصات تعليمية
+                  <Globe className="w-4 h-4" /> {t('nav.platforms')}
                 </Link>
               </div>
             </div>
 
-            {/* دليل المهارات المهنية */}
+            {/* Professional Skills Guide */}
             <Link href="/expertise-guide" className="security-card-enhanced security-card-hover" prefetch={false}>
               <div className="security-card-icon">💼</div>
-              <h3 className="security-card-title">دليل المهارات المهنية</h3>
+              <h3 className="security-card-title">{t('home.guide.expertise')}</h3>
               <p className="security-card-description">
-                تعلم من تجارب المحترفين ونصائح عملية من خبراء ميدانيين
+                {t('home.guide.expertiseDesc')}
               </p>
               <div className="security-card-arrow">→</div>
             </Link>
 
-            {/* الأخبار والتحديثات */}
+            {/* News & Updates */}
             <Link href="/evaluation" className="security-card-enhanced security-card-hover" prefetch={false}>
               <div className="security-card-icon">📊</div>
-              <h3 className="security-card-title">الأخبار والتحديثات</h3>
+              <h3 className="security-card-title">{t('home.guide.news')}</h3>
               <p className="security-card-description">
-                تابع آخر الأخبار والتقييمات في مجال الأمن السيبراني
+                {t('home.guide.newsDesc')}
               </p>
               <div className="security-card-arrow">→</div>
             </Link>
 
-            {/* ساهم معنا */}
+            {/* Contribute */}
             <Link href="/contribute" className="security-card-enhanced security-card-hover" prefetch={false}>
               <div className="security-card-icon">🤝</div>
-              <h3 className="security-card-title">ساهم معنا</h3>
+              <h3 className="security-card-title">{t('home.guide.contribute')}</h3>
               <p className="security-card-description">
-                انضم إلينا وساهم في إثراء المحتوى التعليمي العربي
+                {t('home.guide.contributeDesc')}
               </p>
               <div className="security-card-arrow">→</div>
             </Link>
@@ -228,11 +229,11 @@ export default function HomePage() {
         <div className="team-container-enhanced">
           <div className="team-header-enhanced">
             <h2 className="team-title-enhanced">
-              فريق العمل <span className="gradient-text">والمساهمون</span>
+              {t('home.team.title')}
             </h2>
             <div className="team-title-underline"></div>
             <p className="team-subtitle-enhanced">
-              مجموعة من المطورين والطلاب المتحمسين يعملون معاً لتوفير أفضل تجربة دراسية عربية رقمية.
+              {t('home.team.description')}
             </p>
           </div>
 
@@ -263,7 +264,7 @@ export default function HomePage() {
                 </p>
                 {member.responsibilities && (
                   <div className="team-card-responsibilities">
-                    <p className="team-card-responsibilities-title">مسؤولياتي:</p>
+                    <p className="team-card-responsibilities-title">{t('home.team.responsibilities')}</p>
                     <ul className="team-card-responsibilities-list">
                       {member.responsibilities.map((responsibility, idx) => (
                         <li key={idx} className="team-card-responsibility-item">
@@ -295,15 +296,14 @@ export default function HomePage() {
       <section id="contribute" className="contribute-section">
         <div className="contribute-content">
           <h2>
-            انضم إلينا و<strong> ساهم معنا</strong>
+            {t('home.contribute.title')}
           </h2>
           <p>
-            المنصة مشروع مجتمعي مفتوح. إذا كانت لديك مصادر، أفكار تطوير، أو ترغب في المساهمة بالمحتوى يمكننا التعاون
-            لبناء مرجع عربي حقيقي للأمن السيبراني والتعليم الأكاديمي.
+            {t('home.contribute.description')}
           </p>
-          <Link href="#contact" className="cta-button">
+          <Link href="/contact" className="cta-button">
             <Users className="w-5 h-5" />
-            تواصل لبدء المساهمة
+            {t('home.contribute.button')}
           </Link>
         </div>
       </section>

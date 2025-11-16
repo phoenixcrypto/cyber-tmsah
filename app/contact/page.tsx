@@ -2,8 +2,10 @@
 
 import { MessageCircle, Mail } from 'lucide-react'
 import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function ContactPage() {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -39,11 +41,11 @@ export default function ContactPage() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <MessageCircle className="w-8 h-8 text-cyber-neon" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              تواصل معنا
+              {t('contact.title')}
             </h1>
           </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-2xl mx-auto">
-            لديك استفسار أو فكرة تطوير؟ يسعدنا سماعك. املأ النموذج التالي وسنعمل على الرد في أسرع وقت ممكن.
+            {t('contact.description')}
           </p>
         </div>
 
@@ -52,24 +54,24 @@ export default function ContactPage() {
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="name">الاسم الكامل</label>
+                <label htmlFor="name">{t('contact.name')}</label>
                 <input
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="أدخل اسمك"
+                  placeholder={t('contact.namePlaceholder')}
                   value={formData.name}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">البريد الإلكتروني</label>
+                <label htmlFor="email">{t('contact.email')}</label>
                 <input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder={t('contact.emailPlaceholder')}
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -78,12 +80,12 @@ export default function ContactPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="subject">الموضوع</label>
+              <label htmlFor="subject">{t('contact.subject')}</label>
               <input
                 id="subject"
                 name="subject"
                 type="text"
-                placeholder="كيف يمكننا مساعدتك؟"
+                placeholder={t('contact.subjectPlaceholder')}
                 value={formData.subject}
                 onChange={handleChange}
                 required
@@ -91,12 +93,12 @@ export default function ContactPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="message">رسالتك</label>
+              <label htmlFor="message">{t('contact.message')}</label>
               <textarea
                 id="message"
                 name="message"
                 rows={5}
-                placeholder="اكتب تفاصيل طلبك"
+                placeholder={t('contact.messagePlaceholder')}
                 value={formData.message}
                 onChange={handleChange}
                 required
@@ -104,13 +106,13 @@ export default function ContactPage() {
             </div>
 
             <button type="submit" className="form-submit-button">
-              إرسال الرسالة
+              {t('contact.send')}
             </button>
           </form>
 
           <div className="contact-email-info">
             <Mail className="w-5 h-5" style={{ display: 'inline', marginLeft: '0.5rem' }} />
-            أو راسلنا مباشرة عبر البريد: support@cyber-tmsah.com
+            {t('contact.orEmail')} support@cyber-tmsah.com
           </div>
         </div>
       </div>

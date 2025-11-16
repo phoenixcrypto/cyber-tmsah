@@ -1,37 +1,40 @@
 'use client'
 
 import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function AboutPage() {
+  const { t } = useLanguage()
+
   const features = [
     {
       icon: Users,
-      title: 'مجتمع أكاديمي',
-      description: 'نؤمن بقوة التعلم التعاوني وتبادل المعرفة',
+      titleKey: 'about.feature1.title',
+      descriptionKey: 'about.feature1.desc',
       color: 'from-cyber-neon to-cyber-green',
       bgGradient: 'from-cyber-green/20 to-cyber-neon/20',
       cardBg: 'bg-gradient-to-br from-cyber-green/10 to-cyber-neon/10'
     },
     {
       icon: BookOpen,
-      title: 'محتوى عالي الجودة',
-      description: 'نوفر مواد تعليمية استثنائية ومحدثة باستمرار',
+      titleKey: 'about.feature2.title',
+      descriptionKey: 'about.feature2.desc',
       color: 'from-cyber-violet to-cyber-blue',
       bgGradient: 'from-cyber-violet/20 to-cyber-blue/20',
       cardBg: 'bg-gradient-to-br from-cyber-violet/10 to-cyber-blue/10'
     },
     {
       icon: Award,
-      title: 'خبرة متميزة',
-      description: 'فريق من الخبراء والمتخصصين في مجال التعليم',
+      titleKey: 'about.feature3.title',
+      descriptionKey: 'about.feature3.desc',
       color: 'from-cyber-green to-cyber-neon',
       bgGradient: 'from-cyber-green/20 to-cyber-neon/20',
       cardBg: 'bg-gradient-to-br from-cyber-green/15 to-cyber-neon/15'
     },
     {
       icon: Target,
-      title: 'أهداف واضحة',
-      description: 'نسعى لتحقيق أفضل النتائج التعليمية',
+      titleKey: 'about.feature4.title',
+      descriptionKey: 'about.feature4.desc',
       color: 'from-cyber-blue to-cyber-violet',
       bgGradient: 'from-cyber-blue/20 to-cyber-violet/20',
       cardBg: 'bg-gradient-to-br from-cyber-blue/15 to-cyber-violet/15'
@@ -41,23 +44,23 @@ export default function AboutPage() {
   const values = [
     {
       icon: Heart,
-      title: 'الشغف بالتعلم',
-      description: 'نؤمن أن التعلم رحلة تستمر مدى الحياة'
+      titleKey: 'about.value1.title',
+      descriptionKey: 'about.value1.desc'
     },
     {
       icon: Lightbulb,
-      title: 'الابتكار',
-      description: 'نستخدم أحدث التقنيات لتعزيز تجربة التعلم'
+      titleKey: 'about.value2.title',
+      descriptionKey: 'about.value2.desc'
     },
     {
       icon: Users,
-      title: 'التعاون',
-      description: 'نعمل معاً لتحقيق أهدافنا المشتركة'
+      titleKey: 'about.value3.title',
+      descriptionKey: 'about.value3.desc'
     },
     {
       icon: Award,
-      title: 'التميز',
-      description: 'نسعى للتميز في كل ما نقدمه'
+      titleKey: 'about.value4.title',
+      descriptionKey: 'about.value4.desc'
     }
   ]
 
@@ -69,11 +72,11 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <Info className="w-8 h-8 text-cyber-neon" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              عن منصة سايبر تمساح
+              {t('about.title')}
             </h1>
           </div>
           <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            منصة تعليمية متقدمة تجمع بين أحدث التقنيات والتميز الأكاديمي لتوفير تجارب تعليمية فائقة
+            {t('about.description')}
           </p>
         </div>
 
@@ -83,13 +86,11 @@ export default function AboutPage() {
             <div className="flex items-center justify-center gap-4 mb-6">
               <Target className="w-6 h-6 text-cyber-neon" />
               <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-                رسالتنا
+                {t('about.mission')}
               </h2>
             </div>
             <p className="text-lg text-dark-300 leading-relaxed max-w-4xl mx-auto">
-              نسعى لتوفير بيئة تعليمية متقدمة ومحفزة تساعد الطلاب على تعظيم إمكاناتهم التعليمية. 
-              نؤمن أن التعليم يجب أن يكون تفاعلياً وجذاباً ومتاحاً للجميع، ولهذا نستخدم أحدث التقنيات 
-              لإنشاء تجربة تعليمية فريدة واستثنائية.
+              {t('about.mission.text')}
             </p>
           </div>
         </div>
@@ -99,7 +100,7 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-4 mb-8">
             <Star className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              مميزاتنا
+              {t('about.features')}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -115,10 +116,10 @@ export default function AboutPage() {
                     <Icon className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-dark-100 mb-2">
-                    {feature.title}
+                    {t(feature.titleKey)}
                   </h3>
                   <p className="text-dark-300">
-                    {feature.description}
+                    {t(feature.descriptionKey)}
                   </p>
                 </div>
               )
@@ -131,7 +132,7 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-4 mb-8">
             <Heart className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              قيمنا
+              {t('about.values')}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -149,10 +150,10 @@ export default function AboutPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-dark-100 mb-2">
-                        {value.title}
+                        {t(value.titleKey)}
                       </h3>
                       <p className="text-dark-300">
-                        {value.description}
+                        {t(value.descriptionKey)}
                       </p>
                     </div>
                   </div>
