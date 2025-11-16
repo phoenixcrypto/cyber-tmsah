@@ -1,7 +1,9 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star } from 'lucide-react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import Link from 'next/link'
+import Image from 'next/image'
 
 export default function AboutPage() {
   const { t } = useLanguage()
@@ -163,59 +165,116 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Faculty Section */}
+        {/* Team Members Section */}
         <div className="mb-16 animate-slide-up">
           <div className="flex items-center justify-center gap-4 mb-8">
             <Users className="w-6 h-6 text-cyber-neon" />
             <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              فريقنا
+              {t('team.title')}
             </h2>
           </div>
           
-          {/* Professors Section */}
-          <div className="mb-8">
-            <div className="enhanced-card p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-                  <Award className="w-6 h-6 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: 'زياد محمد',
+                role: 'قائد الدفعة - مؤسس ومطور المنصة',
+                description: 'قائد دفعة سايبر ومؤسس منصة سايبر تمساح. متخصص في هندسة البرمجيات وتطوير الأنظمة التعليمية. قمت بتصميم الموقع بالكامل ونشر الجدول الدراسي وشرح المواد التعليمية لمساعدة زملائي في الدفعة على الوصول للمحتوى التعليمي بسهولة.',
+                responsibilities: [
+                  'تصميم وتطوير المنصة',
+                  'نشر الجدول الدراسي',
+                  'شرح المواد التعليمية',
+                  'إدارة المحتوى',
+                ],
+                socials: [
+                  { icon: 'github', href: 'https://github.com/phoenixcrypto', label: 'GitHub' },
+                  { icon: 'linkedin', href: 'https://www.linkedin.com', label: 'LinkedIn' },
+                  { icon: 'whatsapp', href: 'https://wa.me/', label: 'WhatsApp' },
+                ],
+                image: '/images/zeyad-mohamed.jpg'
+              },
+              {
+                name: 'يوسف وليد',
+                role: 'قائد الدفعة - مطور المنصة',
+                description: 'قائد دفعة سايبر ومطور متخصص في تحسين تجربة المستخدم. على الرغم من عدم مشاركته الفعلية في التطوير حتى الآن، إلا أنه يمتلك مهارات قوية في تحسين UX ويمكنه المساهمة بشكل فعال في تطوير المنصة.',
+                responsibilities: [
+                  'تحسين تجربة المستخدم',
+                  'تطوير الواجهات',
+                  'ضمان الجودة',
+                ],
+                socials: [
+                  { icon: 'whatsapp', href: 'https://wa.me/', label: 'WhatsApp' },
+                ],
+                image: '/images/youssef-waleed.jpg'
+              },
+              {
+                name: 'مؤمن هيثم',
+                role: 'طالب في الدفعة - مساهم',
+                description: 'طالب في دفعة سايبر يمتلك بعض المهارات في التطوير والتصميم. يساهم في المنصة من خلال مشاركته في المحتوى التعليمي والموارد المتعلقة بالأمن السيبراني.',
+                responsibilities: [
+                  'المساهمة في المحتوى',
+                  'دليل الأمن السيبراني',
+                  'الموارد التعليمية',
+                ],
+                socials: [
+                  { icon: 'github', href: 'https://github.com', label: 'GitHub' },
+                  { icon: 'linkedin', href: 'https://www.linkedin.com', label: 'LinkedIn' },
+                  { icon: 'whatsapp', href: 'https://wa.me/', label: 'WhatsApp' },
+                ],
+                image: '/images/moamen-haytham.jpg'
+              }
+            ].map((member, index) => (
+              <div key={index} className="team-member-card-about">
+                <div className="team-member-image-container-about">
+                  <div className="team-member-image-placeholder-about">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      width={200}
+                      height={200}
+                      className="team-member-image-about"
+                      priority
+                    />
+                  </div>
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">أعضاء هيئة التدريس</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="text-dark-300">د. سيمون عزت - الرياضيات</div>
-                <div className="text-dark-300">د. أحمد بكر - الفيزياء التطبيقية</div>
-                <div className="text-dark-300">د. عبير حسن - قواعد البيانات وريادة الأعمال</div>
-                <div className="text-dark-300">د. شيماء أحمد - تكنولوجيا المعلومات</div>
-                <div className="text-dark-300">د. صابرين - اللغة الإنجليزية</div>
-                <div className="text-dark-300">د. هند زيادة - نظم المعلومات</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Teaching Assistants Section */}
-          <div className="mb-8">
-            <div className="enhanced-card p-6 bg-gradient-to-br from-cyber-violet/10 to-cyber-blue/10 border border-cyber-violet/20">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-cyber-violet to-cyber-blue rounded-xl flex items-center justify-center shadow-lg shadow-cyber-violet/30">
-                  <Users className="w-6 h-6 text-white" />
+                <div className="team-member-info-about">
+                  <h3 className="team-member-name-about">{member.name}</h3>
+                  <p className="team-member-role-about">{member.role}</p>
+                  <p className="team-member-description-about">
+                    {member.description}
+                  </p>
+                  <div className="team-member-responsibilities-about">
+                    <div className="team-member-responsibility-title-about">{t('team.responsibilities')}</div>
+                    {member.responsibilities.map((responsibility, idx) => (
+                      <div key={idx} className="team-member-responsibility-item-about">
+                        {responsibility}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="team-member-socials-about">
+                    {member.socials.map((social, idx) => {
+                      const IconComponent = social.icon === 'github' ? Github : social.icon === 'linkedin' ? Linkedin : MessageCircle
+                      return (
+                        <Link
+                          key={idx}
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`team-social-button-about ${
+                            social.label === 'GitHub' ? 'team-social-github' :
+                            social.label === 'LinkedIn' ? 'team-social-linkedin' :
+                            'team-social-whatsapp'
+                          }`}
+                        >
+                          <IconComponent className="w-5 h-5" />
+                          <span>{social.label}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
                 </div>
-                <h3 className="text-2xl font-semibold text-dark-100">المعيدون</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="text-dark-300 font-medium">م. محمد مصطفى</div>
-                <div className="text-dark-300 font-medium">م. إيهاب محمد</div>
-                <div className="text-dark-300 font-medium">م. كريم عادل</div>
-                <div className="text-dark-300 font-medium">م. محمود محمد</div>
-                <div className="text-dark-300 font-medium">م. مريم أشرف</div>
-                <div className="text-dark-300 font-medium">م. نجلة سعيد</div>
-                <div className="text-dark-300 font-medium">م. أمنية إبراهيم</div>
-                <div className="text-dark-300 font-medium">م. ياسمين إبراهيم</div>
-                <div className="text-dark-300 font-medium">م. أحمد نشأت</div>
-                <div className="text-dark-300 font-medium">م. محمد عمار</div>
-                <div className="text-dark-300 font-medium">م. دينا علي</div>
-                <div className="text-dark-300 font-medium">م. آية جمال</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

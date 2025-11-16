@@ -594,7 +594,7 @@ export default function SchedulePage() {
           <div className="mb-6 animate-slide-up">
             <div className="enhanced-card p-4">
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                <h3 className="text-lg font-semibold text-dark-100">خيارات عرض المصفوفة</h3>
+                <h3 className="text-lg font-semibold text-dark-100">{t('schedule.matrixOptions')}</h3>
                 <div className="flex flex-wrap gap-4">
                   <label className="flex items-center gap-2 cursor-pointer group">
                     <div className="relative">
@@ -616,7 +616,7 @@ export default function SchedulePage() {
                         )}
                       </div>
                     </div>
-                    <span className="text-sm text-dark-300">إظهار المحاضرات</span>
+                    <span className="text-sm text-dark-300">{t('schedule.showLectures')}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer group">
                     <div className="relative">
@@ -638,7 +638,7 @@ export default function SchedulePage() {
                         )}
                       </div>
                     </div>
-                    <span className="text-sm text-dark-300">إظهار الفترات الفارغة</span>
+                    <span className="text-sm text-dark-300">{t('schedule.showEmptyPeriods')}</span>
                   </label>
                 </div>
               </div>

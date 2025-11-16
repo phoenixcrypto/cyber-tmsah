@@ -63,6 +63,24 @@ export const translations = {
     'footer.quickLinks': 'روابط سريعة',
     'footer.resources': 'المصادر',
     'footer.copyright': 'جميع الحقوق محفوظة. صُمم وطُوِّر بحُب ❤️',
+    'footer.privacy': 'سياسة الخصوصية',
+    'footer.terms': 'اتفاقية الاستخدام',
+    'footer.adsense': 'إعلانات Google',
+    
+    // Privacy
+    'privacy.title': 'سياسة الخصوصية',
+    'privacy.description': 'نحن ملتزمون بحماية خصوصيتك',
+    'privacy.content': 'سياسة الخصوصية الخاصة بمنصة سايبر تمساح...',
+    
+    // Terms
+    'terms.title': 'اتفاقية الاستخدام',
+    'terms.description': 'شروط وأحكام استخدام المنصة',
+    'terms.content': 'اتفاقية الاستخدام الخاصة بمنصة سايبر تمساح...',
+    
+    // AdSense
+    'adsense.title': 'إعلانات Google',
+    'adsense.description': 'معلومات حول الإعلانات على المنصة',
+    'adsense.content': 'معلومات حول إعلانات Google AdSense على المنصة...',
     
     // Schedule
     'schedule.title': 'الجدول الدراسي',
