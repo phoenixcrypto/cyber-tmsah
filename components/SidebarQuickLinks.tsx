@@ -25,12 +25,12 @@ export default function SidebarQuickLinks() {
       </button>
 
       {/* Sidebar */}
-      <div className={`sidebar-quick-links ${isOpen ? 'sidebar-open' : ''}`}>
+      <div className={`sidebar-quick-links ${isOpen ? 'is-open' : ''}`}>
         <div className="sidebar-content">
           <div className="sidebar-links">
             <Link href="/about" prefetch={false} className="sidebar-link" onClick={() => setIsOpen(false)}>
               <User className="w-5 h-5" />
-              <span>{t('nav.about')}</span>
+              <span>{t('nav.aboutPlatform')}</span>
             </Link>
             <Link href="/contact" prefetch={false} className="sidebar-link" onClick={() => setIsOpen(false)}>
               <Mail className="w-5 h-5" />

@@ -90,29 +90,31 @@ export default function FloatingMenuButton() {
           })}
           
           {/* Resources Dropdown */}
-          <li className="mobile-dropdown-title">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              {(() => {
-                const Icon = resourcesDropdown.icon
-                return Icon ? <Icon className="w-5 h-5" /> : null
-              })()}
-              <span>{resourcesDropdown.label}</span>
+          <li>
+            <div className="mobile-dropdown-title">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                {(() => {
+                  const Icon = resourcesDropdown.icon
+                  return Icon ? <Icon className="w-5 h-5" /> : null
+                })()}
+                <span>{resourcesDropdown.label}</span>
+              </div>
+              <ChevronDown className="w-4 h-4" />
             </div>
-            <ChevronDown className="w-4 h-4" />
+            <ul className="mobile-dropdown-list">
+              {resourcesDropdown.items.map((item) => {
+                const Icon = item.icon
+                return (
+                  <li key={`mobile-${item.href}`}>
+                    <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
+                      <Icon className="w-4 h-4" />
+                      <span>{item.label}</span>
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
           </li>
-          <ul className="mobile-dropdown-list">
-            {resourcesDropdown.items.map((item) => {
-              const Icon = item.icon
-              return (
-                <li key={`mobile-${item.href}`}>
-                  <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
           
           {/* Additional Links */}
           {additionalLinks.map((item) => {

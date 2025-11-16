@@ -264,7 +264,7 @@ const teamMembers = [
                 </p>
                 {member.responsibilities && (
                   <div className="team-card-responsibilities">
-                    <p className="team-card-responsibilities-title">{t('home.team.responsibilities')}</p>
+                    <p className="team-card-responsibilities-title">{t('team.responsibilities')}</p>
                     <ul className="team-card-responsibilities-list">
                       {member.responsibilities.map((responsibility, idx) => (
                         <li key={idx} className="team-card-responsibility-item">
