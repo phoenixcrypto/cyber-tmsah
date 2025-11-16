@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { Menu, X, ChevronDown, Search, Settings, Bookmark, Home, Youtube, Send, Instagram, Facebook, MessageCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Menu, X, ChevronDown, Languages, Home } from 'lucide-react'
 
 interface NavItem {
   label: string
@@ -44,40 +44,64 @@ const primaryLinks: NavItem[] = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up')
+  const [lastScrollY, setLastScrollY] = useState(0)
+  const [isEnglish, setIsEnglish] = useState(false)
 
   const toggle = () => setOpen((prev) => !prev)
   const close = () => setOpen(false)
 
+  // Handle scroll for navbar visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      
+      if (currentScrollY > 50) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setScrollDirection('down')
+      } else if (currentScrollY < lastScrollY) {
+        setScrollDirection('up')
+      }
+
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [lastScrollY])
+
+  // Handle language toggle
+  const toggleLanguage = () => {
+    setIsEnglish(!isEnglish)
+    const html = document.documentElement
+    if (!isEnglish) {
+      html.lang = 'en'
+      html.dir = 'ltr'
+    } else {
+      html.lang = 'ar'
+      html.dir = 'rtl'
+    }
+  }
+
+  const scrollOpacity = Math.min(1, lastScrollY / 200)
+  const headerClass = `main-header-new ${scrollDirection === 'down' && isScrolled ? 'header-hidden' : ''} ${isScrolled ? 'header-scrolled' : ''}`
+
   return (
-    <nav className="main-header-new">
-      {/* Top Bar - Social Links & Quick Links */}
+    <nav className={headerClass} style={{ opacity: isScrolled ? 1 - scrollOpacity * 0.3 : 1 }}>
+      {/* Top Bar - Quick Links */}
       <div className="header-top-bar">
         <div className="header-top-content">
-          {/* Social Media Links */}
-          <div className="header-social-links">
-            <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
-              <Youtube className="w-4 h-4" />
-            </Link>
-            <Link href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
-              <Send className="w-4 h-4" />
-            </Link>
-            <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
-              <Instagram className="w-4 h-4" />
-            </Link>
-            <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
-              <Facebook className="w-4 h-4" />
-            </Link>
-            <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="social-icon-link" prefetch={false}>
-              <MessageCircle className="w-4 h-4" />
-            </Link>
-          </div>
-
           {/* Quick Links */}
           <div className="header-quick-links">
             <Link href="/about" prefetch={false} className="quick-link">من نحن</Link>
-            <Link href="/#contact" prefetch={false} className="quick-link">اتصل بنا</Link>
-            <Link href="/#team" prefetch={false} className="quick-link">فريق العمل</Link>
-            <Link href="/contribute" prefetch={false} className="quick-link">خدماتنا</Link>
+            <Link href="/contact" prefetch={false} className="quick-link">اتصل بنا</Link>
+            <Link href="/team" prefetch={false} className="quick-link">فريق العمل</Link>
           </div>
         </div>
       </div>
@@ -89,38 +113,47 @@ export default function Navbar() {
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          {/* Left Actions */}
+          {/* Left Actions - Language Toggle */}
           <div className="header-left-actions">
-            <button className="header-action-btn" aria-label="بحث">
-              <Search className="w-5 h-5" />
-            </button>
-            <button className="header-action-btn" aria-label="الإعدادات">
-              <Settings className="w-5 h-5" />
-            </button>
-            <button className="header-action-btn" aria-label="المفضلة">
-              <Bookmark className="w-5 h-5" />
+            <button className="header-action-btn" onClick={toggleLanguage} aria-label="الترجمة">
+              <Languages className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Logo Center */}
+          {/* Logo Center - SVG Logo */}
           <Link href="/" className="logo-new" prefetch={false} onClick={close}>
-            <div className="logo-main-text">Cyber TMSAH</div>
+            <svg className="logo-svg" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: '#FF3B40', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#00FF88', stopOpacity: 1 }} />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <text x="100" y="35" fontFamily="Arial, sans-serif" fontSize="28" fontWeight="900" textAnchor="middle" fill="url(#logoGradient)" filter="url(#glow)">
+                Cyber TMSAH
+              </text>
+            </svg>
             <div className="logo-sub-text">منصة تعليمية متكاملة للأمن السيبراني</div>
           </Link>
 
-          {/* Right Actions */}
-          <div className="header-right-actions">
-            <Link href="/" prefetch={false} className="header-action-link">
-              <Home className="w-5 h-5" />
-              <span>الرئيسية</span>
-            </Link>
-          </div>
+          {/* Right Actions - Empty for now */}
+          <div className="header-right-actions"></div>
         </div>
       </div>
 
       {/* Bottom Navigation Bar */}
       <div className="header-bottom-bar">
         <div className="header-bottom-content">
+          <Link href="/" prefetch={false} className="bottom-nav-link bottom-nav-home" onClick={close}>
+            <Home className="w-4 h-4" />
+          </Link>
           <Link href="/schedule" prefetch={false} className="bottom-nav-link bottom-nav-primary" onClick={close}>
             الجدول الدراسي
           </Link>
@@ -156,9 +189,6 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          <Link href="/about" prefetch={false} className="bottom-nav-link" onClick={close}>
-            عن المنصة
-          </Link>
         </div>
       </div>
 

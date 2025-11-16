@@ -116,14 +116,25 @@ button, input, textarea, select {
   right: 0;
   width: 100%;
   z-index: 1000;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(15, 15, 20, 0.98) 50%, rgba(20, 20, 30, 0.98) 100%);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+  border-bottom: 1px solid rgba(255, 59, 64, 0.2);
+}
+
+.main-header-new.header-hidden {
+  transform: translateY(-100%);
+}
+
+.main-header-new.header-scrolled {
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(15, 15, 20, 0.95) 50%, rgba(20, 20, 30, 0.95) 100%);
+  backdrop-filter: blur(10px);
 }
 
 /* Top Bar - Social & Quick Links */
 .header-top-bar {
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 59, 64, 0.1);
   padding: 0.5rem 0;
 }
 
@@ -137,30 +148,7 @@ button, input, textarea, select {
   gap: 2rem;
 }
 
-.header-social-links {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.social-icon-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--accent-silver);
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.social-icon-link:hover {
-  background: var(--primary-red);
-  color: var(--primary-white);
-  transform: translateY(-2px);
-}
+/* Removed social links styles */
 
 .header-quick-links {
   display: flex;
@@ -183,8 +171,8 @@ button, input, textarea, select {
 
 /* Main Header Bar - Logo & Actions */
 .header-main-bar {
-  background: rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 59, 64, 0.1);
   padding: 1rem 0;
 }
 
@@ -212,8 +200,8 @@ button, input, textarea, select {
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 59, 64, 0.2);
   color: var(--accent-silver);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -224,6 +212,7 @@ button, input, textarea, select {
   border-color: var(--primary-red);
   color: var(--primary-white);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.4);
 }
 
 .header-right-actions {
@@ -258,24 +247,28 @@ button, input, textarea, select {
   flex: 1;
   max-width: 400px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.logo-main-text {
-  font-size: 2rem;
-  font-weight: 900;
-  color: var(--primary-white);
-  letter-spacing: 2px;
-  margin-bottom: 0.25rem;
+.logo-svg {
+  width: 200px;
+  height: 60px;
+  transition: all 0.3s ease;
 }
 
-.logo-main-text span {
-  color: var(--primary-red);
+.logo-new:hover .logo-svg {
+  transform: scale(1.05);
+  filter: brightness(1.2);
 }
 
 .logo-sub-text {
   font-size: 0.85rem;
   color: var(--accent-silver);
   font-weight: 400;
+  margin-top: 0.25rem;
 }
 
 /* Bottom Navigation Bar */
@@ -313,6 +306,23 @@ button, input, textarea, select {
 .bottom-nav-link:hover {
   background: rgba(255, 59, 64, 0.2);
   color: var(--primary-red);
+}
+
+.bottom-nav-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.bottom-nav-home:hover {
+  background: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
 }
 
 .bottom-nav-primary {
@@ -833,6 +843,11 @@ button, input, textarea, select {
   .bottom-nav-link {
     font-size: 0.85rem;
     padding: 0.4rem 0.75rem;
+  }
+  
+  .logo-svg {
+    width: 150px;
+    height: 45px;
   }
   
   .nav-links {
@@ -1637,12 +1652,13 @@ footer {
     max-width: 100%;
   }
   
-  .logo-main-text {
-    font-size: 1.5rem;
+  .logo-svg {
+    width: 120px;
+    height: 36px;
   }
   
   .logo-sub-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 
   .hero-section {

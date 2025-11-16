@@ -1,11 +1,8 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle } from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star } from 'lucide-react'
 
 export default function AboutPage() {
-
   const features = [
     {
       icon: Users,
@@ -216,135 +213,6 @@ export default function AboutPage() {
                 <div className="text-dark-300 font-medium">م. محمد عمار</div>
                 <div className="text-dark-300 font-medium">م. دينا علي</div>
                 <div className="text-dark-300 font-medium">م. آية جمال</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Team Members Section */}
-        <div className="animate-slide-up mb-16">
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <Users className="w-6 h-6 text-cyber-neon" />
-            <h2 className="text-2xl sm:text-3xl font-semibold text-dark-100">
-              فريق التطوير
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {/* زياد محمد */}
-            <div className="team-member-card-about">
-              <div className="team-member-image-container-about">
-                <div className="team-member-image-placeholder-about">
-                  <Image
-                    src="/images/zeyad-mohamed.jpg"
-                    alt="زياد محمد"
-                    width={200}
-                    height={200}
-                    className="team-member-image-about"
-                    priority
-                  />
-                </div>
-              </div>
-              <div className="team-member-info-about">
-                <h3 className="team-member-name-about">زياد محمد</h3>
-                <p className="team-member-role-about">مؤسس ومطور المنصة</p>
-                <p className="team-member-description-about">
-                  مؤسس المنصة ومطورها الرئيسي، متخصص في هندسة البرمجيات وتطوير الأنظمة التعليمية. أؤمن بقوة التكنولوجيا في تحويل التعليم وبناء منصات تعليمية مبتكرة تلبي احتياجات الطلاب العرب.
-                </p>
-                <div className="team-member-responsibilities-about">
-                  <div className="team-member-responsibility-item-about">الجدول الدراسي</div>
-                  <div className="team-member-responsibility-item-about">المحتوى التعليمي</div>
-                  <div className="team-member-responsibility-item-about">نشر المقالات</div>
-                </div>
-                <div className="team-member-socials-about">
-                  <Link href="https://github.com/phoenixcrypto" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-github">
-                    <Github className="w-5 h-5" />
-                    <span>GitHub</span>
-                  </Link>
-                  <Link href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-linkedin">
-                    <Linkedin className="w-5 h-5" />
-                    <span>LinkedIn</span>
-                  </Link>
-                  <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-whatsapp">
-                    <MessageCircle className="w-5 h-5" />
-                    <span>WhatsApp</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* يوسف وليد */}
-            <div className="team-member-card-about">
-              <div className="team-member-image-container-about">
-                <div className="team-member-image-placeholder-about">
-                  <Image
-                    src="/images/youssef-waleed.jpg"
-                    alt="يوسف وليد"
-                    width={200}
-                    height={200}
-                    className="team-member-image-about"
-                    priority
-                  />
-                </div>
-              </div>
-              <div className="team-member-info-about">
-                <h3 className="team-member-name-about">يوسف وليد</h3>
-                <p className="team-member-role-about">مطور المنصة</p>
-                <p className="team-member-description-about">
-                  مطور متخصص في تطوير الواجهات والتطبيقات التعليمية، أساهم في بناء تجارب مستخدم متميزة.
-                </p>
-                <div className="team-member-responsibilities-about">
-                  <div className="team-member-responsibility-item-about">تطوير الواجهات</div>
-                  <div className="team-member-responsibility-item-about">تحسين الأداء</div>
-                  <div className="team-member-responsibility-item-about">ضمان الجودة</div>
-                </div>
-                <div className="team-member-socials-about">
-                  <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-whatsapp">
-                    <MessageCircle className="w-5 h-5" />
-                    <span>WhatsApp</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* مؤمن هيثم */}
-            <div className="team-member-card-about">
-              <div className="team-member-image-container-about">
-                <div className="team-member-image-placeholder-about">
-                  <Image
-                    src="/images/moamen-haytham.jpg"
-                    alt="مؤمن هيثم"
-                    width={200}
-                    height={200}
-                    className="team-member-image-about"
-                    priority
-                  />
-                </div>
-              </div>
-              <div className="team-member-info-about">
-                <h3 className="team-member-name-about">مؤمن هيثم</h3>
-                <p className="team-member-role-about">مطور ومصمم المنصة</p>
-                <p className="team-member-description-about">
-                  مطور ومصمم واجهات مستخدم متخصص في إنشاء تجارب تفاعلية وجذابة. أركز على دمج الجمالية مع الوظيفية لضمان تجربة مستخدم سلسة وممتعة في بيئة تعليمية احترافية.
-                </p>
-                <div className="team-member-responsibilities-about">
-                  <div className="team-member-responsibility-item-about">دليل الأمن السيبراني</div>
-                  <div className="team-member-responsibility-item-about">خريطة الطريق</div>
-                  <div className="team-member-responsibility-item-about">الموارد التعليمية</div>
-                </div>
-                <div className="team-member-socials-about">
-                  <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-github">
-                    <Github className="w-5 h-5" />
-                    <span>GitHub</span>
-                  </Link>
-                  <Link href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-linkedin">
-                    <Linkedin className="w-5 h-5" />
-                    <span>LinkedIn</span>
-                  </Link>
-                  <Link href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="team-social-button-about team-social-whatsapp">
-                    <MessageCircle className="w-5 h-5" />
-                    <span>WhatsApp</span>
-                  </Link>
-                </div>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, BookOpen, Target, Users, Award, MessageCircle, Mail, GraduationCap, Video, Headphones, Globe } from 'lucide-react'
+import { Calendar, BookOpen, Target, Users, Award, GraduationCap, Video, Headphones, Globe } from 'lucide-react'
 
 const stats = [
   { icon: BookOpen, value: '7', label: 'مواد دراسية' },
@@ -82,10 +82,6 @@ const teamMembers = [
 ]
 
 export default function HomePage() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-  }
-
   return (
     <>
       <section className="hero-section">
@@ -312,51 +308,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="contact" className="contact-section">
-        <div className="contact-content">
-          <h2>
-            <MessageCircle className="w-6 h-6" style={{ display: 'inline', marginLeft: '0.5rem' }} />
-            تواصل معنا
-          </h2>
-          <p className="contact-description">
-            لديك استفسار أو فكرة تطوير؟ يسعدنا سماعك. املأ النموذج التالي وسنعمل على الرد في أسرع وقت ممكن.
-          </p>
-
-          <div className="contact-form-container">
-            <form className="contact-form" onSubmit={handleSubmit}>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="name">الاسم الكامل</label>
-                  <input id="name" name="name" type="text" placeholder="أدخل اسمك" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">البريد الإلكتروني</label>
-                  <input id="email" name="email" type="email" placeholder="name@example.com" required />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="subject">الموضوع</label>
-                <input id="subject" name="subject" type="text" placeholder="كيف يمكننا مساعدتك؟" required />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="message">رسالتك</label>
-                <textarea id="message" name="message" rows={5} placeholder="اكتب تفاصيل طلبك" required />
-              </div>
-
-              <button type="submit" className="form-submit-button">
-                إرسال الرسالة
-              </button>
-            </form>
-
-            <div className="contact-email-info">
-              <Mail className="w-5 h-5" style={{ display: 'inline', marginLeft: '0.5rem' }} />
-              أو راسلنا مباشرة عبر البريد: support@cyber-tmsah.com
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   )
 }
