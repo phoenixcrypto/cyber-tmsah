@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Menu, X, ChevronDown, Home, Users, Mail, User } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import NewsTicker from './NewsTicker'
 
@@ -87,27 +87,6 @@ export default function Navbar() {
       {/* News Ticker */}
       <NewsTicker />
 
-      {/* Top Bar - Quick Links Only */}
-      <div className="iTopBar">
-        <div className="iTopBar-content">
-          {/* Quick Links - Centered */}
-          <div className="iTopBar-links">
-            <Link href="/about" prefetch={false} className="iTopBar-link">
-              <User className="w-4 h-4" />
-              <span>{t('nav.about')}</span>
-            </Link>
-            <Link href="/contact" prefetch={false} className="iTopBar-link">
-              <Mail className="w-4 h-4" />
-              <span>{t('nav.contact')}</span>
-            </Link>
-            <Link href="/team" prefetch={false} className="iTopBar-link">
-              <Users className="w-4 h-4" />
-              <span>{t('nav.team')}</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main Header - Logo & Navigation */}
       <div className="header-main-bar">
         <div className="header-main-content">
@@ -171,49 +150,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Bottom Navigation Bar */}
-      <div className="header-bottom-bar">
-        <div className="header-bottom-content">
-          <Link href="/" prefetch={false} className="bottom-nav-link bottom-nav-home" onClick={close}>
-            <Home className="w-4 h-4" />
-          </Link>
-          <Link href="/schedule" prefetch={false} className="bottom-nav-link bottom-nav-primary" onClick={close}>
-            {t('nav.schedule')}
-          </Link>
-          <Link href="/materials" prefetch={false} className="bottom-nav-link bottom-nav-primary" onClick={close}>
-            {t('nav.materials')}
-          </Link>
-          {securityGuideLinks.map((item) => (
-            <Link key={item.href} href={item.href} prefetch={false} className="bottom-nav-link" onClick={close}>
-              {item.label}
-            </Link>
-          ))}
-          <div className="bottom-nav-dropdown">
-            <Link href="#" prefetch={false} className="bottom-nav-link" onClick={(e) => e.preventDefault()}>
-              {resourcesDropdown.label}
-              <ChevronDown className="w-4 h-4" style={{ marginRight: '0.25rem', display: 'inline' }} />
-            </Link>
-            <div className="dropdown-content">
-              {resourcesDropdown.items.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  className="dropdown-link"
-                  onClick={close}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          {additionalLinks.map((item) => (
-            <Link key={item.href} href={item.href} prefetch={false} className="bottom-nav-link" onClick={close}>
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </div>
 
       {/* Mobile Menu */}
       <div className={open ? 'mobile-menu-panel is-open' : 'mobile-menu-panel'}>

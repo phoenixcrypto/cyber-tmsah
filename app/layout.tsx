@@ -6,6 +6,8 @@ import { OfflineIndicator } from '@/components/OfflineIndicator'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingLanguageButton from '@/components/FloatingLanguageButton'
+import SidebarQuickLinks from '@/components/SidebarQuickLinks'
+import BottomNavigation from '@/components/BottomNavigation'
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -72,6 +74,8 @@ export default function RootLayout({
         <Providers>
           <div className="app-wrapper">
             <Navbar />
+            <SidebarQuickLinks />
+            <BottomNavigation />
             <main className="main-content">{children}</main>
             <Footer />
             <FloatingLanguageButton />
