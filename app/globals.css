@@ -144,18 +144,19 @@ button, input, textarea, select {
 }
 
 .iTopBar-content {
-  max-width: 1600px;
+  max-width: fit-content;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0.5rem 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
   background: var(--primary-red);
-  border-radius: 12px;
-  margin-top: 0.5rem;
+  border-radius: 0 0 12px 12px;
+  margin-top: 0;
   margin-bottom: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .iTopBar-links {
@@ -175,13 +176,15 @@ button, input, textarea, select {
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   white-space: nowrap;
+  background: transparent;
 }
 
 .iTopBar-link:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--primary-black);
+  color: var(--primary-white);
   transform: translateY(-2px);
 }
 
@@ -1119,8 +1122,9 @@ button, input, textarea, select {
 
 @media (max-width: 1024px) {
   .iTopBar-content {
-    padding: 0 1rem;
+    padding: 0.4rem 1rem;
     gap: 1rem;
+    max-width: fit-content;
   }
   
   .iTopBar-links {
@@ -1129,7 +1133,7 @@ button, input, textarea, select {
   
   .iTopBar-link {
     font-size: 0.8rem;
-    padding: 0.3rem 0.6rem;
+    padding: 0.4rem 0.8rem;
   }
   
   .header-center-section {
@@ -2060,8 +2064,10 @@ footer {
   }
   
   .iTopBar-content {
-    padding: 0 0.75rem;
+    padding: 0.4rem 0.75rem;
     gap: 0.75rem;
+    max-width: fit-content;
+    border-radius: 0 0 10px 10px;
   }
   
   .iTopBar-links {
@@ -2072,7 +2078,7 @@ footer {
   
   .iTopBar-link {
     font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.35rem 0.6rem;
   }
   
   .iTopBar-link span {
