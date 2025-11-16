@@ -524,6 +524,27 @@ button, input, textarea, select {
   }
 }
 
+@media (max-width: 1024px) {
+  .nav-links {
+    display: none !important;
+  }
+  
+  .dropdown {
+    display: none !important;
+  }
+  
+  .logo {
+    font-size: 1.2rem;
+    order: 0;
+    margin: 0;
+  }
+  
+  .logo-center {
+    order: 0;
+    margin: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-container {
     justify-content: space-between;
@@ -531,7 +552,11 @@ button, input, textarea, select {
   }
   
   .nav-links {
-    display: none;
+    display: none !important;
+  }
+  
+  .dropdown {
+    display: none !important;
   }
   
   .logo {
