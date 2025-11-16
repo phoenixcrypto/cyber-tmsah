@@ -44,7 +44,7 @@ export default function Footer() {
 
       <div className="footer-bottom border-t border-cyber-neon/20 pt-4">
         <p className="text-center">
-          © {new Date().getFullYear()} <span className="text-cyber-neon font-bold">سايبر تمساح</span>. جميع الحقوق محفوظة. صُمم وطُوِّر بحُب ❤️
+          © {new Date().getFullYear()} <Link href="/" prefetch={false} className="text-cyber-neon font-bold hover:text-cyber-green transition-colors active:scale-95 inline-block">سايبر تمساح</Link>. جميع الحقوق محفوظة. صُمم وطُوِّر بحُب ❤️
         </p>
       </div>
     </footer>
