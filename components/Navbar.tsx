@@ -2,55 +2,14 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Menu, X } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import NewsTicker from './NewsTicker'
 
-interface NavItem {
-  label: string
-  href: string
-}
-
-interface DropdownItem {
-  label: string
-  href: string
-}
-
 export default function Navbar() {
   const { t } = useLanguage()
-  
-  const securityGuideLinks: NavItem[] = [
-    { label: t('nav.roadmap'), href: '/roadmap' },
-  ]
-
-  const resourcesDropdown: { label: string; items: DropdownItem[] } = {
-    label: t('nav.resources'),
-    items: [
-      { label: t('nav.courses'), href: '/courses' },
-      { label: t('nav.books'), href: '/books' },
-      { label: t('nav.videos'), href: '/videos' },
-      { label: t('nav.podcasts'), href: '/podcasts' },
-      { label: t('nav.platforms'), href: '/platforms' },
-    ],
-  }
-
-  const additionalLinks: NavItem[] = [
-    { label: t('nav.expertise'), href: '/expertise-guide' },
-    { label: t('nav.news'), href: '/evaluation' },
-    { label: t('nav.contribute'), href: '/contribute' },
-  ]
-
-  const primaryLinks: NavItem[] = [
-    { label: t('nav.schedule'), href: '/schedule' },
-    { label: t('nav.materials'), href: '/materials' },
-  ]
-  const [open, setOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up')
   const [lastScrollY, setLastScrollY] = useState(0)
-
-  const toggle = () => setOpen((prev) => !prev)
-  const close = () => setOpen(false)
 
   // Handle scroll for navbar visibility
   useEffect(() => {
@@ -90,10 +49,6 @@ export default function Navbar() {
       {/* Main Header - Logo & Navigation */}
       <div className="header-main-bar">
         <div className="header-main-content">
-          <button className="mobile-menu-button" onClick={toggle} aria-label="القائمة">
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-
           {/* Left Actions - Empty */}
           <div className="header-left-actions"></div>
 
@@ -101,7 +56,7 @@ export default function Navbar() {
           <div className="header-center-section">
 
             {/* Logo Center - SVG Logo with Color Gradient */}
-            <Link href="/" className="logo-new" prefetch={false} onClick={close}>
+            <Link href="/" className="logo-new" prefetch={false}>
               <svg className="logo-svg" viewBox="0 0 300 70" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <filter id="logoGlow" x="-50%" y="-50%" width="200%" height="200%">
@@ -151,62 +106,6 @@ export default function Navbar() {
       </div>
 
 
-      {/* Mobile Menu */}
-      <div className={open ? 'mobile-menu-panel is-open' : 'mobile-menu-panel'}>
-        <ul>
-          {/* Home Page First */}
-          <li>
-            <Link href="/" prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-              {t('nav.home')}
-            </Link>
-          </li>
-          
-          {/* Primary Sections */}
-          {primaryLinks.map((item) => (
-            <li key={`mobile-${item.href}`}>
-              <Link href={item.href} prefetch={false} className="nav-link nav-link-primary" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
-          
-          {/* Other Sections */}
-          <li className="mobile-section-title">{t('home.guide.title')}</li>
-          {securityGuideLinks.map((item) => (
-            <li key={`mobile-${item.href}`}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
-          <li>
-            <span className="mobile-dropdown-title">{resourcesDropdown.label}</span>
-            <ul className="mobile-dropdown-list">
-              {resourcesDropdown.items.map((item) => (
-                <li key={`mobile-${item.href}`}>
-                  <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
-          {additionalLinks.map((item) => (
-            <li key={`mobile-${item.href}`}>
-              <Link href={item.href} prefetch={false} className="nav-link" onClick={close}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
-          
-          {/* About Platform at the end */}
-          <li>
-            <Link href="/about" prefetch={false} className="nav-link" onClick={close}>
-              {t('nav.aboutPlatform')}
-            </Link>
-          </li>
-        </ul>
-      </div>
     </nav>
   )
 }

@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingLanguageButton from '@/components/FloatingLanguageButton'
 import FloatingContributeButton from '@/components/FloatingContributeButton'
+import FloatingMenuButton from '@/components/FloatingMenuButton'
 import SidebarQuickLinks from '@/components/SidebarQuickLinks'
 import BottomNavigation from '@/components/BottomNavigation'
 
@@ -79,6 +80,7 @@ export default function RootLayout({
             <BottomNavigation />
             <main className="main-content">{children}</main>
             <Footer />
+            <FloatingMenuButton />
             <FloatingContributeButton />
             <FloatingLanguageButton />
           </div>
