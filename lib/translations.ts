@@ -356,6 +356,24 @@ export const translations = {
     'footer.quickLinks': 'Quick Links',
     'footer.resources': 'Resources',
     'footer.copyright': 'All rights reserved. Designed and developed with love ❤️',
+    'footer.privacy': 'Privacy Policy',
+    'footer.terms': 'Terms of Service',
+    'footer.adsense': 'Google Ads',
+    
+    // Privacy
+    'privacy.title': 'Privacy Policy',
+    'privacy.description': 'We are committed to protecting your privacy',
+    'privacy.content': 'Cyber TMSAH Platform Privacy Policy...',
+    
+    // Terms
+    'terms.title': 'Terms of Service',
+    'terms.description': 'Terms and conditions for using the platform',
+    'terms.content': 'Cyber TMSAH Platform Terms of Service...',
+    
+    // AdSense
+    'adsense.title': 'Google Ads',
+    'adsense.description': 'Information about ads on the platform',
+    'adsense.content': 'Information about Google AdSense ads on the platform...',
     
     // Schedule
     'schedule.title': 'Study Schedule',
@@ -474,6 +492,9 @@ export const translations = {
     'schedule.showEmptyPeriods': 'Show Empty Periods',
     'schedule.viewMode.list': 'Cards',
     'schedule.viewMode.matrix': 'Table',
+    'schedule.matrixOptions': 'Matrix View Options',
+    'schedule.showLectures': 'Show Lectures',
+    'schedule.showEmptyPeriods': 'Show Empty Periods',
     'schedule.noSections': 'No sections to display. Make sure you selected the correct group.',
     'schedule.holiday': 'Holiday',
     'schedule.subject': 'subject',
