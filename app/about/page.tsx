@@ -240,7 +240,7 @@ export default function AboutPage() {
                 <h3 className="team-member-name-about">زياد محمد</h3>
                 <p className="team-member-role-about">مؤسس ومطور المنصة</p>
                 <p className="team-member-description-about">
-                  مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، أعمل على تطوير منصات تعليمية متقدمة وتصميم تجارب مستخدم استثنائية.
+                  مؤسس المنصة ومطورها الرئيسي، متخصص في هندسة البرمجيات وتطوير الأنظمة التعليمية. أؤمن بقوة التكنولوجيا في تحويل التعليم وبناء منصات تعليمية مبتكرة تلبي احتياجات الطلاب العرب.
                 </p>
                 <div className="team-member-responsibilities-about">
                   <div className="team-member-responsibility-item-about">الجدول الدراسي</div>
@@ -302,7 +302,7 @@ export default function AboutPage() {
                 <h3 className="team-member-name-about">مؤمن هيثم</h3>
                 <p className="team-member-role-about">مطور ومصمم المنصة</p>
                 <p className="team-member-description-about">
-                  مطور ومصمم متخصص في مجال التعليم والتكنولوجيا، أعمل على تطوير منصات تعليمية متقدمة وتصميم تجارب مستخدم استثنائية.
+                  مطور ومصمم واجهات مستخدم متخصص في إنشاء تجارب تفاعلية وجذابة. أركز على دمج الجمالية مع الوظيفية لضمان تجربة مستخدم سلسة وممتعة في بيئة تعليمية احترافية.
                 </p>
                 <div className="team-member-responsibilities-about">
                   <div className="team-member-responsibility-item-about">دليل الأمن السيبراني</div>
