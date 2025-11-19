@@ -69,7 +69,7 @@ export default function PodcastsPage() {
         <p>أفضل البرامج الصوتية العربية والأجنبية التي تناقش أحدث التهديدات، التقنيات، وتجارب الخبراء في المجال.</p>
       </section>
 
-      <main className="courses-content">
+      <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="category-title">{category.title}</h2>
@@ -103,7 +103,7 @@ export default function PodcastsPage() {
             </div>
           </div>
         ))}
-      </main>
+      </div>
     </div>
   )
 }

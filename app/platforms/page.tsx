@@ -78,7 +78,7 @@ export default function PlatformsPage() {
         <p>مجموعة من أفضل المنصات والمواقع التعليمية في مجال الأمن السيبراني، مصنفة حسب النوع والغرض.</p>
       </section>
 
-      <main className="courses-content">
+      <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="category-title">{category.title}</h2>
@@ -107,7 +107,7 @@ export default function PlatformsPage() {
             </div>
           </div>
         ))}
-      </main>
+      </div>
     </div>
   )
 }

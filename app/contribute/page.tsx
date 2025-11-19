@@ -15,7 +15,7 @@ export default function ContributePage() {
         <p>{t('contribute.description')}</p>
       </section>
 
-      <main className="courses-content">
+      <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
           <h2 className="category-title">{t('contribute.mainSources')}</h2>
           <div className="courses-grid">
@@ -54,7 +54,7 @@ export default function ContributePage() {
             </Link>
           </div>
         </section>
-      </main>
+      </div>
     </div>
   )
 }

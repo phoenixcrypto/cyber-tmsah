@@ -14,7 +14,7 @@ export default function EvaluationPage() {
         <p>{t('evaluation.description')}</p>
       </section>
 
-      <main className="courses-content">
+      <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
           <h2 className="category-title">{t('evaluation.latestNews')}</h2>
           <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '8px', border: '1px solid var(--border-dark)' }}>
@@ -23,7 +23,7 @@ export default function EvaluationPage() {
             </p>
           </div>
         </section>
-      </main>
+      </div>
     </div>
   )
 }

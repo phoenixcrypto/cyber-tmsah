@@ -321,7 +321,7 @@ export default function BooksPage() {
         <p>مجموعة منتقاة لأهم كتب الأمن السيبراني، مصنفة حسب التخصص والمستوى.</p>
       </section>
 
-      <main className="library-content">
+      <div className="library-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="book-category-title">{category.title}</h2>
@@ -347,7 +347,7 @@ export default function BooksPage() {
             </div>
           </div>
         ))}
-      </main>
+      </div>
     </div>
   )
 }

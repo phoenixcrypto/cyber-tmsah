@@ -295,7 +295,7 @@ export default function RoadmapPage() {
         </div>
       </section>
 
-      <main className="roadmap-content">
+      <div className="roadmap-content">
         {phases.map((phase, phaseIndex) => (
           <section key={phaseIndex} className="phase-section">
             <div className="phase-header">
@@ -352,7 +352,7 @@ export default function RoadmapPage() {
             ) : null}
           </section>
         ))}
-      </main>
+      </div>
     </div>
   )
 }

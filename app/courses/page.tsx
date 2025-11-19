@@ -104,7 +104,7 @@ export default function CoursesPage() {
         <p>ابدأ رحلتك التعليمية مع أفضل الدورات المجانية والمدفوعة، مصنفة حسب التخصص والمستوى.</p>
       </section>
 
-      <main className="courses-content">
+      <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="category-title">{category.title}</h2>
@@ -132,7 +132,7 @@ export default function CoursesPage() {
             </div>
           </div>
         ))}
-      </main>
+      </div>
     </div>
   )
 }

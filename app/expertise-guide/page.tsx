@@ -14,7 +14,7 @@ export default function ExpertiseGuidePage() {
         <p>{t('expertise.description')}</p>
       </section>
 
-      <main className="courses-content">
+      <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
           <h2 className="category-title">{t('expertise.beginners')}</h2>
           <div className="courses-grid">
@@ -52,7 +52,7 @@ export default function ExpertiseGuidePage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </div>
   )
 }

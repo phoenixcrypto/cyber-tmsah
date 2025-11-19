@@ -76,7 +76,7 @@ export default function RootLayout({
           <div className="app-wrapper">
             <Navbar />
             <SidebarQuickLinks />
-            <main className="main-content">
+            <main className="main-content" role="main">
               <PageTransition>{children}</PageTransition>
             </main>
             <Footer />

@@ -71,7 +71,7 @@ export default function VideosPage() {
         <p>مجموعة من أفضل الفيديوهات التعليمية وقوائم التشغيل من يوتيوب، مصنفة حسب الموضوع والمستوى.</p>
       </section>
 
-      <main className="courses-content">
+      <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="category-title">{category.title}</h2>
@@ -99,7 +99,7 @@ export default function VideosPage() {
             </div>
           </div>
         ))}
-      </main>
+      </div>
     </div>
   )
 }
