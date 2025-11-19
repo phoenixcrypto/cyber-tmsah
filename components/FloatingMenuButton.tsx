@@ -134,7 +134,7 @@ export default function FloatingMenuButton() {
       {/* Overlay */}
       {open && (
         <div 
-          className="floating-menu-overlay"
+          className={`floating-menu-overlay ${open ? 'is-open' : ''}`}
           onClick={close}
         />
       )}
