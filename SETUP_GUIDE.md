@@ -32,15 +32,23 @@
 
 ### **1. إعداد Google Analytics:**
 
-1. اذهب إلى [Google Analytics](https://analytics.google.com/)
-2. أنشئ حساب جديد أو استخدم حساب موجود
-3. أنشئ Property جديد للموقع
-4. احصل على Measurement ID (يبدأ بـ `G-`)
-5. أنشئ ملف `.env.local` في جذر المشروع:
+✅ **تم إعداد Google Analytics بالفعل!**
+
+- تم إضافة Google Tag ID: `G-YEYPN1YQFD`
+- الكود يعمل تلقائياً في جميع الصفحات
+- لا حاجة لإضافة environment variable (تم إضافته مباشرة في الكود)
+
+**للتحديث لاحقاً:**
+إذا أردت تغيير ID، أضف في Vercel Environment Variables:
 ```env
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-YEYPN1YQFD
 ```
-6. أعد تشغيل السيرفر
+
+**للتحقق من الإعداد:**
+1. افتح الموقع
+2. افتح Developer Tools → Network
+3. ابحث عن طلبات `gtag/js`
+4. يجب أن ترى طلبات إلى Google Analytics
 
 ### **2. إعداد نموذج الاتصال (اختياري):**
 
