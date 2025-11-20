@@ -1,3 +1,33 @@
+# robots.txt for Cyber TMSAH
+# https://cyber-tmsah.vercel.app
+
 User-agent: *
+Allow: /
+Disallow: /api/
 Disallow: /admin/
-Disallow: /admin/content/
+Disallow: /_next/
+Disallow: /404
+Disallow: /500
+
+# Sitemap
+Sitemap: https://cyber-tmsah.vercel.app/sitemap.xml
+
+# Crawl-delay (optional)
+Crawl-delay: 1
+
+# Allow specific bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block bad bots (optional)
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

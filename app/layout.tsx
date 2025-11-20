@@ -7,6 +7,8 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingLanguageButton from '@/components/FloatingLanguageButton'
 import PageTransition from '@/components/PageTransition'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
+import StructuredData from '@/components/StructuredData'
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -54,6 +56,17 @@ export const metadata: Metadata = {
     description:
       'منصة عربية حديثة تجمع الجداول الدراسية والمصادر التعليمية ودليل الأمن السيبراني.',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
@@ -66,8 +79,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         <meta name="theme-color" content="#0a0a0a" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <StructuredData />
       </head>
       <body className="font-cairo bg-primary-black text-primary-white">
         <Providers>
@@ -81,6 +96,7 @@ export default function RootLayout({
           </div>
         </Providers>
         <OfflineIndicator />
+        <GoogleAnalytics />
       </body>
     </html>
   )

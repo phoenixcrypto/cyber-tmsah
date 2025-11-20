@@ -28,23 +28,44 @@ export default function ContactPage() {
     setIsSubmitting(true)
     setSubmitStatus('idle')
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    console.log('Form submitted:', formData)
-    setSubmitStatus('success')
-    setIsSubmitting(false)
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       })
-      setSubmitStatus('idle')
-    }, 3000)
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setSubmitStatus('success')
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          setFormData({
+            name: '',
+            email: '',
+            subject: '',
+            message: ''
+          })
+          setSubmitStatus('idle')
+        }, 3000)
+      } else {
+        setSubmitStatus('error')
+        setTimeout(() => {
+          setSubmitStatus('idle')
+        }, 5000)
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      setSubmitStatus('error')
+      setTimeout(() => {
+        setSubmitStatus('idle')
+      }, 5000)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const contactMethods = [
