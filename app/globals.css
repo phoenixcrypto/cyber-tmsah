@@ -651,7 +651,10 @@ button, input, textarea, select {
 .header-main-bar {
   background: transparent;
   border-bottom: none;
-  padding: 1rem 0;
+  padding: 1.25rem 0;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
   position: relative;
 }
 
@@ -1170,24 +1173,49 @@ button, input, textarea, select {
   display: block;
 }
 
+/* Unified Logo Responsive Design 2026 */
+@media (max-width: 1024px) {
+  .logo-svg {
+    max-width: 400px;
+    min-height: 50px;
+  }
+}
+
 @media (max-width: 768px) {
   .logo-svg {
-    max-width: 90%;
-    width: auto;
-    min-width: 200px;
+    max-width: 350px;
+    min-width: 280px;
+    min-height: 48px;
     margin: 0 auto;
     display: block;
     position: relative;
     left: 0;
     transform: none;
   }
+  
+  .logo-sub-text {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
   .logo-svg {
-    max-width: 85%;
-    min-width: 180px;
+    max-width: 300px;
+    min-width: 250px;
+    min-height: 45px;
     margin: 0 auto;
+  }
+  
+  .logo-sub-text {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .logo-svg {
+    max-width: 280px;
+    min-width: 220px;
+    min-height: 42px;
   }
 }
 
@@ -1563,8 +1591,8 @@ button, input, textarea, select {
 
 /* Main Content */
 .main-content {
-  padding-top: 120px;
-  padding-bottom: 80px;
+  padding-top: 140px;
+  padding-bottom: 100px;
   min-height: calc(100vh - 200px);
   position: relative;
   z-index: 1;
@@ -1590,15 +1618,27 @@ button, input, textarea, select {
   }
 }
 
+/* ============================================
+   IMPROVED SPACING SYSTEM 2026
+   ============================================ */
 @media (max-width: 1024px) {
   .main-content {
-    padding-top: 110px;
+    padding-top: 130px;
+    padding-bottom: 90px;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
-    padding-top: 100px;
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 110px;
+    padding-bottom: 70px;
   }
 }
 
@@ -2666,8 +2706,9 @@ footer {
   background: var(--surface-2);
   border-top: 2px solid rgba(255, 59, 64, 0.3);
   padding: 3rem 2rem 1.5rem;
-  margin-top: 4rem;
+  margin-top: 6rem;
   position: relative;
+  z-index: 1;
 }
 
 .footer-content {

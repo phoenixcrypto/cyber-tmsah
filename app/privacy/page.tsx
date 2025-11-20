@@ -2,6 +2,7 @@
 
 import { Shield, FileText, Lock, Eye, Cookie, Users, Database, Globe } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import Link from 'next/link'
 
 export default function PrivacyPage() {
   const { t } = useLanguage()
@@ -101,16 +102,13 @@ export default function PrivacyPage() {
 
         {/* Contact Section */}
         <div className="enhanced-card p-8 mt-8 animate-slide-up">
-          <h3 className="text-xl font-semibold text-dark-100 mb-4">
-            الاتصال بنا
-          </h3>
-          <p className="text-dark-300 leading-relaxed mb-4">
-            إذا كان لديك أي أسئلة أو مخاوف بشأن سياسة الخصوصية هذه أو ممارساتنا، يرجى الاتصال بنا عبر:
+          <p className="text-dark-300 leading-relaxed">
+            إذا كان لديك أي أسئلة أو مخاوف بشأن سياسة الخصوصية هذه أو ممارساتنا، يرجى{' '}
+            <Link href="/contact" className="text-cyber-neon hover:text-cyber-green font-semibold transition-colors underline">
+              الاتصال بنا
+            </Link>
+            {' '}من خلال صفحة الاتصال.
           </p>
-          <div className="space-y-2 text-dark-300">
-            <p><strong className="text-cyber-neon">البريد الإلكتروني:</strong> support@cyber-tmsah.com</p>
-            <p><strong className="text-cyber-neon">الموقع:</strong> cyber-tmsah.vercel.app</p>
-          </div>
         </div>
 
         {/* Changes Section */}
