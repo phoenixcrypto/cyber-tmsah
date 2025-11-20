@@ -1,5 +1,5 @@
 export default function StructuredData() {
-  const baseUrl = 'https://cyber-tmsah.vercel.app'
+  const baseUrl = 'https://www.cyber-tmsah.site'
 
   // Organization Schema
   const organizationSchema = {

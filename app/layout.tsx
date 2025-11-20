@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'ZEYAD MOHAMED' }],
   creator: 'ZEYAD MOHAMED',
   publisher: 'Cyber TMSAH',
-  metadataBase: new URL('https://cyber-tmsah.vercel.app'),
+  metadataBase: new URL('https://www.cyber-tmsah.site'),
   alternates: {
     canonical: '/',
     languages: {

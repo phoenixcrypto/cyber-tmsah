@@ -3,24 +3,24 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Homepage -->
   <url>
-    <loc>https://cyber-tmsah.vercel.app/</loc>
+    <loc>https://www.cyber-tmsah.site/</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://cyber-tmsah.vercel.app/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://cyber-tmsah.vercel.app/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.cyber-tmsah.site/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.cyber-tmsah.site/?lang=en" />
   </url>
   
   <!-- Main Pages -->
   <url>
-    <loc>https://cyber-tmsah.vercel.app/about</loc>
+    <loc>https://www.cyber-tmsah.site/about</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/contact</loc>
+    <loc>https://www.cyber-tmsah.site/contact</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -28,14 +28,14 @@
   
   <!-- Academic Pages -->
   <url>
-    <loc>https://cyber-tmsah.vercel.app/schedule</loc>
+    <loc>https://www.cyber-tmsah.site/schedule</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/materials</loc>
+    <loc>https://www.cyber-tmsah.site/materials</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -43,21 +43,21 @@
   
   <!-- Learning Resources -->
   <url>
-    <loc>https://cyber-tmsah.vercel.app/roadmap</loc>
+    <loc>https://www.cyber-tmsah.site/roadmap</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/expertise-guide</loc>
+    <loc>https://www.cyber-tmsah.site/expertise-guide</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/evaluation</loc>
+    <loc>https://www.cyber-tmsah.site/evaluation</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -65,35 +65,35 @@
   
   <!-- Educational Resources -->
   <url>
-    <loc>https://cyber-tmsah.vercel.app/courses</loc>
+    <loc>https://www.cyber-tmsah.site/courses</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/books</loc>
+    <loc>https://www.cyber-tmsah.site/books</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/videos</loc>
+    <loc>https://www.cyber-tmsah.site/videos</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/podcasts</loc>
+    <loc>https://www.cyber-tmsah.site/podcasts</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/platforms</loc>
+    <loc>https://www.cyber-tmsah.site/platforms</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -101,7 +101,7 @@
   
   <!-- Contribution -->
   <url>
-    <loc>https://cyber-tmsah.vercel.app/contribute</loc>
+    <loc>https://www.cyber-tmsah.site/contribute</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -109,14 +109,14 @@
   
   <!-- Legal Pages -->
   <url>
-    <loc>https://cyber-tmsah.vercel.app/privacy</loc>
+    <loc>https://www.cyber-tmsah.site/privacy</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://cyber-tmsah.vercel.app/terms</loc>
+    <loc>https://www.cyber-tmsah.site/terms</loc>
     <lastmod>2026-01-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>

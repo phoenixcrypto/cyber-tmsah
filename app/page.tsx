@@ -39,7 +39,7 @@ export default function HomePage() {
     '@type': 'WebPage',
     name: 'Cyber TMSAH - المنصة الأكاديمية الشاملة',
     description: 'منصة تعليمية متكاملة للأمن السيبراني',
-    url: 'https://cyber-tmsah.vercel.app',
+    url: 'https://www.cyber-tmsah.site',
     mainEntity: {
       '@type': 'EducationalOrganization',
       name: 'Cyber TMSAH',

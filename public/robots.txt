@@ -1,5 +1,5 @@
 # robots.txt for Cyber TMSAH
-# https://cyber-tmsah.vercel.app
+# https://www.cyber-tmsah.site
 
 User-agent: *
 Allow: /
@@ -10,7 +10,7 @@ Disallow: /404
 Disallow: /500
 
 # Sitemap
-Sitemap: https://cyber-tmsah.vercel.app/sitemap.xml
+Sitemap: https://www.cyber-tmsah.site/sitemap.xml
 
 # Crawl-delay (optional)
 Crawl-delay: 1
