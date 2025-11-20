@@ -3907,7 +3907,8 @@ footer {
 .platforms-page,
 .expertise-page,
 .evaluation-page,
-.contribute-page {
+.contribute-page,
+.roadmap-page {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--surface-0) 0%, var(--surface-2) 100%);
   padding: 2rem 1rem;
@@ -4179,6 +4180,282 @@ footer {
   
   .category-title {
     font-size: 1.5rem;
+  }
+}
+
+/* ============================================
+   ROADMAP PAGE STYLES 2026
+   ============================================ */
+.roadmap-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.phase-section {
+  margin-bottom: 4rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--surface-2) 100%);
+  border: 1.5px solid var(--border-dark);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-dark);
+}
+
+.phase-number {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-strong) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--primary-white);
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(255, 59, 64, 0.4);
+}
+
+.phase-title h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary-white);
+  margin-bottom: 0.5rem;
+}
+
+.phase-title p {
+  font-size: 1rem;
+  color: var(--secondary-gray);
+  line-height: 1.7;
+}
+
+.alternative-track-note {
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.15) 0%, rgba(255, 59, 64, 0.05) 100%);
+  border: 2px solid rgba(255, 59, 64, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.alternative-track-note p {
+  color: var(--accent-silver);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.subsection-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-white);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--primary-red);
+}
+
+.skill-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.skill-card {
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-3) 100%);
+  border: 1.5px solid var(--border-dark);
+  border-radius: 16px;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-red), var(--primary-red-soft));
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.skill-card:hover::before {
+  transform: scaleX(1);
+}
+
+.skill-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-red);
+  box-shadow: 0 20px 40px rgba(255, 59, 64, 0.2), 0 0 30px rgba(255, 59, 64, 0.1);
+}
+
+.course-order {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 32px;
+  height: 32px;
+  background: var(--primary-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary-white);
+  z-index: 1;
+}
+
+.course-status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 59, 64, 0.2);
+  border: 1px solid var(--primary-red);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-red);
+  z-index: 1;
+}
+
+.course-status.optional {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-silver);
+  color: var(--accent-silver);
+}
+
+.skill-icon {
+  font-size: 3rem;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.skill-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-white);
+  margin-bottom: 0.75rem;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.skill-card:hover h3 {
+  color: var(--primary-red);
+}
+
+.skill-card p {
+  font-size: 0.95rem;
+  color: var(--secondary-gray);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.skill-card .course-link {
+  display: block;
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-strong) 100%);
+  border: 2px solid var(--primary-red);
+  border-radius: 8px;
+  color: var(--primary-white);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  margin-bottom: 0.75rem;
+}
+
+.skill-card .course-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.4);
+  background: linear-gradient(135deg, var(--primary-red-strong) 0%, var(--primary-red) 100%);
+}
+
+.instructor {
+  font-size: 0.85rem;
+  color: var(--secondary-gray);
+  text-align: center;
+  font-style: italic;
+}
+
+.instruction-video {
+  max-width: 1000px;
+  margin: 0 auto 4rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--surface-2) 100%);
+  border: 1.5px solid var(--border-dark);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.instruction-video h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-white);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.instruction-video p {
+  font-size: 1rem;
+  color: var(--secondary-gray);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.video-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid var(--border-dark);
+}
+
+.video-placeholder iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.page-hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--secondary-gray);
+  max-width: 700px;
+  margin: 1rem auto 0;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .phase-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .skill-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .instruction-video {
+    padding: 1.5rem;
   }
 }
 
