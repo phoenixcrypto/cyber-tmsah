@@ -15,6 +15,16 @@ export default function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [dropdownTimeout, setDropdownTimeout] = useState<NodeJS.Timeout | null>(null)
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeout) {
+        clearTimeout(dropdownTimeout)
+      }
+    }
+  }, [dropdownTimeout])
 
   // Handle scroll for navbar visibility
   useEffect(() => {
@@ -184,8 +194,22 @@ export default function Navbar() {
               {/* Resources Dropdown */}
               <div 
                 className="nav-dropdown-desktop"
-                onMouseEnter={() => setActiveDropdown('resources')}
-                onMouseLeave={() => setActiveDropdown(null)}
+                onMouseEnter={() => {
+                  // Clear any existing timeout
+                  if (dropdownTimeout) {
+                    clearTimeout(dropdownTimeout)
+                    setDropdownTimeout(null)
+                  }
+                  // Show dropdown immediately
+                  setActiveDropdown('resources')
+                }}
+                onMouseLeave={() => {
+                  // Add delay before hiding dropdown (300ms)
+                  const timeout = setTimeout(() => {
+                    setActiveDropdown(null)
+                  }, 300)
+                  setDropdownTimeout(timeout)
+                }}
               >
                 <button className={`nav-link-desktop ${activeDropdown === 'resources' ? 'active' : ''}`}>
                   <Library className="w-4 h-4" />
@@ -193,7 +217,24 @@ export default function Navbar() {
                   <ChevronDown className="w-4 h-4" />
                 </button>
                 {activeDropdown === 'resources' && (
-                  <div className="dropdown-menu-desktop">
+                  <div 
+                    className="dropdown-menu-desktop"
+                    onMouseEnter={() => {
+                      // Clear timeout when mouse enters dropdown menu
+                      if (dropdownTimeout) {
+                        clearTimeout(dropdownTimeout)
+                        setDropdownTimeout(null)
+                      }
+                      setActiveDropdown('resources')
+                    }}
+                    onMouseLeave={() => {
+                      // Add delay before hiding dropdown (300ms)
+                      const timeout = setTimeout(() => {
+                        setActiveDropdown(null)
+                      }, 300)
+                      setDropdownTimeout(timeout)
+                    }}
+                  >
                     {resourcesDropdown.items.map((item) => {
                       const Icon = item.icon
                       return (
