@@ -15,17 +15,21 @@ export default function Footer() {
 
   return (
     <footer>
-      <div className="footer-content footer-content-compact">
-        <div className="footer-section">
-          <h4>{t('footer.quickLinks')}</h4>
-          <ul className="footer-links">
-            {quickLinks.map((item) => (
-              <li key={item.labelKey}>
-                <Link href={item.href} prefetch={false} className="hover:text-cyber-neon transition-colors active:scale-95">{t(item.labelKey)}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="footer-content footer-content-horizontal">
+        <ul className="footer-links-horizontal">
+          {quickLinks.map((item, index) => (
+            <li key={item.labelKey}>
+              <Link 
+                href={item.href} 
+                prefetch={false} 
+                className="footer-link-horizontal hover:text-cyber-neon transition-colors active:scale-95"
+              >
+                {t(item.labelKey)}
+              </Link>
+              {index < quickLinks.length - 1 && <span className="footer-link-separator">|</span>}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="footer-bottom">

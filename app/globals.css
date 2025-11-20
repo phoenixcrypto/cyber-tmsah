@@ -2589,6 +2589,74 @@ footer {
   padding: 0;
 }
 
+/* ============================================
+   HORIZONTAL FOOTER LINKS 2026
+   ============================================ */
+.footer-content-horizontal {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 2rem;
+}
+
+.footer-links-horizontal {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.footer-links-horizontal li {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0;
+}
+
+.footer-link-horizontal {
+  color: var(--accent-silver);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
+  white-space: nowrap;
+}
+
+.footer-link-horizontal::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-red);
+  transition: width 0.3s ease;
+}
+
+.footer-link-horizontal:hover {
+  color: var(--primary-red);
+  transform: translateY(-2px);
+}
+
+.footer-link-horizontal:hover::after {
+  width: 100%;
+}
+
+.footer-link-separator {
+  color: rgba(255, 59, 64, 0.4);
+  font-size: 1rem;
+  font-weight: 300;
+  margin: 0 0.5rem;
+}
+
 .footer-content-compact .footer-section {
   flex: 0 0 auto;
 }
@@ -2674,28 +2742,26 @@ footer {
     padding: 1.5rem 1rem 1rem;
   }
   
-  .footer-content-compact {
-    gap: 1.5rem !important;
-    flex-direction: column;
-    align-items: center;
+  .footer-content-horizontal {
+    padding: 1rem 1rem;
   }
   
-  .footer-content-compact .footer-section {
-    text-align: center;
+  .footer-links-horizontal {
+    gap: 1rem;
+    flex-wrap: wrap;
   }
   
-  .footer-content-compact .footer-section h4 {
-    font-size: 0.9rem !important;
-    margin-bottom: 0.6rem !important;
+  .footer-links-horizontal li {
+    gap: 1rem;
   }
   
-  .footer-content-compact .footer-links {
-    gap: 0.4rem !important;
-    align-items: center;
+  .footer-link-horizontal {
+    font-size: 0.85rem;
   }
   
-  .footer-content-compact .footer-links a {
-    font-size: 0.825rem !important;
+  .footer-link-separator {
+    font-size: 0.9rem;
+    margin: 0 0.25rem;
   }
   
   .footer-bottom {
