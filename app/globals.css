@@ -1431,15 +1431,9 @@ button, input, textarea, select {
   transform: translateX(4px);
 }
 
-/* Show bottom navigation only on mobile */
-@media (max-width: 768px) {
-  .bottom-navigation-modern {
-    display: block;
-  }
-  
-  .main-content {
-    padding-bottom: 90px;
-  }
+/* Bottom navigation disabled - using navbar menu instead */
+.bottom-navigation-modern {
+  display: none !important;
 }
 
 /* ============================================
@@ -3900,5 +3894,624 @@ footer {
   
   .stat-card {
     padding: 2rem 1.5rem;
+  }
+}
+
+/* ============================================
+   UNIFIED PAGE STYLES FOR ALL RESOURCE PAGES 2026
+   ============================================ */
+.courses-page,
+.books-page,
+.videos-page,
+.podcasts-page,
+.platforms-page,
+.expertise-page,
+.evaluation-page,
+.contribute-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--surface-0) 0%, var(--surface-2) 100%);
+  padding: 2rem 1rem;
+}
+
+.page-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.1) 0%, rgba(255, 59, 64, 0.05) 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 59, 64, 0.2);
+}
+
+.page-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.page-hero p {
+  font-size: 1.1rem;
+  color: var(--secondary-gray);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.courses-content,
+.books-content,
+.videos-content,
+.podcasts-content,
+.platforms-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.category-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary-white);
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--primary-red);
+  display: inline-block;
+}
+
+.courses-grid,
+.books-grid,
+.videos-grid,
+.podcasts-grid,
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.course-card,
+.book-card,
+.video-card,
+.podcast-card,
+.platform-card {
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--surface-2) 100%);
+  border: 1.5px solid var(--border-dark);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.course-card::before,
+.book-card::before,
+.video-card::before,
+.podcast-card::before,
+.platform-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-red), var(--primary-red-soft));
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.course-card:hover::before,
+.book-card:hover::before,
+.video-card:hover::before,
+.podcast-card:hover::before,
+.platform-card:hover::before {
+  transform: scaleX(1);
+}
+
+.course-card:hover,
+.book-card:hover,
+.video-card:hover,
+.podcast-card:hover,
+.platform-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-red);
+  box-shadow: 0 20px 40px rgba(255, 59, 64, 0.2), 0 0 30px rgba(255, 59, 64, 0.1);
+}
+
+.course-thumbnail,
+.book-cover,
+.video-thumbnail,
+.podcast-cover,
+.platform-logo {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-3) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border: 2px solid var(--border-dark);
+  font-size: 4rem;
+  transition: all 0.3s ease;
+}
+
+.course-card:hover .course-thumbnail,
+.book-card:hover .book-cover,
+.video-card:hover .video-thumbnail,
+.podcast-card:hover .podcast-cover,
+.platform-card:hover .platform-logo {
+  border-color: var(--primary-red);
+  transform: scale(1.05);
+}
+
+.course-info,
+.book-info,
+.video-info,
+.podcast-info,
+.platform-info {
+  flex: 1;
+}
+
+.course-info h4,
+.book-info h4,
+.video-info h4,
+.podcast-info h4,
+.platform-info h4 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-white);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.course-card:hover .course-info h4,
+.book-card:hover .book-info h4,
+.video-card:hover .video-info h4,
+.podcast-card:hover .podcast-info h4,
+.platform-card:hover .platform-info h4 {
+  color: var(--primary-red);
+}
+
+.course-instructor,
+.book-author,
+.video-channel,
+.podcast-host,
+.platform-description {
+  font-size: 0.9rem;
+  color: var(--secondary-gray);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.course-description,
+.book-description,
+.video-description,
+.podcast-description {
+  font-size: 0.95rem;
+  color: var(--secondary-gray);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.course-tags,
+.book-tags,
+.video-tags,
+.podcast-tags,
+.platform-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.course-tag,
+.book-tag,
+.video-tag,
+.podcast-tag,
+.platform-tag {
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 59, 64, 0.1);
+  border: 1px solid rgba(255, 59, 64, 0.3);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-silver);
+  transition: all 0.3s ease;
+}
+
+.course-tag:hover,
+.book-tag:hover,
+.video-tag:hover,
+.podcast-tag:hover,
+.platform-tag:hover {
+  background: rgba(255, 59, 64, 0.2);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
+}
+
+.course-link,
+.book-link,
+.video-link,
+.podcast-link,
+.platform-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-strong) 100%);
+  border: 2px solid var(--primary-red);
+  border-radius: 8px;
+  color: var(--primary-white);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.course-link:hover,
+.book-link:hover,
+.video-link:hover,
+.podcast-link:hover,
+.platform-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.4);
+  background: linear-gradient(135deg, var(--primary-red-strong) 0%, var(--primary-red) 100%);
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 2rem 1rem;
+  }
+  
+  .page-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .courses-grid,
+  .books-grid,
+  .videos-grid,
+  .podcasts-grid,
+  .platforms-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .category-title {
+    font-size: 1.5rem;
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-white) 0%, var(--primary-red) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   MODERN CONTACT FORM 2026
+   ============================================ */
+.contact-form-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row-modern {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.form-group-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-label-modern {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-silver);
+}
+
+.form-input-modern,
+.form-textarea-modern {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 2px solid rgba(255, 59, 64, 0.2);
+  border-radius: 12px;
+  color: var(--primary-white);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-input-modern:focus,
+.form-textarea-modern:focus {
+  outline: none;
+  border-color: var(--primary-red);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+  box-shadow: 0 0 0 3px rgba(255, 59, 64, 0.1);
+}
+
+.form-textarea-modern {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.form-submit-button-modern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-strong) 100%);
+  border: 2px solid var(--primary-red);
+  border-radius: 12px;
+  color: var(--primary-white);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(255, 59, 64, 0.4);
+  margin-top: 0.5rem;
+}
+
+.form-submit-button-modern:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(255, 59, 64, 0.6);
+  background: linear-gradient(135deg, var(--primary-red-strong) 0%, var(--primary-red) 100%);
+}
+
+.form-submit-button-modern:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.form-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--primary-white);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.form-success-message,
+.form-error-message {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-top: 1rem;
+  animation: slideInDown 0.3s ease;
+}
+
+.form-success-message {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
+  border: 2px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+}
+
+.form-error-message {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+  border: 2px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+/* ============================================
+   TEAM MEMBER CARDS FOR ABOUT PAGE
+   ============================================ */
+.team-member-card-about {
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--surface-2) 100%);
+  border: 1.5px solid var(--border-dark);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.team-member-card-about::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-red), var(--primary-red-soft));
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.team-member-card-about:hover::before {
+  transform: scaleX(1);
+}
+
+.team-member-card-about:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-red);
+  box-shadow: 0 24px 45px rgba(255, 59, 64, 0.3), 0 0 30px rgba(255, 59, 64, 0.15);
+}
+
+.team-member-image-container-about {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.team-member-image-placeholder-about {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-red);
+  overflow: hidden;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.team-member-card-about:hover .team-member-image-placeholder-about {
+  border-color: var(--primary-red-strong);
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(255, 59, 64, 0.4);
+}
+
+.team-member-image-about {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-member-info-about {
+  text-align: center;
+}
+
+.team-member-name-about {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary-white);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.team-member-card-about:hover .team-member-name-about {
+  color: var(--primary-red);
+}
+
+.team-member-role-about {
+  font-size: 1rem;
+  color: var(--secondary-gray);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.team-member-card-about:hover .team-member-role-about {
+  color: var(--accent-silver);
+}
+
+.team-member-description-about {
+  font-size: 0.95rem;
+  color: var(--secondary-gray);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.team-member-card-about:hover .team-member-description-about {
+  color: var(--accent-silver);
+}
+
+.team-member-responsibilities-about {
+  margin-bottom: 1.5rem;
+  text-align: right;
+}
+
+.team-member-responsibility-title-about {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-red);
+  margin-bottom: 0.75rem;
+}
+
+.team-member-responsibility-item-about {
+  font-size: 0.9rem;
+  color: var(--secondary-gray);
+  margin-bottom: 0.5rem;
+  padding-right: 1rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.team-member-responsibility-item-about::before {
+  content: '•';
+  position: absolute;
+  right: 0;
+  color: var(--primary-red);
+  font-weight: 800;
+}
+
+.team-member-card-about:hover .team-member-responsibility-item-about {
+  color: var(--accent-silver);
+}
+
+.team-member-socials-about {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.team-social-button-about {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 59, 64, 0.1);
+  border: 1px solid rgba(255, 59, 64, 0.3);
+  border-radius: 8px;
+  color: var(--accent-silver);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.team-social-button-about:hover {
+  background: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.4);
+}
+
+.team-social-github:hover {
+  background: #333;
+  border-color: #333;
+}
+
+.team-social-linkedin:hover {
+  background: #0077b5;
+  border-color: #0077b5;
+}
+
+.team-social-whatsapp:hover {
+  background: #25d366;
+  border-color: #25d366;
+}
+
+/* Glass Card Utility */
+.glass-card {
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--surface-2) 100%);
+  border: 1.5px solid var(--border-dark);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .form-row-modern {
+    grid-template-columns: 1fr;
+  }
+  
+  .team-member-card-about {
+    padding: 1.5rem;
+  }
+  
+  .team-member-image-placeholder-about {
+    width: 120px;
+    height: 120px;
   }
 }

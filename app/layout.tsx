@@ -6,7 +6,6 @@ import { OfflineIndicator } from '@/components/OfflineIndicator'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingLanguageButton from '@/components/FloatingLanguageButton'
-import BottomNavigation from '@/components/BottomNavigation'
 import PageTransition from '@/components/PageTransition'
 
 const cairo = Cairo({
@@ -78,7 +77,6 @@ export default function RootLayout({
               <PageTransition>{children}</PageTransition>
             </main>
             <Footer />
-            <BottomNavigation />
             <FloatingLanguageButton />
           </div>
         </Providers>
