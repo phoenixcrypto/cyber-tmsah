@@ -2,18 +2,28 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { User, Mail, Users, ChevronLeft, ChevronRight } from 'lucide-react'
+import { User, Mail, Users, ChevronLeft, ChevronRight, ChevronRight as ChevronRightIcon } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { usePathname } from 'next/navigation'
 
 export default function SidebarQuickLinks() {
   const { t } = useLanguage()
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+
+  const quickLinks = [
+    { label: t('nav.aboutPlatform'), href: '/about', icon: User },
+    { label: t('nav.contact'), href: '/contact', icon: Mail },
+    { label: t('nav.team'), href: '/team', icon: Users },
+  ]
+
+  const isActive = (href: string) => pathname === href
 
   return (
     <>
       {/* Sidebar Toggle Button */}
       <button
-        className="sidebar-toggle-btn"
+        className="sidebar-toggle-btn-modern"
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
       >
@@ -25,21 +35,30 @@ export default function SidebarQuickLinks() {
       </button>
 
       {/* Sidebar */}
-      <div className={`sidebar-quick-links ${isOpen ? 'is-open' : ''}`}>
-        <div className="sidebar-content">
-          <div className="sidebar-links">
-            <Link href="/about" prefetch={false} className="sidebar-link" onClick={() => setIsOpen(false)}>
-              <User className="w-5 h-5" />
-              <span>{t('nav.aboutPlatform')}</span>
-            </Link>
-            <Link href="/contact" prefetch={false} className="sidebar-link" onClick={() => setIsOpen(false)}>
-              <Mail className="w-5 h-5" />
-              <span>{t('nav.contact')}</span>
-            </Link>
-            <Link href="/team" prefetch={false} className="sidebar-link" onClick={() => setIsOpen(false)}>
-              <Users className="w-5 h-5" />
-              <span>{t('nav.team')}</span>
-            </Link>
+      <div className={`sidebar-quick-links-modern ${isOpen ? 'is-open' : ''}`}>
+        <div className="sidebar-content-modern">
+          <div className="sidebar-links-modern">
+            {quickLinks.map((item) => {
+              const Icon = item.icon
+              const active = isActive(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  prefetch={false}
+                  className={`sidebar-link-modern ${active ? 'active' : ''}`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {active && (
+                    <div className="sidebar-link-indicator">
+                      <ChevronRightIcon className="w-4 h-4" />
+                    </div>
+                  )}
+                  <Icon className="sidebar-link-icon" />
+                  <span className="sidebar-link-text">{item.label}</span>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -47,7 +66,7 @@ export default function SidebarQuickLinks() {
       {/* Overlay */}
       {isOpen && (
         <div 
-          className="sidebar-overlay"
+          className="sidebar-overlay-modern"
           onClick={() => setIsOpen(false)}
         />
       )}
