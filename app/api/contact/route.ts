@@ -1,71 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'support@cyber-tmsah.com'
+const FROM_EMAIL = process.env.FROM_EMAIL || 'Cyber TMSAH <onboarding@resend.dev>'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { name, email, subject, message } = body
 
-    // Validation
+    // Basic validation
     if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { error: 'جميع الحقول مطلوبة' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'جميع الحقول مطلوبة' }, { status: 400 })
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'البريد الإلكتروني غير صحيح' }, { status: 400 })
+    }
+
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      console.error('RESEND_API_KEY is not set')
       return NextResponse.json(
-        { error: 'البريد الإلكتروني غير صحيح' },
-        { status: 400 }
+        { error: 'لم يتم إعداد خدمة البريد الإلكتروني بعد.' },
+        { status: 500 }
       )
     }
 
-    // Here you can integrate with:
-    // 1. Email service (SendGrid, Resend, Nodemailer)
-    // 2. Database to store messages
-    // 3. Third-party service (Formspree, FormSubmit, etc.)
-    
-    // For now, we'll log and return success
-    // In production, replace this with actual email sending
-    console.log('Contact Form Submission:', {
-      name,
-      email,
-      subject,
-      message,
-      timestamp: new Date().toISOString(),
-    })
+    const resend = new Resend(apiKey)
 
-    // Example: Send email using a service
-    // You can use services like:
-    // - Resend: https://resend.com
-    // - SendGrid: https://sendgrid.com
-    // - Nodemailer with SMTP
-    // - Formspree: https://formspree.io
-    
-    // Example with Resend (uncomment and configure):
-    /*
-    const resend = new Resend(process.env.RESEND_API_KEY)
-    await resend.emails.send({
-      from: 'contact@cyber-tmsah.com',
-      to: 'support@cyber-tmsah.com',
-      subject: `Contact Form: ${subject}`,
+    // Send email via Resend
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: [CONTACT_EMAIL],
+      replyTo: email,
+      subject: `رسالة جديدة من نموذج الاتصال: ${subject}`,
       html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
+        <h2>رسالة جديدة من نموذج الاتصال في موقع Cyber TMSAH</h2>
+        <p><strong>الاسم:</strong> ${name}</p>
+        <p><strong>البريد الإلكتروني:</strong> ${email}</p>
+        <p><strong>عنوان الرسالة:</strong> ${subject}</p>
+        <p><strong>نص الرسالة:</strong></p>
+        <p>${message.replace(/\n/g, '<br/>')}</p>
+        <hr/>
+        <p style="font-size:12px;color:#666;">تم إرسال هذه الرسالة تلقائياً من نموذج الاتصال في موقع Cyber TMSAH.</p>
       `,
     })
-    */
+
+    if (error) {
+      console.error('Resend error:', error)
+      return NextResponse.json(
+        { error: 'حدث خطأ أثناء إرسال البريد الإلكتروني. يرجى المحاولة مرة أخرى.' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json(
-      { 
+      {
         success: true,
-        message: 'تم إرسال رسالتك بنجاح! سنرد عليك قريباً.' 
+        message: 'تم إرسال رسالتك بنجاح! سنرد عليك قريباً.',
       },
       { status: 200 }
     )
@@ -78,7 +72,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Handle OPTIONS for CORS
+// Handle OPTIONS for CORS (لو احتجته من خارج الموقع)
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
