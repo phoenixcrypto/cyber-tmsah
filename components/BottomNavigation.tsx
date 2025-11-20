@@ -1,20 +1,24 @@
 'use client'
 
 import Link from 'next/link'
-import { Home, ChevronDown } from 'lucide-react'
+import { Home, Calendar, BookOpen, Library, ChevronDown } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
 export default function BottomNavigation() {
   const { t } = useLanguage()
+  const pathname = usePathname()
+  const [activeDropdown, setActiveDropdown] = useState(false)
 
-  const securityGuideLinks = [
-    { label: t('nav.roadmap'), href: '/roadmap' },
-    { label: t('nav.expertise'), href: '/expertise-guide' },
-    { label: t('nav.news'), href: '/evaluation' },
+  const primaryLinks = [
+    { label: t('nav.schedule'), href: '/schedule', icon: Calendar },
+    { label: t('nav.materials'), href: '/materials', icon: BookOpen },
   ]
 
   const resourcesDropdown = {
     label: t('nav.resources'),
+    icon: Library,
     items: [
       { label: t('nav.courses'), href: '/courses' },
       { label: t('nav.books'), href: '/books' },
@@ -24,52 +28,65 @@ export default function BottomNavigation() {
     ],
   }
 
-  const additionalLinks = [
-    { label: t('nav.contribute'), href: '/contribute' },
-  ]
+  const isActive = (href: string) => pathname === href
 
   return (
-    <div className="bottom-navigation-separate">
-      <div className="bottom-navigation-content">
-        <Link href="/" prefetch={false} className="bottom-nav-link bottom-nav-home">
-          <Home className="w-4 h-4" />
+    <nav className="bottom-navigation-modern">
+      <div className="bottom-nav-container">
+        <Link 
+          href="/" 
+          className={`bottom-nav-item ${isActive('/') ? 'active' : ''}`}
+          prefetch={false}
+        >
+          <Home className="bottom-nav-icon" />
+          <span className="bottom-nav-label">{t('nav.home')}</span>
         </Link>
-        <Link href="/schedule" prefetch={false} className="bottom-nav-link bottom-nav-primary">
-          {t('nav.schedule')}
-        </Link>
-        <Link href="/materials" prefetch={false} className="bottom-nav-link bottom-nav-primary">
-          {t('nav.materials')}
-        </Link>
-        {securityGuideLinks.map((item) => (
-          <Link key={item.href} href={item.href} prefetch={false} className="bottom-nav-link">
-            {item.label}
-          </Link>
-        ))}
-        <div className="bottom-nav-dropdown">
-          <Link href="#" prefetch={false} className="bottom-nav-link" onClick={(e) => e.preventDefault()}>
-            {resourcesDropdown.label}
-            <ChevronDown className="w-4 h-4" style={{ marginRight: '0.25rem', display: 'inline' }} />
-          </Link>
-          <div className="dropdown-content">
-            {resourcesDropdown.items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={false}
-                className="dropdown-link"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+
+        {primaryLinks.map((item) => {
+          const Icon = item.icon
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`bottom-nav-item bottom-nav-primary ${isActive(item.href) ? 'active' : ''}`}
+              prefetch={false}
+            >
+              <Icon className="bottom-nav-icon" />
+              <span className="bottom-nav-label">{item.label}</span>
+            </Link>
+          )
+        })}
+
+        <div 
+          className="bottom-nav-item bottom-nav-dropdown"
+          onMouseEnter={() => setActiveDropdown(true)}
+          onMouseLeave={() => setActiveDropdown(false)}
+        >
+          <button 
+            className="bottom-nav-dropdown-btn"
+            onClick={() => setActiveDropdown(!activeDropdown)}
+          >
+            <Library className="bottom-nav-icon" />
+            <span className="bottom-nav-label">{resourcesDropdown.label}</span>
+            <ChevronDown className={`bottom-nav-chevron ${activeDropdown ? 'rotated' : ''}`} />
+          </button>
+          {activeDropdown && (
+            <div className="bottom-nav-dropdown-menu">
+              {resourcesDropdown.items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`bottom-nav-dropdown-item ${isActive(item.href) ? 'active' : ''}`}
+                  prefetch={false}
+                  onClick={() => setActiveDropdown(false)}
+                >
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
-        {additionalLinks.map((item) => (
-          <Link key={item.href} href={item.href} prefetch={false} className="bottom-nav-link">
-            {item.label}
-          </Link>
-        ))}
       </div>
-    </div>
+    </nav>
   )
 }
-

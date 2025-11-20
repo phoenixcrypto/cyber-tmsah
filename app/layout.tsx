@@ -6,7 +6,7 @@ import { OfflineIndicator } from '@/components/OfflineIndicator'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingLanguageButton from '@/components/FloatingLanguageButton'
-import FloatingMenuButton from '@/components/FloatingMenuButton'
+import BottomNavigation from '@/components/BottomNavigation'
 import SidebarQuickLinks from '@/components/SidebarQuickLinks'
 import PageTransition from '@/components/PageTransition'
 
@@ -80,7 +80,7 @@ export default function RootLayout({
               <PageTransition>{children}</PageTransition>
             </main>
             <Footer />
-            <FloatingMenuButton />
+            <BottomNavigation />
             <FloatingLanguageButton />
           </div>
         </Providers>
