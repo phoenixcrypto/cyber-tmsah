@@ -1,5 +1,8 @@
 'use client'
 
+import { BookOpen, ExternalLink, Star } from 'lucide-react'
+import Link from 'next/link'
+
 interface Book {
   cover: string
   title: string
@@ -7,6 +10,7 @@ interface Book {
   description: string
   tags: string[]
   link: string
+  rating?: number
 }
 
 interface Category {
@@ -25,6 +29,7 @@ const categories: Category[] = [
         description: 'دليل شامل لتعلم البايثون من منظور الأمن السيبراني، يغطي بناء الأدوات الأمنية والتحليل الآلي.',
         tags: ['مبتدئ', 'بايثون', 'برمجة'],
         link: '#',
+        rating: 4.5,
       },
       {
         cover: '📘',
@@ -33,6 +38,7 @@ const categories: Category[] = [
         description: 'تعلم كتابة أدوات القرصنة الأخلاقية باستخدام بايثون، من اختراق الشبكات إلى تحليل البرمجيات الخبيثة.',
         tags: ['متقدم', 'بايثون', 'Hacking'],
         link: '#',
+        rating: 4.8,
       },
       {
         cover: '🔧',
@@ -41,6 +47,7 @@ const categories: Category[] = [
         description: 'كتاب متخصص في بناء أدوات الاختراق والتحليل الجنائي باستخدام بايثون بطريقة عملية.',
         tags: ['متقدم', 'بايثون', 'أدوات'],
         link: '#',
+        rating: 4.6,
       },
       {
         cover: '⚙️',
@@ -49,6 +56,7 @@ const categories: Category[] = [
         description: 'فهم عميق للغة C وكيفية استخدامها في تطوير برمجيات آمنة واكتشاف الثغرات.',
         tags: ['متوسط', 'C Language', 'Secure Coding'],
         link: '#',
+        rating: 4.4,
       },
     ],
   },
@@ -62,6 +70,7 @@ const categories: Category[] = [
         description: 'الكتاب الأساسي لفهم الشبكات من الطبقة التطبيقية حتى الطبقة الفيزيائية، مرجع أكاديمي موثوق.',
         tags: ['مبتدئ', 'شبكات', 'أساسيات'],
         link: '#',
+        rating: 4.9,
       },
       {
         cover: '🔒',
@@ -70,6 +79,7 @@ const categories: Category[] = [
         description: 'أساسيات أمن الشبكات بما في ذلك التشفير، جدران النار، والكشف عن التسلل.',
         tags: ['متوسط', 'أمن الشبكات', 'تشفير'],
         link: '#',
+        rating: 4.7,
       },
       {
         cover: '🛡️',
@@ -78,6 +88,7 @@ const categories: Category[] = [
         description: 'دليل عملي لمراقبة أمن الشبكات واكتشاف التهديدات والاستجابة للحوادث الأمنية.',
         tags: ['متقدم', 'مراقبة', 'تهديدات'],
         link: '#',
+        rating: 4.8,
       },
       {
         cover: '🌍',
@@ -86,6 +97,7 @@ const categories: Category[] = [
         description: 'المرجع الكلاسيكي لفهم بروتوكولات TCP/IP بتفصيل عميق مع أمثلة عملية.',
         tags: ['متقدم', 'TCP/IP', 'بروتوكولات'],
         link: '#',
+        rating: 4.9,
       },
     ],
   },
@@ -99,6 +111,7 @@ const categories: Category[] = [
         description: 'الدليل الشامل لاختبار أمن تطبيقات الويب، يغطي جميع تقنيات الاختراق والثغرات المعروفة.',
         tags: ['متقدم', 'Web Security', 'Pentesting'],
         link: '#',
+        rating: 4.9,
       },
       {
         cover: '⚔️',
@@ -107,6 +120,7 @@ const categories: Category[] = [
         description: 'دليل عملي شامل لاستخدام إطار عمل Metasploit في اختبار الاختراق والاستغلال.',
         tags: ['متوسط', 'Metasploit', 'أدوات'],
         link: '#',
+        rating: 4.6,
       },
       {
         cover: '🎭',
@@ -115,6 +129,7 @@ const categories: Category[] = [
         description: 'مقدمة عملية لاختبار الاختراق تغطي المنهجيات والأدوات والتقنيات الحديثة.',
         tags: ['مبتدئ', 'Pentesting', 'عملي'],
         link: '#',
+        rating: 4.7,
       },
       {
         cover: '🏴',
@@ -123,6 +138,7 @@ const categories: Category[] = [
         description: 'تقنيات متقدمة في اختبار الاختراق للبنى التحتية المعقدة والشبكات المؤسسية.',
         tags: ['خبير', 'Advanced', 'Enterprise'],
         link: '#',
+        rating: 4.8,
       },
       {
         cover: '🌐',
@@ -131,6 +147,7 @@ const categories: Category[] = [
         description: 'دليل عملي يحاكي سيناريوهات اختبار الاختراق الواقعية مع أحدث التقنيات والأدوات.',
         tags: ['متوسط', 'عملي', 'سيناريوهات'],
         link: '#',
+        rating: 4.7,
       },
     ],
   },
@@ -144,6 +161,7 @@ const categories: Category[] = [
         description: 'دليل مرجعي سريع لفرق الدفاع السيبراني والاستجابة للحوادث الأمنية.',
         tags: ['متوسط', 'Blue Team', 'Incident Response'],
         link: '#',
+        rating: 4.5,
       },
       {
         cover: '🚨',
@@ -152,6 +170,7 @@ const categories: Category[] = [
         description: 'دليل شامل لبناء وتشغيل مراكز العمليات الأمنية (SOC) بكفاءة عالية.',
         tags: ['متقدم', 'SOC', 'عمليات'],
         link: '#',
+        rating: 4.7,
       },
       {
         cover: '📊',
@@ -160,6 +179,7 @@ const categories: Category[] = [
         description: 'منهجية عملية للاستجابة للحوادث الأمنية من الكشف حتى التعافي الكامل.',
         tags: ['متوسط', 'IR', 'عملي'],
         link: '#',
+        rating: 4.6,
       },
       {
         cover: '🔐',
@@ -168,6 +188,7 @@ const categories: Category[] = [
         description: 'أفضل الممارسات لحماية البنية التحتية وبناء دفاعات سيبرانية قوية.',
         tags: ['مبتدئ', 'دفاع', 'أفضل الممارسات'],
         link: '#',
+        rating: 4.5,
       },
     ],
   },
@@ -181,6 +202,7 @@ const categories: Category[] = [
         description: 'الدليل الشامل لتحليل البرمجيات الخبيثة والهندسة العكسية بأسلوب عملي.',
         tags: ['متقدم', 'Malware', 'تحليل'],
         link: '#',
+        rating: 4.9,
       },
       {
         cover: '⚙️',
@@ -189,6 +211,7 @@ const categories: Category[] = [
         description: 'أساسيات ومفاهيم الهندسة العكسية للبرمجيات مع تطبيقات عملية متنوعة.',
         tags: ['متوسط', 'Reverse Engineering', 'أساسيات'],
         link: '#',
+        rating: 4.7,
       },
       {
         cover: '🦠',
@@ -197,6 +220,7 @@ const categories: Category[] = [
         description: 'تحليل الذاكرة الجنائي لاكتشاف البرمجيات الخبيثة والتهديدات المتقدمة.',
         tags: ['خبير', 'Forensics', 'Memory Analysis'],
         link: '#',
+        rating: 4.8,
       },
       {
         cover: '💾',
@@ -205,6 +229,7 @@ const categories: Category[] = [
         description: 'تعلم تحليل الملفات الثنائية واستخراج المعلومات منها باستخدام أدوات حديثة.',
         tags: ['متقدم', 'Binary Analysis', 'عملي'],
         link: '#',
+        rating: 4.6,
       },
     ],
   },
@@ -218,6 +243,7 @@ const categories: Category[] = [
         description: 'مبادئ التصميم وأفضل الممارسات لبناء أنظمة تشفير آمنة وفعالة.',
         tags: ['متقدم', 'تشفير', 'تصميم'],
         link: '#',
+        rating: 4.8,
       },
       {
         cover: '📐',
@@ -226,6 +252,7 @@ const categories: Category[] = [
         description: 'مقدمة أكاديمية شاملة للتشفير الحديث مع أسس رياضية قوية.',
         tags: ['متوسط', 'تشفير', 'أكاديمي'],
         link: '#',
+        rating: 4.7,
       },
       {
         cover: '🧮',
@@ -234,6 +261,7 @@ const categories: Category[] = [
         description: 'المرجع الكلاسيكي للتشفير التطبيقي، يغطي البروتوكولات والخوارزميات.',
         tags: ['متقدم', 'Protocols', 'مرجع'],
         link: '#',
+        rating: 4.9,
       },
       {
         cover: '🔓',
@@ -242,6 +270,7 @@ const categories: Category[] = [
         description: 'دليل عملي للتشفير الحديث بأسلوب واضح ومباشر للممارسين.',
         tags: ['متوسط', 'عملي', 'حديث'],
         link: '#',
+        rating: 4.6,
       },
     ],
   },
@@ -255,6 +284,7 @@ const categories: Category[] = [
         description: 'الدليل الشامل لاختبار أمن تطبيقات الويب وفقاً لمعايير OWASP العالمية.',
         tags: ['متوسط', 'OWASP', 'Web Security'],
         link: '#',
+        rating: 4.8,
       },
       {
         cover: '📲',
@@ -263,6 +293,7 @@ const categories: Category[] = [
         description: 'دليل شامل لاختبار أمن تطبيقات الموبايل على منصات iOS و Android.',
         tags: ['متقدم', 'Mobile', 'iOS/Android'],
         link: '#',
+        rating: 4.7,
       },
       {
         cover: '⚡',
@@ -271,6 +302,7 @@ const categories: Category[] = [
         description: 'فهم عميق لأمن المتصفحات وتطبيقات الويب من منظور تقني متقدم.',
         tags: ['متقدم', 'Browser Security', 'تقني'],
         link: '#',
+        rating: 4.6,
       },
       {
         cover: '☁️',
@@ -279,6 +311,7 @@ const categories: Category[] = [
         description: 'أمن الحوسبة السحابية وحماية البيانات في البيئات السحابية.',
         tags: ['متوسط', 'Cloud', 'Privacy'],
         link: '#',
+        rating: 4.5,
       },
     ],
   },
@@ -292,6 +325,7 @@ const categories: Category[] = [
         description: 'موسوعة شاملة في هندسة الأمن، تغطي المبادئ والأنظمة والتطبيقات الواقعية.',
         tags: ['متقدم', 'هندسة', 'موسوعي'],
         link: '#',
+        rating: 4.9,
       },
       {
         cover: '🧠',
@@ -300,6 +334,7 @@ const categories: Category[] = [
         description: 'فهم الهندسة الاجتماعية وكيف يستغل المهاجمون العنصر البشري.',
         tags: ['مبتدئ', 'Social Engineering', 'إنساني'],
         link: '#',
+        rating: 4.7,
       },
       {
         cover: '📚',
@@ -308,6 +343,7 @@ const categories: Category[] = [
         description: 'تعلم أساسيات الاختراق والبرمجة والاستغلال من منظور تقني عميق.',
         tags: ['متوسط', 'Exploitation', 'أساسيات'],
         link: '#',
+        rating: 4.8,
       },
     ],
   },
@@ -317,35 +353,60 @@ export default function BooksPage() {
   return (
     <div className="books-page">
       <section className="page-hero">
-        <h1>📚 مكتبة الكتب الشاملة</h1>
-        <p>مجموعة منتقاة لأهم كتب الأمن السيبراني، مصنفة حسب التخصص والمستوى.</p>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <BookOpen className="w-8 h-8 text-cyber-neon" />
+          <h1 className="gradient-text">مكتبة الكتب الشاملة</h1>
+        </div>
+        <p>مجموعة منتقاة لأهم كتب الأمن السيبراني، مصنفة حسب التخصص والمستوى. اكتشف المراجع الأساسية والكتب المتقدمة لتطوير مهاراتك.</p>
       </section>
 
-      <div className="library-content">
+      <div className="books-content">
         {categories.map((category, categoryIndex) => (
-          <div key={categoryIndex}>
+          <section key={categoryIndex} className="book-category-section">
             <h2 className="book-category-title">{category.title}</h2>
-            <div className="book-grid">
+            <div className="books-grid">
               {category.books.map((book, bookIndex) => (
-                <div key={bookIndex} className="book-card">
-                  <div className="book-cover">{book.cover}</div>
-                  <h4>{book.title}</h4>
-                  <p className="book-author">{book.author}</p>
-                  <p className="book-description">{book.description}</p>
-                  <div className="book-tags">
-                    {book.tags.map((tag, tagIndex) => (
-                      <span key={tagIndex} className="book-tag">
-                        {tag}
-                      </span>
-                    ))}
+                <div 
+                  key={bookIndex} 
+                  className="book-card-enhanced"
+                  style={{ animationDelay: `${(categoryIndex * category.books.length + bookIndex) * 0.05}s` }}
+                >
+                  <div className="book-cover-enhanced">
+                    <div className="book-cover-icon">{book.cover}</div>
+                    {book.rating && (
+                      <div className="book-rating">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span>{book.rating}</span>
+                      </div>
+                    )}
                   </div>
-                  <a href={book.link} className="book-link">
-                    عرض التفاصيل
-                  </a>
+                  <div className="book-info-enhanced">
+                    <h3 className="book-title-enhanced">{book.title}</h3>
+                    <p className="book-author-enhanced">
+                      <span className="book-author-label">المؤلف:</span> {book.author}
+                    </p>
+                    <p className="book-description-enhanced">{book.description}</p>
+                    <div className="book-tags-enhanced">
+                      {book.tags.map((tag, tagIndex) => (
+                        <span key={tagIndex} className="book-tag-enhanced">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link 
+                      href={book.link} 
+                      className="book-link-enhanced"
+                      target={book.link !== '#' ? '_blank' : undefined}
+                      rel={book.link !== '#' ? 'noopener noreferrer' : undefined}
+                    >
+                      <span>عرض التفاصيل</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         ))}
       </div>
     </div>
