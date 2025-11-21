@@ -1,5 +1,9 @@
 'use client'
 
+import { Globe } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
+
 interface Platform {
   logo: string
   title: string
@@ -69,16 +73,19 @@ const categories: Category[] = [
 ]
 
 export default function PlatformsPage() {
+  const { t } = useLanguage()
+  
   return (
     <div className="courses-page">
-      <section className="page-hero">
-        <h1>
-          🌐 <span className="gradient-text">مواقع ومنصات تعليمية</span>
-        </h1>
-        <p>مجموعة من أفضل المنصات والمواقع التعليمية في مجال الأمن السيبراني، مصنفة حسب النوع والغرض.</p>
-      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('platforms.title')} 
+          icon={Globe}
+          description={t('platforms.description')}
+        />
 
-      <div className="courses-content">
+        <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="category-title">{category.title}</h2>
@@ -107,6 +114,7 @@ export default function PlatformsPage() {
             </div>
           </div>
         ))}
+        </div>
       </div>
     </div>
   )

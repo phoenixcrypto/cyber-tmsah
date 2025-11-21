@@ -1,6 +1,14 @@
 'use client'
 
 import { useLanguage } from '@/contexts/LanguageContext'
+import { Map, Globe, Settings } from 'lucide-react'
+import PageHeader from '@/components/PageHeader'
+
+// Emoji to Icon mapping
+const emojiToIcon: Record<string, React.ComponentType<any>> = {
+  '🌐': Globe,
+  '⚙️': Settings,
+}
 
 interface Course {
   order?: number
@@ -269,17 +277,20 @@ export default function RoadmapPage() {
 
   return (
     <div className="roadmap-page">
-      <section className="page-hero">
-        <div className="motivational-box">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('roadmap.title')} 
+          icon={Map}
+          description={t('roadmap.description')}
+        />
+        
+        {/* Motivational Box */}
+        <div className="motivational-box text-center mb-8">
           {language === 'ar' ? 'لا تنتظر الظروف المثالية؛ ابدأ الآن واصنع ظروفك بنفسك' : 'Don\'t wait for perfect conditions; start now and create your own conditions'}
         </div>
-        <h1>
-          {t('roadmap.title')}
-        </h1>
-        <p className="page-hero-subtitle">{t('roadmap.description')}</p>
-      </section>
 
-      <section className="instruction-video">
+        <section className="instruction-video">
         <h3>{language === 'ar' ? 'شرح استخدام خريطة الطريق' : 'How to Use the Roadmap'}</h3>
         <p>{language === 'ar' ? 'شاهد هذا الفيديو لتعرف كيفية التنقل بين المراحل واختيار المسار المناسب لك لتحقيق أقصى استفادة.' : 'Watch this video to learn how to navigate between phases and choose the right path for you to maximize your benefit.'}</p>
         <div className="video-placeholder">
@@ -321,7 +332,16 @@ export default function RoadmapPage() {
                       <div key={courseIndex} className="skill-card">
                         {course.order && <div className="course-order">{course.order}</div>}
                         <div className={`course-status ${course.status}`}>إجباري</div>
-                        <div className="skill-icon">{course.icon}</div>
+                        <div className="skill-icon">
+                          {emojiToIcon[course.icon] ? (
+                            (() => {
+                              const Icon = emojiToIcon[course.icon]
+                              return <Icon className="w-8 h-8 text-cyber-neon" />
+                            })()
+                          ) : (
+                            course.icon
+                          )}
+                        </div>
                         <h3>{course.title}</h3>
                         <p>{course.description}</p>
                         <a href={course.link} target="_blank" rel="noopener noreferrer" className="course-link">
@@ -339,7 +359,16 @@ export default function RoadmapPage() {
                   <div key={courseIndex} className="skill-card">
                     {course.order && <div className="course-order">{course.order}</div>}
                     <div className={`course-status ${course.status}`}>إجباري</div>
-                    <div className="skill-icon">{course.icon}</div>
+                    <div className="skill-icon">
+                      {emojiToIcon[course.icon] ? (
+                        (() => {
+                          const Icon = emojiToIcon[course.icon]
+                          return <Icon className="w-8 h-8 text-cyber-neon" />
+                        })()
+                      ) : (
+                        course.icon
+                      )}
+                    </div>
                     <h3>{course.title}</h3>
                     <p>{course.description}</p>
                     <a href={course.link} target="_blank" rel="noopener noreferrer" className="course-link">
@@ -352,6 +381,7 @@ export default function RoadmapPage() {
             ) : null}
           </section>
         ))}
+        </div>
       </div>
     </div>
   )

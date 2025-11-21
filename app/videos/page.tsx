@@ -1,5 +1,9 @@
 'use client'
 
+import { Video as VideoIcon } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
+
 interface Video {
   title: string
   channel: string
@@ -62,16 +66,20 @@ const categories: Category[] = [
 ]
 
 export default function VideosPage() {
+export default function VideosPage() {
+  const { t } = useLanguage()
+  
   return (
     <div className="courses-page">
-      <section className="page-hero">
-        <h1>
-          ▶️ <span className="gradient-text">فيديوهات الأمن السيبراني المقترحة</span>
-        </h1>
-        <p>مجموعة من أفضل الفيديوهات التعليمية وقوائم التشغيل من يوتيوب، مصنفة حسب الموضوع والمستوى.</p>
-      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('videos.title')} 
+          icon={VideoIcon}
+          description={t('videos.description')}
+        />
 
-      <div className="courses-content">
+        <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="category-title">{category.title}</h2>
@@ -99,6 +107,7 @@ export default function VideosPage() {
             </div>
           </div>
         ))}
+        </div>
       </div>
     </div>
   )

@@ -1,20 +1,23 @@
 'use client'
 
 import { useLanguage } from '@/contexts/LanguageContext'
+import { GraduationCap, User } from 'lucide-react'
+import PageHeader from '@/components/PageHeader'
 
 export default function ExpertiseGuidePage() {
   const { t, language } = useLanguage()
 
   return (
     <div className="courses-page">
-      <section className="page-hero">
-        <h1>
-          💼 <span className="gradient-text">{t('expertise.title')}</span>
-        </h1>
-        <p>{t('expertise.description')}</p>
-      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('expertise.title')} 
+          icon={GraduationCap}
+          description={t('expertise.description')}
+        />
 
-      <div className="courses-content">
+        <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
           <h2 className="category-title">{t('expertise.beginners')}</h2>
           <div className="courses-grid">
@@ -35,7 +38,9 @@ export default function ExpertiseGuidePage() {
               </div>
             </div>
             <div className="course-card">
-              <div className="course-thumbnail" style={{ fontSize: '3rem' }}>👩‍🎓</div>
+              <div className="course-thumbnail flex items-center justify-center">
+                <User className="w-12 h-12 text-cyber-neon" />
+              </div>
               <div className="course-info">
                 <h4>{language === 'ar' ? 'فاطمة عبدالرحمن' : 'Fatima Abdelrahman'}</h4>
                 <p className="course-instructor">{t('expertise.securityEngineer')} - 4 {t('expertise.experience')}</p>
@@ -52,6 +57,7 @@ export default function ExpertiseGuidePage() {
             </div>
           </div>
         </section>
+        </div>
       </div>
     </div>
   )

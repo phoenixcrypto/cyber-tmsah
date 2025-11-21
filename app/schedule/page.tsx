@@ -1,8 +1,9 @@
 'use client'
 
-import { Calendar, Clock, MapPin, User, Search } from 'lucide-react'
+import { Calendar, Clock, MapPin, User, Search, BookOpen, FlaskConical, PartyPopper, AlertTriangle } from 'lucide-react'
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
 
 export default function SchedulePage() {
   const { t, language } = useLanguage()
@@ -401,11 +402,11 @@ export default function SchedulePage() {
     
     let filtered = allScheduleData.filter(item => {
       const matchesGroup = item.group === groupFilter
-      // If section is selected: show that section's labs AND all group lectures
+      // If section is selected: show ONLY that section's labs (no lectures)
       // If no section selected: show all sections and lectures
       if (selectedSection) {
-        // Include: labs for the selected section OR lectures (no sectionNumber)
-        return matchesGroup && (item.sectionNumber === parseInt(selectedSection) || !item.sectionNumber)
+        // Include ONLY: labs for the selected section (exclude lectures)
+        return matchesGroup && item.sectionNumber === parseInt(selectedSection)
       } else {
         // Include: all items in the group
         return matchesGroup
@@ -445,6 +446,10 @@ export default function SchedulePage() {
   useEffect(() => {
     if (selectedSection) {
       handleSearch()
+      // On mobile, when filtering by section, force list view (cards)
+      if (window.innerWidth < 768) {
+        setViewMode('list')
+      }
     } else {
       // If no section selected, clear filtered schedule to show all
       setFilteredSchedule([])
@@ -456,15 +461,12 @@ export default function SchedulePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100 mb-6">
-            {t('schedule.title')}
-          </h1>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            {t('schedule.description')}
-          </p>
-        </div>
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('schedule.title')} 
+          icon={Calendar}
+          description={t('schedule.description')}
+        />
 
         {/* Schedule View Toggle - Group A or B */}
         <div className="mb-6 animate-slide-up">
@@ -505,28 +507,29 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        {/* Search Interface */}
+        {/* Search Interface - Modern 2026 Design */}
         <div className="mb-8 animate-slide-up">
-          <div className="enhanced-card p-6">
-            <h2 className="text-xl font-semibold text-dark-100 mb-4 text-center">
+          <div className="enhanced-card p-6 border-2 border-cyber-neon/20 bg-gradient-to-br from-cyber-dark/80 via-cyber-dark/60 to-cyber-dark/80">
+            <h2 className="text-2xl font-bold text-dark-100 mb-6 text-center bg-gradient-to-r from-cyber-neon to-cyber-green bg-clip-text text-transparent">
               {t('schedule.filterBySection')}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-end max-w-3xl mx-auto">
               <div>
-                <label className="block text-sm font-medium text-dark-200 mb-2">
-                      {t('schedule.sectionNumber')}
+                <label className="block text-sm font-semibold text-dark-200 mb-3 flex items-center gap-2">
+                  <Search className="w-4 h-4 text-cyber-neon" />
+                  {t('schedule.sectionNumber')}
                 </label>
                 <select
                   value={selectedSection}
                   onChange={(e) => setSelectedSection(e.target.value)}
-                  className="w-full px-3 py-2 bg-cyber-dark border border-cyber-neon/20 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
+                  className="w-full px-4 py-3 bg-cyber-dark/80 border-2 border-cyber-neon/30 rounded-xl text-dark-100 focus:border-cyber-neon focus:outline-none focus:ring-4 focus:ring-cyber-neon/20 transition-all duration-300 hover:border-cyber-neon/50 font-medium"
                 >
                   <option value="">{t('schedule.allSections')}</option>
                   {sections.map(section => (
                     <option key={section} value={section}>{section}</option>
                   ))}
           </select>
-                </div>
+              </div>
                 
               <div>
                 <button
@@ -538,18 +541,18 @@ export default function SchedulePage() {
                       setValidationError('')
                     }
                   }}
-                  className="w-full bg-gradient-to-r from-cyber-neon to-cyber-green hover:from-cyber-green hover:to-cyber-neon text-dark-100 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                  className="w-full bg-gradient-to-r from-cyber-neon via-cyber-green to-cyber-neon bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-100 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 shadow-lg shadow-cyber-neon/30 active:scale-95"
                 >
-                  <Search className="w-4 h-4" />
+                  <Search className="w-5 h-5" />
                   {selectedSection ? t('schedule.filter') : t('schedule.clear')}
                 </button>
               </div>
-                </div>
+            </div>
                 
             {validationError && (
               <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg max-w-2xl mx-auto">
                 <div className="flex items-start gap-3">
-                  <div className="text-red-400 font-bold text-lg">⚠</div>
+                  <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-red-400 font-semibold mb-1">{t('schedule.invalidSelection')}</h4>
                     <p className="text-red-300 text-sm">{validationError}</p>
@@ -563,31 +566,35 @@ export default function SchedulePage() {
           </div>
                 </div>
 
-        {/* View Mode Toggle */}
-        <div className="mb-6 animate-slide-up">
-          <div className="enhanced-card p-4">
-            <div className="flex items-center justify-center gap-4">
-              <span className={`text-sm font-medium ${viewMode === 'list' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                {t('schedule.viewMode.list')}
-              </span>
-              <button
-                onClick={() => setViewMode(viewMode === 'list' ? 'matrix' : 'list')}
-                className={`relative w-16 h-8 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon switch-track switch-track--compact ${
-                  viewMode === 'matrix' ? 'switch-track--active' : 'switch-track--inactive'
-                }`}
-              >
-                <span
-                  className={`absolute top-1 left-1 w-6 h-6 rounded-full shadow-lg transform transition-transform duration-300 switch-knob ${
-                    viewMode === 'matrix' ? 'translate-x-8' : 'translate-x-0'
+        {/* View Mode Toggle - Modern 2026 Design */}
+        <div className="mb-8 animate-slide-up">
+          <div className="enhanced-card p-5 border-2 border-cyber-neon/20 bg-gradient-to-br from-cyber-dark/80 via-cyber-dark/60 to-cyber-dark/80">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+              <h3 className="text-lg font-semibold text-dark-200">{t('schedule.viewMode.title') || 'أسلوب العرض'}</h3>
+              <div className="flex items-center gap-5">
+                <span className={`text-base font-bold transition-all duration-300 ${viewMode === 'list' ? 'text-cyber-neon scale-110' : 'text-dark-400'}`}>
+                  {t('schedule.viewMode.list')}
+                </span>
+                <button
+                  onClick={() => setViewMode(viewMode === 'list' ? 'matrix' : 'list')}
+                  className={`relative w-20 h-10 rounded-full transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyber-neon/50 focus:ring-offset-2 focus:ring-offset-cyber-dark switch-track ${
+                    viewMode === 'matrix' ? 'switch-track--active' : 'switch-track--inactive'
                   }`}
-                />
-              </button>
-              <span className={`text-sm font-medium ${viewMode === 'matrix' ? 'text-cyber-neon' : 'text-dark-400'}`}>
-                {t('schedule.viewMode.matrix')}
+                  aria-label={viewMode === 'list' ? t('schedule.viewMode.matrix') : t('schedule.viewMode.list')}
+                >
+                  <span
+                    className={`absolute top-1 left-1 w-8 h-8 rounded-full shadow-xl transform transition-all duration-300 switch-knob ${
+                      viewMode === 'matrix' ? 'translate-x-10' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+                <span className={`text-base font-bold transition-all duration-300 ${viewMode === 'matrix' ? 'text-cyber-neon scale-110' : 'text-dark-400'}`}>
+                  {t('schedule.viewMode.matrix')}
                 </span>
               </div>
-                </div>
-                </div>
+            </div>
+          </div>
+        </div>
 
         {/* Matrix View Options */}
         {viewMode === 'matrix' && (
@@ -1046,8 +1053,9 @@ export default function SchedulePage() {
                         <Calendar className={`w-5 h-5 ${isHoliday ? 'text-yellow-400' : 'text-cyber-neon'}`} />
                         <h3 className="text-xl font-bold text-dark-100">{dayNames[day] || day}</h3>
                         {isHoliday ? (
-                          <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold">
-                            🎉 {t('schedule.holiday')}
+                          <span className="ml-auto text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full font-semibold flex items-center gap-1.5">
+                            <PartyPopper className="w-4 h-4" />
+                            {t('schedule.holiday')}
                           </span>
                         ) : (
                           <span className="ml-auto text-sm text-dark-300 bg-cyber-dark/50 px-3 py-1 rounded-full">
@@ -1060,7 +1068,9 @@ export default function SchedulePage() {
                     {/* Day Content */}
                     {isHoliday ? (
                       <div className="p-12 text-center">
-                        <div className="text-6xl mb-4">🎉</div>
+                        <div className="flex justify-center mb-4">
+                          <PartyPopper className="w-16 h-16 text-yellow-400" />
+                        </div>
                         <h4 className="text-2xl font-semibold text-dark-200 mb-2">{t('schedule.holiday')}</h4>
                         <p className="text-dark-400">{t('schedule.noLectures')}</p>
                       </div>
@@ -1099,12 +1109,22 @@ export default function SchedulePage() {
                                           </span>
                                         )}
                                       </div>
-                                      <span className={`px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 ${
+                                      <span className={`px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 flex items-center gap-1.5 ${
                                         item.type === 'lecture'
                                           ? 'bg-cyber-violet/30 text-cyber-violet'
                                           : 'bg-cyber-green/30 text-cyber-green'
                                       }`}>
-                                        {item.type === 'lecture' ? `📚 ${t('schedule.lecture')}` : `🔬 ${t('schedule.lab')}`}
+                                        {item.type === 'lecture' ? (
+                                          <>
+                                            <BookOpen className="w-3.5 h-3.5" />
+                                            {t('schedule.lecture')}
+                                          </>
+                                        ) : (
+                                          <>
+                                            <FlaskConical className="w-3.5 h-3.5" />
+                                            {t('schedule.lab')}
+                                          </>
+                                        )}
                                       </span>
                                     </div>
 

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Calendar, BookOpen, Target, Award } from 'lucide-react'
+import { Calendar, BookOpen, Target, Award, CheckCircle2, Star, Briefcase } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Script from 'next/script'
 
@@ -17,17 +17,17 @@ export default function HomePage() {
 
   const aboutFeatures = [
     {
-      icon: '✅',
+      icon: CheckCircle2,
       titleKey: 'home.about.feature1.title',
       descriptionKey: 'home.about.feature1.desc',
     },
     {
-      icon: '⭐',
+      icon: Star,
       titleKey: 'home.about.feature2.title',
       descriptionKey: 'home.about.feature2.desc',
     },
     {
-      icon: '💼',
+      icon: Briefcase,
       titleKey: 'home.about.feature3.title',
       descriptionKey: 'home.about.feature3.desc',
     },
@@ -101,13 +101,18 @@ export default function HomePage() {
           </div>
 
           <div className="about-features-enhanced">
-            {aboutFeatures.map((feature, index) => (
-              <div key={index} className="about-feature-card" style={{ animationDelay: `${index * 0.15}s` }}>
-                <div className="feature-icon-large">{feature.icon}</div>
-                <h3 className="feature-title">{t(feature.titleKey)}</h3>
-                <p className="feature-description">{t(feature.descriptionKey)}</p>
-              </div>
-            ))}
+            {aboutFeatures.map((feature, index) => {
+              const Icon = feature.icon
+              return (
+                <div key={index} className="about-feature-card" style={{ animationDelay: `${index * 0.15}s` }}>
+                  <div className="feature-icon-large">
+                    <Icon className="w-12 h-12 text-cyber-neon" />
+                  </div>
+                  <h3 className="feature-title">{t(feature.titleKey)}</h3>
+                  <p className="feature-description">{t(feature.descriptionKey)}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>

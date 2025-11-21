@@ -3,6 +3,7 @@
 import { FileText, AlertCircle, CheckCircle, XCircle, BookOpen, Shield, Users, Globe } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
+import PageHeader from '@/components/PageHeader'
 
 export default function TermsPage() {
   const { t } = useLanguage()
@@ -53,57 +54,53 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-              <FileText className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              {t('terms.title')}
-            </h1>
-          </div>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto leading-relaxed">
-            {t('terms.description')}
-          </p>
-          <p className="text-base text-dark-400 max-w-2xl mx-auto mt-4 leading-relaxed">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('terms.title')} 
+          icon={FileText}
+          description={t('terms.description')}
+        />
+        <p className="text-base text-dark-400 max-w-2xl mx-auto mt-4 mb-8 text-center leading-relaxed">
             آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
 
-        {/* Introduction */}
-        <div className="enhanced-card p-8 mb-8 animate-slide-up">
-          <p className="text-dark-300 leading-relaxed text-lg mb-4">
-            مرحباً بك في منصة سايبر تمساح. تشرح هذه الاتفاقية الشروط والأحكام التي تحكم استخدامك لموقعنا وخدماتنا.
-          </p>
-          <p className="text-dark-300 leading-relaxed">
-            يرجى قراءة هذه الشروط بعناية قبل استخدام موقعنا. باستخدام موقعنا، فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق على هذه الشروط، يرجى عدم استخدام موقعنا.
-          </p>
-        </div>
+        {/* Introduction - Article Style */}
+        <article className="enhanced-card p-8 mb-8 animate-slide-up">
+          <h2 className="text-3xl font-bold text-dark-100 mb-6">مقدمة</h2>
+          <div className="prose prose-invert max-w-none">
+            <p className="text-dark-300 leading-relaxed text-lg mb-4">
+              مرحباً بك في منصة سايبر تمساح. تشرح هذه الاتفاقية الشروط والأحكام التي تحكم استخدامك لموقعنا وخدماتنا.
+            </p>
+            <p className="text-dark-300 leading-relaxed text-lg">
+              يرجى قراءة هذه الشروط بعناية قبل استخدام موقعنا. باستخدام موقعنا، فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق على هذه الشروط، يرجى عدم استخدام موقعنا.
+            </p>
+          </div>
+        </article>
 
-        {/* Terms Sections */}
-        <div className="space-y-6">
+        {/* Terms Sections - Article Style for AdSense */}
+        <article className="space-y-8">
           {termsSections.map((section, index) => {
             const Icon = section.icon
             return (
-              <div key={index} className="enhanced-card p-8 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="flex items-start gap-4 mb-4">
+              <section key={index} className="enhanced-card p-8 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="flex items-start gap-4 mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyber-neon/30">
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-dark-100 mb-3">
-                      {section.title}
-                    </h3>
-                    <p className="text-dark-300 leading-relaxed">
-                      {section.content}
-                    </p>
-                  </div>
+                  <h2 className="text-2xl font-bold text-dark-100 flex-1">
+                    {section.title}
+                  </h2>
                 </div>
-              </div>
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-dark-300 leading-relaxed text-lg mb-4">
+                    {section.content}
+                  </p>
+                </div>
+              </section>
             )
           })}
-        </div>
+        </article>
 
         {/* Contact Section */}
         <div className="enhanced-card p-8 mt-8 animate-slide-up">
@@ -116,20 +113,22 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* Agreement Section */}
-        <div className="enhanced-card p-8 mt-8 animate-slide-up border-2 border-cyber-neon/30">
+        {/* Agreement Section - Article Style */}
+        <article className="enhanced-card p-8 mt-8 animate-slide-up border-2 border-cyber-neon/30">
           <div className="flex items-start gap-4">
             <CheckCircle className="w-6 h-6 text-cyber-neon flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="text-xl font-semibold text-dark-100 mb-3">
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-dark-100 mb-4">
                 الموافقة على الشروط
-              </h3>
-              <p className="text-dark-300 leading-relaxed">
-                باستخدام موقع منصة سايبر تمساح، فإنك تقر وتوافق على أنك قد قرأت وفهمت هذه الشروط والأحكام وأنك توافق على الالتزام بها. إذا كنت لا توافق على أي جزء من هذه الشروط، فيجب عليك التوقف عن استخدام موقعنا فوراً.
-              </p>
+              </h2>
+              <div className="prose prose-invert max-w-none">
+                <p className="text-dark-300 leading-relaxed text-lg">
+                  باستخدام موقع منصة سايبر تمساح، فإنك تقر وتوافق على أنك قد قرأت وفهمت هذه الشروط والأحكام وأنك توافق على الالتزام بها. إذا كنت لا توافق على أي جزء من هذه الشروط، فيجب عليك التوقف عن استخدام موقعنا فوراً.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   )

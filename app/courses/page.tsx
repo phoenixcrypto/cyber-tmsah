@@ -1,5 +1,9 @@
 'use client'
 
+import { GraduationCap } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
+
 interface Course {
   title: string
   instructor: string
@@ -95,16 +99,19 @@ const categories: Category[] = [
 ]
 
 export default function CoursesPage() {
+  const { t } = useLanguage()
+  
   return (
     <div className="courses-page">
-      <section className="page-hero">
-        <h1>
-          📚 <span className="gradient-text">الدورات التعليمية المصنفة</span>
-        </h1>
-        <p>ابدأ رحلتك التعليمية مع أفضل الدورات المجانية والمدفوعة، مصنفة حسب التخصص والمستوى.</p>
-      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('courses.title')} 
+          icon={GraduationCap}
+          description={t('courses.description')}
+        />
 
-      <div className="courses-content">
+        <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
             <h2 className="category-title">{category.title}</h2>
@@ -132,6 +139,7 @@ export default function CoursesPage() {
             </div>
           </div>
         ))}
+        </div>
       </div>
     </div>
   )

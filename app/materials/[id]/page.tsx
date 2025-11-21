@@ -95,26 +95,28 @@ export default function SubjectPage() {
             {t('materials.subject.backToMaterials')}
           </Link>
           
-          <div className="flex items-center gap-4 mb-6">
-            <div className={`w-16 h-16 bg-gradient-to-br ${subject.color} rounded-2xl flex items-center justify-center shadow-lg`}>
-              <BookOpen className="w-8 h-8 text-white" />
+          <div className="enhanced-card p-8 mb-8 border-2 border-cyber-neon/20 bg-gradient-to-br from-cyber-dark/80 via-cyber-dark/60 to-cyber-dark/80">
+            <div className="flex items-center gap-6 mb-6">
+              <div className={`w-20 h-20 bg-gradient-to-br ${subject.color} rounded-2xl flex items-center justify-center shadow-xl shadow-cyber-neon/20`}>
+                <BookOpen className="w-10 h-10 text-white" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-3xl sm:text-4xl font-bold text-dark-100 mb-2 bg-gradient-to-r from-cyber-neon to-cyber-green bg-clip-text text-transparent">
+                  {subject.title}
+                </h1>
+                <p className="text-lg text-dark-300">{subject.description}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-orbitron font-bold text-dark-100">
-                {subject.title}
-              </h1>
-              <p className="text-lg text-dark-300">{subject.description}</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-6 text-sm text-dark-400">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              <span>{t('materials.subject.instructor')}: {subject.instructor}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              <span>{articles.length} {articles.length === 1 ? t('materials.article') : t('materials.articles')}</span>
+            
+            <div className="flex flex-wrap items-center gap-6 text-sm">
+              <div className="flex items-center gap-2 px-4 py-2 bg-cyber-dark/50 rounded-lg border border-cyber-neon/20">
+                <User className="w-5 h-5 text-cyber-neon" />
+                <span className="text-dark-200 font-semibold">{subject.instructor}</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-cyber-dark/50 rounded-lg border border-cyber-neon/20">
+                <FileText className="w-5 h-5 text-cyber-green" />
+                <span className="text-dark-200 font-semibold">{articles.length} {articles.length === 1 ? t('materials.article') : t('materials.articles')}</span>
+              </div>
             </div>
           </div>
         </div>

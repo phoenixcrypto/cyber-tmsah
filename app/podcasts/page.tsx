@@ -1,5 +1,20 @@
 'use client'
 
+import { Headphones, Globe, Music, Mic, Lock, Key, Radio } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
+
+// Emoji to Icon mapping
+const emojiToIcon: Record<string, React.ComponentType<any>> = {
+  '🌐': Globe,
+  '🎙️': Mic,
+  '🟢': Radio,
+  '🎵': Music,
+  '🔒': Lock,
+  '🔐': Key,
+  '🎧': Headphones,
+}
+
 interface Podcast {
   cover: string
   title: string
@@ -62,22 +77,38 @@ const categories: Category[] = [
 ]
 
 export default function PodcastsPage() {
+export default function PodcastsPage() {
+  const { t } = useLanguage()
+  
   return (
     <div className="courses-page">
-      <section className="page-hero">
-        <h1>🎙️ استمع وتعلّم: بودكاست الأمن السيبراني</h1>
-        <p>أفضل البرامج الصوتية العربية والأجنبية التي تناقش أحدث التهديدات، التقنيات، وتجارب الخبراء في المجال.</p>
-      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('podcasts.title')} 
+          icon={Headphones}
+          description={t('podcasts.description')}
+        />
 
-      <div className="courses-content">
+        <div className="courses-content">
         {categories.map((category, categoryIndex) => (
           <div key={categoryIndex}>
-            <h2 className="category-title">{category.title}</h2>
+            <h2 className="category-title flex items-center gap-3">
+              {category.title.startsWith('🌐') && <Globe className="w-6 h-6 text-cyber-neon" />}
+              {category.title.replace(/^🌐\s*/, '')}
+            </h2>
             <div className="courses-grid">
               {category.podcasts.map((podcast, podcastIndex) => (
                 <div key={podcastIndex} className="course-card">
-                  <div className="course-thumbnail" style={{ fontSize: '4rem' }}>
-                    {podcast.cover}
+                  <div className="course-thumbnail flex items-center justify-center">
+                    {emojiToIcon[podcast.cover] ? (
+                      (() => {
+                        const Icon = emojiToIcon[podcast.cover]
+                        return <Icon className="w-16 h-16 text-cyber-neon" />
+                      })()
+                    ) : (
+                      <span style={{ fontSize: '4rem' }}>{podcast.cover}</span>
+                    )}
                   </div>
                   <div className="course-info">
                     <h4>{podcast.title}</h4>
@@ -91,11 +122,19 @@ export default function PodcastsPage() {
                       ))}
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1rem' }}>
-                      {podcast.links.map((link, linkIndex) => (
-                        <a key={linkIndex} href={link.url} className="course-link" style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}>
-                          {link.label}
-                        </a>
-                      ))}
+                      {podcast.links.map((link, linkIndex) => {
+                        const emojiMatch = link.label.match(/^([^\s]+)\s(.+)$/)
+                        const emoji = emojiMatch ? emojiMatch[1] : ''
+                        const labelText = emojiMatch ? emojiMatch[2] : link.label
+                        const LinkIcon = emoji && emojiToIcon[emoji] ? emojiToIcon[emoji] : null
+                        
+                        return (
+                          <a key={linkIndex} href={link.url} className="course-link flex items-center gap-2" style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}>
+                            {LinkIcon && <LinkIcon className="w-4 h-4" />}
+                            {labelText}
+                          </a>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
@@ -103,6 +142,7 @@ export default function PodcastsPage() {
             </div>
           </div>
         ))}
+        </div>
       </div>
     </div>
   )

@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, Calculator, Atom, Database, Globe, Users, ArrowRight } from 'lucide-react'
+import { BookOpen, Calculator, Atom, Database, Globe, Users, ArrowRight, FileText } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
 
 interface Subject {
   id: string
@@ -87,23 +88,15 @@ export default function MaterialsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-r from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-              <BookOpen className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              {t('materials.title')}
-            </h1>
-          </div>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            {t('materials.description')}
-          </p>
-        </div>
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('materials.title')} 
+          icon={BookOpen}
+          description={t('materials.description')}
+        />
 
-        {/* Subjects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {/* Subjects Grid - Enhanced 2026 Design */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {subjectsData.map((subject, index) => {
             const Icon = subject.icon
             return (
@@ -112,31 +105,32 @@ export default function MaterialsPage() {
                 href={`/materials/${subject.id}`}
                 className="group block"
               >
-                <div className="enhanced-card p-6 h-full min-h-[240px] flex flex-col justify-between hover:scale-105 transition-all duration-300 animate-slide-up-delayed"
+                <div className="enhanced-card p-8 h-full min-h-[280px] flex flex-col justify-between hover:scale-[1.03] transition-all duration-300 animate-slide-up-delayed border-2 border-cyber-neon/10 hover:border-cyber-neon/30 bg-gradient-to-br from-cyber-dark/80 via-cyber-dark/60 to-cyber-dark/80"
                      style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${subject.color} rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg`}>
-                      <Icon className="w-8 h-8 text-white" />
+                  <div className="flex items-start justify-between mb-6">
+                    <div className={`w-20 h-20 bg-gradient-to-br ${subject.color} rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform shadow-xl shadow-cyber-neon/20`}>
+                      <Icon className="w-10 h-10 text-white" />
                     </div>
-                    <ArrowRight className="w-5 h-5 text-cyber-neon group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-6 h-6 text-cyber-neon group-hover:translate-x-2 transition-all duration-300 opacity-0 group-hover:opacity-100" />
                   </div>
                   
-                  <div>
-                    <h3 className="text-xl font-semibold text-dark-100 mb-2 group-hover:text-cyber-neon transition-colors min-h-[56px]">
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-dark-100 mb-3 group-hover:text-cyber-neon transition-colors min-h-[64px] leading-tight">
                       {subject.title}
                     </h3>
                     
-                    <p className="text-dark-300 mb-4 group-hover:text-dark-200 transition-colors">
+                    <p className="text-dark-300 mb-6 group-hover:text-dark-200 transition-colors text-base leading-relaxed">
                       {subject.description}
                     </p>
                   </div>
                   
-                  <div className="flex items-center justify-between text-sm text-dark-400">
-                    <span>
+                  <div className="flex items-center justify-between text-sm text-dark-400 pt-4 border-t border-cyber-neon/10">
+                    <span className="flex items-center gap-2 font-medium">
+                      <FileText className="w-4 h-4 text-cyber-neon" />
                       {subject.articlesCount} {subject.articlesCount === 1 ? 'مقال' : 'مقالات'}
                     </span>
-                    <span>
-                      {subject.lastUpdated !== 'لا توجد مقالات بعد' ? `تم التحديث: ${subject.lastUpdated}` : 'لا توجد مقالات بعد'}
+                    <span className="text-xs">
+                      {subject.lastUpdated !== 'لا توجد مقالات بعد' ? `تم التحديث: ${subject.lastUpdated}` : 'قريباً'}
                     </span>
                   </div>
                 </div>

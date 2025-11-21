@@ -4,6 +4,7 @@ import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, L
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
 import Image from 'next/image'
+import PageHeader from '@/components/PageHeader'
 
 export default function AboutPage() {
   const { t } = useLanguage()
@@ -69,18 +70,12 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Info className="w-8 h-8 text-cyber-neon" />
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              {t('about.title')}
-            </h1>
-          </div>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto">
-            {t('about.description')}
-          </p>
-        </div>
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('about.title')} 
+          icon={Info}
+          description={t('about.description')}
+        />
 
         {/* Mission Section */}
         <div className="mb-16 animate-slide-up">

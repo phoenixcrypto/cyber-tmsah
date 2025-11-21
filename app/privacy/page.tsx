@@ -3,6 +3,7 @@
 import { Shield, FileText, Lock, Eye, Cookie, Users, Database, Globe } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
+import PageHeader from '@/components/PageHeader'
 
 export default function PrivacyPage() {
   const { t } = useLanguage()
@@ -48,57 +49,52 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-              <Shield className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              {t('privacy.title')}
-            </h1>
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('privacy.title')} 
+          icon={Shield}
+          description={t('privacy.description')}
+        />
+        <p className="text-base text-dark-400 max-w-2xl mx-auto mt-4 mb-8 text-center leading-relaxed">
+          آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+
+        {/* Introduction - Article Style */}
+        <article className="enhanced-card p-8 mb-8 animate-slide-up">
+          <h2 className="text-3xl font-bold text-dark-100 mb-6">مقدمة</h2>
+          <div className="prose prose-invert max-w-none">
+            <p className="text-dark-300 leading-relaxed text-lg mb-4">
+              نحن في منصة سايبر تمساح نولي أهمية كبيرة لخصوصيتك وحماية بياناتك الشخصية. تشرح هذه السياسة كيفية جمعنا واستخدامنا وحماية معلوماتك عند استخدام موقعنا.
+            </p>
+            <p className="text-dark-300 leading-relaxed text-lg">
+              باستخدام موقعنا، فإنك توافق على ممارسات جمع المعلومات واستخدامها الموضحة في هذه السياسة. إذا كنت لا توافق على هذه السياسة، يرجى عدم استخدام موقعنا.
+            </p>
           </div>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto leading-relaxed">
-            {t('privacy.description')}
-          </p>
-          <p className="text-base text-dark-400 max-w-2xl mx-auto mt-4 leading-relaxed">
-            آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
-        </div>
+        </article>
 
-        {/* Introduction */}
-        <div className="enhanced-card p-8 mb-8 animate-slide-up">
-          <p className="text-dark-300 leading-relaxed text-lg mb-4">
-            نحن في منصة سايبر تمساح نولي أهمية كبيرة لخصوصيتك وحماية بياناتك الشخصية. تشرح هذه السياسة كيفية جمعنا واستخدامنا وحماية معلوماتك عند استخدام موقعنا.
-          </p>
-          <p className="text-dark-300 leading-relaxed">
-            باستخدام موقعنا، فإنك توافق على ممارسات جمع المعلومات واستخدامها الموضحة في هذه السياسة. إذا كنت لا توافق على هذه السياسة، يرجى عدم استخدام موقعنا.
-          </p>
-        </div>
-
-        {/* Privacy Sections */}
-        <div className="space-y-6">
+        {/* Privacy Sections - Article Style for AdSense */}
+        <article className="space-y-8">
           {privacySections.map((section, index) => {
             const Icon = section.icon
             return (
-              <div key={index} className="enhanced-card p-8 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="flex items-start gap-4 mb-4">
+              <section key={index} className="enhanced-card p-8 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div className="flex items-start gap-4 mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-cyber-neon to-cyber-green rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyber-neon/30">
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-dark-100 mb-3">
-                      {section.title}
-                    </h3>
-                    <p className="text-dark-300 leading-relaxed">
-                      {section.content}
-                    </p>
-                  </div>
+                  <h2 className="text-2xl font-bold text-dark-100 flex-1">
+                    {section.title}
+                  </h2>
                 </div>
-              </div>
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-dark-300 leading-relaxed text-lg mb-4">
+                    {section.content}
+                  </p>
+                </div>
+              </section>
             )
           })}
-        </div>
+        </article>
 
         {/* Contact Section */}
         <div className="enhanced-card p-8 mt-8 animate-slide-up">
@@ -111,15 +107,17 @@ export default function PrivacyPage() {
           </p>
         </div>
 
-        {/* Changes Section */}
-        <div className="enhanced-card p-8 mt-8 animate-slide-up">
-          <h3 className="text-xl font-semibold text-dark-100 mb-4">
+        {/* Changes Section - Article Style */}
+        <article className="enhanced-card p-8 mt-8 animate-slide-up">
+          <h2 className="text-2xl font-bold text-dark-100 mb-4">
             التغييرات على سياسة الخصوصية
-          </h3>
-          <p className="text-dark-300 leading-relaxed">
-            نحتفظ بالحق في تحديث أو تعديل سياسة الخصوصية هذه في أي وقت. سيتم نشر أي تغييرات على هذه الصفحة مع تحديث تاريخ "آخر تحديث". ننصحك بمراجعة هذه السياسة بانتظام للبقاء على اطلاع بآخر التحديثات.
-          </p>
-        </div>
+          </h2>
+          <div className="prose prose-invert max-w-none">
+            <p className="text-dark-300 leading-relaxed text-lg">
+              نحتفظ بالحق في تحديث أو تعديل سياسة الخصوصية هذه في أي وقت. سيتم نشر أي تغييرات على هذه الصفحة مع تحديث تاريخ "آخر تحديث". ننصحك بمراجعة هذه السياسة بانتظام للبقاء على اطلاع بآخر التحديثات.
+            </p>
+          </div>
+        </article>
       </div>
     </div>
   )

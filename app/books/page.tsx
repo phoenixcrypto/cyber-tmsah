@@ -1,16 +1,42 @@
 'use client'
 
-import { BookOpen, ExternalLink, Star } from 'lucide-react'
+import { BookOpen, ExternalLink, Star, Globe, Radio, Shield, ShieldCheck, BarChart3, FlaskConical, GraduationCap, Book, Target, Unlock, Sword, User, Flag, Search, AlertCircle, Lock, Dna, Settings } from 'lucide-react'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
 
 interface Book {
-  cover: string
+  cover: string | React.ComponentType<any>
   title: string
   author: string
   description: string
   tags: string[]
   link: string
   rating?: number
+}
+
+// Emoji to Icon mapping
+const emojiToIcon: Record<string, React.ComponentType<any>> = {
+  '🌐': Globe,
+  '📡': Radio,
+  '🔒': Shield,
+  '🛡️': ShieldCheck,
+  '🌍': Globe,
+  '🎯': Target,
+  '🔓': Unlock,
+  '⚔️': Sword,
+  '🎭': User,
+  '🏴': Flag,
+  '🔍': Search,
+  '🚨': AlertCircle,
+  '📊': BarChart3,
+  '🔐': Lock,
+  '🔬': FlaskConical,
+  '🧬': Dna,
+  '⚙️': Settings,
+  '📖': Book,
+  '🎓': GraduationCap,
+  '📚': BookOpen,
 }
 
 interface Category {
@@ -350,20 +376,32 @@ const categories: Category[] = [
 ]
 
 export default function BooksPage() {
+  const { t } = useLanguage()
+  
   return (
     <div className="books-page">
-      <section className="page-hero">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <BookOpen className="w-8 h-8 text-cyber-neon" />
-          <h1 className="gradient-text">مكتبة الكتب الشاملة</h1>
-        </div>
-        <p>مجموعة منتقاة لأهم كتب الأمن السيبراني، مصنفة حسب التخصص والمستوى. اكتشف المراجع الأساسية والكتب المتقدمة لتطوير مهاراتك.</p>
-      </section>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Unified Page Header */}
+        <PageHeader 
+          title={t('books.title')} 
+          icon={BookOpen}
+          description={t('books.description')}
+        />
 
-      <div className="books-content">
-        {categories.map((category, categoryIndex) => (
+        <div className="books-content">
+        {categories.map((category, categoryIndex) => {
+          // Extract emoji and text from title
+          const emojiMatch = category.title.match(/^([^\s]+)\s(.+)$/)
+          const emoji = emojiMatch ? emojiMatch[1] : ''
+          const titleText = emojiMatch ? emojiMatch[2] : category.title
+          const IconComponent = emoji && emojiToIcon[emoji] ? emojiToIcon[emoji] : null
+          
+          return (
           <section key={categoryIndex} className="book-category-section">
-            <h2 className="book-category-title">{category.title}</h2>
+            <h2 className="book-category-title flex items-center gap-3">
+              {IconComponent && <IconComponent className="w-8 h-8 text-cyber-neon" />}
+              {titleText}
+            </h2>
             <div className="books-grid">
               {category.books.map((book, bookIndex) => (
                 <div 
@@ -372,7 +410,21 @@ export default function BooksPage() {
                   style={{ animationDelay: `${(categoryIndex * category.books.length + bookIndex) * 0.05}s` }}
                 >
                   <div className="book-cover-enhanced">
-                    <div className="book-cover-icon">{book.cover}</div>
+                    <div className="book-cover-icon">
+                      {typeof book.cover === 'string' && emojiToIcon[book.cover] ? (
+                        (() => {
+                          const Icon = emojiToIcon[book.cover]
+                          return <Icon className="w-12 h-12 text-cyber-neon" />
+                        })()
+                      ) : typeof book.cover === 'string' ? (
+                        book.cover
+                      ) : (
+                        (() => {
+                          const Icon = book.cover
+                          return <Icon className="w-12 h-12 text-cyber-neon" />
+                        })()
+                      )}
+                    </div>
                     {book.rating && (
                       <div className="book-rating">
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -407,7 +459,9 @@ export default function BooksPage() {
               ))}
             </div>
           </section>
-        ))}
+          )
+        })}
+        </div>
       </div>
     </div>
   )

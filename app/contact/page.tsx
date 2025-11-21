@@ -3,6 +3,7 @@
 import { MessageCircle, Mail, Send, User, Info } from 'lucide-react'
 import { useState } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
 
 export default function ContactPage() {
   const { t } = useLanguage()
@@ -67,16 +68,11 @@ export default function ContactPage() {
 
   return (
     <div className="contact-page-2026">
-      {/* Header Bar */}
-      <div className="contact-header-bar">
-        <div className="contact-header-icon">
-          <MessageCircle className="w-6 h-6" />
-        </div>
-        <h1 className="contact-header-title">{t('contact.title')}</h1>
-        <div className="contact-header-icon">
-          <MessageCircle className="w-6 h-6" />
-        </div>
-      </div>
+      {/* Unified Page Header */}
+      <PageHeader 
+        title={t('contact.title')} 
+        icon={MessageCircle}
+      />
 
       {/* Main Content */}
       <div className="contact-content-wrapper">
