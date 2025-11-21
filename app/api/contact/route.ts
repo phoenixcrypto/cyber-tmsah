@@ -6,10 +6,10 @@ const FROM_EMAIL = process.env.FROM_EMAIL || 'Cyber TMSAH <onboarding@resend.dev
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, subject, message } = body
+    const { name, email, message } = body
 
     // Basic validation
-    if (!name || !email || !subject || !message) {
+    if (!name || !email || !message) {
       return NextResponse.json({ error: 'جميع الحقول مطلوبة' }, { status: 400 })
     }
 
@@ -35,16 +35,21 @@ export async function POST(request: NextRequest) {
       from: FROM_EMAIL,
       to: [CONTACT_EMAIL],
       replyTo: email,
-      subject: `رسالة جديدة من نموذج الاتصال: ${subject}`,
+      subject: `رسالة جديدة من نموذج الاتصال - ${name}`,
       html: `
-        <h2>رسالة جديدة من نموذج الاتصال في موقع Cyber TMSAH</h2>
-        <p><strong>الاسم:</strong> ${name}</p>
-        <p><strong>البريد الإلكتروني:</strong> ${email}</p>
-        <p><strong>عنوان الرسالة:</strong> ${subject}</p>
-        <p><strong>نص الرسالة:</strong></p>
-        <p>${message.replace(/\n/g, '<br/>')}</p>
-        <hr/>
-        <p style="font-size:12px;color:#666;">تم إرسال هذه الرسالة تلقائياً من نموذج الاتصال في موقع Cyber TMSAH.</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #1a1a1a; color: #ffffff; border-radius: 12px;">
+          <h2 style="color: #00ffff; margin-bottom: 20px;">رسالة جديدة من نموذج الاتصال في موقع Cyber TMSAH</h2>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <p style="margin: 10px 0;"><strong style="color: #00ffff;">الاسم:</strong> ${name}</p>
+            <p style="margin: 10px 0;"><strong style="color: #00ffff;">البريد الإلكتروني:</strong> ${email}</p>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <p style="margin: 0 0 10px 0;"><strong style="color: #00ffff;">نص الرسالة:</strong></p>
+            <p style="margin: 0; line-height: 1.6; white-space: pre-wrap;">${message.replace(/\n/g, '<br/>')}</p>
+          </div>
+          <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 20px 0;"/>
+          <p style="font-size: 12px; color: rgba(255, 255, 255, 0.6); margin: 0;">تم إرسال هذه الرسالة تلقائياً من نموذج الاتصال في موقع Cyber TMSAH.</p>
+        </div>
       `,
     })
 

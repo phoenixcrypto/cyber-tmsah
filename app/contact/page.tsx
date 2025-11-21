@@ -1,16 +1,14 @@
 'use client'
 
-import { MessageCircle, Mail, Send, MapPin, Clock, Github, Linkedin } from 'lucide-react'
+import { MessageCircle, Mail, Send, User, Info } from 'lucide-react'
 import { useState } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import Link from 'next/link'
 
 export default function ContactPage() {
   const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -46,7 +44,6 @@ export default function ContactPage() {
           setFormData({
             name: '',
             email: '',
-            subject: '',
             message: ''
           })
           setSubmitStatus('idle')
@@ -68,204 +65,130 @@ export default function ContactPage() {
     }
   }
 
-  const contactMethods = [
-    {
-      icon: Mail,
-      title: 'البريد الإلكتروني',
-      value: 'support@cyber-tmsah.com',
-      href: 'mailto:support@cyber-tmsah.com',
-      color: 'from-blue-500 to-blue-600'
-    },
-    {
-      icon: Github,
-      title: 'GitHub',
-      value: 'phoenixcrypto',
-      href: 'https://github.com/phoenixcrypto',
-      color: 'from-gray-600 to-gray-800'
-    },
-    {
-      icon: Linkedin,
-      title: 'LinkedIn',
-      value: 'Cyber TMSAH',
-      href: 'https://www.linkedin.com',
-      color: 'from-blue-600 to-blue-700'
-    }
-  ]
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-cyber-neon to-cyber-green rounded-2xl flex items-center justify-center shadow-lg shadow-cyber-neon/30">
-              <MessageCircle className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold text-dark-100">
-              {t('contact.title')}
-            </h1>
-          </div>
-          <p className="text-lg sm:text-xl text-dark-300 max-w-3xl mx-auto leading-relaxed">
-            {t('contact.description')}
-          </p>
-          <p className="text-base text-dark-400 max-w-2xl mx-auto mt-4 leading-relaxed">
-            نحن هنا لمساعدتك في أي استفسار أو اقتراح. فريقنا متاح للرد على استفساراتك في أقرب وقت ممكن.
+    <div className="contact-page-2026">
+      {/* Header Bar */}
+      <div className="contact-header-bar">
+        <div className="contact-header-icon">
+          <MessageCircle className="w-6 h-6" />
+        </div>
+        <h1 className="contact-header-title">{t('contact.title')}</h1>
+        <div className="contact-header-icon">
+          <MessageCircle className="w-6 h-6" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="contact-content-wrapper">
+        <div className="contact-intro-section">
+          <p className="contact-greeting">عملائنا الكرام،</p>
+          <p className="contact-intro-text">
+            لتقديم الشكاوى، وللاستفسار عن المشاكل التي تواجهونها أثناء تصفح المدونة، وكذلك لتقديم الاقتراحات التي ستساعدنا على تطوير المدونة وتحسين محتوانا نحو الأفضل، يمكنكم التواصل معنا من خلال نموذج الاتصال الموجود في الأسفل.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Contact Methods */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="enhanced-card p-6">
-              <h3 className="text-xl font-semibold text-dark-100 mb-6 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-cyber-neon" />
-                طرق التواصل
-              </h3>
-              <div className="space-y-4">
-                {contactMethods.map((method, index) => {
-                  const Icon = method.icon
-                  return (
-                    <Link
-                      key={index}
-                      href={method.href}
-                      target={method.href.startsWith('http') ? '_blank' : undefined}
-                      rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="block group"
-                    >
-                      <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-surface-2 to-surface-3 border border-border-dark hover:border-cyber-neon transition-all duration-300">
-                        <div className={`w-12 h-12 bg-gradient-to-br ${method.color} rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm text-dark-400 mb-1">{method.title}</p>
-                          <p className="text-dark-100 font-semibold truncate">{method.value}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-
-            <div className="enhanced-card p-6">
-              <h3 className="text-xl font-semibold text-dark-100 mb-4 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-cyber-neon" />
-                أوقات الاستجابة
-              </h3>
-              <div className="space-y-3 text-dark-300">
-                <p className="flex items-center justify-between">
-                  <span>الأيام العادية</span>
-                  <span className="text-cyber-neon font-semibold">24-48 ساعة</span>
-                </p>
-                <p className="flex items-center justify-between">
-                  <span>الاستفسارات العاجلة</span>
-                  <span className="text-cyber-neon font-semibold">12-24 ساعة</span>
-                </p>
-              </div>
-            </div>
+        {/* Important Note Box */}
+        <div className="contact-note-box">
+          <div className="contact-note-header">
+            <Info className="w-5 h-5" />
+            <span className="contact-note-label">ملاحظة</span>
           </div>
+          <p className="contact-note-text">
+            في بعض الحالات لنتمكن من تلبية طلباتكم أو حل مشاكلكم قد نضطر للتواصل معكم عبر البريد الإلكتروني الذي تضعونه لنا في النموذج، لذلك نرجو منكم استخدام بريد إلكتروني صالح.
+          </p>
+        </div>
 
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <div className="enhanced-card p-8 animate-slide-up">
-              <form className="contact-form-modern" onSubmit={handleSubmit}>
-                <div className="form-row-modern">
-                  <div className="form-group-modern">
-                    <label htmlFor="name" className="form-label-modern">
-                      {t('contact.name')}
-                    </label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder={t('contact.namePlaceholder')}
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="form-input-modern"
-                    />
-                  </div>
-                  <div className="form-group-modern">
-                    <label htmlFor="email" className="form-label-modern">
-                      {t('contact.email')}
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder={t('contact.emailPlaceholder')}
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="form-input-modern"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group-modern">
-                  <label htmlFor="subject" className="form-label-modern">
-                    {t('contact.subject')}
-                  </label>
-                  <input
-                    id="subject"
-                    name="subject"
-                    type="text"
-                    placeholder={t('contact.subjectPlaceholder')}
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="form-input-modern"
-                  />
-                </div>
-
-                <div className="form-group-modern">
-                  <label htmlFor="message" className="form-label-modern">
-                    {t('contact.message')}
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={6}
-                    placeholder={t('contact.messagePlaceholder')}
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    className="form-textarea-modern"
-                  />
-                </div>
-
-                <button 
-                  type="submit" 
-                  className="form-submit-button-modern"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="form-spinner"></div>
-                      <span>جاري الإرسال...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5" />
-                      <span>{t('contact.send')}</span>
-                    </>
-                  )}
-                </button>
-
-                {submitStatus === 'success' && (
-                  <div className="form-success-message">
-                    ✓ تم إرسال رسالتك بنجاح! سنرد عليك قريباً.
-                  </div>
-                )}
-
-                {submitStatus === 'error' && (
-                  <div className="form-error-message">
-                    ✗ حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.
-                  </div>
-                )}
-              </form>
+        {/* Contact Form */}
+        <div className="contact-form-wrapper-2026">
+          <form className="contact-form-2026" onSubmit={handleSubmit}>
+            {/* Name Field */}
+            <div className="contact-field-group">
+              <label htmlFor="name" className="contact-field-label">
+                <User className="w-4 h-4" />
+                <span>الاسم</span>
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="الاسم الأول الاسم الأخير"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="contact-field-input"
+              />
             </div>
-          </div>
+
+            {/* Email Field */}
+            <div className="contact-field-group">
+              <label htmlFor="email" className="contact-field-label">
+                <Mail className="w-4 h-4" />
+                <span>البريد الإلكتروني</span>
+                <span className="contact-required-asterisk">*</span>
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="example@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="contact-field-input"
+              />
+            </div>
+
+            {/* Message Field */}
+            <div className="contact-field-group">
+              <label htmlFor="message" className="contact-field-label">
+                <MessageCircle className="w-4 h-4" />
+                <span>نص الرسالة</span>
+                <span className="contact-required-asterisk">*</span>
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={6}
+                placeholder="ضع هنا نص الرسالة التي تريد"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                className="contact-field-textarea"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              className="contact-submit-button-2026"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="form-spinner"></div>
+                  <span>جاري الإرسال...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5" />
+                  <span>إرسال</span>
+                </>
+              )}
+            </button>
+
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div className="contact-success-message-2026">
+                ✓ تم إرسال رسالتك بنجاح! سنرد عليك قريباً.
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="contact-error-message-2026">
+                ✗ حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.
+              </div>
+            )}
+          </form>
         </div>
       </div>
     </div>
