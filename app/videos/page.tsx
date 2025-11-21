@@ -66,7 +66,6 @@ const categories: Category[] = [
 ]
 
 export default function VideosPage() {
-export default function VideosPage() {
   const { t } = useLanguage()
   
   return (

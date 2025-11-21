@@ -61,9 +61,8 @@ export default function TermsPage() {
           description={t('terms.description')}
         />
         <p className="text-base text-dark-400 max-w-2xl mx-auto mt-4 mb-8 text-center leading-relaxed">
-            آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
-        </div>
+          آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
 
         {/* Introduction - Article Style */}
         <article className="enhanced-card p-8 mb-8 animate-slide-up">

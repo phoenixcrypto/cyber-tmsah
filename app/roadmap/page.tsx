@@ -2,10 +2,11 @@
 
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Map, Globe, Settings } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import PageHeader from '@/components/PageHeader'
 
 // Emoji to Icon mapping
-const emojiToIcon: Record<string, React.ComponentType<any>> = {
+const emojiToIcon: Record<string, LucideIcon> = {
   '🌐': Globe,
   '⚙️': Settings,
 }
@@ -333,14 +334,13 @@ export default function RoadmapPage() {
                         {course.order && <div className="course-order">{course.order}</div>}
                         <div className={`course-status ${course.status}`}>إجباري</div>
                         <div className="skill-icon">
-                          {emojiToIcon[course.icon] ? (
-                            (() => {
-                              const Icon = emojiToIcon[course.icon]
-                              return <Icon className="w-8 h-8 text-cyber-neon" />
-                            })()
-                          ) : (
-                            course.icon
-                          )}
+                          {(() => {
+                            const IconComponent = emojiToIcon[course.icon]
+                            if (IconComponent) {
+                              return <IconComponent className="w-8 h-8 text-cyber-neon" />
+                            }
+                            return course.icon
+                          })()}
                         </div>
                         <h3>{course.title}</h3>
                         <p>{course.description}</p>
@@ -360,14 +360,13 @@ export default function RoadmapPage() {
                     {course.order && <div className="course-order">{course.order}</div>}
                     <div className={`course-status ${course.status}`}>إجباري</div>
                     <div className="skill-icon">
-                      {emojiToIcon[course.icon] ? (
-                        (() => {
-                          const Icon = emojiToIcon[course.icon]
-                          return <Icon className="w-8 h-8 text-cyber-neon" />
-                        })()
-                      ) : (
-                        course.icon
-                      )}
+                      {(() => {
+                        const IconComponent = emojiToIcon[course.icon]
+                        if (IconComponent) {
+                          return <IconComponent className="w-8 h-8 text-cyber-neon" />
+                        }
+                        return course.icon
+                      })()}
                     </div>
                     <h3>{course.title}</h3>
                     <p>{course.description}</p>

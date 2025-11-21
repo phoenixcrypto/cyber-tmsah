@@ -1,12 +1,13 @@
 'use client'
 
 import { BookOpen, ExternalLink, Star, Globe, Radio, Shield, ShieldCheck, BarChart3, FlaskConical, GraduationCap, Book, Target, Unlock, Sword, User, Flag, Search, AlertCircle, Lock, Dna, Settings } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
 
 interface Book {
-  cover: string | React.ComponentType<any>
+  cover: string
   title: string
   author: string
   description: string
@@ -16,7 +17,7 @@ interface Book {
 }
 
 // Emoji to Icon mapping
-const emojiToIcon: Record<string, React.ComponentType<any>> = {
+const emojiToIcon: Record<string, LucideIcon> = {
   '🌐': Globe,
   '📡': Radio,
   '🔒': Shield,
@@ -411,19 +412,13 @@ export default function BooksPage() {
                 >
                   <div className="book-cover-enhanced">
                     <div className="book-cover-icon">
-                      {typeof book.cover === 'string' && emojiToIcon[book.cover] ? (
-                        (() => {
-                          const Icon = emojiToIcon[book.cover]
-                          return <Icon className="w-12 h-12 text-cyber-neon" />
-                        })()
-                      ) : typeof book.cover === 'string' ? (
-                        book.cover
-                      ) : (
-                        (() => {
-                          const Icon = book.cover
-                          return <Icon className="w-12 h-12 text-cyber-neon" />
-                        })()
-                      )}
+                      {(() => {
+                        const IconComponent = emojiToIcon[book.cover]
+                        if (IconComponent) {
+                          return <IconComponent className="w-12 h-12 text-cyber-neon" />
+                        }
+                        return <span className="text-4xl">{book.cover}</span>
+                      })()}
                     </div>
                     {book.rating && (
                       <div className="book-rating">

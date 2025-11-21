@@ -1,11 +1,12 @@
 'use client'
 
 import { Headphones, Globe, Music, Mic, Lock, Key, Radio } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
 
 // Emoji to Icon mapping
-const emojiToIcon: Record<string, React.ComponentType<any>> = {
+const emojiToIcon: Record<string, LucideIcon> = {
   '🌐': Globe,
   '🎙️': Mic,
   '🟢': Radio,
@@ -77,7 +78,6 @@ const categories: Category[] = [
 ]
 
 export default function PodcastsPage() {
-export default function PodcastsPage() {
   const { t } = useLanguage()
   
   return (
@@ -101,14 +101,13 @@ export default function PodcastsPage() {
               {category.podcasts.map((podcast, podcastIndex) => (
                 <div key={podcastIndex} className="course-card">
                   <div className="course-thumbnail flex items-center justify-center">
-                    {emojiToIcon[podcast.cover] ? (
-                      (() => {
-                        const Icon = emojiToIcon[podcast.cover]
-                        return <Icon className="w-16 h-16 text-cyber-neon" />
-                      })()
-                    ) : (
-                      <span style={{ fontSize: '4rem' }}>{podcast.cover}</span>
-                    )}
+                    {(() => {
+                      const CoverIcon = emojiToIcon[podcast.cover]
+                      if (CoverIcon) {
+                        return <CoverIcon className="w-16 h-16 text-cyber-neon" />
+                      }
+                      return <span style={{ fontSize: '4rem' }}>{podcast.cover}</span>
+                    })()}
                   </div>
                   <div className="course-info">
                     <h4>{podcast.title}</h4>
