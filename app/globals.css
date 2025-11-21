@@ -1809,7 +1809,9 @@ button, input, textarea, select {
   animation: fadeInUp 0.8s ease-out 0.6s both;
 }
 
-.cta-button, .btn-secondary {
+.cta-button,
+.cta-button-secondary,
+.btn-secondary {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -1851,12 +1853,14 @@ button, input, textarea, select {
   border-color: var(--primary-red-strong);
 }
 
+.cta-button-secondary,
 .btn-secondary {
   background: transparent;
   color: var(--accent-silver);
   border: 2px solid rgba(255, 59, 64, 0.4);
 }
 
+.cta-button-secondary:hover,
 .btn-secondary:hover {
   background: rgba(255, 59, 64, 0.1);
   border-color: var(--primary-red);
@@ -4995,19 +4999,17 @@ footer {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 59, 64, 0.2);
-  margin-bottom: 4rem; /* Increased spacing */
-  margin-top: 1.5rem; /* Prevent overlap with navbar */
-  margin-left: -2rem;
-  margin-right: -2rem;
-  width: calc(100% + 4rem);
+  margin-top: 1.5rem;
+  margin-bottom: 4rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1100px;
 }
 
 @media (max-width: 768px) {
   .page-header-unified-2026 {
     padding: 2rem 1rem;
-    margin-left: -1rem;
-    margin-right: -1rem;
-    width: calc(100% + 2rem);
     margin-top: 2rem;
     margin-bottom: 3rem;
   }
