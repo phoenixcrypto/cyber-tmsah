@@ -484,7 +484,7 @@ export default function SchedulePage() {
                 <span className={`text-lg font-semibold transition-colors ${scheduleView === 'B' ? 'text-cyber-violet' : 'text-dark-400'}`}>
                   {t('schedule.groupB')}
                 </span>
-        </div>
+              </div>
 
               <p className="text-sm text-dark-400 text-center">
                 {t('schedule.currentView')}: <span className="text-cyber-neon font-semibold">{scheduleView === 'A' ? t('schedule.groupA') : t('schedule.groupB')}</span>
@@ -515,8 +515,8 @@ export default function SchedulePage() {
                     <option key={section} value={section}>{section}</option>
                   ))}
                 </select>
-              </div>
-              
+                </div>
+                
               <div>
                 <button
                   onClick={() => {
@@ -533,8 +533,8 @@ export default function SchedulePage() {
                   {selectedSection ? t('schedule.filter') : t('schedule.clear')}
                 </button>
               </div>
-            </div>
-            
+                </div>
+
             {validationError && (
               <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg max-w-2xl mx-auto">
                 <div className="flex items-start gap-3">
@@ -550,7 +550,7 @@ export default function SchedulePage() {
               </div>
             )}
           </div>
-        </div>
+                </div>
 
         {/* Schedule Results - Card View Only */}
         <div className="space-y-6">
@@ -606,8 +606,8 @@ export default function SchedulePage() {
                           {dayItems.length} {dayItems.length === 1 ? t('schedule.subject') : t('schedule.subjects')}
                         </span>
                       )}
-                    </div>
-                  </div>
+                </div>
+              </div>
 
                   {isHoliday ? (
                     <div className="p-12 text-center">
@@ -683,7 +683,7 @@ export default function SchedulePage() {
                                     </div>
                                   </div>
                                 </div>
-                              </div>
+              </div>
                             ))}
                           </div>
                         )

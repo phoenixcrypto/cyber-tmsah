@@ -58,6 +58,8 @@ export const translations = {
     'home.contribute.title': 'انضم إلينا و ساهم معنا',
     'home.contribute.description': 'المنصة مشروع مجتمعي مفتوح. إذا كانت لديك مصادر، أفكار تطوير، أو ترغب في المساهمة بالمحتوى يمكننا التعاون لبناء مرجع عربي حقيقي للأمن السيبراني والتعليم الأكاديمي.',
     'home.contribute.button': 'تواصل لبدء المساهمة',
+    'home.cta.schedule': 'عرض الجدول الدراسي',
+    'home.cta.materials': 'استكشف المحتوى التعليمي',
     
     // Footer
     'footer.quickLinks': 'روابط سريعة',
@@ -344,6 +346,8 @@ export const translations = {
     'home.contribute.title': 'Join Us and Contribute',
     'home.contribute.description': 'The platform is an open community project. If you have resources, development ideas, or want to contribute content, we can collaborate to build a true Arabic reference for cybersecurity and academic education.',
     'home.contribute.button': 'Contact to Start Contributing',
+    'home.cta.schedule': 'View Study Schedule',
+    'home.cta.materials': 'Explore Educational Content',
     
     // Footer
     'footer.quickLinks': 'Quick Links',

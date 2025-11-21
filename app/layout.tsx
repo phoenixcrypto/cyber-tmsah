@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Cairo } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/Providers'
@@ -69,6 +69,10 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  themeColor: '#07010d',
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -80,7 +84,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-        <meta name="theme-color" content="#0a0a0a" />
+        <meta name="theme-color" content="#07010d" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <StructuredData />
       </head>
