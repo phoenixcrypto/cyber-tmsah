@@ -30,10 +30,22 @@ export class Database<T> {
    */
   readAll(): T[] {
     try {
+      if (!fs.existsSync(this.filePath)) {
+        this.ensureFileExists()
+        return []
+      }
       const data = fs.readFileSync(this.filePath, 'utf-8')
+      if (!data || data.trim() === '') {
+        return []
+      }
       return JSON.parse(data) as T[]
     } catch (error) {
       console.error(`Error reading ${this.filePath}:`, error)
+      console.error('Error details:', {
+        filePath: this.filePath,
+        exists: fs.existsSync(this.filePath),
+        errorMessage: error instanceof Error ? error.message : String(error),
+      })
       return []
     }
   }
@@ -43,9 +55,20 @@ export class Database<T> {
    */
   writeAll(data: T[]): void {
     try {
+      // Ensure directory exists
+      const dir = path.dirname(this.filePath)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+      }
       fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2), 'utf-8')
     } catch (error) {
       console.error(`Error writing ${this.filePath}:`, error)
+      console.error('Error details:', {
+        filePath: this.filePath,
+        dirExists: fs.existsSync(path.dirname(this.filePath)),
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorCode: (error as any)?.code,
+      })
       throw error
     }
   }

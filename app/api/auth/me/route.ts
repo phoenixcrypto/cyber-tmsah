@@ -5,7 +5,12 @@ import { getUserById, initializeDefaultAdmin } from '@/lib/db/users'
 export async function GET(request: NextRequest) {
   try {
     // Initialize default admin if needed (only runs once)
-    await initializeDefaultAdmin()
+    try {
+      await initializeDefaultAdmin()
+    } catch (initError) {
+      console.error('Error initializing default admin:', initError)
+      // Continue even if initialization fails - might be a file system issue
+    }
 
     const token = request.cookies.get('admin-token')?.value
 
@@ -30,6 +35,11 @@ export async function GET(request: NextRequest) {
       user = getUserById(payload.userId)
     } catch (error) {
       console.error('Get user by ID error:', error)
+      console.error('Error details:', {
+        userId: payload.userId,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+      })
       return NextResponse.json({ error: 'User lookup failed' }, { status: 500 })
     }
 
@@ -48,6 +58,10 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Get user error:', error)
+    console.error('Error details:', {
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined,
+    })
     return NextResponse.json(
       { error: 'حدث خطأ أثناء جلب بيانات المستخدم' },
       { status: 500 }
