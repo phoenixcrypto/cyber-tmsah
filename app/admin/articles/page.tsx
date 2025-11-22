@@ -86,7 +86,8 @@ export default function AdminArticlesPage() {
         }),
       })
       if (res.ok) {
-        fetchArticles()
+        // Immediate sync - refresh data
+        await fetchArticles()
         setShowAddForm(false)
         resetForm()
       } else {
@@ -114,7 +115,8 @@ export default function AdminArticlesPage() {
         }),
       })
       if (res.ok) {
-        fetchArticles()
+        // Immediate sync - refresh data
+        await fetchArticles()
         setEditingArticle(null)
         resetForm()
       } else {
@@ -132,7 +134,8 @@ export default function AdminArticlesPage() {
     try {
       const res = await fetch(`/api/admin/articles?id=${id}`, { method: 'DELETE' })
       if (res.ok) {
-        fetchArticles()
+        // Immediate sync - refresh data
+        await fetchArticles()
       } else {
         const error = await res.json()
         alert(error.error || 'حدث خطأ')

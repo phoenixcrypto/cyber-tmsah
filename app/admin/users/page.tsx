@@ -65,7 +65,8 @@ export default function AdminUsersPage() {
         }),
       })
       if (res.ok) {
-        fetchUsers()
+        // Immediate sync - refresh data
+        await fetchUsers()
         setShowAddForm(false)
         resetForm()
       } else {
@@ -105,7 +106,8 @@ export default function AdminUsersPage() {
         body: JSON.stringify({ id: editingUser.id, ...updates }),
       })
       if (res.ok) {
-        fetchUsers()
+        // Immediate sync - refresh data
+        await fetchUsers()
         setEditingUser(null)
         resetForm()
       } else {
@@ -123,7 +125,8 @@ export default function AdminUsersPage() {
     try {
       const res = await fetch(`/api/admin/users?id=${id}`, { method: 'DELETE' })
       if (res.ok) {
-        fetchUsers()
+        // Immediate sync - refresh data
+        await fetchUsers()
       } else {
         const error = await res.json()
         alert(error.error || 'حدث خطأ')

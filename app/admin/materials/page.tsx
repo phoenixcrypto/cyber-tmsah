@@ -57,7 +57,8 @@ export default function AdminMaterialsPage() {
         body: JSON.stringify({ ...formData, id: formData.id || `material-${Date.now()}` }),
       })
       if (res.ok) {
-        fetchMaterials()
+        // Immediate sync - refresh data
+        await fetchMaterials()
         setShowAddForm(false)
         resetForm()
       }
@@ -75,7 +76,8 @@ export default function AdminMaterialsPage() {
         body: JSON.stringify({ id: editingMaterial.id, ...formData }),
       })
       if (res.ok) {
-        fetchMaterials()
+        // Immediate sync - refresh data
+        await fetchMaterials()
         setEditingMaterial(null)
         resetForm()
       }
@@ -89,7 +91,8 @@ export default function AdminMaterialsPage() {
     try {
       const res = await fetch(`/api/admin/materials?id=${id}`, { method: 'DELETE' })
       if (res.ok) {
-        fetchMaterials()
+        // Immediate sync - refresh data
+        await fetchMaterials()
       }
     } catch (error) {
       console.error('Error deleting material:', error)

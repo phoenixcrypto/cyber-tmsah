@@ -94,7 +94,8 @@ export default function AdminPagesPage() {
         body: JSON.stringify(formData),
       })
       if (res.ok) {
-        fetchPages()
+        // Immediate sync - refresh data
+        await fetchPages()
         setShowAddForm(false)
         resetForm()
       } else {
@@ -116,7 +117,8 @@ export default function AdminPagesPage() {
         body: JSON.stringify({ id: editingPage.id, ...formData }),
       })
       if (res.ok) {
-        fetchPages()
+        // Immediate sync - refresh data
+        await fetchPages()
         setEditingPage(null)
         resetForm()
       } else {
@@ -134,7 +136,8 @@ export default function AdminPagesPage() {
     try {
       const res = await fetch(`/api/admin/pages?id=${id}`, { method: 'DELETE' })
       if (res.ok) {
-        fetchPages()
+        // Immediate sync - refresh data
+        await fetchPages()
       } else {
         const error = await res.json()
         alert(error.error || 'حدث خطأ')

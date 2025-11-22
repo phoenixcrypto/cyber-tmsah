@@ -60,7 +60,8 @@ export default function AdminSchedulePage() {
         body: JSON.stringify(formData),
       })
       if (res.ok) {
-        fetchItems()
+        // Immediate sync - refresh data
+        await fetchItems()
         setShowAddForm(false)
         setFormData({
           title: '',
@@ -87,7 +88,8 @@ export default function AdminSchedulePage() {
         body: JSON.stringify({ id: editingItem.id, ...formData }),
       })
       if (res.ok) {
-        fetchItems()
+        // Immediate sync - refresh data
+        await fetchItems()
         setEditingItem(null)
         setFormData({})
       }
@@ -101,7 +103,8 @@ export default function AdminSchedulePage() {
     try {
       const res = await fetch(`/api/admin/schedule?id=${id}`, { method: 'DELETE' })
       if (res.ok) {
-        fetchItems()
+        // Immediate sync - refresh data
+        await fetchItems()
       }
     } catch (error) {
       console.error('Error deleting item:', error)

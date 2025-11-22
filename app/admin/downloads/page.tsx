@@ -53,7 +53,8 @@ export default function AdminDownloadsPage() {
         body: JSON.stringify({ ...formData, id: formData.id || `download-${Date.now()}` }),
       })
       if (res.ok) {
-        fetchSoftware()
+        // Immediate sync - refresh data
+        await fetchSoftware()
         setShowAddForm(false)
         resetForm()
       }
@@ -71,7 +72,8 @@ export default function AdminDownloadsPage() {
         body: JSON.stringify({ id: editingSoftware.id, ...formData }),
       })
       if (res.ok) {
-        fetchSoftware()
+        // Immediate sync - refresh data
+        await fetchSoftware()
         setEditingSoftware(null)
         resetForm()
       }
@@ -85,7 +87,8 @@ export default function AdminDownloadsPage() {
     try {
       const res = await fetch(`/api/admin/downloads?id=${id}`, { method: 'DELETE' })
       if (res.ok) {
-        fetchSoftware()
+        // Immediate sync - refresh data
+        await fetchSoftware()
       }
     } catch (error) {
       console.error('Error deleting software:', error)

@@ -26,6 +26,21 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Auto-migrate data on first load
+    const autoMigrate = async () => {
+      try {
+        const statusRes = await fetch('/api/admin/auto-migrate')
+        const statusData = await statusRes.json()
+        
+        if (statusData.status?.needsMigration) {
+          // Auto-migrate silently
+          await fetch('/api/admin/auto-migrate', { method: 'POST' })
+        }
+      } catch (error) {
+        console.error('Auto-migration error:', error)
+      }
+    }
+
     // Fetch dashboard stats from APIs
     const fetchStats = async () => {
       try {
@@ -60,7 +75,8 @@ export default function AdminDashboardPage() {
       }
     }
 
-    fetchStats()
+    // Run auto-migration first, then fetch stats
+    autoMigrate().then(() => fetchStats())
   }, [])
 
   const statCards = [
