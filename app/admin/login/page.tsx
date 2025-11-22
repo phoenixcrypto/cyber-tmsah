@@ -36,14 +36,15 @@ export default function AdminLoginPage() {
 
       // Success - verify that cookies were set
       if (data.success && data.user) {
-        // Wait a moment for cookies to be set, then redirect
-        // Use window.location.replace for full page reload to ensure cookies are sent
+        // Cookies are set by the server in the response
+        // Use window.location for full page reload to ensure cookies are available
+        // The browser will automatically include cookies in the next request
+        
+        // Immediate redirect - cookies are set in the response headers
+        // The browser will handle cookie persistence automatically
+        window.location.href = '/admin/dashboard'
+        
         // Don't set loading to false here as we're redirecting
-        setTimeout(() => {
-          // Force a full page reload to ensure cookies are available
-          // Use replace instead of href to prevent back button issues
-          window.location.replace('/admin/dashboard')
-        }, 500) // Increased delay to ensure cookies are set
       } else {
         setError('حدث خطأ أثناء تسجيل الدخول')
         setLoading(false)

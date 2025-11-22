@@ -22,43 +22,67 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     // Check authentication for other admin pages
-    fetch('/api/auth/me', {
-      credentials: 'include',
-    })
-      .then((res) => {
+    // Add retry mechanism for cases where cookies might not be immediately available
+    let retryCount = 0
+    const maxRetries = 3
+    const retryDelay = 500 // 500ms between retries
+
+    const checkAuth = async (): Promise<void> => {
+      try {
+        const res = await fetch('/api/auth/me', {
+          credentials: 'include',
+        })
+
         if (!res.ok) {
-          // 401 is expected when not logged in - redirect to login silently
-          // Don't log 401 as it's normal behavior
+          // 401 is expected when not logged in
           if (res.status === 401) {
+            // Retry if we haven't exceeded max retries (cookies might not be set yet)
+            if (retryCount < maxRetries) {
+              retryCount++
+              await new Promise((resolve) => setTimeout(resolve, retryDelay))
+              return checkAuth()
+            }
+            // Max retries reached, redirect to login
             router.push('/admin/login')
-            return null
+            setLoading(false)
+            return
           }
           // For other errors (except 429 rate limit), log but don't redirect immediately
           if (res.status !== 429 && res.status !== 401) {
             console.warn('Auth check failed with status:', res.status)
           }
-          return null
+          router.push('/admin/login')
+          setLoading(false)
+          return
         }
-        return res.json()
-      })
-      .then((data) => {
+
+        const data = await res.json()
         if (data?.user) {
           setUser(data.user)
+          setLoading(false)
         } else {
           // No user data - redirect to login
           router.push('/admin/login')
+          setLoading(false)
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         // Only log unexpected errors, not network errors or expected 401s
-        if (error.name !== 'TypeError' && !error.message.includes('fetch')) {
+        if (error instanceof Error && error.name !== 'TypeError' && !error.message.includes('fetch')) {
           console.error('Auth check error:', error)
         }
-        router.push('/admin/login')
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+        // Retry if we haven't exceeded max retries
+        if (retryCount < maxRetries) {
+          retryCount++
+          await new Promise((resolve) => setTimeout(resolve, retryDelay))
+          return checkAuth()
+        } else {
+          router.push('/admin/login')
+          setLoading(false)
+        }
+      }
+    }
+
+    checkAuth()
   }, [router, isLoginPage])
 
   const handleLogout = async () => {

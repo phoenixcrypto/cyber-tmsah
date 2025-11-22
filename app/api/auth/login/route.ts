@@ -72,19 +72,27 @@ export async function POST(request: NextRequest) {
     // Use 'lax' instead of 'strict' for better compatibility
     // 'strict' can prevent cookies from being sent in some navigation scenarios
     // In production (Vercel), always use secure cookies
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
+    
     const cookieOptions = {
       httpOnly: true,
-      secure: true, // Always secure (Vercel uses HTTPS)
+      secure: isProduction, // Secure in production (Vercel uses HTTPS), allow HTTP in development
       sameSite: 'lax' as const, // Changed from 'strict' to 'lax' for better compatibility
       maxAge: 60 * 60 * 24, // 24 hours
       path: '/',
     }
     
+    // Set cookies
     response.cookies.set('admin-token', accessToken, cookieOptions)
     response.cookies.set('admin-refresh-token', refreshToken, {
       ...cookieOptions,
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
+
+    // Log for debugging (remove in production)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ Login successful, cookies set for user:', user.email)
+    }
 
     return response
   } catch (error) {
