@@ -15,14 +15,24 @@ export default function AdminLoginPage() {
 
   useEffect(() => {
     // Check if already logged in
-    fetch('/api/auth/me')
+    fetch('/api/auth/me', {
+      credentials: 'include',
+    })
       .then((res) => {
         if (res.ok) {
+          return res.json()
+        }
+        // 401 is expected when not logged in - not an error
+        return null
+      })
+      .then((data) => {
+        if (data?.user) {
           router.push('/admin/dashboard')
         }
+        // If no user, stay on login page (this is normal)
       })
       .catch(() => {
-        // Not logged in, continue
+        // Network errors are expected - not logged in, continue
       })
   }, [router])
 

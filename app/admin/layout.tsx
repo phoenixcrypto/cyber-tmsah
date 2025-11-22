@@ -15,12 +15,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     // Check authentication
-    fetch('/api/auth/me')
+    fetch('/api/auth/me', {
+      credentials: 'include',
+    })
       .then((res) => {
         if (!res.ok) {
-          // Only redirect if status is 401 (Unauthorized), not 429 (Rate Limited)
+          // 401 is expected when not logged in - don't treat as error
           if (res.status === 401) {
             router.push('/admin/login')
+            return null
+          }
+          // For other errors, log but don't redirect immediately
+          if (res.status !== 429) {
+            console.warn('Auth check failed with status:', res.status)
           }
           return null
         }
@@ -29,16 +36,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       .then((data) => {
         if (data?.user) {
           setUser(data.user)
-        } else if (data === null) {
-          // Only redirect if we got a 401, not if we got rate limited
-          // Rate limited requests will retry automatically
         } else {
+          // No user data - redirect to login
           router.push('/admin/login')
         }
       })
       .catch((error) => {
-        // Don't redirect on network errors or rate limiting
-        console.error('Auth check error:', error)
+        // Only log unexpected errors, not network errors
+        if (error.name !== 'TypeError' && !error.message.includes('fetch')) {
+          console.error('Auth check error:', error)
+        }
+        router.push('/admin/login')
       })
       .finally(() => {
         setLoading(false)
