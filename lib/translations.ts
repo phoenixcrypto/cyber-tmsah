@@ -20,6 +20,7 @@ export const translations = {
     'nav.expertise': 'دليل المهارات المهنية',
     'nav.news': 'الأخبار والتحديثات',
     'nav.contribute': 'ساهم معنا',
+    'nav.downloads': 'التنزيلات',
     'nav.aboutPlatform': 'من نحن',
     'nav.home': 'الرئيسية',
     'logo.subtitle': 'منصة تعليمية متكاملة للأمن السيبراني',
@@ -87,6 +88,12 @@ export const translations = {
     // Materials
     'materials.title': 'المحتوى التعليمي',
     'materials.description': 'الوصول إلى المحتوى التعليمي والموارد الشاملة لجميع المواد الدراسية',
+    
+    // Downloads
+    'downloads.title': 'التنزيلات',
+    'downloads.description': 'شاهد فيديوهات تعليمية لطريقة تثبيت البرامج الأساسية التي تحتاجها في رحلتك التعليمية',
+    'downloads.watch': 'مشاهدة',
+    'downloads.watching': 'جاري المشاهدة...',
     
     // About
     'about.title': 'من نحن',
@@ -306,6 +313,7 @@ export const translations = {
     'nav.expertise': 'Professional Skills Guide',
     'nav.news': 'News & Updates',
     'nav.contribute': 'Contribute',
+    'nav.downloads': 'Downloads',
     'nav.aboutPlatform': 'About Platform',
     'nav.home': 'Home',
     'logo.subtitle': 'Integrated Educational Platform for Cybersecurity',
@@ -375,6 +383,12 @@ export const translations = {
     // Materials
     'materials.title': 'Educational Content',
     'materials.description': 'Access educational content and comprehensive resources for all study subjects',
+    
+    // Downloads
+    'downloads.title': 'Downloads',
+    'downloads.description': 'Watch educational videos on how to install essential programs and tools you need for your educational journey',
+    'downloads.watch': 'Watch',
+    'downloads.watching': 'Watching...',
     
     // About
     'about.title': 'About Cyber TMSAH Platform',

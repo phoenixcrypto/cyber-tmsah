@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Home, Calendar, BookOpen, Map, GraduationCap, Newspaper, Library, Video, Headphones, Globe, Heart, ChevronDown, Menu, X } from 'lucide-react'
+import { Home, Calendar, BookOpen, Map, GraduationCap, Newspaper, Library, Video, Headphones, Globe, Heart, ChevronDown, Menu, X, Download } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import NewsTicker from './NewsTicker'
 import { usePathname } from 'next/navigation'
@@ -57,6 +57,7 @@ export default function Navbar() {
   const primaryLinks = [
     { label: t('nav.schedule'), href: '/schedule', icon: Calendar },
     { label: t('nav.materials'), href: '/materials', icon: BookOpen },
+    { label: t('nav.downloads'), href: '/downloads', icon: Download },
   ]
 
   const securityGuideLinks = [
