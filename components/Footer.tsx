@@ -2,9 +2,16 @@
 
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { usePathname } from 'next/navigation'
 
 export default function Footer() {
   const { t } = useLanguage()
+  const pathname = usePathname()
+
+  // Hide footer on admin pages
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
 
   const quickLinks = [
     { labelKey: 'nav.contact', href: '/contact' },

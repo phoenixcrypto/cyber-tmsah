@@ -29,12 +29,13 @@ export default function AdminDashboardPage() {
     // Fetch dashboard stats from APIs
     const fetchStats = async () => {
       try {
-        const [scheduleRes, materialsRes, downloadsRes, articlesRes, pagesRes] = await Promise.all([
+        const [scheduleRes, materialsRes, downloadsRes, articlesRes, pagesRes, usersRes] = await Promise.all([
           fetch('/api/schedule'),
           fetch('/api/materials'),
           fetch('/api/downloads'),
           fetch('/api/admin/articles'),
           fetch('/api/admin/pages'),
+          fetch('/api/admin/users'),
         ])
 
         const scheduleData = await scheduleRes.json()
@@ -42,12 +43,13 @@ export default function AdminDashboardPage() {
         const downloadsData = await downloadsRes.json()
         const articlesData = await articlesRes.json()
         const pagesData = await pagesRes.json()
+        const usersData = await usersRes.json()
 
         setStats({
           scheduleItems: scheduleData.schedule?.length || 0,
           materials: materialsData.materials?.length || 0,
           downloads: downloadsData.software?.length || 0,
-          users: 1, // TODO: Add users API
+          users: usersData.users?.length || 0,
           articles: articlesData.articles?.length || 0,
           pages: pagesData.pages?.length || 0,
         })

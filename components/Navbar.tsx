@@ -84,6 +84,11 @@ export default function Navbar() {
 
   const isActive = (href: string) => pathname === href
 
+  // Hide navbar on admin pages
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
+
   return (
     <>
       <nav 

@@ -12,7 +12,8 @@ export const loginSchema = z.object({
  * User creation schema
  */
 export const createUserSchema = z.object({
-  email: z.string().email('البريد الإلكتروني غير صحيح'),
+  username: z.string().min(2, 'اسم المستخدم يجب أن يكون حرفين على الأقل').optional(),
+  email: z.string().email('البريد الإلكتروني غير صحيح').optional(),
   password: z.string().min(8, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل'),
   name: z.string().min(2, 'الاسم يجب أن يكون حرفين على الأقل'),
   role: z.enum(['admin', 'editor', 'viewer'], {

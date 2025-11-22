@@ -103,54 +103,70 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
-      {/* Sidebar */}
-      <aside className="fixed right-0 top-0 h-full w-64 bg-cyber-dark/95 border-l border-cyber-neon/20 backdrop-blur-lg z-50">
-        <div className="p-6 border-b border-cyber-neon/20">
-          <div className="flex items-center gap-3 mb-4">
+      {/* Top Header Bar - Fixed */}
+      <header className="fixed top-0 left-0 right-64 bg-cyber-dark/95 border-b border-cyber-neon/20 backdrop-blur-lg z-40">
+        <div className="px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
             <div className="w-10 h-10 bg-gradient-to-br from-cyber-neon/20 to-cyber-violet/20 rounded-lg flex items-center justify-center border border-cyber-neon/30">
               <Shield className="w-6 h-6 text-cyber-neon" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-dark-100">Admin Panel</h2>
-              <p className="text-xs text-dark-400">{user.name}</p>
+              <h1 className="text-xl font-bold text-dark-100">Admin Panel</h1>
+              <p className="text-xs text-dark-400">{user.name} • {user.role}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-dark-300">
+              {new Date().toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
             </div>
           </div>
         </div>
+      </header>
 
-        <nav className="p-4 space-y-2">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                  isActive
-                    ? 'bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 border border-cyber-neon/30 text-cyber-neon'
-                    : 'text-dark-300 hover:bg-cyber-dark/50 hover:text-dark-100'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
+      {/* Sidebar */}
+      <aside className="fixed right-0 top-0 h-full w-64 bg-cyber-dark/95 border-l border-cyber-neon/20 backdrop-blur-lg z-50 pt-20">
+        <div className="h-full flex flex-col">
+          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-cyber-neon/20">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all duration-300"
-          >
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">{language === 'ar' ? 'تسجيل الخروج' : 'Logout'}</span>
-          </button>
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-cyber-neon/20 to-cyber-violet/20 border border-cyber-neon/30 text-cyber-neon shadow-lg shadow-cyber-neon/20'
+                      : 'text-dark-300 hover:bg-cyber-dark/50 hover:text-dark-100 hover:border hover:border-cyber-neon/10'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                </Link>
+              )
+            })}
+          </nav>
+
+          <div className="p-4 border-t border-cyber-neon/20 bg-cyber-dark/50">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all duration-300 border border-red-500/20 hover:border-red-500/40"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="font-medium">{language === 'ar' ? 'تسجيل الخروج' : 'Logout'}</span>
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="mr-64 min-h-screen p-8">
+      <main className="mr-64 pt-20 min-h-screen p-8">
         {children}
       </main>
     </div>

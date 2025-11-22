@@ -23,14 +23,18 @@ export async function initializeDefaultAdmin(): Promise<void> {
     const users = usersDB.readAll()
     
     if (users.length === 0) {
-      // Default admin credentials - Zeyad Eltmsah
-      const defaultPassword = '2610204ZEYAd@@'
+      // Default admin credentials from environment variables
+      // For security, credentials should be set via environment variables
+      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin'
+      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@2026!'
+      const defaultName = process.env.DEFAULT_ADMIN_NAME || 'مدير النظام'
+      
       const hashedPassword = await hashPassword(defaultPassword)
       
       const defaultAdmin: User = {
         id: 'admin-001',
-        username: 'Zeyad Eltmsah',
-        name: 'Zeyad Eltmsah',
+        username: defaultUsername,
+        name: defaultName,
         password: hashedPassword,
         role: 'admin',
         createdAt: new Date().toISOString(),
@@ -38,9 +42,11 @@ export async function initializeDefaultAdmin(): Promise<void> {
       }
       
       usersDB.add(defaultAdmin)
+      // Don't log sensitive information
       console.log('✅ Default admin user created!')
-      console.log('👤 Username: Zeyad Eltmsah')
-      console.log('🔑 Password: 2610204ZEYAd@@')
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚠️  Please change the default password after first login!')
+      }
     }
   } catch (error) {
     console.error('Error initializing default admin:', error)
@@ -78,8 +84,19 @@ export function getUserById(id: string): User | undefined {
 export async function createUser(userData: Omit<User, 'id' | 'password' | 'createdAt' | 'updatedAt'> & { password: string }): Promise<User> {
   const hashedPassword = await hashPassword(userData.password)
   
+  // Ensure username is set (use email prefix if not provided)
+  let username: string
+  if (userData.username) {
+    username = userData.username
+  } else if (userData.email) {
+    username = userData.email.split('@')[0] || userData.email
+  } else {
+    username = `user-${Date.now()}`
+  }
+  
   const newUser: User = {
     ...userData,
+    username,
     id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     password: hashedPassword,
     createdAt: new Date().toISOString(),
