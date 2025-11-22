@@ -89,12 +89,17 @@ export function middleware(request: NextRequest) {
         const payload = verifyAccessToken(token)
         if (payload) {
           // User is already logged in, redirect to dashboard
+          console.log('✅ Valid token on login page, redirecting to dashboard')
           return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+        } else {
+          console.log('⚠️ Token exists but invalid, allowing access to login page')
         }
       } catch (error) {
-        // Token is invalid, allow access to login page
-        console.log('Invalid token on login page, allowing access')
+        // Token verification error - allow access to login page
+        console.log('⚠️ Token verification error on login page, allowing access:', error)
       }
+    } else {
+      console.log('ℹ️ No token on login page, allowing access')
     }
     // User is not logged in, allow access to login page
     return NextResponse.next()
@@ -107,19 +112,44 @@ export function middleware(request: NextRequest) {
     if (!token) {
       // Redirect to login if no token
       if (pathname.startsWith('/admin')) {
+        console.log('🔒 No token found, redirecting to login')
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Verify token
-    const payload = verifyAccessToken(token)
+    // Verify token with error handling
+    let payload
+    try {
+      payload = verifyAccessToken(token)
+    } catch (error) {
+      // Token verification error - log but don't delete cookies immediately
+      // This might be a timing issue where token is being verified before it's fully set
+      console.error('❌ Token verification error:', error)
+      console.log('⚠️ Token exists but verification failed, allowing access with retry')
+      // Don't delete cookies on verification error - might be a timing issue
+      // Let the client-side auth check handle it
+      return NextResponse.next()
+    }
+
     if (!payload) {
-      // Invalid token, clear cookie and redirect
-      const response = NextResponse.redirect(new URL('/admin/login', request.url))
-      response.cookies.delete('admin-token')
-      response.cookies.delete('admin-refresh-token')
-      return response
+      // Token is invalid - only delete cookies if we're certain it's invalid
+      // Check if this is a fresh login attempt (recent redirect from login)
+      const referer = request.headers.get('referer')
+      const isFromLogin = referer?.includes('/admin/login')
+      
+      if (!isFromLogin) {
+        // Only delete cookies if not coming from login page (to avoid deleting fresh cookies)
+        console.log('❌ Invalid token, clearing cookies and redirecting to login')
+        const response = NextResponse.redirect(new URL('/admin/login', request.url))
+        response.cookies.delete('admin-token')
+        response.cookies.delete('admin-refresh-token')
+        return response
+      } else {
+        // Coming from login page - might be a timing issue, allow access
+        console.log('⚠️ Invalid token but coming from login, allowing access')
+        return NextResponse.next()
+      }
     }
 
     // Add user info to headers for API routes

@@ -60,14 +60,15 @@ export default function AdminLoginPage() {
           note: 'HttpOnly cookies are not visible in document.cookie but should be sent automatically',
         })
         
-        // Wait a moment to ensure cookies are processed by the browser
+        // Wait longer to ensure cookies are fully processed by browser
         // Then redirect with full page reload
         setTimeout(() => {
           console.log('🔄 Redirecting to dashboard...')
-          // Use window.location.href for full page reload
+          console.log('🍪 Final cookie check:', document.cookie)
+          // Use window.location.replace for full page reload (prevents back button issues)
           // This ensures cookies are sent with the next request
-          window.location.href = '/admin/dashboard'
-        }, 300)
+          window.location.replace('/admin/dashboard')
+        }, 500) // Increased delay to ensure cookies are fully set
         
         // Don't set loading to false here as we're redirecting
       } else {
