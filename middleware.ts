@@ -81,6 +81,20 @@ export function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
   const isAuthRoute = authRoutes.some((route) => pathname === route)
 
+  // If user is already logged in and tries to access login page, redirect to dashboard
+  if (pathname === '/admin/login') {
+    const token = request.cookies.get('admin-token')?.value
+    if (token) {
+      const payload = verifyAccessToken(token)
+      if (payload) {
+        // User is already logged in, redirect to dashboard
+        return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+      }
+    }
+    // User is not logged in, allow access to login page
+    return NextResponse.next()
+  }
+
   if (isProtectedRoute && !isAuthRoute) {
     // Get token from cookie
     const token = request.cookies.get('admin-token')?.value

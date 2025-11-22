@@ -1,47 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Lock, Mail, AlertCircle, Loader2, Shield } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function AdminLoginPage() {
   const { language } = useLanguage()
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    // Check if already logged in (silently, don't show errors for 401)
-    fetch('/api/auth/me', {
-      credentials: 'include',
-    })
-      .then((res) => {
-        // 401 is expected when not logged in - don't treat as error
-        if (res.status === 401) {
-          // User is not logged in, stay on login page (this is normal)
-          return null
-        }
-        if (res.ok) {
-          return res.json()
-        }
-        // For other errors, just return null
-        return null
-      })
-      .then((data) => {
-        if (data?.user) {
-          // User is already logged in, redirect to dashboard
-          router.push('/admin/dashboard')
-        }
-        // If no user, stay on login page (this is normal)
-      })
-      .catch(() => {
-        // Network errors are expected - not logged in, continue silently
-        // Don't log errors for expected 401 responses
-      })
-  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
