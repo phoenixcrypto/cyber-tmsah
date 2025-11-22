@@ -56,13 +56,24 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Apply stricter rate limiting to auth routes
+  // Apply stricter rate limiting to auth routes (except /me which is called frequently)
   if (pathname.startsWith('/api/auth/')) {
-    if (!rateLimit(ip, 5, 60000)) { // 5 requests per minute
-      return NextResponse.json(
-        { error: 'Too many login attempts. Please try again later.' },
-        { status: 429 }
-      )
+    // More lenient rate limiting for /api/auth/me (used for session checks)
+    if (pathname === '/api/auth/me') {
+      if (!rateLimit(ip, 30, 60000)) { // 30 requests per minute for session checks
+        return NextResponse.json(
+          { error: 'Too many requests. Please try again later.' },
+          { status: 429 }
+        )
+      }
+    } else {
+      // Stricter for login/logout
+      if (!rateLimit(ip, 10, 60000)) { // 10 requests per minute for login/logout
+        return NextResponse.json(
+          { error: 'Too many login attempts. Please try again later.' },
+          { status: 429 }
+        )
+      }
     }
   }
 

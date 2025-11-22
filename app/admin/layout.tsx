@@ -18,20 +18,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     fetch('/api/auth/me')
       .then((res) => {
         if (!res.ok) {
-          router.push('/admin/login')
-          return
+          // Only redirect if status is 401 (Unauthorized), not 429 (Rate Limited)
+          if (res.status === 401) {
+            router.push('/admin/login')
+          }
+          return null
         }
         return res.json()
       })
       .then((data) => {
         if (data?.user) {
           setUser(data.user)
+        } else if (data === null) {
+          // Only redirect if we got a 401, not if we got rate limited
+          // Rate limited requests will retry automatically
         } else {
           router.push('/admin/login')
         }
       })
-      .catch(() => {
-        router.push('/admin/login')
+      .catch((error) => {
+        // Don't redirect on network errors or rate limiting
+        console.error('Auth check error:', error)
       })
       .finally(() => {
         setLoading(false)

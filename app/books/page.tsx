@@ -397,7 +397,7 @@ export default function BooksPage() {
           const titleText = emojiMatch ? emojiMatch[2] : category.title
           const IconComponent = emoji && emojiToIcon[emoji] ? emojiToIcon[emoji] : null
           
-          return (
+  return (
           <section key={categoryIndex} className="book-category-section">
             <h2 className="book-category-title flex items-center gap-3">
               {IconComponent && <IconComponent className="w-8 h-8 text-cyber-neon" />}
