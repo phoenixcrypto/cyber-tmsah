@@ -22,6 +22,7 @@ export default function AdminLoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Ensure cookies are sent
         body: JSON.stringify({ email, password }),
       })
 
@@ -33,11 +34,20 @@ export default function AdminLoginPage() {
         return
       }
 
-      // Success - wait a moment for cookies to be set, then redirect
-      // Use window.location for full page reload to ensure cookies are sent
-      setTimeout(() => {
-        window.location.href = '/admin/dashboard'
-      }, 100)
+      // Success - verify that cookies were set
+      if (data.success && data.user) {
+        // Wait a moment for cookies to be set, then redirect
+        // Use window.location.replace for full page reload to ensure cookies are sent
+        // Don't set loading to false here as we're redirecting
+        setTimeout(() => {
+          // Force a full page reload to ensure cookies are available
+          // Use replace instead of href to prevent back button issues
+          window.location.replace('/admin/dashboard')
+        }, 500) // Increased delay to ensure cookies are set
+      } else {
+        setError('حدث خطأ أثناء تسجيل الدخول')
+        setLoading(false)
+      }
     } catch (error) {
       console.error('Login error:', error)
       setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى')
