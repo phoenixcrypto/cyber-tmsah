@@ -14,25 +14,32 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // Check if already logged in
+    // Check if already logged in (silently, don't show errors for 401)
     fetch('/api/auth/me', {
       credentials: 'include',
     })
       .then((res) => {
+        // 401 is expected when not logged in - don't treat as error
+        if (res.status === 401) {
+          // User is not logged in, stay on login page (this is normal)
+          return null
+        }
         if (res.ok) {
           return res.json()
         }
-        // 401 is expected when not logged in - not an error
+        // For other errors, just return null
         return null
       })
       .then((data) => {
         if (data?.user) {
+          // User is already logged in, redirect to dashboard
           router.push('/admin/dashboard')
         }
         // If no user, stay on login page (this is normal)
       })
       .catch(() => {
-        // Network errors are expected - not logged in, continue
+        // Network errors are expected - not logged in, continue silently
+        // Don't log errors for expected 401 responses
       })
   }, [router])
 

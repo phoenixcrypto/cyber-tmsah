@@ -27,13 +27,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     })
       .then((res) => {
         if (!res.ok) {
-          // 401 is expected when not logged in - redirect to login
+          // 401 is expected when not logged in - redirect to login silently
+          // Don't log 401 as it's normal behavior
           if (res.status === 401) {
             router.push('/admin/login')
             return null
           }
-          // For other errors, log but don't redirect immediately
-          if (res.status !== 429) {
+          // For other errors (except 429 rate limit), log but don't redirect immediately
+          if (res.status !== 429 && res.status !== 401) {
             console.warn('Auth check failed with status:', res.status)
           }
           return null
@@ -49,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
       })
       .catch((error) => {
-        // Only log unexpected errors, not network errors
+        // Only log unexpected errors, not network errors or expected 401s
         if (error.name !== 'TypeError' && !error.message.includes('fetch')) {
           console.error('Auth check error:', error)
         }
