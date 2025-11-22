@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { FileText, Plus, Edit, Trash2, Save, X, Eye, EyeOff } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import RichTextEditor from '@/components/RichTextEditor'
 
 interface Article {
   id: string
@@ -268,26 +269,24 @@ export default function AdminArticlesPage() {
               <label className="block text-sm font-semibold text-dark-200 mb-2">
                 {language === 'ar' ? 'المحتوى (عربي) *' : 'Content (Arabic) *'}
               </label>
-              <textarea
-                placeholder={language === 'ar' ? 'اكتب محتوى المقال هنا...' : 'Write article content here...'}
+              <RichTextEditor
                 value={formData.content || ''}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                className="w-full px-4 py-2 bg-cyber-dark/80 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
-                rows={10}
-                required
+                onChange={(value) => setFormData({ ...formData, content: value })}
+                placeholder={language === 'ar' ? 'اكتب محتوى المقال هنا...' : 'Write article content here...'}
+                height="500px"
+                language="ar"
               />
             </div>
             <div>
               <label className="block text-sm font-semibold text-dark-200 mb-2">
                 {language === 'ar' ? 'المحتوى (إنجليزي) *' : 'Content (English) *'}
               </label>
-              <textarea
-                placeholder={language === 'ar' ? 'اكتب محتوى المقال بالإنجليزية هنا...' : 'Write article content in English here...'}
+              <RichTextEditor
                 value={formData.contentEn || ''}
-                onChange={(e) => setFormData({ ...formData, contentEn: e.target.value })}
-                className="w-full px-4 py-2 bg-cyber-dark/80 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
-                rows={10}
-                required
+                onChange={(value) => setFormData({ ...formData, contentEn: value })}
+                placeholder={language === 'ar' ? 'اكتب محتوى المقال بالإنجليزية هنا...' : 'Write article content in English here...'}
+                height="500px"
+                language="en"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

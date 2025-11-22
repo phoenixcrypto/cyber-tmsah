@@ -5661,3 +5661,75 @@ footer {
     font-size: 0.85rem;
   }
 }
+
+/* ============================================
+   UNIFIED TYPOGRAPHY SYSTEM 2026
+   ============================================ */
+@layer base {
+  /* Page Titles - H1 */
+  .page-title {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold text-dark-100 mb-4;
+    @apply bg-gradient-to-r from-cyber-neon via-cyber-green to-cyber-neon;
+    @apply bg-clip-text text-transparent;
+    @apply leading-tight;
+  }
+
+  /* Section Titles - H2 */
+  .section-title {
+    @apply text-2xl sm:text-3xl font-bold text-dark-100 mb-6;
+    @apply flex items-center gap-3;
+  }
+
+  /* Subsection Titles - H3 */
+  .subsection-title {
+    @apply text-xl sm:text-2xl font-semibold text-dark-100 mb-4;
+  }
+
+  /* Paragraphs */
+  .content-paragraph {
+    @apply text-base sm:text-lg text-dark-300 leading-relaxed mb-4;
+    @apply max-w-4xl;
+  }
+
+  /* Article/Page Content */
+  .article-content {
+    @apply prose prose-invert max-w-none;
+    @apply prose-headings:text-dark-100 prose-headings:font-bold;
+    @apply prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-8;
+    @apply prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-6;
+    @apply prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-4;
+    @apply prose-p:text-dark-300 prose-p:leading-relaxed prose-p:mb-4;
+    @apply prose-strong:text-cyber-neon prose-strong:font-semibold;
+    @apply prose-a:text-cyber-neon prose-a:no-underline hover:prose-a:underline;
+    @apply prose-ul:text-dark-300 prose-ul:list-disc prose-ul:pl-6;
+    @apply prose-ol:text-dark-300 prose-ol:list-decimal prose-ol:pl-6;
+    @apply prose-li:mb-2;
+    @apply prose-blockquote:border-l-4 prose-blockquote:border-cyber-neon;
+    @apply prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-dark-300;
+    @apply prose-code:text-cyber-green prose-code:bg-cyber-dark/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded;
+    @apply prose-pre:bg-cyber-dark/80 prose-pre:border prose-pre:border-cyber-neon/30;
+    @apply prose-img:rounded-lg prose-img:shadow-lg;
+  }
+
+  /* Page Names (in navigation, breadcrumbs, etc.) */
+  .page-name {
+    @apply text-lg font-semibold text-dark-100;
+    @apply flex items-center gap-2;
+  }
+
+  /* Meta Information */
+  .meta-text {
+    @apply text-sm text-dark-400;
+  }
+
+  /* Labels */
+  .form-label {
+    @apply block text-sm font-semibold text-dark-200 mb-2;
+  }
+
+  /* RTL Support */
+  [dir='rtl'] .article-content {
+    @apply prose-ul:pr-6 prose-ul:pl-0;
+    @apply prose-ol:pr-6 prose-ol:pl-0;
+  }
+}

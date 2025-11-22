@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { File, Plus, Edit, Trash2, Save, X, Eye, EyeOff } from 'lucide-react'
+import { File, Plus, Edit, Trash2, Save, X, Eye, EyeOff, Download } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import RichTextEditor from '@/components/RichTextEditor'
 
 interface Page {
   id: string
@@ -48,6 +49,23 @@ export default function AdminPagesPage() {
       console.error('Error fetching pages:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleImportPages = async () => {
+    if (!confirm(language === 'ar' ? 'هل تريد استيراد الصفحات الموجودة (about, privacy, terms, contact)؟' : 'Do you want to import existing pages (about, privacy, terms, contact)?')) return
+    try {
+      const res = await fetch('/api/admin/pages/import', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message || (language === 'ar' ? 'تم الاستيراد بنجاح' : 'Import successful'))
+        fetchPages()
+      } else {
+        alert(data.error || (language === 'ar' ? 'حدث خطأ' : 'An error occurred'))
+      }
+    } catch (error) {
+      console.error('Error importing pages:', error)
+      alert(language === 'ar' ? 'حدث خطأ أثناء الاستيراد' : 'Error importing pages')
     }
   }
 
@@ -146,17 +164,26 @@ export default function AdminPagesPage() {
             {language === 'ar' ? 'إدارة وإضافة وتعديل الصفحات' : 'Manage, add and edit pages'}
           </p>
         </div>
-        <button
-          onClick={() => {
-            setShowAddForm(true)
-            setEditingPage(null)
-            resetForm()
-          }}
-          className="bg-gradient-to-r from-cyber-neon to-cyber-green text-dark-100 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-all"
-        >
-          <Plus className="w-5 h-5" />
-          {language === 'ar' ? 'إضافة صفحة' : 'Add Page'}
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={handleImportPages}
+            className="bg-gradient-to-r from-cyber-violet to-cyber-blue text-dark-100 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-all"
+          >
+            <Download className="w-5 h-5" />
+            {language === 'ar' ? 'استيراد الصفحات' : 'Import Pages'}
+          </button>
+          <button
+            onClick={() => {
+              setShowAddForm(true)
+              setEditingPage(null)
+              resetForm()
+            }}
+            className="bg-gradient-to-r from-cyber-neon to-cyber-green text-dark-100 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-all"
+          >
+            <Plus className="w-5 h-5" />
+            {language === 'ar' ? 'إضافة صفحة' : 'Add Page'}
+          </button>
+        </div>
       </div>
 
       {(showAddForm || editingPage) && (
@@ -232,26 +259,24 @@ export default function AdminPagesPage() {
               <label className="block text-sm font-semibold text-dark-200 mb-2">
                 {language === 'ar' ? 'المحتوى (عربي) *' : 'Content (Arabic) *'}
               </label>
-              <textarea
-                placeholder={language === 'ar' ? 'اكتب محتوى الصفحة هنا...' : 'Write page content here...'}
+              <RichTextEditor
                 value={formData.content || ''}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                className="w-full px-4 py-2 bg-cyber-dark/80 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
-                rows={12}
-                required
+                onChange={(value) => setFormData({ ...formData, content: value })}
+                placeholder={language === 'ar' ? 'اكتب محتوى الصفحة هنا...' : 'Write page content here...'}
+                height="400px"
+                language="ar"
               />
             </div>
             <div>
               <label className="block text-sm font-semibold text-dark-200 mb-2">
                 {language === 'ar' ? 'المحتوى (إنجليزي) *' : 'Content (English) *'}
               </label>
-              <textarea
-                placeholder={language === 'ar' ? 'اكتب محتوى الصفحة بالإنجليزية هنا...' : 'Write page content in English here...'}
+              <RichTextEditor
                 value={formData.contentEn || ''}
-                onChange={(e) => setFormData({ ...formData, contentEn: e.target.value })}
-                className="w-full px-4 py-2 bg-cyber-dark/80 border border-cyber-neon/30 rounded-lg text-dark-100 focus:border-cyber-neon focus:outline-none"
-                rows={12}
-                required
+                onChange={(value) => setFormData({ ...formData, contentEn: value })}
+                placeholder={language === 'ar' ? 'اكتب محتوى الصفحة بالإنجليزية هنا...' : 'Write page content in English here...'}
+                height="400px"
+                language="en"
               />
             </div>
             <div>
