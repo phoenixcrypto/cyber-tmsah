@@ -85,10 +85,15 @@ export function middleware(request: NextRequest) {
   if (pathname === '/admin/login') {
     const token = request.cookies.get('admin-token')?.value
     if (token) {
-      const payload = verifyAccessToken(token)
-      if (payload) {
-        // User is already logged in, redirect to dashboard
-        return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+      try {
+        const payload = verifyAccessToken(token)
+        if (payload) {
+          // User is already logged in, redirect to dashboard
+          return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+        }
+      } catch (error) {
+        // Token is invalid, allow access to login page
+        console.log('Invalid token on login page, allowing access')
       }
     }
     // User is not logged in, allow access to login page

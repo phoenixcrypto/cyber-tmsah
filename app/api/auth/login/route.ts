@@ -74,25 +74,51 @@ export async function POST(request: NextRequest) {
     // In production (Vercel), always use secure cookies
     const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
     
-    const cookieOptions = {
+    // Get domain from request URL
+    const url = new URL(request.url)
+    const hostname = url.hostname
+    
+    // Cookie options - ensure they work in both development and production
+    // Important: Don't set domain explicitly for cookies to work on all subdomains
+    const cookieOptions: {
+      httpOnly: boolean
+      secure: boolean
+      sameSite: 'lax' | 'strict' | 'none'
+      maxAge: number
+      path: string
+    } = {
       httpOnly: true,
       secure: isProduction, // Secure in production (Vercel uses HTTPS), allow HTTP in development
-      sameSite: 'lax' as const, // Changed from 'strict' to 'lax' for better compatibility
+      sameSite: 'lax', // Changed from 'strict' to 'lax' for better compatibility
       maxAge: 60 * 60 * 24, // 24 hours
       path: '/',
     }
     
-    // Set cookies
+    // Set cookies with explicit options
+    // Using response.cookies.set() which should work correctly
     response.cookies.set('admin-token', accessToken, cookieOptions)
     response.cookies.set('admin-refresh-token', refreshToken, {
       ...cookieOptions,
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
 
-    // Log for debugging (remove in production)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('✅ Login successful, cookies set for user:', user.email)
-    }
+    // Log for debugging - always log to help diagnose issues
+    console.log('✅ Login successful, cookies set for user:', user.email)
+    console.log('🔐 Cookie configuration:', {
+      httpOnly: cookieOptions.httpOnly,
+      secure: cookieOptions.secure,
+      sameSite: cookieOptions.sameSite,
+      path: cookieOptions.path,
+      maxAge: cookieOptions.maxAge,
+      hostname: hostname,
+      isProduction: isProduction,
+      nodeEnv: process.env.NODE_ENV,
+      vercel: process.env.VERCEL,
+    })
+    console.log('🍪 Cookies set in response:', {
+      'admin-token': accessToken ? 'SET' : 'NOT SET',
+      'admin-refresh-token': refreshToken ? 'SET' : 'NOT SET',
+    })
 
     return response
   } catch (error) {

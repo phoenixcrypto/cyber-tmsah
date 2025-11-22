@@ -17,18 +17,28 @@ export default function AdminLoginPage() {
     setLoading(true)
 
     try {
+      console.log('🔐 Attempting login...')
+      
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Ensure cookies are sent
+        credentials: 'include', // Ensure cookies are sent and received
         body: JSON.stringify({ email, password }),
       })
 
+      console.log('📡 Login response status:', response.status)
+      console.log('📡 Login response headers:', {
+        'set-cookie': response.headers.get('set-cookie'),
+        'content-type': response.headers.get('content-type'),
+      })
+
       const data = await response.json()
+      console.log('📦 Login response data:', data)
 
       if (!response.ok) {
+        console.error('❌ Login failed:', data.error)
         setError(data.error || 'حدث خطأ أثناء تسجيل الدخول')
         setLoading(false)
         return
@@ -36,21 +46,37 @@ export default function AdminLoginPage() {
 
       // Success - verify that cookies were set
       if (data.success && data.user) {
-        // Cookies are set by the server in the response
-        // Use window.location for full page reload to ensure cookies are available
-        // The browser will automatically include cookies in the next request
+        console.log('✅ Login successful!')
+        console.log('👤 User:', data.user)
+        console.log('🍪 Checking cookies...')
         
-        // Immediate redirect - cookies are set in the response headers
-        // The browser will handle cookie persistence automatically
-        window.location.href = '/admin/dashboard'
+        // Check if cookies are available (they should be set by the server)
+        // Note: HttpOnly cookies cannot be read by JavaScript, but they should be sent automatically
+        const cookiesAvailable = document.cookie.includes('admin-token') || true // HttpOnly cookies won't appear in document.cookie
+        
+        console.log('🍪 Cookies status:', {
+          documentCookies: document.cookie,
+          cookiesAvailable: cookiesAvailable,
+          note: 'HttpOnly cookies are not visible in document.cookie but should be sent automatically',
+        })
+        
+        // Wait a moment to ensure cookies are processed by the browser
+        // Then redirect with full page reload
+        setTimeout(() => {
+          console.log('🔄 Redirecting to dashboard...')
+          // Use window.location.href for full page reload
+          // This ensures cookies are sent with the next request
+          window.location.href = '/admin/dashboard'
+        }, 300)
         
         // Don't set loading to false here as we're redirecting
       } else {
+        console.error('❌ Login response missing success or user data')
         setError('حدث خطأ أثناء تسجيل الدخول')
         setLoading(false)
       }
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('❌ Login error:', error)
       setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى')
       setLoading(false)
     }
