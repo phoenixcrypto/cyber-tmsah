@@ -8,11 +8,27 @@ import PageHeader from '@/components/PageHeader'
 export default function SchedulePage() {
   const { t } = useLanguage()
   const [selectedSection, setSelectedSection] = useState('')
-  const [filteredSchedule, setFilteredSchedule] = useState<any[]>([])
   const [validationError, setValidationError] = useState('')
   const [scheduleView, setScheduleView] = useState<'A' | 'B'>('A') // Toggle between Group A and B
-  
-  // Sections Data - All 15 Sections with their lab schedules
+  const [allScheduleData, setAllScheduleData] = useState<any[]>([])
+
+  // Fetch schedule data from API
+  useEffect(() => {
+    const fetchScheduleData = async () => {
+      try {
+        const res = await fetch('/api/schedule')
+        const data = await res.json()
+        setAllScheduleData(data.items || [])
+      } catch (error) {
+        console.error('Error fetching schedule:', error)
+        // Fallback to empty array
+        setAllScheduleData([])
+      }
+    }
+    fetchScheduleData()
+  }, [])
+
+  // Legacy hardcoded data (fallback) - will be removed after migration
   const sectionsData = [
     // ========== SECTIONS 1-7 (GROUP A - Group 1) ==========
     // Section 1
@@ -354,7 +370,14 @@ export default function SchedulePage() {
     return 0
   }, [periods]);
   
-  const allScheduleData = useMemo(() => [...scheduleData, ...sectionsData], [scheduleData, sectionsData]);
+  // Use API data if available, otherwise fallback to hardcoded
+  const allScheduleDataMemo = useMemo(() => {
+    if (allScheduleData.length > 0) {
+      return allScheduleData
+    }
+    // Fallback to hardcoded data during migration
+    return [...scheduleData, ...sectionsData]
+  }, [allScheduleData, scheduleData, sectionsData])
 
   // Compute derived values
   const groupFilter = useMemo(() => {
@@ -362,13 +385,13 @@ export default function SchedulePage() {
   }, [scheduleView]);
 
   const lecturesForGroup = useMemo(() => {
-    return scheduleData.filter(item => item.group === groupFilter && !item.sectionNumber)
-  }, [scheduleData, groupFilter])
+    return allScheduleDataMemo.filter(item => item.group === groupFilter && !item.sectionNumber)
+  }, [allScheduleDataMemo, groupFilter])
 
   const labsForSelectedSection = useMemo(() => {
     if (!selectedSection) return []
-    return filteredSchedule.filter(item => item.group === groupFilter)
-  }, [filteredSchedule, selectedSection, groupFilter])
+    return allScheduleDataMemo.filter(item => item.group === groupFilter && item.sectionNumber === parseInt(selectedSection) && item.type === 'lab')
+  }, [allScheduleDataMemo, selectedSection, groupFilter])
 
   const scheduleCards = useMemo(() => {
     if (!selectedSection) return []
@@ -383,7 +406,6 @@ export default function SchedulePage() {
       const error = validateGroupAndSection(groupFilter, selectedSection)
       if (error) {
         setValidationError(error)
-        setFilteredSchedule([])
         return
       }
     }
@@ -391,7 +413,7 @@ export default function SchedulePage() {
     // Clear error if validation passes
     setValidationError('')
     
-    let filtered = allScheduleData.filter(item => {
+    let filtered = allScheduleDataMemo.filter(item => {
       const matchesGroup = item.group === groupFilter
       // If section is selected: show ONLY that section's labs (no lectures)
       // If no section selected: show all sections and lectures
@@ -416,8 +438,6 @@ export default function SchedulePage() {
       const timeB = b.time.split(' - ')[0] || ''
       return timeA.localeCompare(timeB)
     })
-    
-    setFilteredSchedule(filtered)
   }
 
   // Group schedule by day
@@ -438,7 +458,6 @@ export default function SchedulePage() {
     if (selectedSection) {
       handleSearch()
     } else {
-      setFilteredSchedule([])
       setValidationError('')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -523,7 +542,6 @@ export default function SchedulePage() {
                     if (selectedSection) {
                       handleSearch()
                     } else {
-                      setFilteredSchedule([])
                       setValidationError('')
                     }
                   }}

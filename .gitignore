@@ -110,3 +110,7 @@ public/fallback-*.js
 coverage/
 .nyc_output/
 *.lcov
+
+# Database files (sensitive data)
+lib/db/data/*.json
+!lib/db/data/.gitkeep

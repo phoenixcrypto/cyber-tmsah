@@ -2,8 +2,11 @@
 
 import Link from 'next/link'
 import { BookOpen, Calculator, Atom, Database, Globe, Users, ArrowRight, FileText } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
+import * as Icons from 'lucide-react'
 
 interface Subject {
   id: string
@@ -84,6 +87,44 @@ const subjectsData: Subject[] = [
 
 export default function MaterialsPage() {
   const { t } = useLanguage()
+  const [subjects, setSubjects] = useState<Subject[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const res = await fetch('/api/materials')
+        const data = await res.json()
+        // Map API data to Subject format
+        const mappedSubjects = (data.materials || []).map((m: any) => ({
+          id: m.id,
+          title: m.title,
+          description: m.description,
+          icon: m.icon,
+          color: m.color,
+          articlesCount: m.articlesCount || 0,
+          lastUpdated: m.lastUpdated || 'لا توجد مقالات بعد'
+        }))
+        setSubjects(mappedSubjects.length > 0 ? mappedSubjects : subjectsData)
+      } catch (error) {
+        console.error('Error fetching materials:', error)
+        setSubjects(subjectsData) // Fallback
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchMaterials()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center py-20 text-dark-300">Loading...</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
@@ -97,8 +138,9 @@ export default function MaterialsPage() {
 
         {/* Subjects Grid - Enhanced 2026 Design */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {subjectsData.map((subject, index) => {
-            const Icon = subject.icon
+          {subjects.map((subject, index) => {
+            const IconComponent = (Icons as any)[subject.icon] || BookOpen
+            const Icon = IconComponent as LucideIcon
             return (
               <Link
                 key={subject.id}
