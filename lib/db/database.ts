@@ -1,11 +1,28 @@
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
 
-const DB_DIR = path.join(process.cwd(), 'lib', 'db', 'data')
+// Use /tmp directory in serverless environments (Vercel, AWS Lambda, etc.)
+// In local development, use project directory
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NODE_ENV === 'production'
+const DB_DIR = isServerless 
+  ? path.join(os.tmpdir(), 'cyber-tmsah-db')
+  : path.join(process.cwd(), 'lib', 'db', 'data')
 
 // Ensure DB directory exists
-if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR, { recursive: true })
+try {
+  if (!fs.existsSync(DB_DIR)) {
+    fs.mkdirSync(DB_DIR, { recursive: true })
+  }
+} catch (error) {
+  console.error('Error creating DB directory:', error)
+  // Fallback to /tmp if initial directory creation fails
+  if (!isServerless) {
+    const fallbackDir = path.join(os.tmpdir(), 'cyber-tmsah-db')
+    if (!fs.existsSync(fallbackDir)) {
+      fs.mkdirSync(fallbackDir, { recursive: true })
+    }
+  }
 }
 
 /**
@@ -15,13 +32,40 @@ export class Database<T> {
   private filePath: string
 
   constructor(fileName: string) {
-    this.filePath = path.join(DB_DIR, `${fileName}.json`)
+    // Use the DB_DIR that was set above, with fallback to /tmp
+    const dbDir = fs.existsSync(DB_DIR) ? DB_DIR : path.join(os.tmpdir(), 'cyber-tmsah-db')
+    this.filePath = path.join(dbDir, `${fileName}.json`)
     this.ensureFileExists()
   }
 
   private ensureFileExists(): void {
-    if (!fs.existsSync(this.filePath)) {
-      fs.writeFileSync(this.filePath, JSON.stringify([], null, 2), 'utf-8')
+    try {
+      // Ensure directory exists
+      const dir = path.dirname(this.filePath)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+      }
+      
+      if (!fs.existsSync(this.filePath)) {
+        fs.writeFileSync(this.filePath, JSON.stringify([], null, 2), 'utf-8')
+      }
+    } catch (error) {
+      console.error(`Error ensuring file exists for ${this.filePath}:`, error)
+      // If we can't write to the intended location, try /tmp as fallback
+      const fallbackPath = path.join(os.tmpdir(), 'cyber-tmsah-db', path.basename(this.filePath))
+      try {
+        const fallbackDir = path.dirname(fallbackPath)
+        if (!fs.existsSync(fallbackDir)) {
+          fs.mkdirSync(fallbackDir, { recursive: true })
+        }
+        if (!fs.existsSync(fallbackPath)) {
+          fs.writeFileSync(fallbackPath, JSON.stringify([], null, 2), 'utf-8')
+        }
+        this.filePath = fallbackPath
+      } catch (fallbackError) {
+        console.error('Fallback path also failed:', fallbackError)
+        throw error
+      }
     }
   }
 
