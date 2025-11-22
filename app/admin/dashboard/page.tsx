@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { LayoutDashboard, Calendar, BookOpen, Download, Users, Activity, Shield } from 'lucide-react'
+import { LayoutDashboard, Calendar, BookOpen, Download, Users, Activity, Shield, FileText, File } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 interface DashboardStats {
@@ -9,6 +9,8 @@ interface DashboardStats {
   materials: number
   downloads: number
   users: number
+  articles: number
+  pages: number
 }
 
 export default function AdminDashboardPage() {
@@ -18,22 +20,45 @@ export default function AdminDashboardPage() {
     materials: 0,
     downloads: 0,
     users: 0,
+    articles: 0,
+    pages: 0,
   })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Fetch dashboard stats
-    // For now, we'll use static data
-    // In production, fetch from API
-    setTimeout(() => {
-      setStats({
-        scheduleItems: 150, // Example
-        materials: 7,
-        downloads: 3,
-        users: 1,
-      })
-      setLoading(false)
-    }, 500)
+    // Fetch dashboard stats from APIs
+    const fetchStats = async () => {
+      try {
+        const [scheduleRes, materialsRes, downloadsRes, articlesRes, pagesRes] = await Promise.all([
+          fetch('/api/schedule'),
+          fetch('/api/materials'),
+          fetch('/api/downloads'),
+          fetch('/api/admin/articles'),
+          fetch('/api/admin/pages'),
+        ])
+
+        const scheduleData = await scheduleRes.json()
+        const materialsData = await materialsRes.json()
+        const downloadsData = await downloadsRes.json()
+        const articlesData = await articlesRes.json()
+        const pagesData = await pagesRes.json()
+
+        setStats({
+          scheduleItems: scheduleData.schedule?.length || 0,
+          materials: materialsData.materials?.length || 0,
+          downloads: downloadsData.software?.length || 0,
+          users: 1, // TODO: Add users API
+          articles: articlesData.articles?.length || 0,
+          pages: pagesData.pages?.length || 0,
+        })
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching stats:', error)
+        setLoading(false)
+      }
+    }
+
+    fetchStats()
   }, [])
 
   const statCards = [
@@ -48,6 +73,18 @@ export default function AdminDashboardPage() {
       value: stats.materials,
       icon: BookOpen,
       color: 'from-green-500 to-green-600',
+    },
+    {
+      title: language === 'ar' ? 'المقالات' : 'Articles',
+      value: stats.articles,
+      icon: FileText,
+      color: 'from-cyan-500 to-cyan-600',
+    },
+    {
+      title: language === 'ar' ? 'الصفحات' : 'Pages',
+      value: stats.pages,
+      icon: File,
+      color: 'from-indigo-500 to-indigo-600',
     },
     {
       title: language === 'ar' ? 'البرامج' : 'Downloads',
@@ -77,7 +114,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {statCards.map((stat, index) => {
           const Icon = stat.icon
           return (
@@ -105,7 +142,7 @@ export default function AdminDashboardPage() {
           <Activity className="w-5 h-5 text-cyber-neon" />
           {language === 'ar' ? 'إجراءات سريعة' : 'Quick Actions'}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <a
             href="/admin/schedule"
             className="p-4 bg-cyber-dark/50 rounded-xl border border-cyber-neon/20 hover:border-cyber-neon/40 transition-all duration-300 hover:scale-105"
@@ -128,6 +165,30 @@ export default function AdminDashboardPage() {
             </h3>
             <p className="text-sm text-dark-300">
               {language === 'ar' ? 'تعديل وإدارة المواد التعليمية' : 'Edit and manage educational materials'}
+            </p>
+          </a>
+          <a
+            href="/admin/articles"
+            className="p-4 bg-cyber-dark/50 rounded-xl border border-cyber-neon/20 hover:border-cyber-neon/40 transition-all duration-300 hover:scale-105"
+          >
+            <FileText className="w-6 h-6 text-cyber-neon mb-2" />
+            <h3 className="font-semibold text-dark-100 mb-1">
+              {language === 'ar' ? 'إدارة المقالات' : 'Manage Articles'}
+            </h3>
+            <p className="text-sm text-dark-300">
+              {language === 'ar' ? 'إضافة وتعديل وحذف المقالات' : 'Add, edit and delete articles'}
+            </p>
+          </a>
+          <a
+            href="/admin/pages"
+            className="p-4 bg-cyber-dark/50 rounded-xl border border-cyber-neon/20 hover:border-cyber-neon/40 transition-all duration-300 hover:scale-105"
+          >
+            <File className="w-6 h-6 text-cyber-neon mb-2" />
+            <h3 className="font-semibold text-dark-100 mb-1">
+              {language === 'ar' ? 'إدارة الصفحات' : 'Manage Pages'}
+            </h3>
+            <p className="text-sm text-dark-300">
+              {language === 'ar' ? 'إضافة وتعديل وحذف الصفحات' : 'Add, edit and delete pages'}
             </p>
           </a>
           <a

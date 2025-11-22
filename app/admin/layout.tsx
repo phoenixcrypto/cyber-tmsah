@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { Shield, LogOut, LayoutDashboard, Calendar, BookOpen, Download, Users, Settings, Database } from 'lucide-react'
+import { Shield, LogOut, LayoutDashboard, Calendar, BookOpen, Download, Users, Settings, Database, FileText, File } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -91,11 +91,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navItems = [
     { href: '/admin/dashboard', icon: LayoutDashboard, label: language === 'ar' ? 'لوحة التحكم' : 'Dashboard' },
-    { href: '/admin/migrate', icon: Database, label: language === 'ar' ? 'نقل البيانات' : 'Migrate Data' },
-    { href: '/admin/schedule', icon: Calendar, label: language === 'ar' ? 'إدارة الجداول' : 'Schedule' },
-    { href: '/admin/materials', icon: BookOpen, label: language === 'ar' ? 'إدارة المواد' : 'Materials' },
-    { href: '/admin/downloads', icon: Download, label: language === 'ar' ? 'إدارة البرامج' : 'Downloads' },
-    { href: '/admin/users', icon: Users, label: language === 'ar' ? 'إدارة المستخدمين' : 'Users' },
+    { href: '/admin/articles', icon: FileText, label: language === 'ar' ? 'المقالات' : 'Articles' },
+    { href: '/admin/pages', icon: File, label: language === 'ar' ? 'الصفحات' : 'Pages' },
+    { href: '/admin/materials', icon: BookOpen, label: language === 'ar' ? 'المواد' : 'Materials' },
+    { href: '/admin/schedule', icon: Calendar, label: language === 'ar' ? 'الجداول' : 'Schedule' },
+    { href: '/admin/downloads', icon: Download, label: language === 'ar' ? 'البرامج' : 'Downloads' },
+    { href: '/admin/migrate', icon: Database, label: language === 'ar' ? 'نقل البيانات' : 'Migrate' },
+    { href: '/admin/users', icon: Users, label: language === 'ar' ? 'المستخدمين' : 'Users' },
     { href: '/admin/settings', icon: Settings, label: language === 'ar' ? 'الإعدادات' : 'Settings' },
   ]
 
