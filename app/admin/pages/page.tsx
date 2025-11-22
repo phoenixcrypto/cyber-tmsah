@@ -53,7 +53,7 @@ export default function AdminPagesPage() {
   }
 
   const handleImportPages = async () => {
-    if (!confirm(language === 'ar' ? 'هل تريد استيراد الصفحات الموجودة (about, privacy, terms, contact)؟' : 'Do you want to import existing pages (about, privacy, terms, contact)?')) return
+    if (!confirm(language === 'ar' ? 'هل تريد استيراد الصفحات الأساسية (about, privacy, terms, contact)؟' : 'Do you want to import basic pages (about, privacy, terms, contact)?')) return
     try {
       const res = await fetch('/api/admin/pages/import', { method: 'POST' })
       const data = await res.json()
@@ -65,6 +65,23 @@ export default function AdminPagesPage() {
       }
     } catch (error) {
       console.error('Error importing pages:', error)
+      alert(language === 'ar' ? 'حدث خطأ أثناء الاستيراد' : 'Error importing pages')
+    }
+  }
+
+  const handleImportAllPages = async () => {
+    if (!confirm(language === 'ar' ? 'هل تريد استيراد جميع الصفحات الموجودة (about, contact, privacy, terms, contribute, roadmap, expertise-guide)؟ سيتم استخراج محتوى كل صفحة بالكامل.' : 'Do you want to import ALL existing pages? Full content will be extracted from each page.')) return
+    try {
+      const res = await fetch('/api/admin/pages/import-all', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message || (language === 'ar' ? 'تم الاستيراد بنجاح' : 'Import successful'))
+        fetchPages()
+      } else {
+        alert(data.error || (language === 'ar' ? 'حدث خطأ' : 'An error occurred'))
+      }
+    } catch (error) {
+      console.error('Error importing all pages:', error)
       alert(language === 'ar' ? 'حدث خطأ أثناء الاستيراد' : 'Error importing pages')
     }
   }
@@ -164,13 +181,22 @@ export default function AdminPagesPage() {
             {language === 'ar' ? 'إدارة وإضافة وتعديل الصفحات' : 'Manage, add and edit pages'}
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           <button
             onClick={handleImportPages}
-            className="bg-gradient-to-r from-cyber-violet to-cyber-blue text-dark-100 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-all"
+            className="bg-gradient-to-r from-cyber-violet to-cyber-blue text-dark-100 px-4 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-all text-sm"
+            title={language === 'ar' ? 'استيراد الصفحات الأساسية (about, privacy, terms, contact)' : 'Import basic pages (about, privacy, terms, contact)'}
           >
-            <Download className="w-5 h-5" />
-            {language === 'ar' ? 'استيراد الصفحات' : 'Import Pages'}
+            <Download className="w-4 h-4" />
+            {language === 'ar' ? 'استيراد أساسي' : 'Basic Import'}
+          </button>
+          <button
+            onClick={handleImportAllPages}
+            className="bg-gradient-to-r from-cyber-green to-cyber-neon text-dark-100 px-4 py-3 rounded-xl font-bold flex items-center gap-2 hover:scale-105 transition-all text-sm"
+            title={language === 'ar' ? 'استيراد جميع الصفحات مع محتواها الكامل' : 'Import all pages with full content'}
+          >
+            <Download className="w-4 h-4" />
+            {language === 'ar' ? 'استيراد الكل' : 'Import All'}
           </button>
           <button
             onClick={() => {
