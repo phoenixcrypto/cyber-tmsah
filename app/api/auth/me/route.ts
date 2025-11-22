@@ -1,21 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAccessToken } from '@/lib/auth/jwt'
-import { getUserById } from '@/lib/db/users'
+import { getUserById, initializeDefaultAdmin } from '@/lib/db/users'
 
 export async function GET(request: NextRequest) {
   try {
+    // Initialize default admin if needed (only runs once)
+    await initializeDefaultAdmin()
+
     const token = request.cookies.get('admin-token')?.value
 
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const payload = verifyAccessToken(token)
+    let payload
+    try {
+      payload = verifyAccessToken(token)
+    } catch (error) {
+      console.error('Token verification error:', error)
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    }
+
     if (!payload) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
-    const user = getUserById(payload.userId)
+    let user
+    try {
+      user = getUserById(payload.userId)
+    } catch (error) {
+      console.error('Get user by ID error:', error)
+      return NextResponse.json({ error: 'User lookup failed' }, { status: 500 })
+    }
+
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
