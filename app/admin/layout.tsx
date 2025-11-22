@@ -12,15 +12,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { language } = useLanguage()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const isLoginPage = pathname === '/admin/login'
 
   useEffect(() => {
-    // Check authentication
+    // Skip auth check for login page
+    if (isLoginPage) {
+      setLoading(false)
+      return
+    }
+
+    // Check authentication for other admin pages
     fetch('/api/auth/me', {
       credentials: 'include',
     })
       .then((res) => {
         if (!res.ok) {
-          // 401 is expected when not logged in - don't treat as error
+          // 401 is expected when not logged in - redirect to login
           if (res.status === 401) {
             router.push('/admin/login')
             return null
@@ -51,12 +58,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       .finally(() => {
         setLoading(false)
       })
-  }, [router])
+  }, [router, isLoginPage])
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/admin/login')
     router.refresh()
+  }
+
+  // For login page, render children directly without auth check
+  if (isLoginPage) {
+    return <>{children}</>
   }
 
   if (loading) {
