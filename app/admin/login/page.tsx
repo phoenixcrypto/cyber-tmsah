@@ -6,7 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function AdminLoginPage() {
   const { language } = useLanguage()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -25,7 +25,7 @@ export default function AdminLoginPage() {
           'Content-Type': 'application/json',
         },
         credentials: 'include', // Ensure cookies are sent and received
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       })
 
       console.log('📡 Login response status:', response.status)
@@ -110,19 +110,18 @@ export default function AdminLoginPage() {
               </div>
             )}
 
-            {/* Email Field */}
+            {/* Username Field */}
             <div>
               <label className="block text-sm font-semibold text-dark-200 mb-2 flex items-center gap-2">
                 <Mail className="w-4 h-4 text-cyber-neon" />
-                {language === 'ar' ? 'البريد الإلكتروني' : 'Email'}
+                {language === 'ar' ? 'اسم المستخدم' : 'Username'}
               </label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 className="w-full px-4 py-3 bg-cyber-dark/80 border-2 border-cyber-neon/30 rounded-xl text-dark-100 focus:border-cyber-neon focus:outline-none focus:ring-4 focus:ring-cyber-neon/20 transition-all duration-300"
-                placeholder={language === 'ar' ? 'admin@cyber-tmsah.site' : 'admin@cyber-tmsah.site'}
                 disabled={loading}
               />
             </div>
@@ -163,19 +162,6 @@ export default function AdminLoginPage() {
               )}
             </button>
           </form>
-
-          {/* Default Credentials Info (only in development) */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-6 p-4 bg-cyber-neon/10 border border-cyber-neon/30 rounded-lg">
-              <p className="text-xs text-dark-300 text-center">
-                <strong className="text-cyber-neon">Default Admin:</strong>
-                <br />
-                Email: admin@cyber-tmsah.site
-                <br />
-                Password: Admin@2026!
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>

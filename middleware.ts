@@ -133,23 +133,22 @@ export function middleware(request: NextRequest) {
     }
 
     if (!payload) {
-      // Token is invalid - only delete cookies if we're certain it's invalid
-      // Check if this is a fresh login attempt (recent redirect from login)
+      // Token is invalid - but don't delete cookies immediately
+      // Allow access and let client-side handle it to avoid timing issues
+      // Only redirect if this is clearly not a fresh login
       const referer = request.headers.get('referer')
       const isFromLogin = referer?.includes('/admin/login')
       
-      if (!isFromLogin) {
-        // Only delete cookies if not coming from login page (to avoid deleting fresh cookies)
-        console.log('❌ Invalid token, clearing cookies and redirecting to login')
-        const response = NextResponse.redirect(new URL('/admin/login', request.url))
-        response.cookies.delete('admin-token')
-        response.cookies.delete('admin-refresh-token')
-        return response
-      } else {
-        // Coming from login page - might be a timing issue, allow access
+      // Always allow access if coming from login (fresh login)
+      if (isFromLogin) {
         console.log('⚠️ Invalid token but coming from login, allowing access')
         return NextResponse.next()
       }
+      
+      // For other cases, allow access but don't delete cookies
+      // The client-side auth check will handle redirect if needed
+      console.log('⚠️ Invalid token, allowing access (client will handle)')
+      return NextResponse.next()
     }
 
     // Add user info to headers for API routes

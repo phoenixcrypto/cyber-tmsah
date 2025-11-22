@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { loginSchema } from '@/lib/validators/schemas'
-import { getUserByEmail, updateLastLogin } from '@/lib/db/users'
+import { getUserByUsername, updateLastLogin } from '@/lib/db/users'
 import { comparePassword } from '@/lib/auth/bcrypt'
 import { generateAccessToken, generateRefreshToken } from '@/lib/auth/jwt'
 import { initializeDefaultAdmin } from '@/lib/db/users'
@@ -21,13 +21,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { email, password } = validationResult.data
+    const { username, password } = validationResult.data
 
-    // Get user
-    const user = getUserByEmail(email)
+    // Get user by username
+    const user = getUserByUsername(username)
     if (!user) {
       return NextResponse.json(
-        { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' },
+        { error: 'اسم المستخدم أو كلمة المرور غير صحيحة' },
         { status: 401 }
       )
     }
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const isPasswordValid = await comparePassword(password, user.password)
     if (!isPasswordValid) {
       return NextResponse.json(
-        { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' },
+        { error: 'اسم المستخدم أو كلمة المرور غير صحيحة' },
         { status: 401 }
       )
     }
@@ -44,13 +44,13 @@ export async function POST(request: NextRequest) {
     // Generate tokens
     const accessToken = generateAccessToken({
       userId: user.id,
-      email: user.email,
+      email: user.email || user.username,
       role: user.role,
     })
 
     const refreshToken = generateRefreshToken({
       userId: user.id,
-      email: user.email,
+      email: user.email || user.username,
       role: user.role,
     })
 
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Log for debugging - always log to help diagnose issues
-    console.log('✅ Login successful, cookies set for user:', user.email)
+    console.log('✅ Login successful, cookies set for user:', user.username)
     console.log('🔐 Cookie configuration:', {
       httpOnly: cookieOptions.httpOnly,
       secure: cookieOptions.secure,

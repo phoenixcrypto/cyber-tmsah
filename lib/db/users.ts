@@ -3,7 +3,8 @@ import { hashPassword } from '../auth/bcrypt'
 
 export interface User {
   id: string
-  email: string
+  username: string // Changed from email to username
+  email?: string // Optional for backward compatibility
   name: string
   password: string // hashed
   role: 'admin' | 'editor' | 'viewer'
@@ -22,14 +23,14 @@ export async function initializeDefaultAdmin(): Promise<void> {
     const users = usersDB.readAll()
     
     if (users.length === 0) {
-      // Default admin credentials
-      const defaultPassword = 'Admin@2026!'
+      // Default admin credentials - Zeyad Eltmsah
+      const defaultPassword = '2610204ZEYAd@@'
       const hashedPassword = await hashPassword(defaultPassword)
       
       const defaultAdmin: User = {
         id: 'admin-001',
-        email: 'admin@cyber-tmsah.site',
-        name: 'مدير النظام',
+        username: 'Zeyad Eltmsah',
+        name: 'Zeyad Eltmsah',
         password: hashedPassword,
         role: 'admin',
         createdAt: new Date().toISOString(),
@@ -38,9 +39,8 @@ export async function initializeDefaultAdmin(): Promise<void> {
       
       usersDB.add(defaultAdmin)
       console.log('✅ Default admin user created!')
-      console.log('📧 Email: admin@cyber-tmsah.site')
-      console.log('🔑 Password: Admin@2026!')
-      console.log('⚠️  Please change the password after first login!')
+      console.log('👤 Username: Zeyad Eltmsah')
+      console.log('🔑 Password: 2610204ZEYAd@@')
     }
   } catch (error) {
     console.error('Error initializing default admin:', error)
@@ -49,11 +49,19 @@ export async function initializeDefaultAdmin(): Promise<void> {
 }
 
 /**
- * Get user by email
+ * Get user by username
+ */
+export function getUserByUsername(username: string): User | undefined {
+  const users = usersDB.readAll()
+  return users.find((user) => user.username.toLowerCase() === username.toLowerCase())
+}
+
+/**
+ * Get user by email (for backward compatibility)
  */
 export function getUserByEmail(email: string): User | undefined {
   const users = usersDB.readAll()
-  return users.find((user) => user.email.toLowerCase() === email.toLowerCase())
+  return users.find((user) => user.email?.toLowerCase() === email.toLowerCase())
 }
 
 /**

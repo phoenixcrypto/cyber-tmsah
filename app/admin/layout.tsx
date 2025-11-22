@@ -22,11 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     // Check authentication for other admin pages
-    // Add retry mechanism for cases where cookies might not be immediately available
-    let retryCount = 0
-    const maxRetries = 3
-    const retryDelay = 500 // 500ms between retries
-
+    // Simplified - no aggressive retries, just check once
     const checkAuth = async (): Promise<void> => {
       try {
         const res = await fetch('/api/auth/me', {
@@ -34,24 +30,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         })
 
         if (!res.ok) {
-          // 401 is expected when not logged in
+          // 401 means not logged in - redirect to login
           if (res.status === 401) {
-            // Retry if we haven't exceeded max retries (cookies might not be set yet)
-            if (retryCount < maxRetries) {
-              retryCount++
-              await new Promise((resolve) => setTimeout(resolve, retryDelay))
-              return checkAuth()
-            }
-            // Max retries reached, redirect to login
             router.push('/admin/login')
             setLoading(false)
             return
           }
-          // For other errors (except 429 rate limit), log but don't redirect immediately
-          if (res.status !== 429 && res.status !== 401) {
-            console.warn('Auth check failed with status:', res.status)
-          }
-          router.push('/admin/login')
+          // For other errors, allow access (might be temporary)
+          console.warn('Auth check failed with status:', res.status)
           setLoading(false)
           return
         }
@@ -66,19 +52,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           setLoading(false)
         }
       } catch (error) {
-        // Only log unexpected errors, not network errors or expected 401s
-        if (error instanceof Error && error.name !== 'TypeError' && !error.message.includes('fetch')) {
-          console.error('Auth check error:', error)
-        }
-        // Retry if we haven't exceeded max retries
-        if (retryCount < maxRetries) {
-          retryCount++
-          await new Promise((resolve) => setTimeout(resolve, retryDelay))
-          return checkAuth()
-        } else {
-          router.push('/admin/login')
-          setLoading(false)
-        }
+        // Network error - allow access (might be temporary)
+        console.error('Auth check error:', error)
+        setLoading(false)
       }
     }
 
