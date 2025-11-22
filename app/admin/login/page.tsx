@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { Lock, Mail, AlertCircle, Loader2, Shield } from 'lucide-react'
+import { Lock, Mail, AlertCircle, Loader2, Shield, Eye, EyeOff } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function AdminLoginPage() {
   const { language } = useLanguage()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -132,15 +133,30 @@ export default function AdminLoginPage() {
                 <Lock className="w-4 h-4 text-cyber-neon" />
                 {language === 'ar' ? 'كلمة المرور' : 'Password'}
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 bg-cyber-dark/80 border-2 border-cyber-neon/30 rounded-xl text-dark-100 focus:border-cyber-neon focus:outline-none focus:ring-4 focus:ring-cyber-neon/20 transition-all duration-300"
-                placeholder={language === 'ar' ? '••••••••' : '••••••••'}
-                disabled={loading}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 pr-12 bg-cyber-dark/80 border-2 border-cyber-neon/30 rounded-xl text-dark-100 focus:border-cyber-neon focus:outline-none focus:ring-4 focus:ring-cyber-neon/20 transition-all duration-300"
+                  placeholder={language === 'ar' ? '••••••••' : '••••••••'}
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-cyber-neon hover:text-cyber-green transition-colors duration-200 focus:outline-none"
+                  disabled={loading}
+                  aria-label={showPassword ? (language === 'ar' ? 'إخفاء كلمة المرور' : 'Hide password') : (language === 'ar' ? 'إظهار كلمة المرور' : 'Show password')}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Submit Button */}

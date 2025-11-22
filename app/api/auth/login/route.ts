@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { loginSchema } from '@/lib/validators/schemas'
-import { getUserByUsername, updateLastLogin } from '@/lib/db/users'
+import { getUserByUsername, updateLastLogin, getAllUsers, initializeDefaultAdmin } from '@/lib/db/users'
 import { comparePassword } from '@/lib/auth/bcrypt'
 import { generateAccessToken, generateRefreshToken } from '@/lib/auth/jwt'
-import { initializeDefaultAdmin } from '@/lib/db/users'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,18 +22,34 @@ export async function POST(request: NextRequest) {
 
     const { username, password } = validationResult.data
 
+    // Trim username to remove any extra spaces
+    const trimmedUsername = username.trim()
+
+    console.log('🔍 Looking for user with username:', trimmedUsername)
+    
     // Get user by username
-    const user = getUserByUsername(username)
+    const user = getUserByUsername(trimmedUsername)
+    
     if (!user) {
+      console.log('❌ User not found:', trimmedUsername)
+      // Log all users for debugging
+      const allUsers = getAllUsers()
+      console.log('📋 All users in database:', allUsers.map((u) => ({ id: u.id, username: u.username, name: u.name })))
       return NextResponse.json(
         { error: 'اسم المستخدم أو كلمة المرور غير صحيحة' },
         { status: 401 }
       )
     }
 
+    console.log('✅ User found:', { id: user.id, username: user.username, name: user.name })
+
     // Verify password
+    console.log('🔐 Verifying password...')
     const isPasswordValid = await comparePassword(password, user.password)
+    console.log('🔐 Password valid:', isPasswordValid)
+    
     if (!isPasswordValid) {
+      console.log('❌ Password verification failed')
       return NextResponse.json(
         { error: 'اسم المستخدم أو كلمة المرور غير صحيحة' },
         { status: 401 }

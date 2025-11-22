@@ -53,7 +53,8 @@ export async function initializeDefaultAdmin(): Promise<void> {
  */
 export function getUserByUsername(username: string): User | undefined {
   const users = usersDB.readAll()
-  return users.find((user) => user.username.toLowerCase() === username.toLowerCase())
+  const trimmedUsername = username.trim()
+  return users.find((user) => user.username.trim().toLowerCase() === trimmedUsername.toLowerCase())
 }
 
 /**
