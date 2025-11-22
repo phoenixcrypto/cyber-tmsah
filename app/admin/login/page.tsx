@@ -65,9 +65,11 @@ export default function AdminLoginPage() {
         return
       }
 
-      // Success - redirect to dashboard
-      router.push('/admin/dashboard')
-      router.refresh()
+      // Success - wait a moment for cookies to be set, then redirect
+      // Use window.location for full page reload to ensure cookies are sent
+      setTimeout(() => {
+        window.location.href = '/admin/dashboard'
+      }, 100)
     } catch (error) {
       console.error('Login error:', error)
       setError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى')
