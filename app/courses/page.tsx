@@ -102,12 +102,11 @@ export default function CoursesPage() {
   const { t } = useLanguage()
   
   return (
-    <div className="courses-page">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <PageHeader 
-          title={t('courses.title')} 
-          icon={GraduationCap}
-          description={t('courses.description')}
+    <div className="page-container">
+      <PageHeader 
+        title={t('courses.title')} 
+        icon={GraduationCap}
+        description={t('courses.description')}
         />
 
         <div className="courses-content">
@@ -139,7 +138,6 @@ export default function CoursesPage() {
           </div>
         ))}
         </div>
-      </div>
     </div>
   )
 }

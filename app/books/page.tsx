@@ -380,12 +380,11 @@ export default function BooksPage() {
   const { t } = useLanguage()
   
   return (
-    <div className="books-page">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <PageHeader 
-          title={t('books.title')} 
-          icon={BookOpen}
-          description={t('books.description')}
+    <div className="page-container">
+      <PageHeader 
+        title={t('books.title')} 
+        icon={BookOpen}
+        description={t('books.description')}
         />
 
         <div className="books-content">
@@ -456,7 +455,6 @@ export default function BooksPage() {
           )
         })}
         </div>
-      </div>
     </div>
   )
 }

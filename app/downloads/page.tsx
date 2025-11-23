@@ -80,13 +80,12 @@ export default function DownloadsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <PageHeader
-          title={t('downloads.title')}
-          icon={Download}
-          description={t('downloads.description')}
-        />
+    <div className="page-container">
+      <PageHeader
+        title={t('downloads.title')}
+        icon={Download}
+        description={t('downloads.description')}
+      />
 
         {loading ? (
           <div className="text-center py-20 text-dark-300">Loading...</div>
@@ -140,7 +139,6 @@ export default function DownloadsPage() {
             )}
           </>
         )}
-      </div>
     </div>
   )
 }

@@ -125,16 +125,15 @@ export default function MaterialsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <PageHeader 
-          title={t('materials.title')} 
-          icon={BookOpen}
-          description={t('materials.description')}
-        />
+    <div className="page-container">
+      <PageHeader 
+        title={t('materials.title')} 
+        icon={BookOpen}
+        description={t('materials.description')}
+      />
 
       {/* Subjects Grid - Enhanced 2026 Design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto" style={{ padding: '0 2rem 4rem' }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {subjects.map((subject, index) => {
             const IconComponent = (Icons as any)[subject.icon] || BookOpen
             const Icon = IconComponent as LucideIcon
@@ -177,7 +176,6 @@ export default function MaterialsPage() {
             )
           })}
         </div>
-      </div>
     </div>
   )
 }

@@ -8,13 +8,12 @@ export default function ExpertiseGuidePage() {
   const { t, language } = useLanguage()
 
   return (
-    <div className="courses-page">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <PageHeader 
-          title={t('expertise.title')} 
-          icon={GraduationCap}
-          description={t('expertise.description')}
-        />
+    <div className="page-container">
+      <PageHeader 
+        title={t('expertise.title')} 
+        icon={GraduationCap}
+        description={t('expertise.description')}
+      />
 
         <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
@@ -57,7 +56,6 @@ export default function ExpertiseGuidePage() {
           </div>
         </section>
         </div>
-      </div>
     </div>
   )
 }

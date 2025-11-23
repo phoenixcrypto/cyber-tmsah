@@ -9,12 +9,11 @@ export default function ContributePage() {
   const { t } = useLanguage()
 
   return (
-    <div className="courses-page">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <PageHeader 
-          title={t('contribute.title')} 
-          icon={Heart}
-          description={t('contribute.description')}
+    <div className="page-container">
+      <PageHeader 
+        title={t('contribute.title')} 
+        icon={Heart}
+        description={t('contribute.description')}
         />
 
         <div className="courses-content">
@@ -61,7 +60,6 @@ export default function ContributePage() {
           </div>
         </section>
         </div>
-      </div>
     </div>
   )
 }
