@@ -43,6 +43,15 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
 
+  // Redirect /eltmsah to /admin (since admin files are in app/admin/)
+  // This allows using /eltmsah as the admin path while keeping files in app/admin/
+  if (pathname === '/eltmsah' || pathname.startsWith('/eltmsah/')) {
+    const newPath = pathname.replace('/eltmsah', '/admin')
+    const url = request.nextUrl.clone()
+    url.pathname = newPath
+    return NextResponse.redirect(url, 308) // 308 = permanent redirect
+  }
+
   // Apply rate limiting to API routes
   if (pathname.startsWith('/api/')) {
     if (!rateLimit(ip, 100, 60000)) { // 100 requests per minute
@@ -93,6 +102,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/api/:path*',
+    '/eltmsah/:path*',
   ],
 }
 

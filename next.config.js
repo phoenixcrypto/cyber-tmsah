@@ -65,23 +65,32 @@ const nextConfig = {
     // Get admin path from environment variable or use default
     const adminPath = process.env.ADMIN_PATH || 'admin';
     
-    return [
+    const redirects = [
       {
         source: '/home',
         destination: '/',
         permanent: true,
       },
-      {
-        source: '/eltmsah',
-        destination: `/${adminPath}`,
-        permanent: true,
-      },
-      {
-        source: '/eltmsah/:path*',
-        destination: `/${adminPath}/:path*`,
-        permanent: true,
-      },
     ];
+    
+    // Only add /eltmsah redirect if ADMIN_PATH is NOT 'eltmsah'
+    // If ADMIN_PATH is 'eltmsah', then /eltmsah is the actual admin path, no redirect needed
+    if (adminPath !== 'eltmsah') {
+      redirects.push(
+        {
+          source: '/eltmsah',
+          destination: `/${adminPath}`,
+          permanent: true,
+        },
+        {
+          source: '/eltmsah/:path*',
+          destination: `/${adminPath}/:path*`,
+          permanent: true,
+        }
+      );
+    }
+    
+    return redirects;
   },
   
   // TypeScript configuration
