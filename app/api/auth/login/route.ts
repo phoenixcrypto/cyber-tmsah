@@ -16,16 +16,21 @@ async function initializeDefaultAdmin(): Promise<void> {
     const userCount = await prisma.user.count()
     
     if (userCount === 0) {
-      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin'
-      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@2026!'
-      const defaultName = process.env.DEFAULT_ADMIN_NAME || 'مدير النظام'
+      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME
+      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD
+      const defaultName = process.env.DEFAULT_ADMIN_NAME
+      
+      if (!defaultUsername || !defaultPassword) {
+        console.error('❌ DEFAULT_ADMIN_USERNAME and DEFAULT_ADMIN_PASSWORD must be set in environment variables')
+        return
+      }
       
       const hashedPassword = await hashPassword(defaultPassword)
       
       await prisma.user.create({
         data: {
           username: defaultUsername,
-          name: defaultName,
+          name: defaultName || defaultUsername,
           password: hashedPassword,
           role: 'admin',
         },
@@ -125,7 +130,7 @@ export async function POST(request: NextRequest) {
           method: 'POST',
           path: '/api/auth/login',
           ipAddress: context.ipAddress,
-          userAgent: context.userAgent ?? undefined,
+          ...(context.userAgent && { userAgent: context.userAgent }),
           userId: user.id,
           startTime,
         },

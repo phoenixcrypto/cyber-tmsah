@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { successResponse, errorResponse, getRequestContext } from '@/lib/utils/api-response'
+import { successResponse, errorResponse } from '@/lib/utils/api-response'
+import { getRequestContext } from '@/lib/middleware/auth'
 import { logger } from '@/lib/utils/logger'
 
 /**
@@ -51,7 +52,7 @@ export async function GET(request: NextRequest) {
           method: 'GET',
           path: '/api/schedule',
           ipAddress: context.ipAddress,
-          userAgent: context.userAgent || undefined,
+          ...(context.userAgent && { userAgent: context.userAgent }),
           startTime,
         },
       }
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
           method: 'GET',
           path: '/api/schedule',
           ipAddress: context.ipAddress,
-          userAgent: context.userAgent || undefined,
+          ...(context.userAgent && { userAgent: context.userAgent }),
           startTime,
         },
       }
@@ -102,7 +103,7 @@ export async function POST(request: NextRequest) {
           method: 'POST',
           path: '/api/schedule',
           ipAddress: context.ipAddress,
-          userAgent: context.userAgent || undefined,
+          ...(context.userAgent && { userAgent: context.userAgent }),
           userId: user.userId,
           startTime,
         },
@@ -134,7 +135,7 @@ export async function POST(request: NextRequest) {
           method: 'POST',
           path: '/api/schedule',
           ipAddress: context.ipAddress,
-          userAgent: context.userAgent || undefined,
+          ...(context.userAgent && { userAgent: context.userAgent }),
           userId: user.userId,
           startTime,
         },

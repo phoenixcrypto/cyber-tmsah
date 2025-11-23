@@ -5,7 +5,6 @@
 import { NextRequest } from 'next/server'
 import { verifyAccessToken } from '@/lib/auth/jwt'
 import { prisma } from '@/lib/db/prisma'
-import { unauthorizedResponse } from '@/lib/utils/api-response'
 
 export interface AuthUser {
   userId: string

@@ -23,6 +23,7 @@ import {
   HelpCircle,
   type LucideIcon,
 } from 'lucide-react'
+import { getAdminBasePath, getAdminLoginPath } from '@/lib/utils/admin-path'
 
 interface SidebarItem {
   label: string
@@ -32,71 +33,75 @@ interface SidebarItem {
   children?: SidebarItem[]
 }
 
-const sidebarItems: SidebarItem[] = [
-  {
-    label: 'لوحة التحكم',
-    icon: LayoutDashboard,
-    href: '/admin',
-  },
-  {
-    label: 'المستخدمين',
-    icon: Users,
-    href: '/admin/users',
-    badge: 12,
-  },
-  {
-    label: 'المحتوى',
-    icon: FileText,
-    href: '/admin/content',
-    children: [
-      { label: 'المواد الدراسية', icon: BookOpen, href: '/admin/content/materials' },
-      { label: 'المقالات', icon: FileText, href: '/admin/content/articles' },
-      { label: 'الصفحات', icon: FileText, href: '/admin/content/pages' },
-      { label: 'الأخبار', icon: Newspaper, href: '/admin/content/news' },
-    ],
-  },
-  {
-    label: 'الجدول الدراسي',
-    icon: Calendar,
-    href: '/admin/schedule',
-  },
-  {
-    label: 'التنزيلات',
-    icon: Download,
-    href: '/admin/downloads',
-  },
-  {
-    label: 'الإحصائيات',
-    icon: BarChart3,
-    href: '/admin/analytics',
-  },
-  {
-    label: 'قاعدة البيانات',
-    icon: Database,
-    href: '/admin/database',
-  },
-  {
-    label: 'الأمان',
-    icon: Shield,
-    href: '/admin/security',
-  },
-  {
-    label: 'الإشعارات',
-    icon: Bell,
-    href: '/admin/notifications',
-    badge: 5,
-  },
-  {
-    label: 'الإعدادات',
-    icon: Settings,
-    href: '/admin/settings',
-  },
-  {
-    label: 'المساعدة',
-    icon: HelpCircle,
-    href: '/admin/help',
-  },
-]
+// Get admin base path dynamically
+function getSidebarItems(): SidebarItem[] {
+  const basePath = getAdminBasePath()
+  return [
+    {
+      label: 'لوحة التحكم',
+      icon: LayoutDashboard,
+      href: basePath,
+    },
+    {
+      label: 'المستخدمين',
+      icon: Users,
+      href: `${basePath}/users`,
+      badge: 12,
+    },
+    {
+      label: 'المحتوى',
+      icon: FileText,
+      href: `${basePath}/content`,
+      children: [
+        { label: 'المواد الدراسية', icon: BookOpen, href: `${basePath}/content/materials` },
+        { label: 'المقالات', icon: FileText, href: `${basePath}/content/articles` },
+        { label: 'الصفحات', icon: FileText, href: `${basePath}/content/pages` },
+        { label: 'الأخبار', icon: Newspaper, href: `${basePath}/content/news` },
+      ],
+    },
+    {
+      label: 'الجدول الدراسي',
+      icon: Calendar,
+      href: `${basePath}/schedule`,
+    },
+    {
+      label: 'التنزيلات',
+      icon: Download,
+      href: `${basePath}/downloads`,
+    },
+    {
+      label: 'الإحصائيات',
+      icon: BarChart3,
+      href: `${basePath}/analytics`,
+    },
+    {
+      label: 'قاعدة البيانات',
+      icon: Database,
+      href: `${basePath}/database`,
+    },
+    {
+      label: 'الأمان',
+      icon: Shield,
+      href: `${basePath}/security`,
+    },
+    {
+      label: 'الإشعارات',
+      icon: Bell,
+      href: `${basePath}/notifications`,
+      badge: 5,
+    },
+    {
+      label: 'الإعدادات',
+      icon: Settings,
+      href: `${basePath}/settings`,
+    },
+    {
+      label: 'المساعدة',
+      icon: HelpCircle,
+      href: `${basePath}/help`,
+    },
+  ]
+}
 
 export default function AdminSidebar({
   isOpen,
@@ -107,6 +112,7 @@ export default function AdminSidebar({
 }) {
   const pathname = usePathname()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
+  const sidebarItems = getSidebarItems()
 
   const toggleExpand = (href: string) => {
     setExpandedItems((prev) =>
@@ -116,7 +122,7 @@ export default function AdminSidebar({
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
-    window.location.href = '/admin/login'
+    window.location.href = getAdminLoginPath()
   }
 
   return (

@@ -6,6 +6,7 @@ import AdminSidebar from '@/components/admin/AdminSidebar'
 import AdminNavbar from '@/components/admin/AdminNavbar'
 import AdminBreadcrumb from '@/components/admin/AdminBreadcrumb'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getAdminLoginPath, getAdminBasePath } from '@/lib/utils/admin-path'
 import '../admin/admin-styles.css'
 
 export default function AdminLayout({
@@ -27,17 +28,19 @@ export default function AdminLayout({
         if (res.ok) {
           setIsAuthenticated(true)
         } else {
-          router.push('/admin/login')
+          router.push(getAdminLoginPath())
         }
       } catch (error) {
-        router.push('/admin/login')
+        router.push(getAdminLoginPath())
       } finally {
         setLoading(false)
       }
     }
 
     // Skip auth check for login page
-    if (pathname !== '/admin/login' && pathname !== '/admin/register') {
+    const loginPath = getAdminLoginPath()
+    const registerPath = `${getAdminBasePath()}/register`
+    if (pathname !== loginPath && pathname !== registerPath) {
       checkAuth()
     } else {
       setLoading(false)
@@ -45,7 +48,9 @@ export default function AdminLayout({
   }, [pathname, router])
 
   // Don't show layout on login/register pages
-  if (pathname === '/admin/login' || pathname === '/admin/register') {
+  const loginPath = getAdminLoginPath()
+  const registerPath = `${getAdminBasePath()}/register`
+  if (pathname === loginPath || pathname === registerPath) {
     return <>{children}</>
   }
 

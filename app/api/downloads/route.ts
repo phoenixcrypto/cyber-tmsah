@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { getRequestContext } from '@/lib/middleware/auth'
 
 /**
  * GET /api/downloads
@@ -27,9 +26,8 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
-    const { requireEditor, getRequestContext } = await import('@/lib/middleware/auth')
-    const context = getRequestContext(request)
-    const user = await requireEditor(request)
+    const { requireEditor } = await import('@/lib/middleware/auth')
+    await requireEditor(request)
 
     const body = await request.json()
     const { name, nameEn, description, descriptionEn, icon, videoUrl, downloadUrl, category } = body

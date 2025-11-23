@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
   const context = getRequestContext(request)
 
   try {
-    const user = await requireAdmin(request)
+    await requireAdmin(request)
 
     const users = await prisma.user.findMany({
       select: {

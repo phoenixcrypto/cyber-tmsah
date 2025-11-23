@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { getRequestContext } from '@/lib/middleware/auth'
 
 /**
  * GET /api/news
@@ -14,10 +13,10 @@ export async function GET(request: NextRequest) {
     const user = await getAuthUser(request)
 
     // If admin, return all. Otherwise, only published
-    const where = user?.role === 'admin' ? {} : { status: 'published' }
+    const where = user?.role === 'admin' ? {} : { status: 'published' as const }
 
     const news = await prisma.newsArticle.findMany({
-      where,
+      ...(Object.keys(where).length > 0 && { where }),
       orderBy: { publishedAt: 'desc' },
     })
 
@@ -34,9 +33,8 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const { requireEditor, getRequestContext } = await import('@/lib/middleware/auth')
-    const context = getRequestContext(request)
-    const user = await requireEditor(request)
+    const { requireEditor } = await import('@/lib/middleware/auth')
+    await requireEditor(request)
 
     const body = await request.json()
     const {

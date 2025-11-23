@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════════
+  DATABASE_URL لـ Vercel
+═══════════════════════════════════════════════════════════════
+
+Project ID: jcnznjdmhwhpauugpbge
+
+═══════════════════════════════════════════════════════════════
+  إنشاء Connection String:
+═══════════════════════════════════════════════════════════════
+
+استخدم إحدى الصيغ التالية (استبدل [YOUR-PASSWORD] بكلمة المرور):
+
+═══════════════════════════════════════════════════════════════
+  Option 1: Connection Pooling (موصى به)
+═══════════════════════════════════════════════════════════════
+
+postgresql://postgres.jcnznjdmhwhpauugpbge:[YOUR-PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+
+أو إذا كانت المنطقة مختلفة:
+postgresql://postgres.jcnznjdmhwhpauugpbge:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
+
+═══════════════════════════════════════════════════════════════
+  Option 2: Direct Connection
+═══════════════════════════════════════════════════════════════
+
+postgresql://postgres:[YOUR-PASSWORD]@db.jcnznjdmhwhpauugpbge.supabase.co:5432/postgres
+
+═══════════════════════════════════════════════════════════════
+  الخطوات:
+═══════════════════════════════════════════════════════════════
+
+1. استبدل [YOUR-PASSWORD] بكلمة المرور التي حفظتها عند إنشاء المشروع
+
+2. مثال إذا كانت كلمة المرور: MyPassword123!
+   postgresql://postgres.jcnznjdmhwhpauugpbge:MyPassword123!@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+
+3. انسخ Connection String الكامل
+
+4. اذهب إلى: Vercel Dashboard → Project → Settings → Environment Variables
+
+5. اضغط "Add New"
+
+6. أضف:
+   Key: DATABASE_URL
+   Value: (انسخ Connection String بعد استبدال [YOUR-PASSWORD])
+   Environment: All Environments
+
+7. احفظ
+
+═══════════════════════════════════════════════════════════════
+  ملاحظات:
+═══════════════════════════════════════════════════════════════
+
+- استخدم Option 1 (Pooler) إذا كانت متاحة - أفضل للأداء
+- إذا لم تعمل Option 1، جرب Option 2 (Direct)
+- تأكد من استبدال [YOUR-PASSWORD] بكلمة المرور الحقيقية
+- المنطقة (Region) قد تكون مختلفة - جرب eu-central-1 أولاً
+
+═══════════════════════════════════════════════════════════════
+  باقي المتغيرات المطلوبة في Vercel:
+═══════════════════════════════════════════════════════════════
+
+بعد إضافة DATABASE_URL، أضف:
+
+1. JWT_SECRET=vudZ7GUblq9ucmt/GrNWNFvg+G7JawBr5lIEZjkqzno=
+2. JWT_REFRESH_SECRET=Ar+F4QMBgtNTSAYU8ze3lyIfuyWX/1Z2/Nb6gH5ebPI=
+3. DEFAULT_ADMIN_USERNAME=zeyadeltmsah26
+4. DEFAULT_ADMIN_PASSWORD=2610204ZEYAd@@
+5. DEFAULT_ADMIN_NAME=Zeyad Eltmsah
+6. RESEND_API_KEY=re_SZ4oE1wZ_KXeT76T8ykXmvAsx75V7q...
+7. CONTACT_EMAIL=info@cyber-tmsah.site
+8. FROM_EMAIL=Cyber TMSAH <onboarding@resend.dev>
+9. ADMIN_PATH=dashboard
+10. NODE_ENV=production
+

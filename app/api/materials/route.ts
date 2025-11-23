@@ -1,16 +1,13 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { successResponse, errorResponse, getRequestContext } from '@/lib/utils/api-response'
+import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { getRequestContext as getAuthContext } from '@/lib/middleware/auth'
 
 /**
  * GET /api/materials
  * Get all materials
  */
 export async function GET() {
-  const startTime = Date.now()
-
   try {
     const materials = await prisma.material.findMany({
       orderBy: { title: 'asc' },
@@ -40,12 +37,9 @@ export async function GET() {
  * Create new material (admin/editor only)
  */
 export async function POST(request: NextRequest) {
-  const startTime = Date.now()
-  const context = getAuthContext(request)
-
   try {
     const { requireEditor } = await import('@/lib/middleware/auth')
-    const user = await requireEditor(request)
+    await requireEditor(request)
 
     const body = await request.json()
     const { title, titleEn, description, descriptionEn, icon, color } = body

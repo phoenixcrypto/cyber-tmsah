@@ -38,6 +38,9 @@ export default function UserTable({
   const sortedUsers = [...users].sort((a, b) => {
     const aVal = a[sortField]
     const bVal = b[sortField]
+    if (aVal == null && bVal == null) return 0
+    if (aVal == null) return 1
+    if (bVal == null) return -1
     if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1
     if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1
     return 0
@@ -212,11 +215,13 @@ export default function UserTable({
                   <td>{getRoleBadge(user.role)}</td>
                   <td>{getStatusBadge(getStatusFromUser(user))}</td>
                   <td>
-                    {new Date(user.lastLogin).toLocaleDateString('ar-EG', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
+                    {user.lastLogin
+                      ? new Date(user.lastLogin).toLocaleDateString('ar-EG', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })
+                      : 'لم يسجل دخول'}
                   </td>
                   <td>
                     <div className="admin-user-table-actions">

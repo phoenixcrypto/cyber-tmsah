@@ -24,17 +24,22 @@ export async function initializeDefaultAdmin(): Promise<void> {
     
     if (users.length === 0) {
       // Default admin credentials from environment variables
-      // For security, credentials should be set via environment variables
-      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin'
-      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@2026!'
-      const defaultName = process.env.DEFAULT_ADMIN_NAME || 'مدير النظام'
+      // For security, credentials must be set via environment variables
+      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME
+      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD
+      const defaultName = process.env.DEFAULT_ADMIN_NAME
+      
+      if (!defaultUsername || !defaultPassword) {
+        console.error('❌ DEFAULT_ADMIN_USERNAME and DEFAULT_ADMIN_PASSWORD must be set in environment variables')
+        return
+      }
       
       const hashedPassword = await hashPassword(defaultPassword)
       
       const defaultAdmin: User = {
         id: 'admin-001',
         username: defaultUsername,
-        name: defaultName,
+        name: defaultName || defaultUsername,
         password: hashedPassword,
         role: 'admin',
         createdAt: new Date().toISOString(),

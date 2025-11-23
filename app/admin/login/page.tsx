@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Shield, Mail, Lock, LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { getAdminBasePath } from '@/lib/utils/admin-path'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -38,7 +39,7 @@ export default function AdminLoginPage() {
       const data = await res.json()
 
       if (res.ok) {
-        router.push('/admin')
+        router.push(getAdminBasePath())
       } else {
         setErrors({ general: data.error || 'حدث خطأ أثناء تسجيل الدخول' })
       }

@@ -51,9 +51,9 @@ export function successResponse<T>(
       status,
       responseTime,
       {
-        ipAddress: options.logContext.ipAddress,
-        userAgent: options.logContext.userAgent,
-        userId: options.logContext.userId,
+        ...(options.logContext.ipAddress && { ipAddress: options.logContext.ipAddress }),
+        ...(options.logContext.userAgent && { userAgent: options.logContext.userAgent }),
+        ...(options.logContext.userId && { userId: options.logContext.userId }),
       }
     )
   }
@@ -85,9 +85,9 @@ export function errorResponse(
       status,
       responseTime,
       {
-        ipAddress: options.logContext.ipAddress,
-        userAgent: options.logContext.userAgent,
-        userId: options.logContext.userId,
+        ...(options.logContext.ipAddress && { ipAddress: options.logContext.ipAddress }),
+        ...(options.logContext.userAgent && { userAgent: options.logContext.userAgent }),
+        ...(options.logContext.userId && { userId: options.logContext.userId }),
         error: message,
       }
     )

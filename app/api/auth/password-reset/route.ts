@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { hashPassword, comparePassword, validatePasswordStrength } from '@/lib/auth/bcrypt'
+import { hashPassword, validatePasswordStrength } from '@/lib/auth/bcrypt'
 import { z } from 'zod'
 import { successResponse, errorResponse, validationErrorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'

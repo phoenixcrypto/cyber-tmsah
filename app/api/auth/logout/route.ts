@@ -8,7 +8,6 @@ import { getRequestContext } from '@/lib/middleware/auth'
  * Logout user and clear cookies
  */
 export async function POST(request: NextRequest) {
-  const startTime = Date.now()
   const context = getRequestContext(request)
 
   try {

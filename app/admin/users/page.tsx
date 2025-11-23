@@ -18,7 +18,6 @@ interface User {
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterRole, setFilterRole] = useState<string>('all')
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
@@ -51,8 +50,6 @@ export default function AdminUsersPage() {
         }
       } catch (error) {
         console.error('Error fetching users:', error)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -158,7 +155,7 @@ export default function AdminUsersPage() {
           setEditingUser(user)
           setIsModalOpen(true)
         }}
-        onDelete={(_userId) => {
+        onDelete={async (_userId) => {
           if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
             // Delete user
             try {

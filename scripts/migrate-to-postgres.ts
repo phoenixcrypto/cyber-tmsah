@@ -59,15 +59,20 @@ async function migrateUsers(): Promise<number> {
 
   // Create default admin if no users exist
   if (count === 0) {
-    const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin'
-    const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@2026!'
-    const defaultName = process.env.DEFAULT_ADMIN_NAME || 'مدير النظام'
+    const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME
+    const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD
+    const defaultName = process.env.DEFAULT_ADMIN_NAME
+    
+    if (!defaultUsername || !defaultPassword) {
+      console.error('❌ DEFAULT_ADMIN_USERNAME and DEFAULT_ADMIN_PASSWORD must be set in environment variables')
+      return 0
+    }
     const hashedPassword = await hashPassword(defaultPassword)
 
     await prisma.user.create({
       data: {
         username: defaultUsername,
-        name: defaultName,
+        name: defaultName || defaultUsername,
         password: hashedPassword,
         role: 'admin',
       },
