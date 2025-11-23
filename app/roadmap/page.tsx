@@ -283,11 +283,6 @@ export default function RoadmapPage() {
         icon={Map}
         description={t('roadmap.description')}
       />
-      
-      {/* Motivational Box - Only for roadmap */}
-      <div className="motivational-box text-center mb-8">
-        {language === 'ar' ? 'لا تنتظر الظروف المثالية؛ ابدأ الآن واصنع ظروفك بنفسك' : 'Don\'t wait for perfect conditions; start now and create your own conditions'}
-      </div>
 
       <section className="instruction-video" style={{ maxWidth: '1000px', margin: '0 auto 4rem', padding: '0 2rem' }}>
         <h3 className="section-title" style={{ textAlign: 'center', marginBottom: '1rem' }}>
