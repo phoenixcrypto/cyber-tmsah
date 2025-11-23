@@ -3,7 +3,7 @@
 ═══════════════════════════════════════════════════════════════
 
 ✅ Project ID: jcnznjdmhwhpauugpbge
-✅ Password: amz537uk3VD98ra8
+✅ Password: ZXCVBNM123456789zxcvbnm@@12
 
 ═══════════════════════════════════════════════════════════════
   1. DATABASE_URL (مطلوب!)
@@ -11,11 +11,11 @@
 
 Option 1: Connection Pooling (موصى به - جرب هذا أولاً)
 ─────────────────────────────────────────────────────────────
-postgresql://postgres.jcnznjdmhwhpauugpbge:amz537uk3VD98ra8@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+postgresql://postgres.jcnznjdmhwhpauugpbge:ZXCVBNM123456789zxcvbnm@@12@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
 
 Option 2: Direct Connection (إذا لم يعمل Option 1)
 ─────────────────────────────────────────────────────────────
-postgresql://postgres:amz537uk3VD98ra8@db.jcnznjdmhwhpauugpbge.supabase.co:5432/postgres
+postgresql://postgres:ZXCVBNM123456789zxcvbnm@@12@db.jcnznjdmhwhpauugpbge.supabase.co:5432/postgres
 
 ═══════════════════════════════════════════════════════════════
   2. JWT_SECRET (مطلوب!)

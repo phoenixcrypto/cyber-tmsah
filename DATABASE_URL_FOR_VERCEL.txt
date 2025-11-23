@@ -31,8 +31,8 @@ postgresql://postgres:[YOUR-PASSWORD]@db.jcnznjdmhwhpauugpbge.supabase.co:5432/p
 
 1. استبدل [YOUR-PASSWORD] بكلمة المرور التي حفظتها عند إنشاء المشروع
 
-2. مثال إذا كانت كلمة المرور: MyPassword123!
-   postgresql://postgres.jcnznjdmhwhpauugpbge:MyPassword123!@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+2. مثال إذا كانت كلمة المرور: ZXCVBNM123456789zxcvbnm@@12
+   postgresql://postgres.jcnznjdmhwhpauugpbge:ZXCVBNM123456789zxcvbnm@@12@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
 
 3. انسخ Connection String الكامل
 
