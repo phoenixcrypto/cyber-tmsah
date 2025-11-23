@@ -5,6 +5,7 @@ import { BookOpen, Calculator, Atom, Database, Globe, Users, ArrowRight, FileTex
 import type { LucideIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
 import * as Icons from 'lucide-react'
 
 interface Subject {
@@ -117,21 +118,20 @@ export default function MaterialsPage() {
 
   if (loading) {
     return (
-      <section className="hero-section">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center py-20 text-dark-300">جاري التحميل...</div>
-      </section>
+      </div>
     )
   }
 
   return (
-    <>
-      <section className="hero-section">
-        <div className="motivational-box">
-          {t('home.motivational')}
-        </div>
-        <h1 className="page-title">{t('materials.title')}</h1>
-        <p className="content-paragraph">{t('materials.description')}</p>
-      </section>
+    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageHeader 
+          title={t('materials.title')} 
+          icon={BookOpen}
+          description={t('materials.description')}
+        />
 
       {/* Subjects Grid - Enhanced 2026 Design */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto" style={{ padding: '0 2rem 4rem' }}>
@@ -177,6 +177,7 @@ export default function MaterialsPage() {
             )
           })}
         </div>
-    </>
+      </div>
+    </div>
   )
 }

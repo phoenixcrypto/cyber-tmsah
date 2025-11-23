@@ -1,21 +1,20 @@
 'use client'
 
 import { useLanguage } from '@/contexts/LanguageContext'
+import { Newspaper } from 'lucide-react'
+import PageHeader from '@/components/PageHeader'
 
 export default function EvaluationPage() {
   const { t } = useLanguage()
 
   return (
-    <>
-      <section className="hero-section">
-        <div className="motivational-box">
-          {t('home.motivational')}
-        </div>
-        <h1 className="page-title">{t('evaluation.title')}</h1>
-        <p className="content-paragraph">{t('evaluation.description')}</p>
-      </section>
-
+    <div className="courses-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageHeader 
+          title={t('evaluation.title')} 
+          icon={Newspaper}
+          description={t('evaluation.description')}
+        />
 
         <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
@@ -28,6 +27,6 @@ export default function EvaluationPage() {
         </section>
         </div>
       </div>
-    </>
+    </div>
   )
 }

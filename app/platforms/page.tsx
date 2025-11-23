@@ -1,6 +1,8 @@
 'use client'
 
+import { Globe } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
 
 interface Platform {
   logo: string
@@ -74,16 +76,13 @@ export default function PlatformsPage() {
   const { t } = useLanguage()
   
   return (
-    <>
-      <section className="hero-section">
-        <div className="motivational-box">
-          {t('home.motivational')}
-        </div>
-        <h1 className="page-title">{t('platforms.title')}</h1>
-        <p className="content-paragraph">{t('platforms.description')}</p>
-      </section>
-
+    <div className="courses-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageHeader 
+          title={t('platforms.title')} 
+          icon={Globe}
+          description={t('platforms.description')}
+        />
 
         <div className="courses-content">
         {categories.map((category, categoryIndex) => (
@@ -116,6 +115,6 @@ export default function PlatformsPage() {
         ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }

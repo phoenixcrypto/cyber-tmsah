@@ -1,8 +1,9 @@
 'use client'
 
 import { useLanguage } from '@/contexts/LanguageContext'
-import { Globe, Settings } from 'lucide-react'
+import { Map, Globe, Settings } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import PageHeader from '@/components/PageHeader'
 
 // Emoji to Icon mapping
 const emojiToIcon: Record<string, LucideIcon> = {
@@ -276,16 +277,20 @@ export default function RoadmapPage() {
   const { t, language } = useLanguage()
 
   return (
-    <>
-      <section className="hero-section">
-        <div className="motivational-box">
+    <div className="roadmap-page">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageHeader 
+          title={t('roadmap.title')} 
+          icon={Map}
+          description={t('roadmap.description')}
+        />
+        
+        {/* Motivational Box - Only for roadmap */}
+        <div className="motivational-box text-center mb-8">
           {language === 'ar' ? 'لا تنتظر الظروف المثالية؛ ابدأ الآن واصنع ظروفك بنفسك' : 'Don\'t wait for perfect conditions; start now and create your own conditions'}
         </div>
-        <h1 className="page-title">{t('roadmap.title')}</h1>
-        <p className="content-paragraph">{t('roadmap.description')}</p>
-      </section>
 
-      <section className="instruction-video" style={{ maxWidth: '1000px', margin: '0 auto 4rem', padding: '0 2rem' }}>
+        <section className="instruction-video" style={{ maxWidth: '1000px', margin: '0 auto 4rem', padding: '0 2rem' }}>
         <h3 className="section-title" style={{ textAlign: 'center', marginBottom: '1rem' }}>
           {language === 'ar' ? 'شرح استخدام خريطة الطريق' : 'How to Use the Roadmap'}
         </h3>
@@ -303,9 +308,9 @@ export default function RoadmapPage() {
             allowFullScreen
           />
         </div>
-      </section>
+        </section>
 
-      <div className="roadmap-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
+        <div className="roadmap-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
         {phases.map((phase, phaseIndex) => (
           <section key={phaseIndex} className="phase-section" style={{ marginBottom: '4rem' }}>
             <div className="phase-header">
@@ -384,7 +389,8 @@ export default function RoadmapPage() {
             ) : null}
           </section>
         ))}
+        </div>
       </div>
-    </>
+    </div>
   )
 }

@@ -1,6 +1,8 @@
 'use client'
 
+import { Video as VideoIcon } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import PageHeader from '@/components/PageHeader'
 
 interface Video {
   title: string
@@ -67,16 +69,13 @@ export default function VideosPage() {
   const { t } = useLanguage()
   
   return (
-    <>
-      <section className="hero-section">
-        <div className="motivational-box">
-          {t('home.motivational')}
-        </div>
-        <h1 className="page-title">{t('videos.title')}</h1>
-        <p className="content-paragraph">{t('videos.description')}</p>
-      </section>
-
+    <div className="courses-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageHeader 
+          title={t('videos.title')} 
+          icon={VideoIcon}
+          description={t('videos.description')}
+        />
 
         <div className="courses-content">
         {categories.map((category, categoryIndex) => (
@@ -108,6 +107,6 @@ export default function VideosPage() {
         ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }
