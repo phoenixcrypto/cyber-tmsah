@@ -34,8 +34,10 @@
   --glass-border: rgba(255, 255, 255, 0.1);
   --neon-glow: 0 0 20px rgba(255, 59, 64, 0.5), 0 0 40px rgba(255, 59, 64, 0.3);
   --neon-glow-strong: 0 0 30px rgba(255, 59, 64, 0.7), 0 0 60px rgba(255, 59, 64, 0.4);
+  --neon-glow-ultra: 0 0 40px rgba(255, 59, 64, 0.8), 0 0 80px rgba(255, 59, 64, 0.5), 0 0 120px rgba(255, 59, 64, 0.3);
   --smooth-transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   --bounce-transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --elastic-transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Backwards compatibility with previous utilities */
   --cyber-dark: var(--surface-1);
@@ -6282,12 +6284,34 @@ footer {
   }
 }
 
-/* Professional Page Container - Unified for all pages */
+/* ULTRA PREMIUM Page Container - Unified for all pages */
 .page-container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
   width: 100%;
+  animation: fadeInUpUltra 0.6s ease-out;
+  position: relative;
+}
+
+.page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 59, 64, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: gradientShift 12s ease infinite;
+}
+
+.page-container > * {
+  position: relative;
+  z-index: 1;
 }
 
 @media (min-width: 640px) {
@@ -6309,47 +6333,96 @@ footer {
 /* Contact Method Cards */
 .contact-method-card {
   background: linear-gradient(135deg, 
-    rgba(23, 23, 23, 0.85) 0%, 
-    rgba(16, 16, 16, 0.9) 100%);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid rgba(255, 59, 64, 0.2);
-  border-radius: 20px;
-  padding: 2rem;
-  transition: var(--smooth-transition);
+    rgba(23, 23, 23, 0.9) 0%, 
+    rgba(16, 16, 16, 0.95) 100%);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 2px solid rgba(255, 59, 64, 0.25);
+  border-radius: 24px;
+  padding: 2.5rem;
+  transition: var(--elastic-transition);
   display: flex;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: 2rem;
   text-decoration: none;
   color: inherit;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    var(--neon-glow);
+}
+
+.contact-method-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 59, 64, 0.15), 
+    transparent);
+  transition: left 0.8s ease;
+}
+
+.contact-method-card:hover::before {
+  left: 100%;
 }
 
 .contact-method-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 59, 64, 0.4);
-  box-shadow: var(--neon-glow);
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(255, 59, 64, 0.5);
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    var(--neon-glow-ultra);
 }
 
 .contact-method-icon {
-  width: 56px;
-  height: 56px;
+  width: 70px;
+  height: 70px;
   background: linear-gradient(135deg, 
-    rgba(255, 59, 64, 0.25) 0%, 
-    rgba(255, 59, 64, 0.15) 100%);
-  border: 2px solid rgba(255, 59, 64, 0.3);
-  border-radius: 14px;
+    rgba(255, 59, 64, 0.3) 0%, 
+    rgba(255, 59, 64, 0.2) 100%);
+  border: 3px solid rgba(255, 59, 64, 0.4);
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--primary-red);
   flex-shrink: 0;
-  transition: var(--smooth-transition);
+  transition: var(--elastic-transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 59, 64, 0.3);
+}
+
+.contact-method-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 59, 64, 0.5) 0%, 
+    rgba(255, 59, 64, 0.3) 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.contact-method-card:hover .contact-method-icon::before {
+  opacity: 1;
 }
 
 .contact-method-card:hover .contact-method-icon {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.2) rotate(8deg);
   border-color: var(--primary-red);
-  box-shadow: 0 0 20px rgba(255, 59, 64, 0.4);
+  box-shadow: var(--neon-glow-strong);
+}
+
+.contact-method-icon svg {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 8px rgba(255, 59, 64, 0.6));
 }
 
 .contact-method-content {
@@ -6642,19 +6715,20 @@ footer {
 
 .team-member-card-2030 {
   background: linear-gradient(135deg, 
-    rgba(23, 23, 23, 0.85) 0%, 
-    rgba(16, 16, 16, 0.9) 100%);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid rgba(255, 59, 64, 0.2);
-  border-radius: 24px;
-  padding: 2.5rem;
-  transition: var(--smooth-transition);
+    rgba(23, 23, 23, 0.9) 0%, 
+    rgba(16, 16, 16, 0.95) 100%);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 2px solid rgba(255, 59, 64, 0.3);
+  border-radius: 28px;
+  padding: 3rem;
+  transition: var(--elastic-transition);
   position: relative;
   overflow: hidden;
   box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    0 25px 70px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    var(--neon-glow);
 }
 
 .team-member-card-2030::before {
@@ -6666,22 +6740,41 @@ footer {
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(255, 59, 64, 0.1), 
+    rgba(255, 59, 64, 0.15), 
     transparent);
-  transition: left 0.6s ease;
+  transition: left 0.8s ease;
 }
 
 .team-member-card-2030:hover::before {
   left: 100%;
 }
 
+.team-member-card-2030::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--primary-red), 
+    transparent);
+  transform: scaleX(0);
+  transition: transform 0.6s ease;
+}
+
+.team-member-card-2030:hover::after {
+  transform: scaleX(1);
+}
+
 .team-member-card-2030:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(255, 59, 64, 0.4);
+  transform: translateY(-14px) scale(1.04);
+  border-color: rgba(255, 59, 64, 0.6);
   box-shadow: 
-    0 30px 80px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-    var(--neon-glow);
+    0 40px 100px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    var(--neon-glow-ultra);
 }
 
 .team-member-image-container-2030 {
@@ -6810,27 +6903,203 @@ footer {
   box-shadow: 0 4px 12px rgba(255, 59, 64, 0.4);
 }
 
+/* ============================================
+   ULTRA PREMIUM INPUT & BUTTON STYLES 2030
+   ============================================ */
+
+.input-2030 {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  background: rgba(23, 23, 23, 0.7);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  border: 2px solid rgba(255, 59, 64, 0.25);
+  border-radius: 14px;
+  color: var(--primary-white);
+  font-size: 1.05rem;
+  font-family: inherit;
+  transition: var(--elastic-transition);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.input-2030::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.input-2030:focus {
+  outline: none;
+  border-color: var(--primary-red);
+  background: rgba(23, 23, 23, 0.85);
+  box-shadow: 
+    0 0 0 4px rgba(255, 59, 64, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    var(--neon-glow);
+  transform: translateY(-2px);
+}
+
+.input-2030:hover:not(:focus) {
+  border-color: rgba(255, 59, 64, 0.35);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.button-2030 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem 2.5rem;
+  background: linear-gradient(135deg, 
+    var(--primary-red) 0%, 
+    var(--primary-red-strong) 100%);
+  border: 2px solid var(--primary-red);
+  border-radius: 14px;
+  color: var(--primary-white);
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--elastic-transition);
+  box-shadow: var(--neon-glow);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.button-2030::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.8s, height 0.8s;
+}
+
+.button-2030:hover::before {
+  width: 400px;
+  height: 400px;
+}
+
+.button-2030:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: var(--neon-glow-ultra);
+  border-color: var(--primary-red-strong);
+}
+
+.button-2030:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.button-2030:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button-2030 svg {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.button-2030:hover svg {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* ============================================
+   ULTRA PREMIUM TYPOGRAPHY ENHANCEMENTS
+   ============================================ */
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary-white);
+  line-height: 1.2;
+  margin-bottom: 2rem;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, 
+    var(--primary-white) 0%, 
+    var(--primary-red) 50%,
+    var(--accent-silver) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 5s ease infinite;
+  text-shadow: 0 0 40px rgba(255, 59, 64, 0.3);
+}
+
+.subsection-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary-white);
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.content-paragraph {
+  font-size: 1.1rem;
+  color: var(--dark-300);
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+  max-width: 65ch;
+}
+
 @media (max-width: 768px) {
   .contact-method-card {
     flex-direction: column;
     text-align: center;
+    padding: 2rem 1.5rem;
   }
   
   .contact-method-icon {
     margin: 0 auto;
+    width: 60px;
+    height: 60px;
   }
   
   .team-member-card-2030 {
-    padding: 2rem 1.5rem;
+    padding: 2.5rem 2rem;
   }
   
   .team-member-image-placeholder-2030 {
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
   }
   
   .terms-nav-item {
-    font-size: 0.875rem;
-    padding: 0.75rem;
+    font-size: 0.95rem;
+    padding: 1rem 1.125rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .subsection-title {
+    font-size: 1.5rem;
+  }
+  
+  .content-paragraph {
+    font-size: 1rem;
+  }
+  
+  .input-2030 {
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+  }
+  
+  .button-2030 {
+    padding: 1rem 2rem;
+    font-size: 1rem;
   }
 }

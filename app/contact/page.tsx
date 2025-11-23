@@ -72,8 +72,8 @@ export default function ContactPage() {
       icon: Mail,
       title: 'البريد الإلكتروني',
       value: 'info@cyber-tmsah.site',
-      link: 'mailto:info@cyber-tmsah.site',
-      description: 'أرسل لنا بريداً إلكترونياً'
+      link: 'mailto:info@cyber-tmsah.site?subject=استفسار من موقع Cyber TMSAH',
+      description: 'أرسل لنا بريداً إلكترونياً مباشرة'
     },
     {
       icon: MessageCircle,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'support@cyber-tmsah.com'
-const FROM_EMAIL = process.env.FROM_EMAIL || 'Cyber TMSAH <onboarding@resend.dev>'
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@cyber-tmsah.site'
+const FROM_EMAIL = process.env.FROM_EMAIL || 'Cyber TMSAH <noreply@cyber-tmsah.site>'
 
 export async function POST(request: NextRequest) {
   try {
