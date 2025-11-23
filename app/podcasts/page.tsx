@@ -3,7 +3,6 @@
 import { Headphones, Globe, Music, Mic, Lock, Key, Radio } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import PageHeader from '@/components/PageHeader'
 
 // Emoji to Icon mapping
 const emojiToIcon: Record<string, LucideIcon> = {
@@ -81,14 +80,16 @@ export default function PodcastsPage() {
   const { t } = useLanguage()
   
   return (
-    <div className="courses-page">
+    <>
+      <section className="hero-section">
+        <div className="motivational-box">
+          {t('home.motivational')}
+        </div>
+        <h1 className="page-title">{t('podcasts.title')}</h1>
+        <p className="content-paragraph">{t('podcasts.description')}</p>
+      </section>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Unified Page Header */}
-        <PageHeader 
-          title={t('podcasts.title')} 
-          icon={Headphones}
-          description={t('podcasts.description')}
-        />
 
         <div className="courses-content">
         {categories.map((category, categoryIndex) => (
@@ -143,6 +144,6 @@ export default function PodcastsPage() {
         ))}
         </div>
       </div>
-    </div>
+    </>
   )
 }

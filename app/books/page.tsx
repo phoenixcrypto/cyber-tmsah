@@ -4,7 +4,6 @@ import { BookOpen, ExternalLink, Star, Globe, Radio, Shield, ShieldCheck, BarCha
 import type { LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
-import PageHeader from '@/components/PageHeader'
 
 interface Book {
   cover: string
@@ -380,14 +379,16 @@ export default function BooksPage() {
   const { t } = useLanguage()
   
   return (
-    <div className="books-page">
+    <>
+      <section className="hero-section">
+        <div className="motivational-box">
+          {t('home.motivational')}
+        </div>
+        <h1 className="page-title">{t('books.title')}</h1>
+        <p className="content-paragraph">{t('books.description')}</p>
+      </section>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Unified Page Header */}
-        <PageHeader 
-          title={t('books.title')} 
-          icon={BookOpen}
-          description={t('books.description')}
-        />
 
         <div className="books-content">
         {categories.map((category, categoryIndex) => {
@@ -458,6 +459,6 @@ export default function BooksPage() {
         })}
         </div>
       </div>
-    </div>
+    </>
   )
 }

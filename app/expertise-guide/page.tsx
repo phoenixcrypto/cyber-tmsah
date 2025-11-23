@@ -1,21 +1,22 @@
 'use client'
 
 import { useLanguage } from '@/contexts/LanguageContext'
-import { GraduationCap, User } from 'lucide-react'
-import PageHeader from '@/components/PageHeader'
+import { User } from 'lucide-react'
 
 export default function ExpertiseGuidePage() {
   const { t, language } = useLanguage()
 
   return (
-    <div className="courses-page">
+    <>
+      <section className="hero-section">
+        <div className="motivational-box">
+          {t('home.motivational')}
+        </div>
+        <h1 className="page-title">{t('expertise.title')}</h1>
+        <p className="content-paragraph">{t('expertise.description')}</p>
+      </section>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Unified Page Header */}
-        <PageHeader 
-          title={t('expertise.title')} 
-          icon={GraduationCap}
-          description={t('expertise.description')}
-        />
 
         <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
@@ -59,6 +60,6 @@ export default function ExpertiseGuidePage() {
         </section>
         </div>
       </div>
-    </div>
+    </>
   )
 }

@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { verifyAccessToken } from './lib/auth/jwt'
 
-// Routes that require authentication
-const protectedRoutes = ['/admin']
-const authRoutes = ['/admin/login']
+// Admin routes removed - no authentication needed
 
 // Rate limiting store (in production, use Redis)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
@@ -77,92 +74,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Check if route is protected
-  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
-  const isAuthRoute = authRoutes.some((route) => pathname === route)
-
-  // If user is already logged in and tries to access login page, redirect to dashboard
-  if (pathname === '/admin/login') {
-    const token = request.cookies.get('admin-token')?.value
-    if (token) {
-      try {
-        const payload = verifyAccessToken(token)
-        if (payload) {
-          // User is already logged in, redirect to dashboard
-          console.log('✅ Valid token on login page, redirecting to dashboard')
-          return NextResponse.redirect(new URL('/admin/dashboard', request.url))
-        } else {
-          console.log('⚠️ Token exists but invalid, allowing access to login page')
-        }
-      } catch (error) {
-        // Token verification error - allow access to login page
-        console.log('⚠️ Token verification error on login page, allowing access:', error)
-      }
-    } else {
-      console.log('ℹ️ No token on login page, allowing access')
-    }
-    // User is not logged in, allow access to login page
-    return NextResponse.next()
-  }
-
-  if (isProtectedRoute && !isAuthRoute) {
-    // Get token from cookie
-    const token = request.cookies.get('admin-token')?.value
-
-    if (!token) {
-      // Redirect to login if no token
-      if (pathname.startsWith('/admin')) {
-        console.log('🔒 No token found, redirecting to login')
-        return NextResponse.redirect(new URL('/admin/login', request.url))
-      }
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Verify token with error handling
-    let payload
-    try {
-      payload = verifyAccessToken(token)
-    } catch (error) {
-      // Token verification error - log but don't delete cookies immediately
-      // This might be a timing issue where token is being verified before it's fully set
-      console.error('❌ Token verification error:', error)
-      console.log('⚠️ Token exists but verification failed, allowing access with retry')
-      // Don't delete cookies on verification error - might be a timing issue
-      // Let the client-side auth check handle it
-      return NextResponse.next()
-    }
-
-    if (!payload) {
-      // Token is invalid - but don't delete cookies immediately
-      // Allow access and let client-side handle it to avoid timing issues
-      // Only redirect if this is clearly not a fresh login
-      const referer = request.headers.get('referer')
-      const isFromLogin = referer?.includes('/admin/login')
-      
-      // Always allow access if coming from login (fresh login)
-      if (isFromLogin) {
-        console.log('⚠️ Invalid token but coming from login, allowing access')
-        return NextResponse.next()
-      }
-      
-      // For other cases, allow access but don't delete cookies
-      // The client-side auth check will handle redirect if needed
-      console.log('⚠️ Invalid token, allowing access (client will handle)')
-      return NextResponse.next()
-    }
-
-    // Add user info to headers for API routes
-    if (pathname.startsWith('/api/admin/')) {
-      const requestHeaders = new Headers(request.headers)
-      requestHeaders.set('x-user-id', payload.userId)
-      requestHeaders.set('x-user-role', payload.role)
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      })
-    }
-  }
+  // Admin routes removed - no authentication needed
 
   // Security headers
   const response = NextResponse.next()
@@ -173,21 +85,14 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-XSS-Protection', '1; mode=block')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   
-  // Prevent caching of admin pages
-  if (pathname.startsWith('/admin')) {
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
-    response.headers.set('Pragma', 'no-cache')
-    response.headers.set('Expires', '0')
-  }
+  // No admin pages to cache
 
   return response
 }
 
 export const config = {
   matcher: [
-    '/admin/:path*',
-    '/api/auth/:path*',
-    '/api/admin/:path*',
+    '/api/:path*',
   ],
 }
 

@@ -2,21 +2,22 @@
 
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
-import { Heart, GraduationCap, Book } from 'lucide-react'
-import PageHeader from '@/components/PageHeader'
+import { GraduationCap, Book } from 'lucide-react'
 
 export default function ContributePage() {
   const { t } = useLanguage()
 
   return (
-    <div className="courses-page">
+    <>
+      <section className="hero-section">
+        <div className="motivational-box">
+          {t('home.motivational')}
+        </div>
+        <h1 className="page-title">{t('contribute.title')}</h1>
+        <p className="content-paragraph">{t('contribute.description')}</p>
+      </section>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Unified Page Header */}
-        <PageHeader 
-          title={t('contribute.title')} 
-          icon={Heart}
-          description={t('contribute.description')}
-        />
 
         <div className="courses-content">
         <section style={{ marginBottom: '4rem' }}>
@@ -63,6 +64,6 @@ export default function ContributePage() {
         </section>
         </div>
       </div>
-    </div>
+    </>
   )
 }

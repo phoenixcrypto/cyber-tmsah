@@ -3,7 +3,6 @@
 import { Calendar, Clock, MapPin, User, Search, BookOpen, FlaskConical, PartyPopper, AlertTriangle } from 'lucide-react'
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import PageHeader from '@/components/PageHeader'
 
 export default function SchedulePage() {
   const { t } = useLanguage()
@@ -464,14 +463,16 @@ export default function SchedulePage() {
   }, [scheduleView, selectedSection])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyber-dark via-cyber-dark to-cyber-dark/80">
+    <>
+      <section className="hero-section">
+        <div className="motivational-box">
+          {t('home.motivational')}
+        </div>
+        <h1 className="page-title">{t('schedule.title')}</h1>
+        <p className="content-paragraph">{t('schedule.description')}</p>
+      </section>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Unified Page Header */}
-        <PageHeader 
-          title={t('schedule.title')} 
-          icon={Calendar}
-          description={t('schedule.description')}
-        />
 
         {/* Schedule View Toggle - Group A or B */}
         <div className="mb-6 animate-slide-up">
@@ -730,7 +731,7 @@ export default function SchedulePage() {
             </p>
           </div>
         )}
-          </div>
       </div>
+    </>
   )
 }

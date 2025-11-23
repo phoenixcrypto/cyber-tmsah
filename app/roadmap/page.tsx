@@ -1,9 +1,8 @@
 'use client'
 
 import { useLanguage } from '@/contexts/LanguageContext'
-import { Map, Globe, Settings } from 'lucide-react'
+import { Globe, Settings } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import PageHeader from '@/components/PageHeader'
 
 // Emoji to Icon mapping
 const emojiToIcon: Record<string, LucideIcon> = {
@@ -277,24 +276,23 @@ export default function RoadmapPage() {
   const { t, language } = useLanguage()
 
   return (
-    <div className="roadmap-page">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Unified Page Header */}
-        <PageHeader 
-          title={t('roadmap.title')} 
-          icon={Map}
-          description={t('roadmap.description')}
-        />
-        
-        {/* Motivational Box */}
-        <div className="motivational-box text-center mb-8">
+    <>
+      <section className="hero-section">
+        <div className="motivational-box">
           {language === 'ar' ? 'لا تنتظر الظروف المثالية؛ ابدأ الآن واصنع ظروفك بنفسك' : 'Don\'t wait for perfect conditions; start now and create your own conditions'}
         </div>
+        <h1 className="page-title">{t('roadmap.title')}</h1>
+        <p className="content-paragraph">{t('roadmap.description')}</p>
+      </section>
 
-        <section className="instruction-video">
-        <h3>{language === 'ar' ? 'شرح استخدام خريطة الطريق' : 'How to Use the Roadmap'}</h3>
-        <p>{language === 'ar' ? 'شاهد هذا الفيديو لتعرف كيفية التنقل بين المراحل واختيار المسار المناسب لك لتحقيق أقصى استفادة.' : 'Watch this video to learn how to navigate between phases and choose the right path for you to maximize your benefit.'}</p>
-        <div className="video-placeholder">
+      <section className="instruction-video" style={{ maxWidth: '1000px', margin: '0 auto 4rem', padding: '0 2rem' }}>
+        <h3 className="section-title" style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          {language === 'ar' ? 'شرح استخدام خريطة الطريق' : 'How to Use the Roadmap'}
+        </h3>
+        <p className="content-paragraph" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          {language === 'ar' ? 'شاهد هذا الفيديو لتعرف كيفية التنقل بين المراحل واختيار المسار المناسب لك لتحقيق أقصى استفادة.' : 'Watch this video to learn how to navigate between phases and choose the right path for you to maximize your benefit.'}
+        </p>
+        <div className="video-placeholder" style={{ borderRadius: '16px', overflow: 'hidden', aspectRatio: '16/9' }}>
           <iframe
             width="100%"
             height="100%"
@@ -307,26 +305,32 @@ export default function RoadmapPage() {
         </div>
       </section>
 
-      <div className="roadmap-content">
+      <div className="roadmap-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
         {phases.map((phase, phaseIndex) => (
-          <section key={phaseIndex} className="phase-section">
+          <section key={phaseIndex} className="phase-section" style={{ marginBottom: '4rem' }}>
             <div className="phase-header">
               <div className="phase-number">{phase.number}</div>
               <div className="phase-title">
-                <h2>{phase.title}</h2>
-                <p>{phase.description}</p>
+                <h2 className="section-title">{phase.title}</h2>
+                <p className="content-paragraph">{phase.description}</p>
               </div>
             </div>
 
             {phase.alternativeNote && (
-              <div className="alternative-track-note">
-                <p>{t('roadmap.alternativeNote')}</p>
+              <div className="alternative-track-note" style={{ 
+                background: 'linear-gradient(135deg, rgba(255, 59, 64, 0.15) 0%, rgba(255, 59, 64, 0.05) 100%)',
+                border: '1.5px solid rgba(255, 59, 64, 0.3)',
+                borderRadius: '16px',
+                padding: '1.5rem',
+                marginBottom: '2rem'
+              }}>
+                <p className="content-paragraph">{t('roadmap.alternativeNote')}</p>
               </div>
             )}
 
             {phase.subsections ? (
               phase.subsections.map((subsection, subIndex) => (
-                <div key={subIndex}>
+                <div key={subIndex} style={{ marginBottom: '2rem' }}>
                   <h3 className="subsection-title">{subsection.title}</h3>
                   <div className="skill-cards-grid">
                     {subsection.courses.map((course, courseIndex) => (
@@ -380,8 +384,7 @@ export default function RoadmapPage() {
             ) : null}
           </section>
         ))}
-        </div>
       </div>
-    </div>
+    </>
   )
 }
