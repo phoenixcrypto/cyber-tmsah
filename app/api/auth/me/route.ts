@@ -1,7 +1,44 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAccessToken } from '@/lib/auth/jwt'
-import { getUserById, initializeDefaultAdmin } from '@/lib/db/users'
+import { NextRequest } from 'next/server'
+import { prisma } from '@/lib/db/prisma'
+import { getAuthUser, getRequestContext } from '@/lib/middleware/auth'
+import { successResponse, unauthorizedResponse, errorResponse } from '@/lib/utils/api-response'
+import { logger } from '@/lib/utils/logger'
+import { hashPassword } from '@/lib/auth/bcrypt'
 
+/**
+ * Initialize default admin if no users exist
+ */
+async function initializeDefaultAdmin(): Promise<void> {
+  try {
+    const userCount = await prisma.user.count()
+    
+    if (userCount === 0) {
+      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin'
+      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@2026!'
+      const defaultName = process.env.DEFAULT_ADMIN_NAME || 'مدير النظام'
+      
+      const hashedPassword = await hashPassword(defaultPassword)
+      
+      await prisma.user.create({
+        data: {
+          username: defaultUsername,
+          name: defaultName,
+          password: hashedPassword,
+          role: 'admin',
+        },
+      })
+      
+      console.log('✅ Default admin user created!')
+    }
+  } catch (error) {
+    console.error('Error initializing default admin:', error)
+  }
+}
+
+/**
+ * GET /api/auth/me
+ * Get current authenticated user
+ */
 export async function GET(request: NextRequest) {
   try {
     // Initialize default admin if needed (only runs once)
@@ -9,63 +46,45 @@ export async function GET(request: NextRequest) {
       await initializeDefaultAdmin()
     } catch (initError) {
       console.error('Error initializing default admin:', initError)
-      // Continue even if initialization fails - might be a file system issue
     }
 
-    const token = request.cookies.get('admin-token')?.value
-
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    let payload
-    try {
-      payload = verifyAccessToken(token)
-    } catch (error) {
-      console.error('Token verification error:', error)
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
-    }
-
-    if (!payload) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
-    }
-
-    let user
-    try {
-      user = getUserById(payload.userId)
-    } catch (error) {
-      console.error('Get user by ID error:', error)
-      console.error('Error details:', {
-        userId: payload.userId,
-        errorMessage: error instanceof Error ? error.message : String(error),
-        errorStack: error instanceof Error ? error.stack : undefined,
-      })
-      return NextResponse.json({ error: 'User lookup failed' }, { status: 500 })
-    }
+    const user = await getAuthUser(request)
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return unauthorizedResponse('Unauthorized')
     }
 
-    return NextResponse.json({
+    // Get full user data
+    const fullUser = await prisma.user.findUnique({
+      where: { id: user.userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        lastLogin: true,
+        createdAt: true,
+      },
+    })
+
+    if (!fullUser) {
+      return unauthorizedResponse('User not found')
+    }
+
+    return successResponse({
       user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        lastLogin: user.lastLogin,
+        id: fullUser.id,
+        email: fullUser.email,
+        name: fullUser.name,
+        role: fullUser.role,
+        lastLogin: fullUser.lastLogin,
       },
     })
   } catch (error) {
-    console.error('Get user error:', error)
-    console.error('Error details:', {
-      errorMessage: error instanceof Error ? error.message : String(error),
-      errorStack: error instanceof Error ? error.stack : undefined,
+    await logger.error('Get user error', error as Error, {
+      method: 'GET',
+      path: '/api/auth/me',
     })
-    return NextResponse.json(
-      { error: 'حدث خطأ أثناء جلب بيانات المستخدم' },
-      { status: 500 }
-    )
+    return errorResponse('حدث خطأ أثناء جلب بيانات المستخدم', 500)
   }
 }
-

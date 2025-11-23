@@ -1,0 +1,298 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Settings,
+  Calendar,
+  BookOpen,
+  Download,
+  Newspaper,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  BarChart3,
+  Database,
+  Shield,
+  Bell,
+  HelpCircle,
+  type LucideIcon,
+} from 'lucide-react'
+
+interface SidebarItem {
+  label: string
+  icon: LucideIcon
+  href: string
+  badge?: number
+  children?: SidebarItem[]
+}
+
+const sidebarItems: SidebarItem[] = [
+  {
+    label: 'لوحة التحكم',
+    icon: LayoutDashboard,
+    href: '/admin',
+  },
+  {
+    label: 'المستخدمين',
+    icon: Users,
+    href: '/admin/users',
+    badge: 12,
+  },
+  {
+    label: 'المحتوى',
+    icon: FileText,
+    href: '/admin/content',
+    children: [
+      { label: 'المواد الدراسية', icon: BookOpen, href: '/admin/content/materials' },
+      { label: 'المقالات', icon: FileText, href: '/admin/content/articles' },
+      { label: 'الصفحات', icon: FileText, href: '/admin/content/pages' },
+      { label: 'الأخبار', icon: Newspaper, href: '/admin/content/news' },
+    ],
+  },
+  {
+    label: 'الجدول الدراسي',
+    icon: Calendar,
+    href: '/admin/schedule',
+  },
+  {
+    label: 'التنزيلات',
+    icon: Download,
+    href: '/admin/downloads',
+  },
+  {
+    label: 'الإحصائيات',
+    icon: BarChart3,
+    href: '/admin/analytics',
+  },
+  {
+    label: 'قاعدة البيانات',
+    icon: Database,
+    href: '/admin/database',
+  },
+  {
+    label: 'الأمان',
+    icon: Shield,
+    href: '/admin/security',
+  },
+  {
+    label: 'الإشعارات',
+    icon: Bell,
+    href: '/admin/notifications',
+    badge: 5,
+  },
+  {
+    label: 'الإعدادات',
+    icon: Settings,
+    href: '/admin/settings',
+  },
+  {
+    label: 'المساعدة',
+    icon: HelpCircle,
+    href: '/admin/help',
+  },
+]
+
+export default function AdminSidebar({
+  isOpen,
+  onToggle,
+}: {
+  isOpen: boolean
+  onToggle: () => void
+}) {
+  const pathname = usePathname()
+  const [expandedItems, setExpandedItems] = useState<string[]>([])
+
+  const toggleExpand = (href: string) => {
+    setExpandedItems((prev) =>
+      prev.includes(href) ? prev.filter((item) => item !== href) : [...prev, href]
+    )
+  }
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    window.location.href = '/admin/login'
+  }
+
+  return (
+    <motion.aside
+      className={`admin-sidebar ${isOpen ? 'open' : 'collapsed'}`}
+      initial={false}
+      animate={{ width: isOpen ? 280 : 80 }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
+      {/* Sidebar Header */}
+      <div className="admin-sidebar-header">
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.div
+              key="logo-full"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="admin-sidebar-logo"
+            >
+              <div className="admin-logo-icon">
+                <Shield className="w-8 h-8" />
+              </div>
+              <div className="admin-logo-text">
+                <h2 className="admin-logo-title">Cyber TMSAH</h2>
+                <p className="admin-logo-subtitle">Admin Panel</p>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="logo-icon"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="admin-sidebar-logo-icon-only"
+            >
+              <Shield className="w-8 h-8" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          className="admin-sidebar-toggle"
+          onClick={onToggle}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          {isOpen ? (
+            <ChevronRight className="w-5 h-5" />
+          ) : (
+            <ChevronLeft className="w-5 h-5" />
+          )}
+        </motion.button>
+      </div>
+
+      {/* Sidebar Navigation */}
+      <nav className="admin-sidebar-nav">
+        {sidebarItems.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+          const isExpanded = expandedItems.includes(item.href)
+          const hasChildren = item.children && item.children.length > 0
+
+          return (
+            <div key={item.href} className="admin-sidebar-item-wrapper">
+              <motion.div
+                className={`admin-sidebar-item ${isActive ? 'active' : ''}`}
+                whileHover={{ x: isOpen ? 5 : 0 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link
+                  href={item.href}
+                  className="admin-sidebar-link"
+                  onClick={(e) => {
+                    if (hasChildren) {
+                      e.preventDefault()
+                      toggleExpand(item.href)
+                    }
+                  }}
+                >
+                  <div className="admin-sidebar-icon-wrapper">
+                    <Icon className="admin-sidebar-icon" />
+                    {isActive && (
+                      <motion.div
+                        className="admin-sidebar-active-indicator"
+                        layoutId="activeIndicator"
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </div>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.span
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: 'auto' }}
+                        exit={{ opacity: 0, width: 0 }}
+                        className="admin-sidebar-label"
+                      >
+                        {item.label}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  {isOpen && item.badge && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="admin-sidebar-badge"
+                    >
+                      {item.badge}
+                    </motion.span>
+                  )}
+                  {isOpen && hasChildren && (
+                    <motion.div
+                      animate={{ rotate: isExpanded ? 90 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </motion.div>
+                  )}
+                </Link>
+              </motion.div>
+
+              {/* Submenu */}
+              <AnimatePresence>
+                {isOpen && hasChildren && isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="admin-sidebar-submenu"
+                  >
+                    {item.children?.map((child) => {
+                      const ChildIcon = child.icon
+                      const isChildActive = pathname === child.href
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className={`admin-sidebar-submenu-item ${isChildActive ? 'active' : ''}`}
+                        >
+                          <ChildIcon className="w-4 h-4" />
+                          <span>{child.label}</span>
+                        </Link>
+                      )
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )
+        })}
+      </nav>
+
+      {/* Sidebar Footer */}
+      <div className="admin-sidebar-footer">
+        <motion.button
+          className="admin-sidebar-logout"
+          onClick={handleLogout}
+          whileHover={{ x: isOpen ? 5 : 0 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <LogOut className="admin-sidebar-icon" />
+          <AnimatePresence>
+            {isOpen && (
+              <motion.span
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+              >
+                تسجيل الخروج
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
+    </motion.aside>
+  )
+}
+

@@ -1,10 +1,54 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { loginSchema } from '@/lib/validators/schemas'
-import { getUserByUsername, updateLastLogin, getAllUsers, initializeDefaultAdmin } from '@/lib/db/users'
+import { prisma } from '@/lib/db/prisma'
 import { comparePassword } from '@/lib/auth/bcrypt'
 import { generateAccessToken, generateRefreshToken } from '@/lib/auth/jwt'
+import { successResponse, errorResponse, validationErrorResponse } from '@/lib/utils/api-response'
+import { logger } from '@/lib/utils/logger'
+import { hashPassword } from '@/lib/auth/bcrypt'
+import { getRequestContext } from '@/lib/middleware/auth'
 
+/**
+ * Initialize default admin if no users exist
+ */
+async function initializeDefaultAdmin(): Promise<void> {
+  try {
+    const userCount = await prisma.user.count()
+    
+    if (userCount === 0) {
+      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin'
+      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@2026!'
+      const defaultName = process.env.DEFAULT_ADMIN_NAME || 'مدير النظام'
+      
+      const hashedPassword = await hashPassword(defaultPassword)
+      
+      await prisma.user.create({
+        data: {
+          username: defaultUsername,
+          name: defaultName,
+          password: hashedPassword,
+          role: 'admin',
+        },
+      })
+      
+      console.log('✅ Default admin user created!')
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚠️  Please change the default password after first login!')
+      }
+    }
+  } catch (error) {
+    console.error('Error initializing default admin:', error)
+  }
+}
+
+/**
+ * POST /api/auth/login
+ * User login endpoint
+ */
 export async function POST(request: NextRequest) {
+  const startTime = Date.now()
+  const context = getRequestContext(request)
+
   try {
     // Initialize default admin if needed
     await initializeDefaultAdmin()
@@ -14,46 +58,36 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validationResult = loginSchema.safeParse(body)
     if (!validationResult.success) {
-      return NextResponse.json(
-        { error: validationResult.error.issues[0]?.message || 'Validation error' },
-        { status: 400 }
+      return validationErrorResponse(
+        validationResult.error.issues.map(issue => issue.message)
       )
     }
 
     const { username, password } = validationResult.data
-
-    // Trim username to remove any extra spaces
     const trimmedUsername = username.trim()
 
-    console.log('🔍 Looking for user with username:', trimmedUsername)
-    
     // Get user by username
-    const user = getUserByUsername(trimmedUsername)
+    const user = await prisma.user.findUnique({
+      where: { username: trimmedUsername },
+    })
     
     if (!user) {
-      console.log('❌ User not found:', trimmedUsername)
-      // Log all users for debugging
-      const allUsers = getAllUsers()
-      console.log('📋 All users in database:', allUsers.map((u) => ({ id: u.id, username: u.username, name: u.name })))
-      return NextResponse.json(
-        { error: 'اسم المستخدم أو كلمة المرور غير صحيحة' },
-        { status: 401 }
-      )
+      await logger.warn('Login attempt with invalid username', {
+        username: trimmedUsername,
+        ipAddress: context.ipAddress,
+      })
+      return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
-    console.log('✅ User found:', { id: user.id, username: user.username, name: user.name })
-
     // Verify password
-    console.log('🔐 Verifying password...')
     const isPasswordValid = await comparePassword(password, user.password)
-    console.log('🔐 Password valid:', isPasswordValid)
     
     if (!isPasswordValid) {
-      console.log('❌ Password verification failed')
-      return NextResponse.json(
-        { error: 'اسم المستخدم أو كلمة المرور غير صحيحة' },
-        { status: 401 }
-      )
+      await logger.warn('Login attempt with invalid password', {
+        userId: user.id,
+        ipAddress: context.ipAddress,
+      })
+      return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
     // Generate tokens
@@ -70,78 +104,72 @@ export async function POST(request: NextRequest) {
     })
 
     // Update last login
-    updateLastLogin(user.id)
-
-    // Create response
-    const response = NextResponse.json({
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLogin: new Date() },
     })
 
+    // Create response
+    const response = successResponse(
+      {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        },
+      },
+      {
+        logRequest: true,
+        logContext: {
+          method: 'POST',
+          path: '/api/auth/login',
+          ipAddress: context.ipAddress,
+          userAgent: context.userAgent ?? undefined,
+          userId: user.id,
+          startTime,
+        },
+      }
+    )
+
     // Set secure cookies
-    // Use 'lax' instead of 'strict' for better compatibility
-    // 'strict' can prevent cookies from being sent in some navigation scenarios
-    // In production (Vercel), always use secure cookies
     const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
     
-    // Get domain from request URL
-    const url = new URL(request.url)
-    const hostname = url.hostname
-    
-    // Cookie options - ensure they work in both development and production
-    // Important: Don't set domain explicitly for cookies to work on all subdomains
-    const cookieOptions: {
-      httpOnly: boolean
-      secure: boolean
-      sameSite: 'lax' | 'strict' | 'none'
-      maxAge: number
-      path: string
-    } = {
+    const cookieOptions = {
       httpOnly: true,
-      secure: isProduction, // Secure in production (Vercel uses HTTPS), allow HTTP in development
-      sameSite: 'lax', // Changed from 'strict' to 'lax' for better compatibility
+      secure: isProduction,
+      sameSite: 'lax' as const,
       maxAge: 60 * 60 * 24, // 24 hours
       path: '/',
     }
     
-    // Set cookies with explicit options
-    // Using response.cookies.set() which should work correctly
     response.cookies.set('admin-token', accessToken, cookieOptions)
     response.cookies.set('admin-refresh-token', refreshToken, {
       ...cookieOptions,
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
 
-    // Log for debugging - always log to help diagnose issues
-    console.log('✅ Login successful, cookies set for user:', user.username)
-    console.log('🔐 Cookie configuration:', {
-      httpOnly: cookieOptions.httpOnly,
-      secure: cookieOptions.secure,
-      sameSite: cookieOptions.sameSite,
-      path: cookieOptions.path,
-      maxAge: cookieOptions.maxAge,
-      hostname: hostname,
-      isProduction: isProduction,
-      nodeEnv: process.env.NODE_ENV,
-      vercel: process.env.VERCEL,
-    })
-    console.log('🍪 Cookies set in response:', {
-      'admin-token': accessToken ? 'SET' : 'NOT SET',
-      'admin-refresh-token': refreshToken ? 'SET' : 'NOT SET',
+    await logger.info('User logged in successfully', {
+      userId: user.id,
+      username: user.username,
+      ipAddress: context.ipAddress,
     })
 
     return response
   } catch (error) {
-    console.error('Login error:', error)
-    return NextResponse.json(
-      { error: 'حدث خطأ أثناء تسجيل الدخول' },
-      { status: 500 }
-    )
+    await logger.error('Login error', error as Error, {
+      method: 'POST',
+      path: '/api/auth/login',
+      ipAddress: context.ipAddress,
+    })
+    return errorResponse('حدث خطأ أثناء تسجيل الدخول', 500, {
+      logRequest: true,
+      logContext: {
+        method: 'POST',
+        path: '/api/auth/login',
+        ipAddress: context.ipAddress,
+        startTime,
+      },
+    })
   }
 }
-

@@ -1,14 +1,63 @@
-import { NextResponse } from 'next/server'
-import { getAllSoftware } from '@/lib/db/downloads'
+import { NextRequest } from 'next/server'
+import { prisma } from '@/lib/db/prisma'
+import { successResponse, errorResponse } from '@/lib/utils/api-response'
+import { logger } from '@/lib/utils/logger'
+import { getRequestContext } from '@/lib/middleware/auth'
 
-// Public API - Get downloads data
+/**
+ * GET /api/downloads
+ * Get all downloadable software
+ */
 export async function GET() {
   try {
-    const software = getAllSoftware()
-    return NextResponse.json({ software })
+    const downloads = await prisma.downloadSoftware.findMany({
+      orderBy: { name: 'asc' },
+    })
+
+    return successResponse({ downloads })
   } catch (error) {
-    console.error('Get downloads error:', error)
-    return NextResponse.json({ error: 'حدث خطأ أثناء جلب البيانات' }, { status: 500 })
+    await logger.error('Get downloads error', error as Error)
+    return errorResponse('حدث خطأ أثناء جلب البيانات', 500)
   }
 }
 
+/**
+ * POST /api/downloads
+ * Create new download (admin/editor only)
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const { requireEditor, getRequestContext } = await import('@/lib/middleware/auth')
+    const context = getRequestContext(request)
+    const user = await requireEditor(request)
+
+    const body = await request.json()
+    const { name, nameEn, description, descriptionEn, icon, videoUrl, downloadUrl, category } = body
+
+    if (!name || !description) {
+      return errorResponse('الاسم والوصف مطلوبان', 400)
+    }
+
+    const download = await prisma.downloadSoftware.create({
+      data: {
+        name,
+        nameEn: nameEn || name,
+        description,
+        descriptionEn: descriptionEn || description,
+        icon: icon || 'Download',
+        videoUrl: videoUrl || null,
+        downloadUrl: downloadUrl || null,
+        category: category || null,
+      },
+    })
+
+    return successResponse({ download }, { status: 201 })
+  } catch (error: any) {
+    if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+      return errorResponse('غير مصرح', 401)
+    }
+
+    await logger.error('Create download error', error as Error)
+    return errorResponse('حدث خطأ أثناء إنشاء التحميل', 500)
+  }
+}

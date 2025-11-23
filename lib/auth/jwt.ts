@@ -1,8 +1,30 @@
 import jwt from 'jsonwebtoken'
 
-const JWT_SECRET: string = process.env.JWT_SECRET || 'cyber-tmsah-super-secret-key-change-in-production-2026'
+// JWT secrets - MUST be set in environment variables
+// No fallback values to prevent hardcoded secrets (Snyk security requirement)
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET
+  if (!secret) {
+    throw new Error(
+      'JWT_SECRET environment variable is required. Please set it in your .env file.'
+    )
+  }
+  return secret
+}
+
+function getJwtRefreshSecret(): string {
+  const secret = process.env.JWT_REFRESH_SECRET
+  if (!secret) {
+    throw new Error(
+      'JWT_REFRESH_SECRET environment variable is required. Please set it in your .env file.'
+    )
+  }
+  return secret
+}
+
+const JWT_SECRET: string = getJwtSecret()
 const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || '24h'
-const JWT_REFRESH_SECRET: string = process.env.JWT_REFRESH_SECRET || 'cyber-tmsah-refresh-secret-key-change-in-production-2026'
+const JWT_REFRESH_SECRET: string = getJwtRefreshSecret()
 const JWT_REFRESH_EXPIRES_IN: string = process.env.JWT_REFRESH_EXPIRES_IN || '7d'
 
 export interface JWTPayload {
