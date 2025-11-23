@@ -62,10 +62,23 @@ const nextConfig = {
   
   // Redirects
   async redirects() {
+    // Get admin path from environment variable or use default
+    const adminPath = process.env.ADMIN_PATH || 'admin';
+    
     return [
       {
         source: '/home',
         destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/eltmsah',
+        destination: `/${adminPath}`,
+        permanent: true,
+      },
+      {
+        source: '/eltmsah/:path*',
+        destination: `/${adminPath}/:path*`,
         permanent: true,
       },
     ];
