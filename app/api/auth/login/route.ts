@@ -55,6 +55,12 @@ export async function POST(request: NextRequest) {
   const context = getRequestContext(request)
 
   try {
+    // Check if JWT secrets are configured
+    if (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET) {
+      console.error('❌ JWT_SECRET and JWT_REFRESH_SECRET must be set in environment variables')
+      return errorResponse('خطأ في إعدادات النظام. يرجى التحقق من متغيرات البيئة.', 500)
+    }
+
     // Initialize default admin if needed
     await initializeDefaultAdmin()
 
@@ -162,11 +168,31 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error) {
-    await logger.error('Login error', error as Error, {
+    // Log detailed error for debugging
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const errorStack = error instanceof Error ? error.stack : undefined
+    
+    console.error('Login error details:', {
+      message: errorMessage,
+      stack: errorStack,
+      ipAddress: context.ipAddress,
+    })
+    
+    await logger.error('Login error', error instanceof Error ? error : new Error(errorMessage), {
       method: 'POST',
       path: '/api/auth/login',
       ipAddress: context.ipAddress,
     })
+    
+    // Return more specific error message if it's a known error
+    if (errorMessage.includes('JWT_SECRET') || errorMessage.includes('JWT_REFRESH_SECRET')) {
+      return errorResponse('خطأ في إعدادات النظام. يرجى التحقق من متغيرات البيئة.', 500)
+    }
+    
+    if (errorMessage.includes('Prisma') || errorMessage.includes('database')) {
+      return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى.', 500)
+    }
+    
     return errorResponse('حدث خطأ أثناء تسجيل الدخول', 500, {
       logRequest: true,
       logContext: {
