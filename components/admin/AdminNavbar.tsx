@@ -1,13 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
   Bell,
   User,
-  Moon,
-  Sun,
   Menu,
   X,
   Settings,
@@ -15,13 +13,17 @@ import {
   HelpCircle,
   ChevronDown,
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { getAdminBasePath, getAdminLoginPath } from '@/lib/utils/admin-path'
+import { getSidebarItems } from '@/lib/admin/sidebar-items'
 
 export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }) {
-  const [darkMode, setDarkMode] = useState(true)
+  const router = useRouter()
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [user, setUser] = useState<any>(null)
+  const basePath = getAdminBasePath()
 
   useEffect(() => {
     // Fetch user data
@@ -33,7 +35,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
-    window.location.href = '/admin/login'
+    window.location.href = getAdminLoginPath()
   }
 
   const notifications = [
@@ -41,6 +43,26 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
     { id: 2, title: 'تحديث النظام', message: 'تم تحديث النظام بنجاح', time: 'منذ ساعة', unread: true },
     { id: 3, title: 'نسخة احتياطية', message: 'تم إنشاء نسخة احتياطية', time: 'منذ يوم', unread: false },
   ]
+
+  const searchOptions = useMemo(() => {
+    const items = getSidebarItems()
+    return items
+      .flatMap((item) => [item, ...(item.children || [])])
+      .map((entry) => ({ label: entry.label, href: entry.href }))
+  }, [])
+
+  const filteredSearch = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase()
+    if (!query) return []
+    return searchOptions.filter((option) => option.label.toLowerCase().includes(query)).slice(0, 6)
+  }, [searchOptions, searchQuery])
+
+  const handleNavigate = (href: string) => {
+    router.push(href)
+    setSearchQuery('')
+    setUserMenuOpen(false)
+    setNotificationsOpen(false)
+  }
 
   return (
     <motion.nav
@@ -83,22 +105,30 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
                 <X className="w-4 h-4" />
               </motion.button>
             )}
+
+            {searchQuery && (
+              <div className="admin-navbar-search-results">
+                {filteredSearch.length > 0 ? (
+                  filteredSearch.map((result) => (
+                    <button
+                      key={result.href}
+                      className="admin-navbar-search-result"
+                      onClick={() => handleNavigate(result.href)}
+                    >
+                      <span>{result.label}</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                  ))
+                ) : (
+                  <div className="admin-navbar-search-empty">لا توجد نتائج مطابقة</div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Right Section */}
         <div className="admin-navbar-right">
-          {/* Theme Toggle */}
-          <motion.button
-            className="admin-navbar-icon-btn"
-            onClick={() => setDarkMode(!darkMode)}
-            whileHover={{ scale: 1.1, rotate: 15 }}
-            whileTap={{ scale: 0.9 }}
-            title={darkMode ? 'تفعيل الوضع الفاتح' : 'تفعيل الوضع الداكن'}
-          >
-            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </motion.button>
-
           {/* Notifications */}
           <div className="admin-navbar-notifications">
             <motion.button
@@ -199,15 +229,15 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
                     </div>
                   </div>
                   <div className="admin-navbar-user-dropdown-menu">
-                    <button>
+                    <button onClick={() => handleNavigate(`${basePath}/profile`)}>
                       <User className="w-4 h-4" />
                       <span>الملف الشخصي</span>
                     </button>
-                    <button>
+                    <button onClick={() => handleNavigate(`${basePath}/settings`)}>
                       <Settings className="w-4 h-4" />
                       <span>الإعدادات</span>
                     </button>
-                    <button>
+                    <button onClick={() => handleNavigate(`${basePath}/help`)}>
                       <HelpCircle className="w-4 h-4" />
                       <span>المساعدة</span>
                     </button>

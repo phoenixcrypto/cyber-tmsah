@@ -1,11 +1,12 @@
 'use client'
 
-import { Play, Download, FileText } from 'lucide-react'
+import { Play, Download, FileText, Link as LinkIcon } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
 import * as Icons from 'lucide-react'
+import { seedDownloads } from '@/lib/seed-data/downloads'
 
 interface Software {
   id: string
@@ -14,38 +15,12 @@ interface Software {
   description: string
   descriptionEn: string
   icon: string // Icon name as string
-  videoUrl: string
+  videoUrl?: string
+  downloadUrl?: string
+  category?: string
 }
 
-const softwareList: Software[] = [
-  {
-    id: 'edrawmax',
-    name: 'Wondershare EdrawMax',
-    nameEn: 'Wondershare EdrawMax',
-    description: 'برنامج احترافي لرسم مخططات ERD وقواعد البيانات',
-    descriptionEn: 'Professional software for drawing ERD diagrams and databases',
-    icon: 'FileText',
-    videoUrl: '#'
-  },
-  {
-    id: 'revo',
-    name: 'Revo Uninstaller',
-    nameEn: 'Revo Uninstaller',
-    description: 'أداة قوية لإزالة البرامج والملفات المتبقية من النظام',
-    descriptionEn: 'Powerful tool for uninstalling programs and removing leftover files from the system',
-    icon: 'Trash2',
-    videoUrl: '#'
-  },
-  {
-    id: 'office',
-    name: 'Microsoft Office',
-    nameEn: 'Microsoft Office',
-    description: 'حزمة برامج مايكروسوفت المكتبية (Word, Excel, PowerPoint)',
-    descriptionEn: 'Microsoft Office suite (Word, Excel, PowerPoint)',
-    icon: 'Briefcase',
-    videoUrl: '#'
-  }
-]
+const softwareList: Software[] = seedDownloads
 
 export default function DownloadsPage() {
   const { t, language } = useLanguage()
@@ -57,7 +32,11 @@ export default function DownloadsPage() {
       try {
         const res = await fetch('/api/downloads')
         const data = await res.json()
-        setSoftware(data.software && data.software.length > 0 ? data.software : softwareList)
+        const normalized = (data.downloads || data.software || []).map((item: any) => ({
+          ...item,
+          icon: item.icon || 'FileText',
+        }))
+        setSoftware(normalized.length > 0 ? normalized : softwareList)
       } catch (error) {
         console.error('Error fetching software:', error)
         setSoftware(softwareList)
@@ -114,13 +93,27 @@ export default function DownloadsPage() {
                       {language === 'ar' ? item.description : item.descriptionEn}
                     </p>
 
-                    <button
-                      onClick={() => handleWatch(item.videoUrl)}
-                      className="w-full bg-gradient-to-r from-cyber-neon via-cyber-green to-cyber-neon bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-100 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 shadow-lg shadow-cyber-neon/30 active:scale-95"
-                    >
-                      <Play className="w-5 h-5" />
-                      {t('downloads.watch')}
-                    </button>
+                    <div className="flex flex-col gap-3">
+                      <button
+                        onClick={() => handleWatch(item.videoUrl || '#')}
+                        className="w-full bg-gradient-to-r from-cyber-neon via-cyber-green to-cyber-neon bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-100 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 shadow-lg shadow-cyber-neon/30 active:scale-95"
+                      >
+                        <Play className="w-5 h-5" />
+                        {t('downloads.watch')}
+                      </button>
+
+                      {item.downloadUrl && (
+                        <a
+                          href={item.downloadUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full border border-cyber-neon/40 text-dark-100 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 hover:border-cyber-neon"
+                        >
+                          <LinkIcon className="w-5 h-5" />
+                          {language === 'ar' ? 'تحميل البرنامج' : 'Download Software'}
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )
               })}

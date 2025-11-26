@@ -1,89 +1,33 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, Calculator, Atom, Database, Globe, Users, ArrowRight, FileText } from 'lucide-react'
+import { BookOpen, ArrowRight, FileText } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
 import * as Icons from 'lucide-react'
+import { seedMaterials } from '@/lib/seed-data/materials'
 
 interface Subject {
   id: string
   title: string
   description: string
-  icon: any
+  icon: string
   color: string
   articlesCount: number
   lastUpdated: string
 }
 
-// Static data - no API calls
-const subjectsData: Subject[] = [
-  {
-    id: 'applied-physics',
-    title: 'الفيزياء التطبيقية',
-    description: 'مبادئ الفيزياء وتطبيقاتها في التكنولوجيا',
-    icon: Atom,
-    color: 'from-blue-500 to-blue-600',
-    articlesCount: 0,
-    lastUpdated: 'لا توجد مقالات بعد'
-  },
-  {
-    id: 'mathematics',
-    title: 'الرياضيات',
-    description: 'أسس الرياضيات وحل المشكلات',
-    icon: Calculator,
-    color: 'from-green-500 to-green-600',
-    articlesCount: 0,
-    lastUpdated: 'لا توجد مقالات بعد'
-  },
-  {
-    id: 'entrepreneurship',
-    title: 'ريادة الأعمال والتفكير الإبداعي',
-    description: 'الابتكار في الأعمال وحل المشكلات الإبداعي',
-    icon: Users,
-    color: 'from-purple-500 to-purple-600',
-    articlesCount: 0,
-    lastUpdated: 'لا توجد مقالات بعد'
-  },
-  {
-    id: 'information-technology',
-    title: 'تكنولوجيا المعلومات',
-    description: 'أساسيات تكنولوجيا المعلومات والتقنيات الحديثة',
-    icon: Globe,
-    color: 'from-cyan-500 to-cyan-600',
-    articlesCount: 0,
-    lastUpdated: 'لا توجد مقالات بعد'
-  },
-  {
-    id: 'database-systems',
-    title: 'قواعد البيانات',
-    description: 'تصميم وتنفيذ وإدارة قواعد البيانات',
-    icon: Database,
-    color: 'from-orange-500 to-orange-600',
-    articlesCount: 0,
-    lastUpdated: 'لا توجد مقالات بعد'
-  },
-  {
-    id: 'english-language',
-    title: 'اللغة الإنجليزية',
-    description: 'التواصل باللغة الإنجليزية والكتابة التقنية',
-    icon: BookOpen,
-    color: 'from-red-500 to-red-600',
-    articlesCount: 0,
-    lastUpdated: 'لا توجد مقالات بعد'
-  },
-  {
-    id: 'information-systems',
-    title: 'نظم المعلومات',
-    description: 'تحليل وتصميم وتنفيذ نظم المعلومات',
-    icon: BookOpen,
-    color: 'from-indigo-500 to-indigo-600',
-    articlesCount: 0,
-    lastUpdated: 'لا توجد مقالات بعد'
-  }
-]
+const subjectsData: Subject[] = seedMaterials.map((material) => ({
+  id: material.id,
+  title: material.title,
+  description: material.description,
+  icon: material.icon,
+  color: material.color,
+  articlesCount: material.articlesCount,
+  lastUpdated: material.lastUpdated,
+}))
 
 export default function MaterialsPage() {
   const { t } = useLanguage()

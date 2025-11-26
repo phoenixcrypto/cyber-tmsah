@@ -379,6 +379,45 @@
   color: var(--dark-400);
 }
 
+.admin-navbar-search-results {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 320px;
+  background: linear-gradient(135deg, rgba(23, 23, 23, 0.98) 0%, rgba(16, 16, 16, 0.98) 100%);
+  border: 1px solid rgba(255, 59, 64, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.admin-navbar-search-result {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.1rem;
+  background: transparent;
+  border: none;
+  color: var(--dark-200);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--smooth-transition);
+}
+
+.admin-navbar-search-result:hover {
+  background: rgba(255, 59, 64, 0.12);
+  color: var(--primary-white);
+}
+
+.admin-navbar-search-empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--dark-400);
+  font-size: 0.9rem;
+}
+
 .admin-navbar-search-clear {
   position: absolute;
   left: 1rem;
@@ -448,7 +487,8 @@
 .admin-navbar-notifications-dropdown {
   position: absolute;
   top: calc(100% + 1rem);
-  left: 0;
+  right: 0;
+  left: auto;
   width: 360px;
   background: linear-gradient(135deg, rgba(23, 23, 23, 0.98) 0%, rgba(16, 16, 16, 0.98) 100%);
   backdrop-filter: blur(30px) saturate(180%);
@@ -633,7 +673,8 @@
 .admin-navbar-user-dropdown {
   position: absolute;
   top: calc(100% + 1rem);
-  left: 0;
+  right: 0;
+  left: auto;
   width: 280px;
   background: linear-gradient(135deg, rgba(23, 23, 23, 0.98) 0%, rgba(16, 16, 16, 0.98) 100%);
   backdrop-filter: blur(30px) saturate(180%);
