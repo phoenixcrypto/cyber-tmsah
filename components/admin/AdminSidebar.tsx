@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react'
 import { getAdminLoginPath } from '@/lib/utils/admin-path'
-import { getSidebarItems, type SidebarItem } from '@/lib/admin/sidebar-items'
+import { getSidebarItems } from '@/lib/admin/sidebar-items'
 
 export default function AdminSidebar({
   isOpen,
