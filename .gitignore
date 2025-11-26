@@ -114,3 +114,8 @@ coverage/
 # Database files (sensitive data)
 lib/db/data/*.json
 !lib/db/data/.gitkeep
+
+# Sensitive configuration files (contain secrets)
+VERCEL_ENV_VARIABLES_COMPLETE.txt
+DATABASE_URL_FOR_VERCEL.txt
+*.txt.env
