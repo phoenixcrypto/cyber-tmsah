@@ -13,6 +13,12 @@ import { getRequestContext } from '@/lib/middleware/auth'
  */
 async function initializeDefaultAdmin(): Promise<void> {
   try {
+    // Check if DATABASE_URL is set
+    if (!process.env.DATABASE_URL) {
+      console.error('❌ DATABASE_URL is not set in environment variables')
+      throw new Error('DATABASE_URL is not set')
+    }
+    
     const userCount = await prisma.user.count()
     
     if (userCount === 0) {
@@ -42,7 +48,13 @@ async function initializeDefaultAdmin(): Promise<void> {
       }
     }
   } catch (error) {
-    console.error('Error initializing default admin:', error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error('Error initializing default admin:', {
+      message: errorMessage,
+      hasDatabaseUrl: !!process.env.DATABASE_URL,
+    })
+    // Re-throw to be caught by the main error handler
+    throw error
   }
 }
 
@@ -176,6 +188,8 @@ export async function POST(request: NextRequest) {
       message: errorMessage,
       stack: errorStack,
       ipAddress: context.ipAddress,
+      hasDatabaseUrl: !!process.env.DATABASE_URL,
+      databaseUrlLength: process.env.DATABASE_URL?.length || 0,
     })
     
     await logger.error('Login error', error instanceof Error ? error : new Error(errorMessage), {
@@ -189,8 +203,23 @@ export async function POST(request: NextRequest) {
       return errorResponse('خطأ في إعدادات النظام. يرجى التحقق من متغيرات البيئة.', 500)
     }
     
-    if (errorMessage.includes('Prisma') || errorMessage.includes('database')) {
-      return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى.', 500)
+    // Check for database connection errors
+    if (
+      errorMessage.includes('Prisma') ||
+      errorMessage.includes('database') ||
+      errorMessage.includes('P1001') ||
+      errorMessage.includes('Can\'t reach database') ||
+      errorMessage.includes('Connection') ||
+      errorMessage.includes('ECONNREFUSED') ||
+      errorMessage.includes('ETIMEDOUT')
+    ) {
+      // Check if DATABASE_URL is missing
+      if (!process.env.DATABASE_URL) {
+        console.error('❌ DATABASE_URL is not set in environment variables')
+        return errorResponse('خطأ في إعدادات قاعدة البيانات: DATABASE_URL غير موجود. يرجى التحقق من متغيرات البيئة على Vercel.', 500)
+      }
+      
+      return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من إعدادات DATABASE_URL على Vercel والتأكد من إضافة ?sslmode=require للاتصال بـ Supabase.', 500)
     }
     
     return errorResponse('حدث خطأ أثناء تسجيل الدخول', 500, {
