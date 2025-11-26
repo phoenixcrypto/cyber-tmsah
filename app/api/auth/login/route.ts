@@ -15,8 +15,15 @@ async function initializeDefaultAdmin(): Promise<void> {
   try {
     // Check if DATABASE_URL is set
     if (!process.env.DATABASE_URL) {
+      const error = new Error('DATABASE_URL is not set in environment variables')
       console.error('❌ DATABASE_URL is not set in environment variables')
-      throw new Error('DATABASE_URL is not set')
+      throw error
+    }
+    
+    // Check if DATABASE_URL has sslmode
+    const dbUrl = process.env.DATABASE_URL
+    if (!dbUrl.includes('sslmode')) {
+      console.warn('⚠️ DATABASE_URL does not contain sslmode parameter. Supabase requires SSL connection.')
     }
     
     const userCount = await prisma.user.count()
@@ -49,9 +56,12 @@ async function initializeDefaultAdmin(): Promise<void> {
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
+    const errorCode = (error as any)?.code
     console.error('Error initializing default admin:', {
       message: errorMessage,
+      code: errorCode,
       hasDatabaseUrl: !!process.env.DATABASE_URL,
+      databaseUrlPreview: process.env.DATABASE_URL?.substring(0, 50) + '...',
     })
     // Re-throw to be caught by the main error handler
     throw error
@@ -184,12 +194,17 @@ export async function POST(request: NextRequest) {
     const errorMessage = error instanceof Error ? error.message : String(error)
     const errorStack = error instanceof Error ? error.stack : undefined
     
+    const errorCode = (error as any)?.code
     console.error('Login error details:', {
       message: errorMessage,
+      code: errorCode,
       stack: errorStack,
       ipAddress: context.ipAddress,
       hasDatabaseUrl: !!process.env.DATABASE_URL,
       databaseUrlLength: process.env.DATABASE_URL?.length || 0,
+      databaseUrlPreview: process.env.DATABASE_URL?.substring(0, 50) + '...',
+      hasJwtSecret: !!process.env.JWT_SECRET,
+      hasJwtRefreshSecret: !!process.env.JWT_REFRESH_SECRET,
     })
     
     await logger.error('Login error', error instanceof Error ? error : new Error(errorMessage), {
