@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react'
+import { ChevronLeft, ChevronRight, LogOut, Shield } from 'lucide-react'
 import { getAdminLoginPath } from '@/lib/utils/admin-path'
 import { getSidebarItems } from '@/lib/admin/sidebar-items'
 
