@@ -1,12 +1,12 @@
 // Prisma Schema for Cyber TMSAH
-// PostgreSQL Database with full type safety
+// MySQL Database with full type safety
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -90,6 +90,8 @@ model Material {
   articles      Article[]
 
   @@index([title])
+  @@index([createdAt])
+  @@index([updatedAt])
   @@map("materials")
 }
 
@@ -107,7 +109,7 @@ model Article {
   status      ArticleStatus @default(draft)
   publishedAt DateTime?
   views       Int           @default(0)
-  tags        String[]      @default([])
+  tags        Json          @default("[]")
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
@@ -116,6 +118,9 @@ model Article {
   @@index([materialId])
   @@index([status])
   @@index([publishedAt])
+  @@index([author])
+  @@index([createdAt])
+  @@index([updatedAt])
   @@map("articles")
 }
 
@@ -139,6 +144,8 @@ model DownloadSoftware {
   updatedAt     DateTime @updatedAt
 
   @@index([name])
+  @@index([category])
+  @@index([createdAt])
   @@map("download_software")
 }
 
@@ -158,6 +165,8 @@ model NewsArticle {
 
   @@index([status])
   @@index([publishedAt])
+  @@index([subjectId])
+  @@index([createdAt])
   @@map("news_articles")
 }
 
@@ -178,6 +187,8 @@ model Page {
 
   @@index([slug])
   @@index([status])
+  @@index([order])
+  @@index([createdAt])
   @@map("pages")
 }
 

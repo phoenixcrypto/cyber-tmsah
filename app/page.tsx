@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { Calendar, BookOpen, Target, Award, CheckCircle2, Star, Briefcase } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Script from 'next/script'
+import { memo } from 'react'
 
-export default function HomePage() {
+function HomePage() {
   const { t } = useLanguage()
 
   const stats = [
@@ -119,3 +120,5 @@ export default function HomePage() {
     </>
   )
 }
+
+export default memo(HomePage)

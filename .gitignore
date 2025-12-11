@@ -17,8 +17,10 @@ dist/
 .env.test.local
 .env.production.local
 .env.vercel.local
+.env.*.local
 # Never commit real secrets - even in example files!
 # If you accidentally commit secrets, rotate them IMMEDIATELY
+# .env.example is safe to commit (contains no real secrets)
 
 # IDE
 .vscode/
@@ -67,6 +69,10 @@ jspm_packages/
 
 # next.js build output
 .next
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # nuxt.js build output
 .nuxt
@@ -119,3 +125,37 @@ lib/db/data/*.json
 VERCEL_ENV_VARIABLES_COMPLETE.txt
 DATABASE_URL_FOR_VERCEL.txt
 *.txt.env
+*.env.example
+.env.*
+
+# Secrets and API keys
+*.key
+*.pem
+*.cert
+*.secret
+secrets/
+.secrets/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

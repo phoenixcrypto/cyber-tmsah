@@ -9,6 +9,7 @@ import FloatingLanguageButton from '@/components/FloatingLanguageButton'
 import PageTransition from '@/components/PageTransition'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import StructuredData from '@/components/StructuredData'
+import ContentProtection from '@/components/ContentProtection'
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -101,6 +102,7 @@ export default function RootLayout({
         </Providers>
         <OfflineIndicator />
         <GoogleAnalytics />
+        <ContentProtection />
       </body>
     </html>
   )

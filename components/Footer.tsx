@@ -1,10 +1,11 @@
 'use client'
 
+import { memo } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { usePathname } from 'next/navigation'
 
-export default function Footer() {
+function Footer() {
   const { t } = useLanguage()
   const pathname = usePathname()
 
@@ -47,3 +48,5 @@ export default function Footer() {
     </footer>
   )
 }
+
+export default memo(Footer)

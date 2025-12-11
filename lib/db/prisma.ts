@@ -2,41 +2,44 @@
  * Prisma Client Singleton
  * Ensures only one instance of Prisma Client is created
  * 
- * For Supabase connections:
- * - Direct Connection: Use port 5432 with ?sslmode=require
- * - Connection Pooling: Use port 6543 with postgres.{project_id} as username
+ * This pattern prevents multiple Prisma Client instances in development
+ * which can cause connection pool exhaustion.
+ * 
+ * For MySQL connections:
+ * - Use standard MySQL connection string format
+ * - Ensure SSL is enabled for production
  */
 
 import { PrismaClient } from '@prisma/client'
 
+/**
+ * Type-safe global Prisma instance storage
+ * Used to prevent multiple instances in development (Hot Module Replacement)
+ */
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-// Validate DATABASE_URL format
+/**
+ * Validate DATABASE_URL format
+ * Ensures database connection string is properly configured
+ */
 function validateDatabaseUrl(): void {
   const dbUrl = process.env.DATABASE_URL
   if (!dbUrl) {
     throw new Error('DATABASE_URL is not set in environment variables')
   }
 
-  // Check if it's a Supabase URL
-  const isSupabase = dbUrl.includes('supabase.co') || dbUrl.includes('pooler.supabase.com')
+  // Validate MySQL connection string format
+  const isMySQL = dbUrl.startsWith('mysql://') || dbUrl.startsWith('mysqlx://')
   
-  if (isSupabase) {
-    // For Supabase, ensure SSL is required
-    if (!dbUrl.includes('sslmode=require') && !dbUrl.includes('sslmode=prefer')) {
-      console.warn('⚠️  Supabase connection string should include sslmode=require for security')
-    }
+  if (!isMySQL) {
+    console.warn('⚠️  Expected MySQL connection string. Current format may not be compatible.')
+  }
 
-    // Check if using connection pooling
-    const isPooling = dbUrl.includes('pooler.supabase.com') || dbUrl.includes(':6543')
-    if (isPooling) {
-      // For pooling, username should include project ID
-      if (!dbUrl.includes('postgres.') && !dbUrl.includes('postgresql://postgres.')) {
-        console.warn('⚠️  Connection Pooling requires username format: postgres.{project_id}')
-      }
-    }
+  // Check for SSL requirement in production
+  if (process.env.NODE_ENV === 'production' && !dbUrl.includes('sslaccept=strict')) {
+    console.warn('⚠️  Production database connections should use SSL (sslaccept=strict)')
   }
 }
 

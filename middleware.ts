@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { validateCsrfToken, generateCsrfToken, setCsrfCookie } from '@/lib/utils/csrf'
 
 // Admin routes removed - no authentication needed
 
@@ -56,9 +57,28 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith('/api/')) {
     if (!rateLimit(ip, 100, 60000)) { // 100 requests per minute
       return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
+        { 
+          success: false,
+          error: 'Too many requests. Please try again later.',
+          code: 'RATE_6001'
+        },
         { status: 429 }
       )
+    }
+
+    // CSRF Protection for state-changing methods
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+      const isValidCsrf = validateCsrfToken(request)
+      if (!isValidCsrf) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Invalid CSRF token',
+            code: 'AUTH_1007'
+          },
+          { status: 403 }
+        )
+      }
     }
   }
 
@@ -93,8 +113,15 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-XSS-Protection', '1; mode=block')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  response.headers.set('X-DNS-Prefetch-Control', 'on')
+  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
   
-  // No admin pages to cache
+  // Set CSRF token cookie if not present
+  if (!request.cookies.get('csrf-token')) {
+    const csrfToken = generateCsrfToken()
+    const cookie = setCsrfCookie(csrfToken)
+    response.cookies.set(cookie.name, cookie.value, cookie.options)
+  }
 
   return response
 }

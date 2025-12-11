@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { LucideIcon } from 'lucide-react'
 
 interface PageHeaderProps {
@@ -8,7 +9,7 @@ interface PageHeaderProps {
   description?: string
 }
 
-export default function PageHeader({ title, icon: Icon, description }: PageHeaderProps) {
+function PageHeader({ title, icon: Icon, description }: PageHeaderProps) {
   return (
     <div className="page-header-professional">
       <div className="page-header-content">
@@ -26,3 +27,5 @@ export default function PageHeader({ title, icon: Icon, description }: PageHeade
     </div>
   )
 }
+
+export default memo(PageHeader)

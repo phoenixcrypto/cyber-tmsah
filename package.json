@@ -13,7 +13,7 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "tsx scripts/seed-database.ts",
-    "db:check": "tsx scripts/setup-supabase.ts"
+    "db:import": "tsx scripts/import-sql.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
@@ -39,11 +39,14 @@
     "@types/node-fetch": "^2.6.13",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
     "commander": "^14.0.2",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.5",
     "node-fetch": "^3.3.2",
+    "postcss": "^8.4.47",
     "prisma": "^5.19.1",
+    "tailwindcss": "^3.4.17",
     "tsx": "^4.20.6",
     "typescript": "^5.5.3"
   },
