@@ -282,7 +282,7 @@
 
   .stat-card::before {
     @apply absolute top-0 left-0 right-0 h-1;
-    @apply transition-transform duration-400;
+    @apply transition-transform duration-500;
     background: linear-gradient(90deg, var(--primary-red), var(--primary-red-soft));
     transform: scaleX(0);
   }
@@ -360,7 +360,7 @@
   .sidebar-quick-links-modern {
     @apply fixed top-1/2 right-0 translate-x-full -translate-y-1/2;
     @apply w-[280px] max-h-[450px] rounded-l-2xl z-[997];
-    @apply transition-transform duration-400 overflow-y-auto overflow-x-hidden;
+    @apply transition-transform duration-500 overflow-y-auto overflow-x-hidden;
     background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(15, 15, 15, 0.95) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -747,7 +747,7 @@
   .mobile-nav-panel {
     @apply fixed top-0 right-0 w-0 max-w-[320px] h-screen;
     @apply z-[1000] overflow-y-auto overflow-x-hidden;
-    @apply transition-all duration-400;
+    @apply transition-all duration-500;
     background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(15, 15, 15, 0.95) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
