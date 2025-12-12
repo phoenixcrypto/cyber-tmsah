@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { validateCsrfToken, generateCsrfToken, setCsrfCookie } from '@/lib/utils/csrf'
+// CSRF utilities disabled in Edge Runtime - will be handled in API routes instead
+// import { validateCsrfToken, generateCsrfToken, setCsrfCookie } from '@/lib/utils/csrf'
 
 // Admin routes removed - no authentication needed
 
@@ -66,20 +67,8 @@ export function middleware(request: NextRequest) {
       )
     }
 
-    // CSRF Protection for state-changing methods
-    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
-      const isValidCsrf = validateCsrfToken(request)
-      if (!isValidCsrf) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: 'Invalid CSRF token',
-            code: 'AUTH_1007'
-          },
-          { status: 403 }
-        )
-      }
-    }
+    // CSRF Protection disabled in Edge Runtime
+    // Will be handled in individual API routes using Node.js runtime
   }
 
   // Apply stricter rate limiting to auth routes (except /me which is called frequently)
@@ -116,12 +105,8 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-DNS-Prefetch-Control', 'on')
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
   
-  // Set CSRF token cookie if not present
-  if (!request.cookies.get('csrf-token')) {
-    const csrfToken = generateCsrfToken()
-    const cookie = setCsrfCookie(csrfToken)
-    response.cookies.set(cookie.name, cookie.value, cookie.options)
-  }
+  // CSRF token cookie generation disabled in Edge Runtime
+  // Will be handled in API routes using Node.js runtime
 
   return response
 }

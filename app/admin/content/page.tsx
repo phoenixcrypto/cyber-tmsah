@@ -37,11 +37,16 @@ export default function AdminContentOverviewPage() {
           fetch('/api/downloads').catch(() => null),
         ])
 
-        const materials = materialsRes?.ok ? (await materialsRes.json()).data?.materials || [] : []
-        const articles = articlesRes?.ok ? (await articlesRes.json()).data?.articles || [] : []
-        const pages = pagesRes?.ok ? (await pagesRes.json()).data?.pages || [] : []
-        const news = newsRes?.ok ? (await newsRes.json()).data?.news || [] : []
-        const downloads = downloadsRes?.ok ? (await downloadsRes.json()).data?.downloads || downloadsRes?.ok ? (await downloadsRes.json()).data?.software || [] : []
+        const materials = materialsRes?.ok ? ((await materialsRes.json()).data?.materials || []) : []
+        const articles = articlesRes?.ok ? ((await articlesRes.json()).data?.articles || []) : []
+        const pages = pagesRes?.ok ? ((await pagesRes.json()).data?.pages || []) : []
+        const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
+        
+        let downloads: any[] = []
+        if (downloadsRes?.ok) {
+          const downloadsData = await downloadsRes.json()
+          downloads = downloadsData?.data?.downloads || downloadsData?.data?.software || []
+        }
 
         setStats({
           materials: materials.length,

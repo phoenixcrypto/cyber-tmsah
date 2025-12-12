@@ -70,12 +70,23 @@ export default function AdminDashboard() {
           fetch('/api/news').catch(() => null),
         ])
 
-        const users = usersRes?.ok ? (await usersRes.json()).data?.users || [] : []
-        const materials = materialsRes?.ok ? (await materialsRes.json()).data?.materials || [] : []
-        const articles = articlesRes?.ok ? (await articlesRes.json()).data?.articles || [] : []
-        const schedule = scheduleRes?.ok ? (await scheduleRes.json()).data?.schedule || scheduleRes?.ok ? (await scheduleRes.json()).data?.items || [] : []
-        const downloads = downloadsRes?.ok ? (await downloadsRes.json()).data?.downloads || downloadsRes?.ok ? (await downloadsRes.json()).data?.software || [] : []
-        const news = newsRes?.ok ? (await newsRes.json()).data?.news || [] : []
+        const users = usersRes?.ok ? ((await usersRes.json()).data?.users || []) : []
+        const materials = materialsRes?.ok ? ((await materialsRes.json()).data?.materials || []) : []
+        const articles = articlesRes?.ok ? ((await articlesRes.json()).data?.articles || []) : []
+        
+        let schedule: any[] = []
+        if (scheduleRes?.ok) {
+          const scheduleData = await scheduleRes.json()
+          schedule = scheduleData?.data?.schedule || scheduleData?.data?.items || []
+        }
+        
+        let downloads: any[] = []
+        if (downloadsRes?.ok) {
+          const downloadsData = await downloadsRes.json()
+          downloads = downloadsData?.data?.downloads || downloadsData?.data?.software || []
+        }
+        
+        const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
 
         const totalContent = materials.length + articles.length + news.length
 

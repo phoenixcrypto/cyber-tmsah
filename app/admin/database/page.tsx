@@ -40,13 +40,24 @@ export default function AdminDatabasePage() {
           fetch('/api/admin/users').catch(() => null),
         ])
 
-        const materials = materialsRes?.ok ? (await materialsRes.json()).data?.materials || [] : []
-        const articles = articlesRes?.ok ? (await articlesRes.json()).data?.articles || [] : []
-        const pages = pagesRes?.ok ? (await pagesRes.json()).data?.pages || [] : []
-        const news = newsRes?.ok ? (await newsRes.json()).data?.news || [] : []
-        const downloads = downloadsRes?.ok ? (await downloadsRes.json()).data?.downloads || downloadsRes?.ok ? (await downloadsRes.json()).data?.software || [] : []
-        const schedule = scheduleRes?.ok ? (await scheduleRes.json()).data?.schedule || scheduleRes?.ok ? (await scheduleRes.json()).data?.items || [] : []
-        const users = usersRes?.ok ? (await usersRes.json()).data?.users || [] : []
+        const materials = materialsRes?.ok ? ((await materialsRes.json()).data?.materials || []) : []
+        const articles = articlesRes?.ok ? ((await articlesRes.json()).data?.articles || []) : []
+        const pages = pagesRes?.ok ? ((await pagesRes.json()).data?.pages || []) : []
+        const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
+        
+        let downloads: any[] = []
+        if (downloadsRes?.ok) {
+          const downloadsData = await downloadsRes.json()
+          downloads = downloadsData?.data?.downloads || downloadsData?.data?.software || []
+        }
+        
+        let schedule: any[] = []
+        if (scheduleRes?.ok) {
+          const scheduleData = await scheduleRes.json()
+          schedule = scheduleData?.data?.schedule || scheduleData?.data?.items || []
+        }
+        
+        const users = usersRes?.ok ? ((await usersRes.json()).data?.users || []) : []
 
         const totalRecords = materials.length + articles.length + pages.length + news.length + downloads.length + schedule.length + users.length
 
