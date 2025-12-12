@@ -579,7 +579,8 @@
   }
 
   .iNewsTicker_post-separator {
-    @apply text-muted-gray mx-2;
+    @apply mx-2;
+    color: var(--muted-gray);
   }
 
   .iNewsTicker_post-subject {
