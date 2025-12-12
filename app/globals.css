@@ -257,7 +257,7 @@
 
   .cta-button-secondary:hover,
   .btn-secondary:hover {
-    @apply border-cyber-neon;
+    border-color: var(--cyber-neon);
     background: rgba(255, 59, 64, 0.1);
     color: var(--dark-100);
     @apply -translate-y-1;
