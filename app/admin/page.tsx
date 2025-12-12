@@ -8,6 +8,8 @@ import {
   Calendar,
   Download,
   TrendingUp,
+  Newspaper,
+  BookOpen,
 } from 'lucide-react'
 import MetricCard from '@/components/admin/MetricCard'
 import ChartCard from '@/components/admin/ChartCard'
@@ -15,71 +17,125 @@ import ActivityFeed from '@/components/admin/ActivityFeed'
 import SystemHealth from '@/components/admin/SystemHealth'
 import QuickActions from '@/components/admin/QuickActions'
 
-// Mock Data
-const mockMetrics = {
-  totalUsers: 1247,
-  totalContent: 342,
-  totalSchedule: 156,
-  totalDownloads: 89,
-  userGrowth: 12.5,
-  contentGrowth: 8.3,
-  scheduleGrowth: -2.1,
-  downloadGrowth: 15.7,
+interface Metrics {
+  totalUsers: number
+  totalContent: number
+  totalSchedule: number
+  totalDownloads: number
+  totalArticles: number
+  totalNews: number
+  userGrowth: number
+  contentGrowth: number
+  scheduleGrowth: number
+  downloadGrowth: number
 }
-
-const mockChartData = {
-  users: {
-    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
-    data: [450, 520, 680, 750, 920, 1100],
-  },
-  content: {
-    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
-    data: [120, 145, 180, 210, 250, 290],
-  },
-}
-
-const mockActivities = [
-  {
-    id: 1,
-    user: 'زياد محمد',
-    action: 'أنشأ مقال جديد',
-    target: 'مادة الأمن السيبراني',
-    time: 'منذ 5 دقائق',
-    avatar: 'Z',
-  },
-  {
-    id: 2,
-    user: 'مؤمن هيثم',
-    action: 'حدث الجدول الدراسي',
-    target: 'المجموعة الأولى',
-    time: 'منذ 15 دقيقة',
-    avatar: 'M',
-  },
-  {
-    id: 3,
-    user: 'يوسف وليد',
-    action: 'أضاف برنامج جديد',
-    target: 'Kali Linux',
-    time: 'منذ ساعة',
-    avatar: 'Y',
-  },
-  {
-    id: 4,
-    user: 'زياد محمد',
-    action: 'نشر خبر جديد',
-    target: 'تحديثات الأمن السيبراني',
-    time: 'منذ ساعتين',
-    avatar: 'Z',
-  },
-]
 
 export default function AdminDashboard() {
-  const [metrics] = useState(mockMetrics)
+  const [metrics, setMetrics] = useState<Metrics>({
+    totalUsers: 0,
+    totalContent: 0,
+    totalSchedule: 0,
+    totalDownloads: 0,
+    totalArticles: 0,
+    totalNews: 0,
+    userGrowth: 0,
+    contentGrowth: 0,
+    scheduleGrowth: 0,
+    downloadGrowth: 0,
+  })
+  const [loading, setLoading] = useState(true)
+  const [chartData, setChartData] = useState({
+    users: {
+      labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+      data: [0, 0, 0, 0, 0, 0],
+    },
+    content: {
+      labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+      data: [0, 0, 0, 0, 0, 0],
+    },
+  })
 
   useEffect(() => {
-    // Fetch real metrics from API
-    // fetch('/api/admin/metrics').then(res => res.json()).then(setMetrics)
+    const fetchMetrics = async () => {
+      try {
+        setLoading(true)
+        
+        // Fetch all data in parallel
+        const [usersRes, materialsRes, articlesRes, scheduleRes, downloadsRes, newsRes] = await Promise.all([
+          fetch('/api/admin/users').catch(() => null),
+          fetch('/api/materials').catch(() => null),
+          fetch('/api/articles').catch(() => null),
+          fetch('/api/schedule').catch(() => null),
+          fetch('/api/downloads').catch(() => null),
+          fetch('/api/news').catch(() => null),
+        ])
+
+        const users = usersRes?.ok ? (await usersRes.json()).data?.users || [] : []
+        const materials = materialsRes?.ok ? (await materialsRes.json()).data?.materials || [] : []
+        const articles = articlesRes?.ok ? (await articlesRes.json()).data?.articles || [] : []
+        const schedule = scheduleRes?.ok ? (await scheduleRes.json()).data?.schedule || scheduleRes?.ok ? (await scheduleRes.json()).data?.items || [] : []
+        const downloads = downloadsRes?.ok ? (await downloadsRes.json()).data?.downloads || downloadsRes?.ok ? (await downloadsRes.json()).data?.software || [] : []
+        const news = newsRes?.ok ? (await newsRes.json()).data?.news || [] : []
+
+        const totalContent = materials.length + articles.length + news.length
+
+        setMetrics({
+          totalUsers: users.length,
+          totalContent,
+          totalSchedule: schedule.length,
+          totalDownloads: downloads.length,
+          totalArticles: articles.length,
+          totalNews: news.length,
+          userGrowth: 0, // TODO: Calculate from historical data
+          contentGrowth: 0, // TODO: Calculate from historical data
+          scheduleGrowth: 0, // TODO: Calculate from historical data
+          downloadGrowth: 0, // TODO: Calculate from historical data
+        })
+
+        // Generate chart data (mock for now, can be enhanced with real historical data)
+        setChartData({
+          users: {
+            labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+            data: [0, 0, 0, 0, 0, users.length],
+          },
+          content: {
+            labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+            data: [0, 0, 0, 0, 0, totalContent],
+          },
+        })
+      } catch (error) {
+        console.error('Error fetching metrics:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchMetrics()
   }, [])
+
+  const mockActivities = [
+    {
+      id: 1,
+      user: 'النظام',
+      action: 'تم تحديث الإحصائيات',
+      target: 'لوحة التحكم',
+      time: 'الآن',
+      avatar: 'S',
+    },
+  ]
+
+  if (loading) {
+    return (
+      <div className="admin-dashboard">
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-page-title">لوحة التحكم</h1>
+            <p className="admin-page-description">جاري التحميل...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="admin-dashboard">
@@ -140,36 +196,55 @@ export default function AdminDashboard() {
         />
       </div>
 
+      {/* Additional Metrics */}
+      <div className="admin-metrics-grid" style={{ marginTop: '1.5rem' }}>
+        <MetricCard
+          title="المقالات"
+          value={metrics.totalArticles}
+          change={0}
+          icon={BookOpen}
+          color="from-indigo-500 to-blue-500"
+          delay={0.4}
+        />
+        <MetricCard
+          title="الأخبار"
+          value={metrics.totalNews}
+          change={0}
+          icon={Newspaper}
+          color="from-pink-500 to-rose-500"
+          delay={0.5}
+        />
+      </div>
+
       {/* Charts & Activity Grid */}
       <div className="admin-dashboard-grid">
         {/* Users Chart */}
         <ChartCard
           title="نمو المستخدمين"
-          data={mockChartData.users}
+          data={chartData.users}
           type="line"
           color="#3b82f6"
-          delay={0.4}
+          delay={0.6}
         />
 
         {/* Content Chart */}
         <ChartCard
           title="نمو المحتوى"
-          data={mockChartData.content}
+          data={chartData.content}
           type="bar"
           color="#a855f7"
-          delay={0.5}
+          delay={0.7}
         />
 
         {/* Activity Feed */}
-        <ActivityFeed activities={mockActivities} delay={0.6} />
+        <ActivityFeed activities={mockActivities} delay={0.8} />
 
         {/* System Health */}
-        <SystemHealth delay={0.7} />
+        <SystemHealth delay={0.9} />
 
         {/* Quick Actions */}
-        <QuickActions delay={0.8} />
+        <QuickActions delay={1.0} />
       </div>
     </div>
   )
 }
-

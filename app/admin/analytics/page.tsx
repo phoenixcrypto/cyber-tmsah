@@ -1,60 +1,145 @@
-import SectionPlaceholder from '@/components/admin/SectionPlaceholder'
-import { prisma } from '@/lib/db/prisma'
+'use client'
 
-async function getAnalytics() {
-  try {
-    const [users, materials, articles, schedule, downloads, apiLogs] = await Promise.all([
-      prisma.user.count(),
-      prisma.material.count(),
-      prisma.article.count(),
-      prisma.scheduleItem.count(),
-      prisma.downloadSoftware.count(),
-      prisma.apiLog.count(),
-    ])
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { BarChart3, TrendingUp, Users, Eye, FileText } from 'lucide-react'
+import ChartCard from '@/components/admin/ChartCard'
 
-    return {
-      stats: [
-        { label: 'إجمالي المستخدمين', value: users },
-        { label: 'عدد المواد', value: materials },
-        { label: 'عدد المقالات', value: articles },
-        { label: 'حصص الجدول', value: schedule },
-        { label: 'برامج التنزيل', value: downloads },
-        { label: 'سجلات API', value: apiLogs },
-      ],
-      error: null,
+export default function AdminAnalyticsPage() {
+  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState({
+    totalViews: 0,
+    totalUsers: 0,
+    totalContent: 0,
+  })
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true)
+        // Fetch data from APIs
+        const [articlesRes, usersRes] = await Promise.all([
+          fetch('/api/articles').catch(() => null),
+          fetch('/api/admin/users').catch(() => null),
+        ])
+
+        const articles = articlesRes?.ok ? (await articlesRes.json()).data?.articles || [] : []
+        const users = usersRes?.ok ? (await usersRes.json()).data?.users || [] : []
+
+        const totalViews = articles.reduce((sum: number, article: { views?: number }) => sum + (article.views || 0), 0)
+
+        setStats({
+          totalViews,
+          totalUsers: users.length,
+          totalContent: articles.length,
+        })
+      } catch (error) {
+        console.error('Error fetching analytics:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  } catch (error) {
-    console.error('Failed to load analytics', error)
-    return { stats: [], error: 'تعذر تحميل الإحصائيات.' }
-  }
-}
 
-export default async function AdminAnalyticsPage() {
-  const { stats, error } = await getAnalytics()
+    fetchAnalytics()
+  }, [])
+
+  const mockChartData = {
+    views: {
+      labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+      data: [0, 0, 0, 0, 0, stats.totalViews],
+    },
+    users: {
+      labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+      data: [0, 0, 0, 0, 0, stats.totalUsers],
+    },
+  }
+
+  if (loading) {
+    return (
+      <div className="admin-dashboard">
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-page-title">الإحصائيات</h1>
+            <p className="admin-page-description">جاري التحميل...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <SectionPlaceholder
-      title="الإحصائيات والتحليلات"
-      description="نظرة سريعة على أداء المنصة واستخدامها."
-      hint="سيتم إضافة لوحات رسومية وتكامل مع أدوات التحليل قريباً."
-    >
-      {error ? (
-        <div className="admin-empty-state">
-          <div className="admin-empty-state-glow" />
-          <p>{error}</p>
+    <div className="admin-dashboard">
+      {/* Page Header */}
+      <motion.div
+        className="admin-page-header"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div>
+          <h1 className="admin-page-title">الإحصائيات</h1>
+          <p className="admin-page-description">تحليل الأداء والاستخدام</p>
         </div>
-      ) : (
-        <div className="admin-section-grid">
-          {stats.map((stat) => (
-            <div key={stat.label} className="admin-section-stat">
-              <span className="admin-section-stat-label">{stat.label}</span>
-              <span className="admin-section-stat-value">{stat.value}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </SectionPlaceholder>
+      </motion.div>
+
+      {/* Stats Grid */}
+      <div className="admin-metrics-grid">
+        <motion.div
+          className="stat-card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0 }}
+        >
+          <div className="stat-icon bg-gradient-to-br from-blue-500 to-cyan-500">
+            <Eye className="w-8 h-8" />
+          </div>
+          <div className="stat-value">{stats.totalViews}</div>
+          <div className="stat-label">إجمالي المشاهدات</div>
+        </motion.div>
+
+        <motion.div
+          className="stat-card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="stat-icon bg-gradient-to-br from-purple-500 to-pink-500">
+            <Users className="w-8 h-8" />
+          </div>
+          <div className="stat-value">{stats.totalUsers}</div>
+          <div className="stat-label">إجمالي المستخدمين</div>
+        </motion.div>
+
+        <motion.div
+          className="stat-card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="stat-icon bg-gradient-to-br from-green-500 to-emerald-500">
+            <FileText className="w-8 h-8" />
+          </div>
+          <div className="stat-value">{stats.totalContent}</div>
+          <div className="stat-label">إجمالي المحتوى</div>
+        </motion.div>
+      </div>
+
+      {/* Charts */}
+      <div className="admin-dashboard-grid" style={{ marginTop: '2rem' }}>
+        <ChartCard
+          title="المشاهدات"
+          data={mockChartData.views}
+          type="line"
+          color="#3b82f6"
+          delay={0.3}
+        />
+        <ChartCard
+          title="المستخدمين"
+          data={mockChartData.users}
+          type="bar"
+          color="#a855f7"
+          delay={0.4}
+        />
+      </div>
+    </div>
   )
 }
-
-
