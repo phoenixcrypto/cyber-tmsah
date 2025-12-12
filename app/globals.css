@@ -5538,8 +5538,7 @@ footer {
     @apply prose-ul:list-disc prose-ul:pl-6;
     @apply prose-ol:list-decimal prose-ol:pl-6;
     @apply prose-li:mb-2;
-    @apply prose-blockquote:border-l-4 prose-blockquote:border-cyber-neon;
-    @apply prose-blockquote:pl-4 prose-blockquote:italic;
+    @apply prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:italic;
     @apply prose-code:px-1 prose-code:py-0.5 prose-code:rounded;
     @apply prose-pre:border;
   }
@@ -5576,6 +5575,7 @@ footer {
   
   .article-content blockquote {
     color: var(--dark-300);
+    border-color: var(--cyber-neon);
   }
   
   .article-content code {
