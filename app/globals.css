@@ -68,7 +68,8 @@
 
   body {
     @apply bg-gradient-to-br from-surface-0 via-surface-1 to-surface-2;
-    @apply text-dark-100 font-cairo leading-relaxed;
+    @apply font-cairo leading-relaxed;
+    color: var(--dark-100);
     @apply overflow-x-hidden max-w-full w-full min-h-screen;
     background-image:
       radial-gradient(circle at 20% 20%, rgba(255, 59, 64, 0.15) 0%, rgba(255, 59, 64, 0) 35%),
@@ -100,7 +101,7 @@
   }
 
   a:hover {
-    @apply text-cyber-neon;
+    color: var(--cyber-neon);
   }
 
   button, input, textarea, select {
@@ -180,7 +181,8 @@
   }
 
   .hero-section p {
-    @apply text-xl text-dark-300 mb-10 max-w-[720px] mx-auto;
+    @apply text-xl mb-10 max-w-[720px] mx-auto;
+    color: var(--dark-300);
     @apply leading-relaxed animate-fade-in-up;
     animation-delay: 0.4s;
     animation-fill-mode: both;
@@ -222,7 +224,8 @@
   }
 
   .cta-button {
-    @apply text-dark-100 border-2;
+    @apply border-2;
+    color: var(--dark-100);
     background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-strong) 100%);
     border-color: var(--primary-red);
     box-shadow: 0 4px 16px rgba(255, 59, 64, 0.4);
@@ -247,13 +250,15 @@
 
   .cta-button-secondary,
   .btn-secondary {
-    @apply bg-transparent text-dark-200 border-2;
+    @apply bg-transparent border-2;
+    color: var(--dark-200);
     border-color: rgba(255, 59, 64, 0.4);
   }
 
   .cta-button-secondary:hover,
   .btn-secondary:hover {
-    @apply bg-cyber-red/10 border-cyber-neon text-dark-100;
+    @apply bg-cyber-red/10 border-cyber-neon;
+    color: var(--dark-100);
     @apply -translate-y-1;
     box-shadow: 0 4px 16px rgba(255, 59, 64, 0.3);
   }
@@ -330,12 +335,13 @@
   }
 
   .stat-label {
-    @apply text-base text-dark-300 font-semibold;
+    @apply text-base font-semibold;
     @apply transition-colors duration-300;
+    color: var(--dark-300);
   }
 
   .stat-card:hover .stat-label {
-    @apply text-dark-200;
+    color: var(--dark-200);
   }
 
   /* Sidebar Toggle Button */
@@ -382,8 +388,9 @@
 
   .sidebar-link-modern {
     @apply flex items-center gap-4 px-5 py-4 rounded-xl;
-    @apply text-accent-silver no-underline font-semibold text-[0.95rem];
+    @apply no-underline font-semibold text-[0.95rem];
     @apply transition-all duration-300 relative overflow-hidden;
+    color: var(--accent-silver);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
     border: 2px solid rgba(255, 59, 64, 0.2);
   }
@@ -421,8 +428,9 @@
   .sidebar-link-indicator {
     @apply absolute -left-5 top-1/2 -translate-y-1/2;
     @apply w-6 h-6 rounded-r-xl;
-    @apply flex items-center justify-center text-primary-white;
+    @apply flex items-center justify-center;
     @apply transition-all duration-300;
+    color: var(--primary-white);
     background: var(--primary-red);
     box-shadow: 2px 0 8px rgba(255, 59, 64, 0.4);
   }
@@ -557,12 +565,13 @@
   }
 
   .iNewsTicker_post-link {
-    @apply text-accent-silver no-underline transition-colors duration-300;
+    @apply no-underline transition-colors duration-300;
     @apply flex items-center gap-3;
+    color: var(--accent-silver);
   }
 
   .iNewsTicker_post-link:hover {
-    @apply text-primary-white;
+    color: var(--primary-white);
   }
 
   .iNewsTicker_post-title {
@@ -574,11 +583,13 @@
   }
 
   .iNewsTicker_post-subject {
-    @apply text-secondary-gray text-[0.85rem];
+    @apply text-[0.85rem];
+    color: var(--secondary-gray);
   }
 
   .iNewsTicker_post-arrow {
-    @apply text-cyber-neon mr-2;
+    @apply mr-2;
+    color: var(--cyber-neon);
   }
 
   .iNewsTicker:hover {
@@ -652,8 +663,9 @@
 
   .nav-link-desktop {
     @apply flex items-center gap-2 px-4 py-2.5 rounded-[10px];
-    @apply text-accent-silver no-underline text-[0.9rem] font-semibold;
+    @apply no-underline text-[0.9rem] font-semibold;
     @apply transition-all duration-300 relative whitespace-nowrap;
+    color: var(--accent-silver);
   }
 
   .nav-link-desktop::before {
@@ -664,7 +676,8 @@
   }
 
   .nav-link-desktop:hover {
-    @apply text-primary-white -translate-y-0.5;
+    @apply -translate-y-0.5;
+    color: var(--primary-white);
     background: rgba(255, 59, 64, 0.1);
   }
 
@@ -673,7 +686,7 @@
   }
 
   .nav-link-desktop.active {
-    @apply text-cyber-neon;
+    color: var(--cyber-neon);
     background: rgba(255, 59, 64, 0.15);
   }
 
@@ -720,8 +733,9 @@
 
   .dropdown-item-desktop {
     @apply flex items-center gap-3 px-4 py-3 rounded-lg;
-    @apply text-accent-silver no-underline text-[0.9rem] font-medium;
+    @apply no-underline text-[0.9rem] font-medium;
     @apply transition-all duration-200 w-full relative;
+    color: var(--accent-silver);
   }
 
   .dropdown-item-desktop:hover {
@@ -785,8 +799,9 @@
   }
 
   .footer-link-horizontal {
-    @apply text-accent-silver text-[0.95rem] font-semibold no-underline;
+    @apply text-[0.95rem] font-semibold no-underline;
     @apply transition-all duration-300 py-2 relative whitespace-nowrap;
+    color: var(--accent-silver);
   }
 
   .footer-link-horizontal::after {
@@ -797,7 +812,8 @@
   }
 
   .footer-link-horizontal:hover {
-    @apply text-cyber-neon -translate-y-0.5;
+    @apply -translate-y-0.5;
+    color: var(--cyber-neon);
   }
 
   .footer-link-horizontal:hover::after {
@@ -805,7 +821,8 @@
   }
 
   .footer-link-separator {
-    @apply text-cyber-red/40 text-base font-light mx-2;
+    @apply text-base font-light mx-2;
+    color: rgba(255, 59, 64, 0.4);
   }
 
   .footer-content-compact .footer-section {
@@ -829,7 +846,8 @@
   }
 
   .footer-content-compact .footer-links a:hover {
-    @apply text-cyber-neon -translate-x-0.5;
+    @apply -translate-x-0.5;
+    color: var(--cyber-neon);
   }
 
   .footer-section {
@@ -837,7 +855,8 @@
   }
 
   .footer-section h4 {
-    @apply text-cyber-neon text-[1.1rem] font-bold mb-2;
+    @apply text-[1.1rem] font-bold mb-2;
+    color: var(--cyber-neon);
   }
 
   .footer-links {
@@ -849,11 +868,13 @@
   }
 
   .footer-links a {
-    @apply text-accent-silver text-[0.95rem] transition-all duration-300 inline-block;
+    @apply text-[0.95rem] transition-all duration-300 inline-block;
+    color: var(--accent-silver);
   }
 
   .footer-links a:hover {
-    @apply text-cyber-neon -translate-x-1;
+    @apply -translate-x-1;
+    color: var(--cyber-neon);
   }
 
   .footer-bottom {
@@ -862,7 +883,8 @@
   }
 
   .footer-bottom p {
-    @apply text-secondary-gray text-[0.85rem] m-0 leading-relaxed;
+    @apply text-[0.85rem] m-0 leading-relaxed;
+    color: var(--secondary-gray);
   }
 
   @media (max-width: 768px) {
@@ -5474,63 +5496,98 @@ footer {
 @layer base {
   /* Page Titles - H1 */
   .page-title {
-    @apply text-3xl sm:text-4xl lg:text-5xl font-bold text-dark-100 mb-4;
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold mb-4;
     @apply bg-gradient-to-r from-cyber-neon via-cyber-green to-cyber-neon;
     @apply bg-clip-text text-transparent;
     @apply leading-tight;
+    color: var(--dark-100);
   }
 
   /* Section Titles - H2 */
   .section-title {
-    @apply text-2xl sm:text-3xl font-bold text-dark-100 mb-6;
+    @apply text-2xl sm:text-3xl font-bold mb-6;
     @apply flex items-center gap-3;
+    color: var(--dark-100);
   }
 
   /* Subsection Titles - H3 */
   .subsection-title {
-    @apply text-xl sm:text-2xl font-semibold text-dark-100 mb-4;
+    @apply text-xl sm:text-2xl font-semibold mb-4;
+    color: var(--dark-100);
   }
 
   /* Paragraphs */
   .content-paragraph {
-    @apply text-base sm:text-lg text-dark-300 leading-relaxed mb-4;
+    @apply text-base sm:text-lg leading-relaxed mb-4;
     @apply max-w-4xl;
+    color: var(--dark-300);
   }
 
   /* Article/Page Content */
   .article-content {
     @apply prose prose-invert max-w-none;
-    @apply prose-headings:text-dark-100 prose-headings:font-bold;
+    @apply prose-headings:font-bold;
     @apply prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-8;
     @apply prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-6;
     @apply prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-4;
-    @apply prose-p:text-dark-300 prose-p:leading-relaxed prose-p:mb-4;
-    @apply prose-strong:text-cyber-neon prose-strong:font-semibold;
-    @apply prose-a:text-cyber-neon prose-a:no-underline hover:prose-a:underline;
-    @apply prose-ul:text-dark-300 prose-ul:list-disc prose-ul:pl-6;
-    @apply prose-ol:text-dark-300 prose-ol:list-decimal prose-ol:pl-6;
+    @apply prose-p:leading-relaxed prose-p:mb-4;
+    @apply prose-strong:font-semibold;
+    @apply prose-a:no-underline hover:prose-a:underline;
+    @apply prose-ul:list-disc prose-ul:pl-6;
+    @apply prose-ol:list-decimal prose-ol:pl-6;
     @apply prose-li:mb-2;
     @apply prose-blockquote:border-l-4 prose-blockquote:border-cyber-neon;
-    @apply prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-dark-300;
-    @apply prose-code:text-cyber-green prose-code:bg-cyber-dark/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded;
+    @apply prose-blockquote:pl-4 prose-blockquote:italic;
+    @apply prose-code:bg-cyber-dark/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded;
     @apply prose-pre:bg-cyber-dark/80 prose-pre:border prose-pre:border-cyber-neon/30;
     @apply prose-img:rounded-lg prose-img:shadow-lg;
+  }
+  
+  .article-content :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--dark-100);
+  }
+  
+  .article-content p {
+    color: var(--dark-300);
+  }
+  
+  .article-content :is(ul, ol) {
+    color: var(--dark-300);
+  }
+  
+  .article-content strong {
+    color: var(--cyber-neon);
+  }
+  
+  .article-content a {
+    color: var(--cyber-neon);
+  }
+  
+  .article-content blockquote {
+    color: var(--dark-300);
+  }
+  
+  .article-content code {
+    color: var(--cyber-green);
   }
 
   /* Page Names (in navigation, breadcrumbs, etc.) */
   .page-name {
-    @apply text-lg font-semibold text-dark-100;
+    @apply text-lg font-semibold;
     @apply flex items-center gap-2;
+    color: var(--dark-100);
   }
 
   /* Meta Information */
   .meta-text {
-    @apply text-sm text-dark-400;
+    @apply text-sm;
+    color: var(--dark-400);
   }
 
   /* Labels */
   .form-label {
-    @apply block text-sm font-semibold text-dark-200 mb-2;
+    @apply block text-sm font-semibold mb-2;
+    color: var(--dark-200);
   }
 
   /* RTL Support */
