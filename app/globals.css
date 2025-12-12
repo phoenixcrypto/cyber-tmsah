@@ -257,7 +257,8 @@
 
   .cta-button-secondary:hover,
   .btn-secondary:hover {
-    @apply bg-cyber-red/10 border-cyber-neon;
+    @apply border-cyber-neon;
+    background: rgba(255, 59, 64, 0.1);
     color: var(--dark-100);
     @apply -translate-y-1;
     box-shadow: 0 4px 16px rgba(255, 59, 64, 0.3);
@@ -5539,8 +5540,17 @@ footer {
     @apply prose-li:mb-2;
     @apply prose-blockquote:border-l-4 prose-blockquote:border-cyber-neon;
     @apply prose-blockquote:pl-4 prose-blockquote:italic;
-    @apply prose-code:bg-cyber-dark/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded;
-    @apply prose-pre:bg-cyber-dark/80 prose-pre:border prose-pre:border-cyber-neon/30;
+    @apply prose-code:px-1 prose-code:py-0.5 prose-code:rounded;
+    @apply prose-pre:border;
+  }
+  
+  .article-content code {
+    background: rgba(8, 8, 8, 0.5);
+  }
+  
+  .article-content pre {
+    background: rgba(8, 8, 8, 0.8);
+    border-color: rgba(255, 59, 64, 0.3);
     @apply prose-img:rounded-lg prose-img:shadow-lg;
   }
   
