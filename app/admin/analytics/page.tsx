@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { TrendingUp, Users, Eye, FileText } from 'lucide-react'
+import { Users, Eye, FileText } from 'lucide-react'
 import ChartCard from '@/components/admin/ChartCard'
 
 export default function AdminAnalyticsPage() {
