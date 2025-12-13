@@ -5,9 +5,6 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   
-  // Production optimizations
-  swcMinify: true,
-  
   // Output configuration for Vercel
   output: 'standalone',
   
@@ -131,9 +128,6 @@ const nextConfig = {
   
   // Generate ETags
   generateEtags: true,
-  
-  // Optimize fonts
-  optimizeFonts: true,
   
   // Production source maps (disable for smaller bundle)
   productionBrowserSourceMaps: false,

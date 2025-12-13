@@ -12,7 +12,7 @@
 
 export function getAdminPath(): string {
   // Get from environment variable, default to 'admin' if not set
-  return process.env.ADMIN_PATH || 'admin'
+  return process.env['ADMIN_PATH'] || 'admin'
 }
 
 export function getAdminLoginPath(): string {

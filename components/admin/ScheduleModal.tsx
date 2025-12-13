@@ -73,10 +73,10 @@ export default function ScheduleModal({ isOpen, onClose, onSave, schedule }: Sch
 
     // Validation
     const newErrors: Record<string, string> = {}
-    if (!formData.title.trim()) newErrors.title = 'المادة مطلوبة'
-    if (!formData.time.trim()) newErrors.time = 'الوقت مطلوب'
-    if (!formData.location.trim()) newErrors.location = 'المكان مطلوب'
-    if (!formData.instructor.trim()) newErrors.instructor = 'المحاضر مطلوب'
+    if (!formData['title'].trim()) newErrors['title'] = 'المادة مطلوبة'
+    if (!formData['time'].trim()) newErrors['time'] = 'الوقت مطلوب'
+    if (!formData['location'].trim()) newErrors['location'] = 'المكان مطلوب'
+    if (!formData['instructor'].trim()) newErrors['instructor'] = 'المحاضر مطلوب'
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -171,10 +171,10 @@ export default function ScheduleModal({ isOpen, onClose, onSave, schedule }: Sch
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className={`admin-modal-form-input ${errors.title ? 'error' : ''}`}
+                  className={`admin-modal-form-input ${errors['title'] ? 'error' : ''}`}
                   placeholder="مثال: الأمن السيبراني"
                 />
-                {errors.title && <span className="admin-modal-form-error">{errors.title}</span>}
+                {errors['title'] && <span className="admin-modal-form-error">{errors['title']}</span>}
               </div>
 
               {/* Day */}
@@ -206,10 +206,10 @@ export default function ScheduleModal({ isOpen, onClose, onSave, schedule }: Sch
                   type="text"
                   value={formData.time}
                   onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className={`admin-modal-form-input ${errors.time ? 'error' : ''}`}
+                  className={`admin-modal-form-input ${errors['time'] ? 'error' : ''}`}
                   placeholder="مثال: 10:00 - 12:00"
                 />
-                {errors.time && <span className="admin-modal-form-error">{errors.time}</span>}
+                {errors['time'] && <span className="admin-modal-form-error">{errors['time']}</span>}
               </div>
 
               {/* Location */}
@@ -222,10 +222,10 @@ export default function ScheduleModal({ isOpen, onClose, onSave, schedule }: Sch
                   type="text"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className={`admin-modal-form-input ${errors.location ? 'error' : ''}`}
+                  className={`admin-modal-form-input ${errors['location'] ? 'error' : ''}`}
                   placeholder="مثال: القاعة 101"
                 />
-                {errors.location && <span className="admin-modal-form-error">{errors.location}</span>}
+                {errors['location'] && <span className="admin-modal-form-error">{errors['location']}</span>}
               </div>
 
               {/* Instructor */}
@@ -238,10 +238,10 @@ export default function ScheduleModal({ isOpen, onClose, onSave, schedule }: Sch
                   type="text"
                   value={formData.instructor}
                   onChange={(e) => setFormData({ ...formData, instructor: e.target.value })}
-                  className={`admin-modal-form-input ${errors.instructor ? 'error' : ''}`}
+                  className={`admin-modal-form-input ${errors['instructor'] ? 'error' : ''}`}
                   placeholder="اسم المحاضر"
                 />
-                {errors.instructor && <span className="admin-modal-form-error">{errors.instructor}</span>}
+                {errors['instructor'] && <span className="admin-modal-form-error">{errors['instructor']}</span>}
               </div>
 
               {/* Type */}

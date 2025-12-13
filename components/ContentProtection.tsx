@@ -10,33 +10,28 @@ import { useEffect } from 'react'
 export default function ContentProtection() {
   useEffect(() => {
     // Disable right-click context menu
-    const handleContextMenu = (e: MouseEvent) => {
+    const handleContextMenu = (e: MouseEvent): void => {
       e.preventDefault()
-      return false
     }
 
     // Disable text selection
-    const handleSelectStart = (e: Event) => {
+    const handleSelectStart = (e: Event): void => {
       e.preventDefault()
-      return false
     }
 
     // Disable drag
-    const handleDragStart = (e: DragEvent) => {
+    const handleDragStart = (e: DragEvent): void => {
       e.preventDefault()
-      return false
     }
 
     // Disable copy (Ctrl+C, Cmd+C)
-    const handleCopy = (e: ClipboardEvent) => {
+    const handleCopy = (e: ClipboardEvent): void => {
       e.preventDefault()
-      return false
     }
 
     // Disable cut (Ctrl+X, Cmd+X)
-    const handleCut = (e: ClipboardEvent) => {
+    const handleCut = (e: ClipboardEvent): void => {
       e.preventDefault()
-      return false
     }
 
     // Disable paste (Ctrl+V, Cmd+V) - optional, can be removed if needed
@@ -46,41 +41,41 @@ export default function ContentProtection() {
     // }
 
     // Disable print screen (F12, Print Screen)
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       // Disable F12 (Developer Tools)
       if (e.key === 'F12' || (e.key === 'I' && e.ctrlKey && e.shiftKey)) {
         e.preventDefault()
-        return false
+        return
       }
 
       // Disable Print Screen
       if (e.key === 'PrintScreen') {
         e.preventDefault()
-        return false
+        return
       }
 
       // Disable Ctrl+Shift+I (Developer Tools)
       if (e.ctrlKey && e.shiftKey && e.key === 'I') {
         e.preventDefault()
-        return false
+        return
       }
 
       // Disable Ctrl+Shift+J (Console)
       if (e.ctrlKey && e.shiftKey && e.key === 'J') {
         e.preventDefault()
-        return false
+        return
       }
 
       // Disable Ctrl+U (View Source)
       if (e.ctrlKey && e.key === 'u') {
         e.preventDefault()
-        return false
+        return
       }
 
       // Disable Ctrl+S (Save Page)
       if (e.ctrlKey && e.key === 's') {
         e.preventDefault()
-        return false
+        return
       }
     }
 
@@ -95,9 +90,9 @@ export default function ContentProtection() {
 
     // Disable text selection via CSS
     document.body.style.userSelect = 'none'
-    document.body.style.webkitUserSelect = 'none'
-    document.body.style.mozUserSelect = 'none'
-    document.body.style.msUserSelect = 'none'
+    ;(document.body.style as unknown as Record<string, string>)['webkitUserSelect'] = 'none'
+    ;(document.body.style as unknown as Record<string, string>)['mozUserSelect'] = 'none'
+    ;(document.body.style as unknown as Record<string, string>)['msUserSelect'] = 'none'
 
     // Disable image dragging (run after images load)
     const disableImageDrag = () => {
@@ -130,9 +125,9 @@ export default function ContentProtection() {
 
       // Restore text selection
       document.body.style.userSelect = ''
-      document.body.style.webkitUserSelect = ''
-      document.body.style.mozUserSelect = ''
-      document.body.style.msUserSelect = ''
+      ;(document.body.style as unknown as Record<string, string>)['webkitUserSelect'] = ''
+      ;(document.body.style as unknown as Record<string, string>)['mozUserSelect'] = ''
+      ;(document.body.style as unknown as Record<string, string>)['msUserSelect'] = ''
     }
   }, [])
 

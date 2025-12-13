@@ -3,7 +3,7 @@
  * Professional-grade performance optimization utilities for React components
  */
 
-import { memo, ComponentType, lazy, type ReactNode } from 'react'
+import { memo, ComponentType, lazy } from 'react'
 
 /**
  * Memoize component with custom comparison
@@ -13,7 +13,7 @@ export function memoizeComponent<P extends Record<string, unknown>>(
   Component: ComponentType<P>,
   areEqual?: (prevProps: P, nextProps: P) => boolean
 ): ComponentType<P> {
-  return memo(Component, areEqual) as ComponentType<P>
+  return memo(Component, areEqual) as unknown as ComponentType<P>
 }
 
 /**
@@ -21,8 +21,8 @@ export function memoizeComponent<P extends Record<string, unknown>>(
  * @template P - Component props type
  */
 export function lazyLoad<P extends Record<string, unknown>>(
-  importFn: () => Promise<{ default: ComponentType<P> }>,
-  fallback?: ComponentType<{ children?: ReactNode }>
+  importFn: () => Promise<{ default: ComponentType<P> }>
+  // fallback parameter reserved for future use with Suspense
 ): React.LazyExoticComponent<ComponentType<P>> {
   return lazy(importFn)
 }

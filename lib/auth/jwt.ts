@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 // No fallback values to prevent hardcoded secrets (Snyk security requirement)
 // Using lazy loading to avoid errors during module initialization
 function getJwtSecret(): string {
-  const secret = process.env.JWT_SECRET
+  const secret = process.env['JWT_SECRET']
   if (!secret) {
     throw new Error(
       'JWT_SECRET environment variable is required. Please set it in your .env file.'
@@ -14,7 +14,7 @@ function getJwtSecret(): string {
 }
 
 function getJwtRefreshSecret(): string {
-  const secret = process.env.JWT_REFRESH_SECRET
+  const secret = process.env['JWT_REFRESH_SECRET']
   if (!secret) {
     throw new Error(
       'JWT_REFRESH_SECRET environment variable is required. Please set it in your .env file.'
@@ -32,8 +32,8 @@ function getJwtRefreshSecretLazy(): string {
   return getJwtRefreshSecret()
 }
 
-const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || '24h'
-const JWT_REFRESH_EXPIRES_IN: string = process.env.JWT_REFRESH_EXPIRES_IN || '7d'
+const JWT_EXPIRES_IN: string = process.env['JWT_EXPIRES_IN'] || '24h'
+const JWT_REFRESH_EXPIRES_IN: string = process.env['JWT_REFRESH_EXPIRES_IN'] || '7d'
 
 export interface JWTPayload {
   userId: string

@@ -53,9 +53,9 @@ async function seedDownloadsData() {
         description: download.description,
         descriptionEn: download.descriptionEn,
         icon: download.icon,
-        videoUrl: download.videoUrl,
-        downloadUrl: download.downloadUrl,
-        category: download.category,
+        videoUrl: download.videoUrl ?? null,
+        downloadUrl: download.downloadUrl ?? null,
+        category: download.category ?? null,
       },
       create: {
         id: download.id,
@@ -64,9 +64,9 @@ async function seedDownloadsData() {
         description: download.description,
         descriptionEn: download.descriptionEn,
         icon: download.icon,
-        videoUrl: download.videoUrl,
-        downloadUrl: download.downloadUrl,
-        category: download.category,
+        videoUrl: download.videoUrl ?? null,
+        downloadUrl: download.downloadUrl ?? null,
+        category: download.category ?? null,
       },
     })
   }
@@ -87,7 +87,7 @@ async function seedScheduleData() {
         instructor: lecture.instructor,
         type: lecture.type,
         group: lecture.group === 'Group 1' ? 'Group1' : 'Group2',
-        day: lecture.day,
+        day: lecture.day as 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday',
       },
       create: {
         id: lecture.id,
@@ -97,7 +97,7 @@ async function seedScheduleData() {
         instructor: lecture.instructor,
         type: lecture.type,
         group: lecture.group === 'Group 1' ? 'Group1' : 'Group2',
-        day: lecture.day,
+        day: lecture.day as 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday',
       },
     })
     count++
@@ -115,7 +115,7 @@ async function seedScheduleData() {
         type: section.type,
         group: section.group === 'Group 1' ? 'Group1' : 'Group2',
         sectionNumber: section.sectionNumber,
-        day: section.day,
+        day: section.day as 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday',
       },
       create: {
         id: section.id,
@@ -126,7 +126,7 @@ async function seedScheduleData() {
         type: section.type,
         group: section.group === 'Group 1' ? 'Group1' : 'Group2',
         sectionNumber: section.sectionNumber,
-        day: section.day,
+        day: section.day as 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday',
       },
     })
     count++
@@ -175,10 +175,10 @@ async function seedPagesData() {
         titleEn: page.titleEn,
         content: page.content,
         contentEn: page.contentEn,
-        metaDescription: page.metaDescription,
-        metaDescriptionEn: page.metaDescriptionEn,
+        metaDescription: page.metaDescription ?? null,
+        metaDescriptionEn: page.metaDescriptionEn ?? null,
         status: page.status,
-        order: page.order,
+        order: page.order ?? null,
       },
       create: {
         id: page.id,
@@ -187,10 +187,10 @@ async function seedPagesData() {
         titleEn: page.titleEn,
         content: page.content,
         contentEn: page.contentEn,
-        metaDescription: page.metaDescription,
-        metaDescriptionEn: page.metaDescriptionEn,
+        metaDescription: page.metaDescription ?? null,
+        metaDescriptionEn: page.metaDescriptionEn ?? null,
         status: page.status,
-        order: page.order,
+        order: page.order ?? null,
       },
     })
   }
@@ -208,11 +208,11 @@ async function seedArticlesData() {
         titleEn: article.titleEn,
         content: article.content,
         contentEn: article.contentEn,
-        excerpt: article.excerpt,
-        excerptEn: article.excerptEn,
+        excerpt: article.excerpt ?? null,
+        excerptEn: article.excerptEn ?? null,
         author: article.author,
         status: article.status,
-        publishedAt: article.publishedAt,
+        publishedAt: article.publishedAt ?? null,
         tags: article.tags,
       },
       create: {
@@ -222,11 +222,11 @@ async function seedArticlesData() {
         titleEn: article.titleEn,
         content: article.content,
         contentEn: article.contentEn,
-        excerpt: article.excerpt,
-        excerptEn: article.excerptEn,
+        excerpt: article.excerpt ?? null,
+        excerptEn: article.excerptEn ?? null,
         author: article.author,
         status: article.status,
-        publishedAt: article.publishedAt,
+        publishedAt: article.publishedAt ?? null,
         tags: article.tags,
       },
     })

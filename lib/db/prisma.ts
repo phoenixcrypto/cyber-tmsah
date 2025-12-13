@@ -25,7 +25,7 @@ const globalForPrisma = globalThis as unknown as {
  * Ensures database connection string is properly configured
  */
 function validateDatabaseUrl(): void {
-  const dbUrl = process.env.DATABASE_URL
+  const dbUrl = process.env['DATABASE_URL']
   if (!dbUrl) {
     throw new Error('DATABASE_URL is not set in environment variables')
   }
@@ -38,13 +38,13 @@ function validateDatabaseUrl(): void {
   }
 
   // Check for SSL requirement in production
-  if (process.env.NODE_ENV === 'production' && !dbUrl.includes('sslaccept=strict')) {
+  if (process.env['NODE_ENV'] === 'production' && !dbUrl.includes('sslaccept=strict')) {
     console.warn('⚠️  Production database connections should use SSL (sslaccept=strict)')
   }
 }
 
 // Validate on module load (only in production/serverless)
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+if (process.env['NODE_ENV'] === 'production' || process.env['VERCEL']) {
   try {
     validateDatabaseUrl()
   } catch (error) {
@@ -55,10 +55,10 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: process.env['NODE_ENV'] === 'development' ? ['query', 'error', 'warn'] : ['error'],
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (process.env['NODE_ENV'] !== 'production') globalForPrisma.prisma = prisma
 
 export default prisma
 

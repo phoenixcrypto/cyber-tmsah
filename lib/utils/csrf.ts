@@ -5,7 +5,7 @@
 import { NextRequest } from 'next/server'
 import { randomBytes, createHmac } from 'crypto'
 
-const CSRF_SECRET = process.env.CSRF_SECRET || 'change-me-in-production'
+const CSRF_SECRET = process.env['CSRF_SECRET'] || 'change-me-in-production'
 const CSRF_TOKEN_HEADER = 'X-CSRF-Token'
 const CSRF_COOKIE_NAME = 'csrf-token'
 
@@ -108,7 +108,7 @@ export function setCsrfCookie(token: string): {
     value: signCsrfToken(token),
     options: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' || process.env.VERCEL === '1',
+      secure: process.env['NODE_ENV'] === 'production' || process.env['VERCEL'] === '1',
       sameSite: 'strict',
       path: '/',
       maxAge: 60 * 60 * 24, // 24 hours

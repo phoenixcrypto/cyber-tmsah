@@ -42,7 +42,7 @@ class Logger {
         console.warn(formatted)
         break
       case LogLevel.DEBUG:
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env['NODE_ENV'] === 'development') {
           console.debug(formatted)
         }
         break
@@ -114,7 +114,7 @@ export async function logApiRequest(
         ipAddress: context?.ipAddress || null,
         userAgent: context?.userAgent || null,
         userId: context?.userId || null,
-        error: statusCode >= 400 ? context?.error as string || null : null,
+        error: statusCode >= 400 ? (context?.['error'] as string) || null : null,
       },
     })
   } catch (error) {

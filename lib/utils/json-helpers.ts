@@ -4,19 +4,6 @@
  */
 
 /**
- * Type guard to check if value is a valid JSON-serializable value
- */
-function isJsonSerializable(value: unknown): value is string | number | boolean | null | object {
-  return (
-    typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'boolean' ||
-    value === null ||
-    (typeof value === 'object' && value !== null)
-  )
-}
-
-/**
  * Parse tags from JSON to string array
  * Handles various input types safely
  */

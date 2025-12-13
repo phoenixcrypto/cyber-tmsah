@@ -3,7 +3,6 @@
  */
 
 import { Prisma } from '@prisma/client'
-import type { LucideIcon } from 'lucide-react'
 
 // Schedule Item Types
 export interface ScheduleItem {

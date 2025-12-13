@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Save, User, Mail, Shield, Lock } from 'lucide-react'
+import { X, Save, User as UserIcon, Mail, Shield, Lock } from 'lucide-react'
 import type { User } from '@/lib/types'
 
 interface UserModalProps {
@@ -53,12 +53,12 @@ export default function UserModal({ isOpen, onClose, onSave, user }: UserModalPr
 
     // Validation
     const newErrors: Record<string, string> = {}
-    if (!formData.name) newErrors.name = 'الاسم مطلوب'
-    if (!formData.email) newErrors.email = 'البريد الإلكتروني مطلوب'
-    if (!formData.username) newErrors.username = 'اسم المستخدم مطلوب'
-    if (!user && !formData.password) newErrors.password = 'كلمة المرور مطلوبة'
-    if (formData.password && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'كلمات المرور غير متطابقة'
+    if (!formData['name']) newErrors['name'] = 'الاسم مطلوب'
+    if (!formData['email']) newErrors['email'] = 'البريد الإلكتروني مطلوب'
+    if (!formData['username']) newErrors['username'] = 'اسم المستخدم مطلوب'
+    if (!user && !formData['password']) newErrors['password'] = 'كلمة المرور مطلوبة'
+    if (formData['password'] && formData['password'] !== formData['confirmPassword']) {
+      newErrors['confirmPassword'] = 'كلمات المرور غير متطابقة'
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -149,17 +149,17 @@ export default function UserModal({ isOpen, onClose, onSave, user }: UserModalPr
               {/* Name */}
               <div className="admin-modal-form-group">
                 <label className="admin-modal-form-label">
-                  <User className="w-4 h-4" />
+                  <UserIcon className="w-4 h-4" />
                   <span>الاسم الكامل</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={`admin-modal-form-input ${errors.name ? 'error' : ''}`}
+                  className={`admin-modal-form-input ${errors['name'] ? 'error' : ''}`}
                   placeholder="أدخل الاسم الكامل"
                 />
-                {errors.name && <span className="admin-modal-form-error">{errors.name}</span>}
+                {errors['name'] && <span className="admin-modal-form-error">{errors['name']}</span>}
               </div>
 
               {/* Email */}
@@ -172,27 +172,27 @@ export default function UserModal({ isOpen, onClose, onSave, user }: UserModalPr
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={`admin-modal-form-input ${errors.email ? 'error' : ''}`}
+                  className={`admin-modal-form-input ${errors['email'] ? 'error' : ''}`}
                   placeholder="user@example.com"
                 />
-                {errors.email && <span className="admin-modal-form-error">{errors.email}</span>}
+                {errors['email'] && <span className="admin-modal-form-error">{errors['email']}</span>}
               </div>
 
               {/* Username */}
               <div className="admin-modal-form-group">
                 <label className="admin-modal-form-label">
-                  <User className="w-4 h-4" />
+                  <UserIcon className="w-4 h-4" />
                   <span>اسم المستخدم</span>
                 </label>
                 <input
                   type="text"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className={`admin-modal-form-input ${errors.username ? 'error' : ''}`}
+                  className={`admin-modal-form-input ${errors['username'] ? 'error' : ''}`}
                   placeholder="username"
                 />
-                {errors.username && (
-                  <span className="admin-modal-form-error">{errors.username}</span>
+                {errors['username'] && (
+                  <span className="admin-modal-form-error">{errors['username']}</span>
                 )}
               </div>
 
@@ -230,11 +230,11 @@ export default function UserModal({ isOpen, onClose, onSave, user }: UserModalPr
                       type="password"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className={`admin-modal-form-input ${errors.password ? 'error' : ''}`}
+                      className={`admin-modal-form-input ${errors['password'] ? 'error' : ''}`}
                       placeholder="••••••••"
                     />
-                    {errors.password && (
-                      <span className="admin-modal-form-error">{errors.password}</span>
+                    {errors['password'] && (
+                      <span className="admin-modal-form-error">{errors['password']}</span>
                     )}
                   </div>
 
@@ -250,11 +250,11 @@ export default function UserModal({ isOpen, onClose, onSave, user }: UserModalPr
                       onChange={(e) =>
                         setFormData({ ...formData, confirmPassword: e.target.value })
                       }
-                      className={`admin-modal-form-input ${errors.confirmPassword ? 'error' : ''}`}
+                      className={`admin-modal-form-input ${errors['confirmPassword'] ? 'error' : ''}`}
                       placeholder="••••••••"
                     />
-                    {errors.confirmPassword && (
-                      <span className="admin-modal-form-error">{errors.confirmPassword}</span>
+                    {errors['confirmPassword'] && (
+                      <span className="admin-modal-form-error">{errors['confirmPassword']}</span>
                     )}
                   </div>
                 </>
