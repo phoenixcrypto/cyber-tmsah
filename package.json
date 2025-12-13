@@ -16,6 +16,9 @@
     "db:import": "tsx scripts/import-sql.ts"
   },
   "dependencies": {
+    "next": "^16.0.10",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "@prisma/client": "^5.19.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
@@ -43,12 +46,9 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.0.10",
     "lucide-react": "^0.561.0",
-    "next": "^16.0.10",
     "node-fetch": "^3.3.2",
     "postcss": "^8.4.47",
     "prisma": "^5.19.1",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.6",
     "typescript": "^5.5.3"
