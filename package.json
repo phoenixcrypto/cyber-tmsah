@@ -2,9 +2,9 @@
   "name": "cyber-tmsah",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
+"scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "npm run db:generate && next build",
     "start": "next start",
     "lint": "next lint",
     "admin": "node scripts/admin-api.js",
