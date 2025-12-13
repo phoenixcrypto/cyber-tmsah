@@ -1,6 +1,6 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle, Rocket, Shield, Globe, Zap } from 'lucide-react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle, Rocket, Shield, Globe, Zap, CheckCircle } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -204,114 +204,127 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Team Members Section */}
+      {/* Team Members Section - Founder Only */}
       <div className="mb-16">
         <div className="flex items-center justify-center gap-4 mb-8">
           <Users className="w-6 h-6 text-cyber-neon" />
-          <h2 className="section-title mb-0">{t('team.title') || 'فريق العمل'}</h2>
+          <h2 className="section-title mb-0">{t('team.title') || 'مؤسس المنصة'}</h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              name: 'زياد محمد',
-              role: 'قائد الدفعة - مؤسس ومطور المنصة',
-              description: 'قائد دفعة سايبر ومؤسس منصة سايبر تمساح. متخصص في هندسة البرمجيات وتطوير الأنظمة التعليمية. قمت بتصميم الموقع بالكامل ونشر الجدول الدراسي وشرح المواد التعليمية لمساعدة زملائي في الدفعة على الوصول للمحتوى التعليمي بسهولة.',
-              responsibilities: [
-                'تصميم وتطوير المنصة',
-                'نشر الجدول الدراسي',
-                'شرح المواد التعليمية',
-                'إدارة المحتوى',
-              ],
-              socials: [
-                { icon: Github, href: 'https://github.com/phoenixcrypto', label: 'GitHub' },
-                { icon: Linkedin, href: 'https://www.linkedin.com', label: 'LinkedIn' },
-                { icon: MessageCircle, href: 'https://wa.me/', label: 'WhatsApp' },
-              ],
-              image: '/images/zeyad-mohamed.jpg'
-            },
-            {
-              name: 'يوسف وليد',
-              role: 'قائد الدفعة - مطور المنصة',
-              description: 'قائد دفعة سايبر ومطور متخصص في تحسين تجربة المستخدم. يمتلك مهارات قوية في تحسين UX ويساهم بشكل فعال في تطوير المنصة.',
-              responsibilities: [
-                'تحسين تجربة المستخدم',
-                'تطوير الواجهات',
-                'ضمان الجودة',
-              ],
-              socials: [
-                { icon: MessageCircle, href: 'https://wa.me/', label: 'WhatsApp' },
-              ],
-              image: '/images/youssef-waleed.jpg'
-            },
-            {
-              name: 'مؤمن هيثم',
-              role: 'طالب في الدفعة - مساهم',
-              description: 'طالب في دفعة سايبر يمتلك بعض المهارات في التطوير والتصميم. يساهم في المنصة من خلال مشاركته في المحتوى التعليمي والموارد المتعلقة بالأمن السيبراني.',
-              responsibilities: [
-                'المساهمة في المحتوى',
-                'دليل الأمن السيبراني',
-                'الموارد التعليمية',
-              ],
-              socials: [
-                { icon: Github, href: 'https://github.com', label: 'GitHub' },
-                { icon: Linkedin, href: 'https://www.linkedin.com', label: 'LinkedIn' },
-                { icon: MessageCircle, href: 'https://wa.me/', label: 'WhatsApp' },
-              ],
-              image: '/images/moamen-haytham.jpg'
-            }
-          ].map((member, index) => (
-            <div 
-              key={index} 
-              className="team-member-card-2030 stagger-item"
-              style={{ animationDelay: `${1.7 + index * 0.15}s` }}
-            >
-              <div className="team-member-image-container-2030">
-                <div className="team-member-image-placeholder-2030">
+        <div className="max-w-4xl mx-auto">
+          <div 
+            className="team-member-card-2030-enhanced stagger-item"
+            style={{ animationDelay: '1.7s' }}
+          >
+            <div className="team-member-hero-section-2030">
+              <div className="team-member-image-container-hero-2030">
+                <div className="team-member-image-placeholder-hero-2030">
                   <Image
-                    src={member.image}
-                    alt={member.name}
-                    width={200}
-                    height={200}
-                    className="team-member-image-2030"
+                    src="/images/zeyad-mohamed.jpg"
+                    alt="زياد محمد"
+                    width={300}
+                    height={300}
+                    className="team-member-image-hero-2030"
                     priority
                   />
+                  <div className="team-member-image-glow-2030"></div>
                 </div>
               </div>
-              <div className="team-member-info-2030">
-                <h3 className="team-member-name-2030">{member.name}</h3>
-                <p className="team-member-role-2030">{member.role}</p>
-                <p className="team-member-description-2030">
-                  {member.description}
-                </p>
-                <div className="team-member-responsibilities-2030">
-                  <div className="team-member-responsibility-title-2030">المسؤوليات</div>
-                  {member.responsibilities.map((responsibility, idx) => (
-                    <div key={idx} className="team-member-responsibility-item-2030">
-                      {responsibility}
-                    </div>
-                  ))}
+              <div className="team-member-hero-content-2030">
+                <div className="team-member-badge-2030">
+                  <Star className="w-5 h-5" />
+                  <span>المؤسس والرئيس التنفيذي</span>
                 </div>
-                <div className="team-member-socials-2030">
-                  {member.socials.map((social, idx) => {
-                    const Icon = social.icon
-                    return (
-                      <Link
-                        key={idx}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="team-social-button-2030"
-                      >
-                        <Icon className="w-5 h-5" />
-                        <span>{social.label}</span>
-                      </Link>
-                    )
-                  })}
+                <h3 className="team-member-name-hero-2030">زياد محمد</h3>
+                <p className="team-member-role-hero-2030">قائد الدفعة - مؤسس ومطور المنصة</p>
+                <p className="team-member-description-hero-2030">
+                  قائد دفعة سايبر ومؤسس منصة سايبر تمساح. متخصص في هندسة البرمجيات وتطوير الأنظمة التعليمية. 
+                  قمت بتصميم وتطوير الموقع بالكامل من الصفر باستخدام أحدث التقنيات مثل Next.js 16 و React 19. 
+                  نشرت الجدول الدراسي وشرحت المواد التعليمية لمساعدة زملائي في الدفعة على الوصول للمحتوى التعليمي بسهولة.
+                  أعمل على تطوير وتحسين المنصة باستمرار لتقديم أفضل تجربة تعليمية ممكنة.
+                </p>
+                
+                <div className="team-member-skills-2030">
+                  <div className="team-member-skill-tag-2030">
+                    <Rocket className="w-4 h-4" />
+                    <span>Next.js 16</span>
+                  </div>
+                  <div className="team-member-skill-tag-2030">
+                    <Zap className="w-4 h-4" />
+                    <span>React 19</span>
+                  </div>
+                  <div className="team-member-skill-tag-2030">
+                    <Shield className="w-4 h-4" />
+                    <span>TypeScript</span>
+                  </div>
+                  <div className="team-member-skill-tag-2030">
+                    <BookOpen className="w-4 h-4" />
+                    <span>Prisma</span>
+                  </div>
+                  <div className="team-member-skill-tag-2030">
+                    <Target className="w-4 h-4" />
+                    <span>UI/UX Design</span>
+                  </div>
+                </div>
+                
+                <div className="team-member-responsibilities-enhanced-2030">
+                  <div className="team-member-responsibility-title-enhanced-2030">
+                    <Award className="w-5 h-5" />
+                    <span>المسؤوليات والإنجازات</span>
+                  </div>
+                  <div className="team-member-responsibilities-grid-2030">
+                    {[
+                      'تصميم وتطوير المنصة بالكامل',
+                      'نشر وإدارة الجدول الدراسي',
+                      'شرح المواد التعليمية وتوفير المحتوى',
+                      'إدارة قاعدة البيانات والمحتوى',
+                      'تحسين تجربة المستخدم',
+                      'التطوير المستمر والتحسينات',
+                      'إدارة الخوادم والنشر على Vercel',
+                      'التصميم الجرافيكي والهوية البصرية'
+                    ].map((responsibility, idx) => (
+                      <div key={idx} className="team-member-responsibility-item-enhanced-2030">
+                        <div className="team-member-responsibility-icon-2030">
+                          <CheckCircle className="w-4 h-4" />
+                        </div>
+                        <span>{responsibility}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="team-member-socials-enhanced-2030">
+                  <Link
+                    href="https://github.com/phoenixcrypto"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="team-social-button-enhanced-2030 team-social-github-2030"
+                  >
+                    <Github className="w-5 h-5" />
+                    <span>GitHub</span>
+                  </Link>
+                  <Link
+                    href="https://www.linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="team-social-button-enhanced-2030 team-social-linkedin-2030"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                    <span>LinkedIn</span>
+                  </Link>
+                  <Link
+                    href="https://wa.me/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="team-social-button-enhanced-2030 team-social-whatsapp-2030"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    <span>WhatsApp</span>
+                  </Link>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
