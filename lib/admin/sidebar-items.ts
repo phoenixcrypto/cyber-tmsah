@@ -6,7 +6,6 @@ import {
   Calendar,
   BookOpen,
   Download,
-  Newspaper,
   BarChart3,
   Database,
   Shield,
@@ -45,7 +44,6 @@ export function getSidebarItems(): SidebarItem[] {
         { label: 'المواد الدراسية', icon: BookOpen, href: `${basePath}/content/materials` },
         { label: 'المقالات', icon: FileText, href: `${basePath}/content/articles` },
         { label: 'الصفحات', icon: FileText, href: `${basePath}/content/pages` },
-        { label: 'الأخبار', icon: Newspaper, href: `${basePath}/content/news` },
       ],
     },
     {

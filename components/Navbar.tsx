@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Home, Calendar, BookOpen, Map, GraduationCap, Newspaper, Library, Video, Headphones, Globe, Heart, ChevronDown, Menu, X, Download } from 'lucide-react'
+import { Home, Calendar, BookOpen, Menu, X, Download } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import NewsTicker from './NewsTicker'
 import { usePathname } from 'next/navigation'
@@ -14,17 +14,6 @@ export default function Navbar() {
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up')
   const [lastScrollY, setLastScrollY] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [dropdownTimeout, setDropdownTimeout] = useState<NodeJS.Timeout | null>(null)
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (dropdownTimeout) {
-        clearTimeout(dropdownTimeout)
-      }
-    }
-  }, [dropdownTimeout])
 
   // Handle scroll for navbar visibility
   useEffect(() => {
@@ -58,28 +47,6 @@ export default function Navbar() {
     { label: t('nav.schedule'), href: '/schedule', icon: Calendar },
     { label: t('nav.materials'), href: '/materials', icon: BookOpen },
     { label: t('nav.downloads'), href: '/downloads', icon: Download },
-  ]
-
-  const securityGuideLinks = [
-    { label: t('nav.roadmap'), href: '/roadmap', icon: Map },
-    { label: t('nav.expertise'), href: '/expertise-guide', icon: GraduationCap },
-    { label: t('nav.news'), href: '/evaluation', icon: Newspaper },
-  ]
-
-  const resourcesDropdown = {
-    label: t('nav.resources'),
-    icon: Library,
-    items: [
-      { label: t('nav.courses'), href: '/courses', icon: GraduationCap },
-      { label: t('nav.books'), href: '/books', icon: BookOpen },
-      { label: t('nav.videos'), href: '/videos', icon: Video },
-      { label: t('nav.podcasts'), href: '/podcasts', icon: Headphones },
-      { label: t('nav.platforms'), href: '/platforms', icon: Globe },
-    ],
-  }
-
-  const additionalLinks = [
-    { label: t('nav.contribute'), href: '/contribute', icon: Heart },
   ]
 
   const isActive = (href: string) => pathname === href
@@ -181,98 +148,6 @@ export default function Navbar() {
                   </Link>
                 )
               })}
-
-              {securityGuideLinks.map((item) => {
-                const Icon = item.icon
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`nav-link-desktop ${isActive(item.href) ? 'active' : ''}`}
-                    prefetch={false}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                )
-              })}
-
-              {/* Resources Dropdown */}
-              <div 
-                className="nav-dropdown-desktop"
-                onMouseEnter={() => {
-                  // Clear any existing timeout
-                  if (dropdownTimeout) {
-                    clearTimeout(dropdownTimeout)
-                    setDropdownTimeout(null)
-                  }
-                  // Show dropdown immediately
-                  setActiveDropdown('resources')
-                }}
-                onMouseLeave={() => {
-                  // Add delay before hiding dropdown (300ms)
-                  const timeout = setTimeout(() => {
-                    setActiveDropdown(null)
-                  }, 300)
-                  setDropdownTimeout(timeout)
-                }}
-              >
-                <button className={`nav-link-desktop ${activeDropdown === 'resources' ? 'active' : ''}`}>
-                  <Library className="w-4 h-4" />
-                  <span>{resourcesDropdown.label}</span>
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-                {activeDropdown === 'resources' && (
-                  <div 
-                    className="dropdown-menu-desktop"
-                    onMouseEnter={() => {
-                      // Clear timeout when mouse enters dropdown menu
-                      if (dropdownTimeout) {
-                        clearTimeout(dropdownTimeout)
-                        setDropdownTimeout(null)
-                      }
-                      setActiveDropdown('resources')
-                    }}
-                    onMouseLeave={() => {
-                      // Add delay before hiding dropdown (300ms)
-                      const timeout = setTimeout(() => {
-                        setActiveDropdown(null)
-                      }, 300)
-                      setDropdownTimeout(timeout)
-                    }}
-                  >
-                    {resourcesDropdown.items.map((item) => {
-                      const Icon = item.icon
-                      return (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={`dropdown-item-desktop ${isActive(item.href) ? 'active' : ''}`}
-                          prefetch={false}
-                        >
-                          <Icon className="w-4 h-4" />
-                          <span>{item.label}</span>
-                        </Link>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {additionalLinks.map((item) => {
-                const Icon = item.icon
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`nav-link-desktop ${isActive(item.href) ? 'active' : ''}`}
-                    prefetch={false}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                )
-              })}
             </div>
           </div>
         </div>
@@ -299,74 +174,6 @@ export default function Navbar() {
                   <Link
                     href={item.href}
                     className={`mobile-nav-link mobile-nav-primary ${isActive(item.href) ? 'active' : ''}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    prefetch={false}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              )
-            })}
-
-            {securityGuideLinks.map((item) => {
-              const Icon = item.icon
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`mobile-nav-link ${isActive(item.href) ? 'active' : ''}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    prefetch={false}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              )
-            })}
-
-            <li>
-              <button
-                className="mobile-nav-dropdown-toggle"
-                onClick={() => setActiveDropdown(activeDropdown === 'resources-mobile' ? null : 'resources-mobile')}
-              >
-                <Library className="w-5 h-5" />
-                <span>{resourcesDropdown.label}</span>
-                <ChevronDown className={`w-4 h-4 ${activeDropdown === 'resources-mobile' ? 'rotated' : ''}`} />
-              </button>
-              {activeDropdown === 'resources-mobile' && (
-                <ul className="mobile-nav-dropdown">
-                  {resourcesDropdown.items.map((item) => {
-                    const Icon = item.icon
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className={`mobile-nav-link ${isActive(item.href) ? 'active' : ''}`}
-                          onClick={() => {
-                            setMobileMenuOpen(false)
-                            setActiveDropdown(null)
-                          }}
-                          prefetch={false}
-                        >
-                          <Icon className="w-4 h-4" />
-                          <span>{item.label}</span>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
-            </li>
-
-            {additionalLinks.map((item) => {
-              const Icon = item.icon
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`mobile-nav-link ${isActive(item.href) ? 'active' : ''}`}
                     onClick={() => setMobileMenuOpen(false)}
                     prefetch={false}
                   >
