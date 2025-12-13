@@ -220,12 +220,13 @@ export default function AboutPage() {
               <div className="team-member-image-container-hero-2030">
                 <div className="team-member-image-placeholder-hero-2030">
                   <Image
-                    src="/images/zeyad-mohamed.jpg"
+                    src="/image/zeyad-mohamed.jpg"
                     alt="زياد محمد"
-                    width={300}
-                    height={300}
+                    width={320}
+                    height={320}
                     className="team-member-image-hero-2030"
                     priority
+                    quality={95}
                   />
                   <div className="team-member-image-glow-2030"></div>
                 </div>
