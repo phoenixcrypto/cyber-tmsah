@@ -100,8 +100,9 @@ export async function POST(request: NextRequest) {
 
     const { username, password } = validationResult.data
     const trimmedUsername = username.trim()
+    const trimmedPassword = password.trim()
 
-    // Get user by username
+    // Get user by username (exact match)
     const user = await prisma.user.findUnique({
       where: { username: trimmedUsername },
     })
@@ -115,7 +116,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify password
-    const isPasswordValid = await comparePassword(password, user.password)
+    const isPasswordValid = await comparePassword(trimmedPassword, user.password)
     
     if (!isPasswordValid) {
       await logger.warn('Login attempt with invalid password', {

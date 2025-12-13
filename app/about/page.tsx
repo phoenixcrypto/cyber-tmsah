@@ -1,6 +1,6 @@
 'use client'
 
-import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle, Rocket, Shield, Globe, Zap, CheckCircle } from 'lucide-react'
+import { Users, BookOpen, Award, Target, Heart, Lightbulb, Info, Star, Github, Linkedin, MessageCircle, Rocket, Shield, Globe, Zap } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -38,7 +38,7 @@ export default function AboutPage() {
       icon: BookOpen,
       title: 'محتوى عالي الجودة',
       description: 'نحرص على تقديم محتوى تعليمي دقيق ومحدث من مصادر موثوقة',
-      color: 'from-cyber-violet to-cyber-blue',
+      color: 'from-cyber-neon to-cyber-green',
     },
     {
       icon: Award,
@@ -50,7 +50,7 @@ export default function AboutPage() {
       icon: Target,
       title: 'سهولة الوصول',
       description: 'تصميم بسيط وواضح يسهل على الطلاب الوصول للمعلومات بسرعة',
-      color: 'from-cyber-blue to-cyber-violet',
+      color: 'from-cyber-neon to-cyber-green',
     }
   ]
 
@@ -238,58 +238,32 @@ export default function AboutPage() {
                 <h3 className="team-member-name-hero-2030">زياد محمد</h3>
                 <p className="team-member-role-hero-2030">قائد الدفعة - مؤسس ومطور المنصة</p>
                 <p className="team-member-description-hero-2030">
-                  قائد دفعة سايبر ومؤسس منصة سايبر تمساح. متخصص في هندسة البرمجيات وتطوير الأنظمة التعليمية. 
-                  قمت بتصميم وتطوير الموقع بالكامل من الصفر باستخدام أحدث التقنيات مثل Next.js 16 و React 19. 
-                  نشرت الجدول الدراسي وشرحت المواد التعليمية لمساعدة زملائي في الدفعة على الوصول للمحتوى التعليمي بسهولة.
-                  أعمل على تطوير وتحسين المنصة باستمرار لتقديم أفضل تجربة تعليمية ممكنة.
+                  قائد دفعة سايبر ومؤسس منصة سايبر تمساح. أعمل في التدوين وإنشاء قوالب بلوجر والتطوير في قوالب ووردبريس الحديثة.
+                  عملت كفريلانسر في الجرافيك ديزاين، وكنت منشئ محتوى في التدوين والمجال التقني.
+                  أحب الأمن السيبراني وأسعى للتطور بداخله ونشر المعلومة، لأن طبعي هو نشر المعلومات وإفادة الجميع.
+                  قمت بتطوير هذه المنصة لمساعدة زملائي في الدفعة على الوصول للمحتوى التعليمي بسهولة.
                 </p>
                 
                 <div className="team-member-skills-2030">
                   <div className="team-member-skill-tag-2030">
-                    <Rocket className="w-4 h-4" />
-                    <span>Next.js 16</span>
-                  </div>
-                  <div className="team-member-skill-tag-2030">
-                    <Zap className="w-4 h-4" />
-                    <span>React 19</span>
-                  </div>
-                  <div className="team-member-skill-tag-2030">
-                    <Shield className="w-4 h-4" />
-                    <span>TypeScript</span>
-                  </div>
-                  <div className="team-member-skill-tag-2030">
                     <BookOpen className="w-4 h-4" />
-                    <span>Prisma</span>
+                    <span>التدوين</span>
+                  </div>
+                  <div className="team-member-skill-tag-2030">
+                    <Rocket className="w-4 h-4" />
+                    <span>تطوير القوالب</span>
                   </div>
                   <div className="team-member-skill-tag-2030">
                     <Target className="w-4 h-4" />
-                    <span>UI/UX Design</span>
+                    <span>الجرافيك ديزاين</span>
                   </div>
-                </div>
-                
-                <div className="team-member-responsibilities-enhanced-2030">
-                  <div className="team-member-responsibility-title-enhanced-2030">
-                    <Award className="w-5 h-5" />
-                    <span>المسؤوليات والإنجازات</span>
+                  <div className="team-member-skill-tag-2030">
+                    <Zap className="w-4 h-4" />
+                    <span>إنشاء المحتوى</span>
                   </div>
-                  <div className="team-member-responsibilities-grid-2030">
-                    {[
-                      'تصميم وتطوير المنصة بالكامل',
-                      'نشر وإدارة الجدول الدراسي',
-                      'شرح المواد التعليمية وتوفير المحتوى',
-                      'إدارة قاعدة البيانات والمحتوى',
-                      'تحسين تجربة المستخدم',
-                      'التطوير المستمر والتحسينات',
-                      'إدارة الخوادم والنشر على Vercel',
-                      'التصميم الجرافيكي والهوية البصرية'
-                    ].map((responsibility, idx) => (
-                      <div key={idx} className="team-member-responsibility-item-enhanced-2030">
-                        <div className="team-member-responsibility-icon-2030">
-                          <CheckCircle className="w-4 h-4" />
-                        </div>
-                        <span>{responsibility}</span>
-                      </div>
-                    ))}
+                  <div className="team-member-skill-tag-2030">
+                    <Shield className="w-4 h-4" />
+                    <span>الأمن السيبراني</span>
                   </div>
                 </div>
                 
