@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Edit, Trash2, Search, BookOpen } from 'lucide-react'
 import MaterialModal from '@/components/admin/MaterialModal'
-import { getAdminBasePath } from '@/lib/utils/admin-path'
 
 interface Material {
   id: string
@@ -26,7 +25,6 @@ export default function AdminMaterialsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingMaterial, setEditingMaterial] = useState<Material | null>(null)
-  const basePath = getAdminBasePath()
 
   const fetchMaterials = async () => {
     try {
