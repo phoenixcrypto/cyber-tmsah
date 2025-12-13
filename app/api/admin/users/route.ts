@@ -5,6 +5,7 @@ import { successResponse, errorResponse, validationErrorResponse } from '@/lib/u
 import { logger } from '@/lib/utils/logger'
 import { hashPassword } from '@/lib/auth/bcrypt'
 import { z } from 'zod'
+import type { ErrorWithCode } from '@/lib/types'
 
 const createUserSchema = z.object({
   username: z.string().min(3).max(50),
@@ -39,12 +40,13 @@ export async function GET(request: NextRequest) {
     })
 
     return successResponse({ users })
-  } catch (error: any) {
-    if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.message === 'Unauthorized' || err.message.includes('Forbidden')) {
       return errorResponse('غير مصرح', 401)
     }
 
-    await logger.error('Get users error', error as Error, {
+    await logger.error('Get users error', err as Error, {
       ipAddress: context.ipAddress,
     })
     return errorResponse('حدث خطأ أثناء جلب المستخدمين', 500)
@@ -120,12 +122,13 @@ export async function POST(request: NextRequest) {
     })
 
     return successResponse({ user: newUser }, { status: 201 })
-  } catch (error: any) {
-    if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.message === 'Unauthorized' || err.message.includes('Forbidden')) {
       return errorResponse('غير مصرح', 401)
     }
 
-    await logger.error('Create user error', error as Error, {
+    await logger.error('Create user error', err as Error, {
       ipAddress: context.ipAddress,
     })
     return errorResponse('حدث خطأ أثناء إنشاء المستخدم', 500)

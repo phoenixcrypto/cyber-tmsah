@@ -45,16 +45,26 @@ export default function AdminDatabasePage() {
         const pages = pagesRes?.ok ? ((await pagesRes.json()).data?.pages || []) : []
         const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
         
-        let downloads: any[] = []
+        interface DownloadItem {
+          id: string
+          name: string
+          [key: string]: unknown
+        }
+        interface ScheduleItem {
+          id: string
+          title: string
+          [key: string]: unknown
+        }
+        let downloads: DownloadItem[] = []
         if (downloadsRes?.ok) {
           const downloadsData = await downloadsRes.json()
-          downloads = downloadsData?.data?.downloads || downloadsData?.data?.software || []
+          downloads = (downloadsData?.data?.downloads || downloadsData?.data?.software || []) as DownloadItem[]
         }
         
-        let schedule: any[] = []
+        let schedule: ScheduleItem[] = []
         if (scheduleRes?.ok) {
           const scheduleData = await scheduleRes.json()
-          schedule = scheduleData?.data?.schedule || scheduleData?.data?.items || []
+          schedule = (scheduleData?.data?.schedule || scheduleData?.data?.items || []) as ScheduleItem[]
         }
         
         const users = usersRes?.ok ? ((await usersRes.json()).data?.users || []) : []

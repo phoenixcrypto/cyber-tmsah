@@ -32,7 +32,8 @@ export default function DownloadsPage() {
       try {
         const res = await fetch('/api/downloads')
         const data = await res.json()
-        const normalized = (data.downloads || data.software || []).map((item: any) => ({
+        const downloads = (data.downloads || data.software || []) as Software[]
+        const normalized = downloads.map((item) => ({
           ...item,
           icon: item.icon || 'FileText',
         }))
@@ -54,8 +55,12 @@ export default function DownloadsPage() {
   }
 
   const getIcon = (iconName: string): LucideIcon => {
-    const IconComponent = (Icons as any)[iconName] || FileText
-    return IconComponent
+    // Type-safe icon lookup
+    const IconComponent = (Icons as unknown as Record<string, LucideIcon>)[iconName]
+    if (IconComponent && typeof IconComponent === 'function') {
+      return IconComponent
+    }
+    return FileText
   }
 
   return (

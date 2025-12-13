@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
   Bell,
-  User,
+  User as UserIcon,
   Menu,
   X,
   Settings,
@@ -16,21 +16,34 @@ import {
 import { useRouter } from 'next/navigation'
 import { getAdminBasePath, getAdminLoginPath } from '@/lib/utils/admin-path'
 import { getSidebarItems } from '@/lib/admin/sidebar-items'
+import type { User } from '@/lib/types'
 
 export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }) {
   const router = useRouter()
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const basePath = getAdminBasePath()
 
   useEffect(() => {
     // Fetch user data
     fetch('/api/auth/me')
-      .then((res) => res.json())
-      .then((data) => setUser(data.user))
-      .catch(() => {})
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch user data')
+        }
+        return res.json()
+      })
+      .then((data) => {
+        if (data.success && data.user) {
+          setUser(data.user)
+        }
+      })
+      .catch((error) => {
+        // Silently fail - user might not be logged in
+        console.debug('Failed to fetch user data:', error)
+      })
   }, [])
 
   const handleLogout = async () => {
@@ -230,7 +243,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
                   </div>
                   <div className="admin-navbar-user-dropdown-menu">
                     <button onClick={() => handleNavigate(`${basePath}/profile`)}>
-                      <User className="w-4 h-4" />
+                      <UserIcon className="w-4 h-4" />
                       <span>الملف الشخصي</span>
                     </button>
                     <button onClick={() => handleNavigate(`${basePath}/settings`)}>

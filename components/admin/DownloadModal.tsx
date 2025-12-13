@@ -75,8 +75,8 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
 
     // Validation
     const newErrors: Record<string, string> = {}
-    if (!formData.name.trim()) newErrors.name = 'الاسم مطلوب'
-    if (!formData.description.trim()) newErrors.description = 'الوصف مطلوب'
+    if (!formData['name'].trim()) newErrors['name'] = 'الاسم مطلوب'
+    if (!formData['description'].trim()) newErrors['description'] = 'الوصف مطلوب'
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -92,14 +92,14 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name.trim(),
-          nameEn: formData.nameEn.trim() || formData.name.trim(),
-          description: formData.description.trim(),
-          descriptionEn: formData.descriptionEn.trim() || formData.description.trim(),
-          icon: formData.icon,
-          videoUrl: formData.videoUrl || null,
-          downloadUrl: formData.downloadUrl || null,
-          category: formData.category || null,
+          name: formData['name'].trim(),
+          nameEn: formData['nameEn'].trim() || formData['name'].trim(),
+          description: formData['description'].trim(),
+          descriptionEn: formData['descriptionEn'].trim() || formData['description'].trim(),
+          icon: formData['icon'],
+          videoUrl: formData['videoUrl'] || null,
+          downloadUrl: formData['downloadUrl'] || null,
+          category: formData['category'] || null,
         }),
       })
 
@@ -169,12 +169,16 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                 </label>
                 <input
                   type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={`admin-modal-form-input ${errors.name ? 'error' : ''}`}
+                  value={formData['name']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['name'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['name'] ? 'error' : ''}`}
                   placeholder="مثال: Kali Linux"
                 />
-                {errors.name && <span className="admin-modal-form-error">{errors.name}</span>}
+                {errors['name'] && <span className="admin-modal-form-error">{errors['name']}</span>}
               </div>
 
               {/* Name En */}
@@ -185,8 +189,12 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                 </label>
                 <input
                   type="text"
-                  value={formData.nameEn}
-                  onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
+                  value={formData['nameEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['nameEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Example: Kali Linux"
                 />
@@ -199,13 +207,17 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                   <span>الوصف (عربي) *</span>
                 </label>
                 <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className={`admin-modal-form-input ${errors.description ? 'error' : ''}`}
+                  value={formData['description']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['description'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['description'] ? 'error' : ''}`}
                   placeholder="وصف البرنامج..."
                   rows={4}
                 />
-                {errors.description && <span className="admin-modal-form-error">{errors.description}</span>}
+                {errors['description'] && <span className="admin-modal-form-error">{errors['description']}</span>}
               </div>
 
               {/* Description En */}
@@ -215,8 +227,12 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                   <span>الوصف (إنجليزي)</span>
                 </label>
                 <textarea
-                  value={formData.descriptionEn}
-                  onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
+                  value={formData['descriptionEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['descriptionEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Software description in English..."
                   rows={4}
@@ -230,8 +246,12 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                   <span>الأيقونة</span>
                 </label>
                 <select
-                  value={formData.icon}
-                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                  value={formData['icon']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['icon'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-select"
                 >
                   {iconOptions.map((icon) => (
@@ -250,8 +270,12 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                 </label>
                 <input
                   type="text"
-                  value={formData.category || ''}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value || null })}
+                  value={formData['category'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['category'] = e.target.value || null
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="مثال: أنظمة التشغيل"
                 />
@@ -265,8 +289,12 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                 </label>
                 <input
                   type="url"
-                  value={formData.videoUrl || ''}
-                  onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value || null })}
+                  value={formData['videoUrl'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['videoUrl'] = e.target.value || null
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="https://youtube.com/..."
                 />
@@ -280,8 +308,12 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
                 </label>
                 <input
                   type="url"
-                  value={formData.downloadUrl || ''}
-                  onChange={(e) => setFormData({ ...formData, downloadUrl: e.target.value || null })}
+                  value={formData['downloadUrl'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['downloadUrl'] = e.target.value || null
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="https://example.com/download"
                 />

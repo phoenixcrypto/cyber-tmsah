@@ -13,7 +13,7 @@ interface News {
   subjectTitleEn: string
   url: string
   status: 'published' | 'draft'
-  publishedAt: string
+  publishedAt?: string
 }
 
 interface NewsModalProps {
@@ -24,7 +24,7 @@ interface NewsModalProps {
 }
 
 export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalProps) {
-  const [formData, setFormData] = useState<News>({
+  const [formData, setFormData] = useState<Omit<News, 'publishedAt'> & { publishedAt: string }>({
     title: '',
     titleEn: '',
     subjectId: '',
@@ -32,7 +32,7 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
     subjectTitleEn: '',
     url: '',
     status: 'draft',
-    publishedAt: new Date().toISOString().split('T')[0],
+    publishedAt: (new Date().toISOString().split('T')[0] ?? '') as string,
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -47,7 +47,7 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
         subjectTitleEn: news.subjectTitleEn || '',
         url: news.url || '',
         status: news.status || 'draft',
-        publishedAt: news.publishedAt ? new Date(news.publishedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        publishedAt: (news.publishedAt ? (new Date(news.publishedAt).toISOString().split('T')[0] ?? '') : (new Date().toISOString().split('T')[0] ?? '')) as string,
       })
     } else {
       setFormData({
@@ -58,7 +58,7 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
         subjectTitleEn: '',
         url: '',
         status: 'draft',
-        publishedAt: new Date().toISOString().split('T')[0],
+        publishedAt: new Date().toISOString().split('T')[0] || '',
       })
     }
     setErrors({})
@@ -70,10 +70,10 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
 
     // Validation
     const newErrors: Record<string, string> = {}
-    if (!formData.title.trim()) newErrors.title = 'العنوان مطلوب'
-    if (!formData.subjectId.trim()) newErrors.subjectId = 'معرف المادة مطلوب'
-    if (!formData.subjectTitle.trim()) newErrors.subjectTitle = 'عنوان المادة مطلوب'
-    if (!formData.url.trim()) newErrors.url = 'الرابط مطلوب'
+    if (!formData['title'].trim()) newErrors['title'] = 'العنوان مطلوب'
+    if (!formData['subjectId'].trim()) newErrors['subjectId'] = 'معرف المادة مطلوب'
+    if (!formData['subjectTitle'].trim()) newErrors['subjectTitle'] = 'عنوان المادة مطلوب'
+    if (!formData['url'].trim()) newErrors['url'] = 'الرابط مطلوب'
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -89,14 +89,14 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: formData.title.trim(),
-          titleEn: formData.titleEn.trim() || formData.title.trim(),
-          subjectId: formData.subjectId.trim(),
-          subjectTitle: formData.subjectTitle.trim(),
-          subjectTitleEn: formData.subjectTitleEn.trim() || formData.subjectTitle.trim(),
-          url: formData.url.trim(),
-          status: formData.status,
-          publishedAt: formData.publishedAt,
+          title: formData['title'].trim(),
+          titleEn: formData['titleEn'].trim() || formData['title'].trim(),
+          subjectId: formData['subjectId'].trim(),
+          subjectTitle: formData['subjectTitle'].trim(),
+          subjectTitleEn: formData['subjectTitleEn'].trim() || formData['subjectTitle'].trim(),
+          url: formData['url'].trim(),
+          status: formData['status'],
+          publishedAt: formData['publishedAt'] || new Date().toISOString().split('T')[0],
         }),
       })
 
@@ -166,12 +166,16 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className={`admin-modal-form-input ${errors.title ? 'error' : ''}`}
+                  value={formData['title']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['title'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['title'] ? 'error' : ''}`}
                   placeholder="عنوان الخبر"
                 />
-                {errors.title && <span className="admin-modal-form-error">{errors.title}</span>}
+                {errors['title'] && <span className="admin-modal-form-error">{errors['title']}</span>}
               </div>
 
               {/* Title En */}
@@ -182,8 +186,12 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.titleEn}
-                  onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                  value={formData['titleEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['titleEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="News title in English"
                 />
@@ -197,12 +205,16 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.subjectId}
-                  onChange={(e) => setFormData({ ...formData, subjectId: e.target.value })}
-                  className={`admin-modal-form-input ${errors.subjectId ? 'error' : ''}`}
+                  value={formData['subjectId']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['subjectId'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['subjectId'] ? 'error' : ''}`}
                   placeholder="مثال: material-1"
                 />
-                {errors.subjectId && <span className="admin-modal-form-error">{errors.subjectId}</span>}
+                {errors['subjectId'] && <span className="admin-modal-form-error">{errors['subjectId']}</span>}
               </div>
 
               {/* Subject Title */}
@@ -213,12 +225,16 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.subjectTitle}
-                  onChange={(e) => setFormData({ ...formData, subjectTitle: e.target.value })}
-                  className={`admin-modal-form-input ${errors.subjectTitle ? 'error' : ''}`}
+                  value={formData['subjectTitle']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['subjectTitle'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['subjectTitle'] ? 'error' : ''}`}
                   placeholder="مثال: الأمن السيبراني"
                 />
-                {errors.subjectTitle && <span className="admin-modal-form-error">{errors.subjectTitle}</span>}
+                {errors['subjectTitle'] && <span className="admin-modal-form-error">{errors['subjectTitle']}</span>}
               </div>
 
               {/* Subject Title En */}
@@ -229,8 +245,12 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.subjectTitleEn}
-                  onChange={(e) => setFormData({ ...formData, subjectTitleEn: e.target.value })}
+                  value={formData['subjectTitleEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['subjectTitleEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Example: Cybersecurity"
                 />
@@ -244,12 +264,16 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                 </label>
                 <input
                   type="url"
-                  value={formData.url}
-                  onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                  className={`admin-modal-form-input ${errors.url ? 'error' : ''}`}
+                  value={formData['url']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['url'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['url'] ? 'error' : ''}`}
                   placeholder="https://example.com/news"
                 />
-                {errors.url && <span className="admin-modal-form-error">{errors.url}</span>}
+                {errors['url'] && <span className="admin-modal-form-error">{errors['url']}</span>}
               </div>
 
               {/* Status */}
@@ -259,8 +283,12 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                   <span>الحالة</span>
                 </label>
                 <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'published' | 'draft' })}
+                  value={formData['status']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['status'] = e.target.value as 'published' | 'draft'
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-select"
                 >
                   <option value="draft">مسودة</option>
@@ -276,8 +304,12 @@ export default function NewsModal({ isOpen, onClose, onSave, news }: NewsModalPr
                 </label>
                 <input
                   type="date"
-                  value={formData.publishedAt}
-                  onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
+                  value={formData['publishedAt'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['publishedAt'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                 />
               </div>

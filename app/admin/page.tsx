@@ -74,16 +74,26 @@ export default function AdminDashboard() {
         const materials = materialsRes?.ok ? ((await materialsRes.json()).data?.materials || []) : []
         const articles = articlesRes?.ok ? ((await articlesRes.json()).data?.articles || []) : []
         
-        let schedule: any[] = []
+        interface ScheduleItem {
+          id: string
+          title: string
+          [key: string]: unknown
+        }
+        interface DownloadItem {
+          id: string
+          name: string
+          [key: string]: unknown
+        }
+        let schedule: ScheduleItem[] = []
         if (scheduleRes?.ok) {
           const scheduleData = await scheduleRes.json()
-          schedule = scheduleData?.data?.schedule || scheduleData?.data?.items || []
+          schedule = (scheduleData?.data?.schedule || scheduleData?.data?.items || []) as ScheduleItem[]
         }
         
-        let downloads: any[] = []
+        let downloads: DownloadItem[] = []
         if (downloadsRes?.ok) {
           const downloadsData = await downloadsRes.json()
-          downloads = downloadsData?.data?.downloads || downloadsData?.data?.software || []
+          downloads = (downloadsData?.data?.downloads || downloadsData?.data?.software || []) as DownloadItem[]
         }
         
         const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []

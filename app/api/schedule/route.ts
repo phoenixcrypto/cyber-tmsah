@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { getRequestContext } from '@/lib/middleware/auth'
 import { logger } from '@/lib/utils/logger'
+import type { ErrorWithCode } from '@/lib/types'
 
 /**
  * GET /api/schedule
@@ -141,8 +142,9 @@ export async function POST(request: NextRequest) {
         },
       }
     )
-  } catch (error: any) {
-    if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.message === 'Unauthorized' || err.message.includes('Forbidden')) {
       return errorResponse('غير مصرح', 401, {
         logRequest: true,
         logContext: {
@@ -154,7 +156,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    await logger.error('Create schedule error', error as Error, {
+    await logger.error('Create schedule error', err as Error, {
       method: 'POST',
       path: '/api/schedule',
       ipAddress: context.ipAddress,

@@ -5,13 +5,14 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
 import { seedScheduleLectures, seedScheduleSections } from '@/lib/seed-data/schedule'
+import type { ScheduleItem } from '@/lib/types'
 
 export default function SchedulePage() {
   const { t } = useLanguage()
   const [selectedSection, setSelectedSection] = useState('')
   const [validationError, setValidationError] = useState('')
   const [scheduleView, setScheduleView] = useState<'A' | 'B'>('A') // Toggle between Group A and B
-  const [allScheduleData, setAllScheduleData] = useState<any[]>([])
+  const [allScheduleData, setAllScheduleData] = useState<ScheduleItem[]>([])
 
   // Fetch schedule data from API
   useEffect(() => {
@@ -29,8 +30,17 @@ export default function SchedulePage() {
     fetchScheduleData()
   }, [])
 
-  const sectionsData = seedScheduleSections
-  const scheduleData = seedScheduleLectures
+  // Convert seed data to ScheduleItem format
+  const sectionsData: ScheduleItem[] = seedScheduleSections.map(item => ({
+    ...item,
+    day: item.day as ScheduleItem['day'],
+    group: item.group as ScheduleItem['group'],
+  }))
+  const scheduleData: ScheduleItem[] = seedScheduleLectures.map(item => ({
+    ...item,
+    day: item.day as ScheduleItem['day'],
+    group: item.group as ScheduleItem['group'],
+  }))
 
   // Validation function
   const validateGroupAndSection = useCallback((group: string, section: string): string => {
@@ -161,8 +171,8 @@ export default function SchedulePage() {
   }
 
   // Group schedule by day
-  const groupByDay = (items: any[]) => {
-    const grouped: { [key: string]: any[] } = {}
+  const groupByDay = (items: ScheduleItem[]) => {
+    const grouped: Record<string, ScheduleItem[]> = {}
     items.forEach(item => {
       const day = item.day || 'Other'
       if (!grouped[day]) {
@@ -377,7 +387,7 @@ export default function SchedulePage() {
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="flex-1">
                                       <h4 className="text-lg sm:text-xl font-bold text-dark-100 mb-1">
-                                        {item.title || item.subject}
+                                        {item.title}
                                       </h4>
                                       {item.sectionNumber && (
                                         <span className="inline-block px-2 py-1 bg-cyber-green/30 text-cyber-green rounded text-xs font-bold mr-2">
@@ -415,7 +425,7 @@ export default function SchedulePage() {
                                     </div>
                                     <div className="flex items-center gap-2 text-sm sm:text-base text-dark-200 bg-cyber-dark/30 px-3 py-2 rounded-lg sm:col-span-2">
                                       <MapPin className="w-4 h-4 text-cyber-green flex-shrink-0" />
-                                      <span className="font-medium">{item.location || item.room}</span>
+                                      <span className="font-medium">{item.location}</span>
                                     </div>
                                   </div>
                                 </div>

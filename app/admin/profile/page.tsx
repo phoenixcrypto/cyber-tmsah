@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { User, Mail, Shield, Calendar, Save, Edit } from 'lucide-react'
+import { User, Mail, Shield, Calendar, Edit } from 'lucide-react'
 import ProfileDetails from './profile-details'
 
 interface UserProfile {

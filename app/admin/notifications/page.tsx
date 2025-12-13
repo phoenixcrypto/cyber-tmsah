@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Bell, Mail, Smartphone, MessageSquare, CheckCircle, Clock } from 'lucide-react'
+import { Bell, Mail, Smartphone, MessageSquare } from 'lucide-react'
 import { getAdminBasePath } from '@/lib/utils/admin-path'
 import Link from 'next/link'
 

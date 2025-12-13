@@ -42,10 +42,15 @@ export default function AdminContentOverviewPage() {
         const pages = pagesRes?.ok ? ((await pagesRes.json()).data?.pages || []) : []
         const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
         
-        let downloads: any[] = []
+        interface DownloadItem {
+          id: string
+          name: string
+          [key: string]: unknown
+        }
+        let downloads: DownloadItem[] = []
         if (downloadsRes?.ok) {
           const downloadsData = await downloadsRes.json()
-          downloads = downloadsData?.data?.downloads || downloadsData?.data?.software || []
+          downloads = (downloadsData?.data?.downloads || downloadsData?.data?.software || []) as DownloadItem[]
         }
 
         setStats({

@@ -13,9 +13,9 @@ async function initializeDefaultAdmin(): Promise<void> {
     const userCount = await prisma.user.count()
     
     if (userCount === 0) {
-      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME
-      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD
-      const defaultName = process.env.DEFAULT_ADMIN_NAME
+      const defaultUsername = process.env['DEFAULT_ADMIN_USERNAME']
+      const defaultPassword = process.env['DEFAULT_ADMIN_PASSWORD']
+      const defaultName = process.env['DEFAULT_ADMIN_NAME']
       
       if (!defaultUsername || !defaultPassword) {
         console.error('❌ DEFAULT_ADMIN_USERNAME and DEFAULT_ADMIN_PASSWORD must be set in environment variables')

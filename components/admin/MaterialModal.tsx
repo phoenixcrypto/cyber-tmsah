@@ -79,8 +79,8 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
 
     // Validation
     const newErrors: Record<string, string> = {}
-    if (!formData.title.trim()) newErrors.title = 'العنوان مطلوب'
-    if (!formData.description.trim()) newErrors.description = 'الوصف مطلوب'
+    if (!formData['title'].trim()) newErrors['title'] = 'العنوان مطلوب'
+    if (!formData['description'].trim()) newErrors['description'] = 'الوصف مطلوب'
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -96,12 +96,12 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: formData.title.trim(),
-          titleEn: formData.titleEn.trim() || formData.title.trim(),
-          description: formData.description.trim(),
-          descriptionEn: formData.descriptionEn.trim() || formData.description.trim(),
-          icon: formData.icon,
-          color: formData.color,
+          title: formData['title'].trim(),
+          titleEn: formData['titleEn'].trim() || formData['title'].trim(),
+          description: formData['description'].trim(),
+          descriptionEn: formData['descriptionEn'].trim() || formData['description'].trim(),
+          icon: formData['icon'],
+          color: formData['color'],
         }),
       })
 
@@ -171,12 +171,16 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
                 </label>
                 <input
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className={`admin-modal-form-input ${errors.title ? 'error' : ''}`}
+                  value={formData['title']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['title'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['title'] ? 'error' : ''}`}
                   placeholder="مثال: الأمن السيبراني"
                 />
-                {errors.title && <span className="admin-modal-form-error">{errors.title}</span>}
+                {errors['title'] && <span className="admin-modal-form-error">{errors['title']}</span>}
               </div>
 
               {/* Title En */}
@@ -187,8 +191,12 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
                 </label>
                 <input
                   type="text"
-                  value={formData.titleEn}
-                  onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                  value={formData['titleEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['titleEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Example: Cybersecurity"
                 />
@@ -201,13 +209,17 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
                   <span>الوصف (عربي) *</span>
                 </label>
                 <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className={`admin-modal-form-input ${errors.description ? 'error' : ''}`}
+                  value={formData['description']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['description'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['description'] ? 'error' : ''}`}
                   placeholder="وصف المادة الدراسية..."
                   rows={4}
                 />
-                {errors.description && <span className="admin-modal-form-error">{errors.description}</span>}
+                {errors['description'] && <span className="admin-modal-form-error">{errors['description']}</span>}
               </div>
 
               {/* Description En */}
@@ -217,8 +229,12 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
                   <span>الوصف (إنجليزي)</span>
                 </label>
                 <textarea
-                  value={formData.descriptionEn}
-                  onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
+                  value={formData['descriptionEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['descriptionEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Material description in English..."
                   rows={4}
@@ -232,8 +248,12 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
                   <span>الأيقونة</span>
                 </label>
                 <select
-                  value={formData.icon}
-                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                  value={formData['icon']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['icon'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-select"
                 >
                   {iconOptions.map((icon) => (
@@ -251,8 +271,12 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
                   <span>اللون</span>
                 </label>
                 <select
-                  value={formData.color}
-                  onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                  value={formData['color']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['color'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-select"
                 >
                   {colorOptions.map((color) => (

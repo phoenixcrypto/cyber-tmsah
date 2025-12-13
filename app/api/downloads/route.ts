@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
+import type { ErrorWithCode } from '@/lib/types'
 
 /**
  * GET /api/downloads
@@ -50,12 +51,13 @@ export async function POST(request: NextRequest) {
     })
 
     return successResponse({ download }, { status: 201 })
-  } catch (error: any) {
-    if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.message === 'Unauthorized' || err.message.includes('Forbidden')) {
       return errorResponse('غير مصرح', 401)
     }
 
-    await logger.error('Create download error', error as Error)
+    await logger.error('Create download error', err as Error)
     return errorResponse('حدث خطأ أثناء إنشاء التحميل', 500)
   }
 }

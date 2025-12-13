@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Save, FileText, User, Tag, Calendar, BookOpen } from 'lucide-react'
 import RichTextEditor from '@/components/RichTextEditor'
-import { parseTags } from '@/lib/utils/json-helpers'
 
 interface Article {
   id?: string
@@ -82,14 +81,18 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
   }, [article, isOpen, materials])
 
   const handleAddTag = () => {
-    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
-      setFormData({ ...formData, tags: [...formData.tags, tagInput.trim()] })
+    if (tagInput.trim() && !formData['tags'].includes(tagInput.trim())) {
+      const newData = { ...formData }
+      newData['tags'] = [...formData['tags'], tagInput.trim()]
+      setFormData(newData)
       setTagInput('')
     }
   }
 
   const handleRemoveTag = (tag: string) => {
-    setFormData({ ...formData, tags: formData.tags.filter((t) => t !== tag) })
+    const newData = { ...formData }
+    newData['tags'] = formData['tags'].filter((t) => t !== tag)
+    setFormData(newData)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,10 +101,10 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
 
     // Validation
     const newErrors: Record<string, string> = {}
-    if (!formData.materialId) newErrors.materialId = 'المادة مطلوبة'
-    if (!formData.title.trim()) newErrors.title = 'العنوان مطلوب'
-    if (!formData.content.trim()) newErrors.content = 'المحتوى مطلوب'
-    if (!formData.author.trim()) newErrors.author = 'المؤلف مطلوب'
+    if (!formData['materialId']) newErrors['materialId'] = 'المادة مطلوبة'
+    if (!formData['title'].trim()) newErrors['title'] = 'العنوان مطلوب'
+    if (!formData['content'].trim()) newErrors['content'] = 'المحتوى مطلوب'
+    if (!formData['author'].trim()) newErrors['author'] = 'المؤلف مطلوب'
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -117,17 +120,17 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          materialId: formData.materialId,
-          title: formData.title.trim(),
-          titleEn: formData.titleEn.trim() || formData.title.trim(),
-          content: formData.content.trim(),
-          contentEn: formData.contentEn.trim() || formData.content.trim(),
-          excerpt: formData.excerpt || null,
-          excerptEn: formData.excerptEn || formData.excerpt || null,
-          author: formData.author.trim(),
-          status: formData.status,
-          publishedAt: formData.status === 'published' && formData.publishedAt ? formData.publishedAt : formData.status === 'published' ? new Date().toISOString() : null,
-          tags: formData.tags,
+          materialId: formData['materialId'],
+          title: formData['title'].trim(),
+          titleEn: formData['titleEn'].trim() || formData['title'].trim(),
+          content: formData['content'].trim(),
+          contentEn: formData['contentEn'].trim() || formData['content'].trim(),
+          excerpt: formData['excerpt'] || null,
+          excerptEn: formData['excerptEn'] || formData['excerpt'] || null,
+          author: formData['author'].trim(),
+          status: formData['status'],
+          publishedAt: formData['status'] === 'published' && formData['publishedAt'] ? formData['publishedAt'] : formData['status'] === 'published' ? new Date().toISOString() : null,
+          tags: formData['tags'],
         }),
       })
 
@@ -197,9 +200,13 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                   <span>المادة *</span>
                 </label>
                 <select
-                  value={formData.materialId}
-                  onChange={(e) => setFormData({ ...formData, materialId: e.target.value })}
-                  className={`admin-modal-form-select ${errors.materialId ? 'error' : ''}`}
+                  value={formData['materialId']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['materialId'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-select ${errors['materialId'] ? 'error' : ''}`}
                 >
                   <option value="">اختر المادة</option>
                   {materials.map((material) => (
@@ -208,7 +215,7 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                     </option>
                   ))}
                 </select>
-                {errors.materialId && <span className="admin-modal-form-error">{errors.materialId}</span>}
+                {errors['materialId'] && <span className="admin-modal-form-error">{errors['materialId']}</span>}
               </div>
 
               {/* Title */}
@@ -219,12 +226,16 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                 </label>
                 <input
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className={`admin-modal-form-input ${errors.title ? 'error' : ''}`}
+                  value={formData['title']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['title'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['title'] ? 'error' : ''}`}
                   placeholder="عنوان المقال"
                 />
-                {errors.title && <span className="admin-modal-form-error">{errors.title}</span>}
+                {errors['title'] && <span className="admin-modal-form-error">{errors['title']}</span>}
               </div>
 
               {/* Title En */}
@@ -235,8 +246,12 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                 </label>
                 <input
                   type="text"
-                  value={formData.titleEn}
-                  onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                  value={formData['titleEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['titleEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Article title in English"
                 />
@@ -250,12 +265,16 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                 </label>
                 <input
                   type="text"
-                  value={formData.author}
-                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                  className={`admin-modal-form-input ${errors.author ? 'error' : ''}`}
+                  value={formData['author']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['author'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['author'] ? 'error' : ''}`}
                   placeholder="اسم المؤلف"
                 />
-                {errors.author && <span className="admin-modal-form-error">{errors.author}</span>}
+                {errors['author'] && <span className="admin-modal-form-error">{errors['author']}</span>}
               </div>
 
               {/* Status */}
@@ -265,8 +284,12 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                   <span>الحالة</span>
                 </label>
                 <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'published' | 'draft' })}
+                  value={formData['status']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['status'] = e.target.value as 'published' | 'draft'
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-select"
                 >
                   <option value="draft">مسودة</option>
@@ -275,7 +298,7 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
               </div>
 
               {/* Published At */}
-              {formData.status === 'published' && (
+              {formData['status'] === 'published' && (
                 <div className="admin-modal-form-group">
                   <label className="admin-modal-form-label">
                     <Calendar className="w-4 h-4" />
@@ -283,8 +306,12 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                   </label>
                   <input
                     type="datetime-local"
-                    value={formData.publishedAt ? new Date(formData.publishedAt).toISOString().slice(0, 16) : ''}
-                    onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value ? new Date(e.target.value).toISOString() : null })}
+                    value={formData['publishedAt'] ? new Date(formData['publishedAt']).toISOString().slice(0, 16) : ''}
+                    onChange={(e) => {
+                      const newData = { ...formData }
+                      newData['publishedAt'] = e.target.value ? new Date(e.target.value).toISOString() : null
+                      setFormData(newData)
+                    }}
                     className="admin-modal-form-input"
                   />
                 </div>
@@ -297,8 +324,12 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                   <span>الملخص (عربي)</span>
                 </label>
                 <textarea
-                  value={formData.excerpt || ''}
-                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value || null })}
+                  value={formData['excerpt'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['excerpt'] = e.target.value || null
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="ملخص المقال..."
                   rows={3}
@@ -312,8 +343,12 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                   <span>الملخص (إنجليزي)</span>
                 </label>
                 <textarea
-                  value={formData.excerptEn || ''}
-                  onChange={(e) => setFormData({ ...formData, excerptEn: e.target.value || null })}
+                  value={formData['excerptEn'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['excerptEn'] = e.target.value || null
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Article excerpt in English..."
                   rows={3}
@@ -328,14 +363,18 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                 </label>
                 <div style={{ minHeight: '300px' }}>
                   <RichTextEditor
-                    value={formData.content}
-                    onChange={(value) => setFormData({ ...formData, content: value })}
+                    value={formData['content']}
+                    onChange={(value) => {
+                      const newData = { ...formData }
+                      newData['content'] = value
+                      setFormData(newData)
+                    }}
                     placeholder="اكتب محتوى المقال هنا..."
                     height="300px"
                     language="ar"
                   />
                 </div>
-                {errors.content && <span className="admin-modal-form-error">{errors.content}</span>}
+                {errors['content'] && <span className="admin-modal-form-error">{errors['content']}</span>}
               </div>
 
               {/* Content En */}
@@ -346,8 +385,12 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                 </label>
                 <div style={{ minHeight: '300px' }}>
                   <RichTextEditor
-                    value={formData.contentEn}
-                    onChange={(value) => setFormData({ ...formData, contentEn: value })}
+                    value={formData['contentEn']}
+                    onChange={(value) => {
+                      const newData = { ...formData }
+                      newData['contentEn'] = value
+                      setFormData(newData)
+                    }}
                     placeholder="Write article content in English here..."
                     height="300px"
                     language="en"
@@ -362,7 +405,7 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
                   <span>الوسوم</span>
                 </label>
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
-                  {formData.tags.map((tag) => (
+                  {formData['tags'].map((tag) => (
                     <span
                       key={tag}
                       className="admin-badge"

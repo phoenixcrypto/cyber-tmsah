@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Settings, Globe, Shield, Database, Bell, Save } from 'lucide-react'
+import { Settings, Globe, Shield, Database, Bell } from 'lucide-react'
 
 const settingsCategories = [
   {

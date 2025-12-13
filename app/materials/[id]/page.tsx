@@ -6,7 +6,12 @@ import { useParams } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 // Static articles data - no API calls
-const staticArticles: { [key: string]: any[] } = {
+interface StaticArticle {
+  id: string
+  title: string
+  [key: string]: unknown
+}
+const staticArticles: Record<string, StaticArticle[]> = {
   'applied-physics': [],
   'mathematics': [],
   'entrepreneurship': [],
@@ -65,7 +70,7 @@ const subjectData = {
 export default function SubjectPage() {
   const { t } = useLanguage()
   const params = useParams()
-  const subjectId = params.id as string
+  const subjectId = params['id'] as string
   const articles = staticArticles[subjectId] || []
   const subject = subjectData[subjectId as keyof typeof subjectData]
 
@@ -125,7 +130,7 @@ export default function SubjectPage() {
         <div className="space-y-4">
           {articles.length > 0 ? articles.map((article, index) => (
             <div 
-              key={article.id}
+              key={String(article['id'])}
               className="enhanced-card p-6 hover:scale-[1.02] transition-all duration-300 animate-slide-up-delayed"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -133,33 +138,33 @@ export default function SubjectPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-xl font-semibold text-dark-100">
-                      {article.title}
+                      {String(article['title'] || '')}
                     </h3>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      article.status === 'published' 
+                      article['status'] === 'published' 
                         ? 'bg-green-500/20 text-green-400' 
                         : 'bg-yellow-500/20 text-yellow-400'
                     }`}>
-                      {article.status === 'published' ? t('materials.subject.available') : t('materials.subject.comingSoon')}
+                      {article['status'] === 'published' ? t('materials.subject.available') : t('materials.subject.comingSoon')}
                     </span>
                   </div>
                   
                   <p className="text-dark-300 mb-4">
-                    {article.excerpt || article.description}
+                    {String(article['excerpt'] || article['description'] || '')}
                   </p>
                   
                   <div className="flex items-center gap-6 text-sm text-dark-400">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>{t('materials.subject.duration')}: {article.duration}</span>
+                      <span>{t('materials.subject.duration')}: {String(article['duration'] || '')}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{t('materials.subject.publishedAt')}: {new Date(article.publishedAt).toLocaleDateString()}</span>
+                      <span>{t('materials.subject.publishedAt')}: {article['publishedAt'] ? new Date(String(article['publishedAt'])).toLocaleDateString() : ''}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-4" />
-                      <span>{t('materials.subject.type')}: <span className="capitalize">{article.type}</span></span>
+                      <span>{t('materials.subject.type')}: <span className="capitalize">{String(article['type'] || '')}</span></span>
                     </div>
                   </div>
                 </div>

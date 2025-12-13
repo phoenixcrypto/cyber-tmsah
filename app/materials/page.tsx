@@ -40,7 +40,17 @@ export default function MaterialsPage() {
         const res = await fetch('/api/materials')
         const data = await res.json()
         // Map API data to Subject format
-        const mappedSubjects = (data.materials || []).map((m: any) => ({
+        interface ApiMaterial {
+          id: string
+          title: string
+          description: string
+          icon: string
+          color: string
+          articlesCount?: number
+          lastUpdated?: string
+        }
+        const materials = (data.materials || []) as ApiMaterial[]
+        const mappedSubjects = materials.map((m): Subject => ({
           id: m.id,
           title: m.title,
           description: m.description,
@@ -79,8 +89,9 @@ export default function MaterialsPage() {
       {/* Subjects Grid - Enhanced 2026 Design */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {subjects.map((subject, index) => {
-            const IconComponent = (Icons as any)[subject.icon] || BookOpen
-            const Icon = IconComponent as LucideIcon
+            // Type-safe icon lookup
+            const IconComponent = (Icons as unknown as Record<string, LucideIcon>)[subject.icon]
+            const Icon = (IconComponent && typeof IconComponent === 'function' ? IconComponent : BookOpen) as LucideIcon
             return (
               <Link
                 key={subject.id}

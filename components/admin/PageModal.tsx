@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Save, FileText, Hash, Calendar } from 'lucide-react'
+import { X, Save, FileText, Hash } from 'lucide-react'
 import RichTextEditor from '@/components/RichTextEditor'
 
 interface Page {
@@ -75,13 +75,13 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
 
     // Validation
     const newErrors: Record<string, string> = {}
-    if (!formData.slug.trim()) newErrors.slug = 'الرابط مطلوب'
-    if (!formData.title.trim()) newErrors.title = 'العنوان مطلوب'
-    if (!formData.content.trim()) newErrors.content = 'المحتوى مطلوب'
+    if (!formData['slug'].trim()) newErrors['slug'] = 'الرابط مطلوب'
+    if (!formData['title'].trim()) newErrors['title'] = 'العنوان مطلوب'
+    if (!formData['content'].trim()) newErrors['content'] = 'المحتوى مطلوب'
 
     // Validate slug format
-    if (formData.slug && !/^[a-z0-9-]+$/.test(formData.slug)) {
-      newErrors.slug = 'الرابط يجب أن يحتوي على أحرف صغيرة وأرقام وشرطات فقط'
+    if (formData['slug'] && !/^[a-z0-9-]+$/.test(formData['slug'])) {
+      newErrors['slug'] = 'الرابط يجب أن يحتوي على أحرف صغيرة وأرقام وشرطات فقط'
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -98,15 +98,15 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          slug: formData.slug.trim(),
-          title: formData.title.trim(),
-          titleEn: formData.titleEn.trim() || formData.title.trim(),
-          content: formData.content.trim(),
-          contentEn: formData.contentEn.trim() || formData.content.trim(),
-          metaDescription: formData.metaDescription || null,
-          metaDescriptionEn: formData.metaDescriptionEn || formData.metaDescription || null,
-          status: formData.status,
-          order: formData.order || 0,
+          slug: formData['slug'].trim(),
+          title: formData['title'].trim(),
+          titleEn: formData['titleEn'].trim() || formData['title'].trim(),
+          content: formData['content'].trim(),
+          contentEn: formData['contentEn'].trim() || formData['content'].trim(),
+          metaDescription: formData['metaDescription'] || null,
+          metaDescriptionEn: formData['metaDescriptionEn'] || formData['metaDescription'] || null,
+          status: formData['status'],
+          order: formData['order'] || 0,
         }),
       })
 
@@ -177,13 +177,17 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-                  className={`admin-modal-form-input ${errors.slug ? 'error' : ''}`}
+                  value={formData['slug']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['slug'] = e.target.value.toLowerCase().replace(/\s+/g, '-')
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['slug'] ? 'error' : ''}`}
                   placeholder="مثال: about-us"
                   disabled={!!page?.id}
                 />
-                {errors.slug && <span className="admin-modal-form-error">{errors.slug}</span>}
+                {errors['slug'] && <span className="admin-modal-form-error">{errors['slug']}</span>}
                 <small style={{ color: 'var(--dark-400)', fontSize: '0.75rem', marginTop: '0.25rem', display: 'block' }}>
                   {page?.id ? 'لا يمكن تغيير الرابط بعد الإنشاء' : 'سيتم الوصول للصفحة عبر /[slug]'}
                 </small>
@@ -197,8 +201,12 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                 </label>
                 <input
                   type="number"
-                  value={formData.order || 0}
-                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                  value={formData['order'] || 0}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['order'] = parseInt(e.target.value) || 0
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   min="0"
                 />
@@ -212,12 +220,16 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className={`admin-modal-form-input ${errors.title ? 'error' : ''}`}
+                  value={formData['title']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['title'] = e.target.value
+                    setFormData(newData)
+                  }}
+                  className={`admin-modal-form-input ${errors['title'] ? 'error' : ''}`}
                   placeholder="عنوان الصفحة"
                 />
-                {errors.title && <span className="admin-modal-form-error">{errors.title}</span>}
+                {errors['title'] && <span className="admin-modal-form-error">{errors['title']}</span>}
               </div>
 
               {/* Title En */}
@@ -228,8 +240,12 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                 </label>
                 <input
                   type="text"
-                  value={formData.titleEn}
-                  onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                  value={formData['titleEn']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['titleEn'] = e.target.value
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="Page title in English"
                 />
@@ -242,8 +258,12 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                   <span>الحالة</span>
                 </label>
                 <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'published' | 'draft' })}
+                  value={formData['status']}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['status'] = e.target.value as 'published' | 'draft'
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-select"
                 >
                   <option value="draft">مسودة</option>
@@ -258,8 +278,12 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                   <span>وصف SEO (عربي)</span>
                 </label>
                 <textarea
-                  value={formData.metaDescription || ''}
-                  onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value || null })}
+                  value={formData['metaDescription'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['metaDescription'] = e.target.value || null
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="وصف مختصر للصفحة لمحركات البحث..."
                   rows={2}
@@ -273,8 +297,12 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                   <span>وصف SEO (إنجليزي)</span>
                 </label>
                 <textarea
-                  value={formData.metaDescriptionEn || ''}
-                  onChange={(e) => setFormData({ ...formData, metaDescriptionEn: e.target.value || null })}
+                  value={formData['metaDescriptionEn'] || ''}
+                  onChange={(e) => {
+                    const newData = { ...formData }
+                    newData['metaDescriptionEn'] = e.target.value || null
+                    setFormData(newData)
+                  }}
                   className="admin-modal-form-input"
                   placeholder="SEO description in English..."
                   rows={2}
@@ -289,14 +317,18 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                 </label>
                 <div style={{ minHeight: '400px' }}>
                   <RichTextEditor
-                    value={formData.content}
-                    onChange={(value) => setFormData({ ...formData, content: value })}
+                    value={formData['content']}
+                    onChange={(value) => {
+                      const newData = { ...formData }
+                      newData['content'] = value
+                      setFormData(newData)
+                    }}
                     placeholder="اكتب محتوى الصفحة هنا..."
                     height="400px"
                     language="ar"
                   />
                 </div>
-                {errors.content && <span className="admin-modal-form-error">{errors.content}</span>}
+                {errors['content'] && <span className="admin-modal-form-error">{errors['content']}</span>}
               </div>
 
               {/* Content En */}
@@ -307,8 +339,12 @@ export default function PageModal({ isOpen, onClose, onSave, page }: PageModalPr
                 </label>
                 <div style={{ minHeight: '400px' }}>
                   <RichTextEditor
-                    value={formData.contentEn}
-                    onChange={(value) => setFormData({ ...formData, contentEn: value })}
+                    value={formData['contentEn']}
+                    onChange={(value) => {
+                      const newData = { ...formData }
+                      newData['contentEn'] = value
+                      setFormData(newData)
+                    }}
                     placeholder="Write page content in English here..."
                     height="400px"
                     language="en"

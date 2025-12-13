@@ -9,7 +9,7 @@ import { logger } from '@/lib/utils/logger'
  * Get single news article by ID
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

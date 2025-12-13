@@ -5,6 +5,7 @@ import { successResponse, errorResponse, notFoundResponse, validationErrorRespon
 import { logger } from '@/lib/utils/logger'
 import { hashPassword } from '@/lib/auth/bcrypt'
 import { z } from 'zod'
+import type { UserUpdateInput, ErrorWithCode } from '@/lib/types'
 
 const updateUserSchema = z.object({
   username: z.string().min(3).max(50).optional(),
@@ -36,7 +37,7 @@ export async function PUT(
     }
 
     const data = validationResult.data
-    const updateData: any = {}
+    const updateData: UserUpdateInput = {}
 
     if (data.username) {
       // Check if username exists (excluding current user)
@@ -88,16 +89,17 @@ export async function PUT(
     })
 
     return successResponse({ user: updatedUser })
-  } catch (error: any) {
-    if (error.code === 'P2025') {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.code === 'P2025') {
       return notFoundResponse('المستخدم غير موجود')
     }
 
-    if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+    if (err.message === 'Unauthorized' || err.message.includes('Forbidden')) {
       return errorResponse('غير مصرح', 401)
     }
 
-    await logger.error('Update user error', error as Error, {
+    await logger.error('Update user error', err as Error, {
       userId: params.id,
       ipAddress: context.ipAddress,
     })
@@ -134,16 +136,17 @@ export async function DELETE(
     })
 
     return successResponse({ message: 'تم الحذف بنجاح' })
-  } catch (error: any) {
-    if (error.code === 'P2025') {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.code === 'P2025') {
       return notFoundResponse('المستخدم غير موجود')
     }
 
-    if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+    if (err.message === 'Unauthorized' || err.message.includes('Forbidden')) {
       return errorResponse('غير مصرح', 401)
     }
 
-    await logger.error('Delete user error', error as Error, {
+    await logger.error('Delete user error', err as Error, {
       userId: params.id,
       ipAddress: context.ipAddress,
     })

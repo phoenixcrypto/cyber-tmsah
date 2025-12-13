@@ -9,7 +9,7 @@ import { logger } from '@/lib/utils/logger'
  * Get single page by ID or slug
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

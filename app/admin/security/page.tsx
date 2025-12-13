@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Shield, CheckCircle, AlertCircle, Lock, Database, Key } from 'lucide-react'
+import { Shield, CheckCircle, Lock, Database, Key } from 'lucide-react'
 
 const securityChecks = [
   { label: 'حماية تسجيل الدخول', value: 'JWT + Refresh Tokens', status: 'مفعل', icon: Lock, color: 'from-green-500 to-emerald-500' },

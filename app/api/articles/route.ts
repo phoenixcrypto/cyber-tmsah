@@ -76,6 +76,16 @@ export async function POST(request: NextRequest) {
       return errorResponse('المادة المحددة غير موجودة', 404)
     }
 
+    // Get user name from database if author is not provided
+    let authorName = author
+    if (!authorName) {
+      const fullUser = await prisma.user.findUnique({
+        where: { id: user.userId },
+        select: { name: true },
+      })
+      authorName = fullUser?.name || user.email
+    }
+
     const article = await prisma.article.create({
       data: {
         materialId,
@@ -85,7 +95,7 @@ export async function POST(request: NextRequest) {
         contentEn: contentEn || content,
         excerpt: excerpt || null,
         excerptEn: excerptEn || excerpt || null,
-        author: author || user.name,
+        author: authorName,
         status: status === 'published' ? 'published' : 'draft',
         publishedAt: status === 'published' && publishedAt ? new Date(publishedAt) : status === 'published' ? new Date() : null,
         tags: stringifyTags(tags || []),

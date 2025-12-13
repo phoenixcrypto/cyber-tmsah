@@ -6,8 +6,8 @@ import { logger } from '@/lib/utils/logger'
 import { sanitizeText, sanitizeHtml } from '@/lib/utils/security'
 import { getRequestContext } from '@/lib/middleware/auth'
 
-const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@cyber-tmsah.site'
-const FROM_EMAIL = process.env.FROM_EMAIL || 'Cyber TMSAH <noreply@cyber-tmsah.site>'
+const CONTACT_EMAIL = process.env['CONTACT_EMAIL'] || 'info@cyber-tmsah.site'
+const FROM_EMAIL = process.env['FROM_EMAIL'] || 'Cyber TMSAH <noreply@cyber-tmsah.site>'
 
 const contactSchema = z.object({
   name: z.string().min(2).max(100),
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     const sanitizedSubject = sanitizeText(subject)
     const sanitizedMessage = sanitizeHtml(message)
 
-    const apiKey = process.env.RESEND_API_KEY
+    const apiKey = process.env['RESEND_API_KEY']
     if (!apiKey) {
       await logger.error('RESEND_API_KEY is not set', undefined, {
         method: 'POST',

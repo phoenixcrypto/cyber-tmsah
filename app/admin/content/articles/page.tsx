@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, type ChangeEvent } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Edit, Trash2, Search, FileText } from 'lucide-react'
 import ArticleModal from '@/components/admin/ArticleModal'
@@ -35,13 +35,34 @@ export default function AdminArticlesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingArticle, setEditingArticle] = useState<Article | null>(null)
 
-  const fetchArticles = async () => {
+  const fetchArticles = useCallback(async () => {
     try {
       setLoading(true)
       const res = await fetch('/api/articles')
       if (res.ok) {
         const data = await res.json()
-        const articles = (data.data.articles || []).map((article: any) => ({
+        interface ApiArticle {
+          id: string
+          materialId: string
+          title: string
+          titleEn: string
+          content: string
+          contentEn: string
+          excerpt?: string | null
+          excerptEn?: string | null
+          author: string
+          status: 'published' | 'draft'
+          publishedAt?: string | null
+          views: number
+          tags: unknown
+          createdAt: string
+          updatedAt: string
+          material?: {
+            title: string
+          }
+        }
+        const apiArticles = (data.data?.articles || data.articles || []) as ApiArticle[]
+        const articles = apiArticles.map((article): Article => ({
           ...article,
           tags: parseTags(article.tags),
         }))
@@ -54,26 +75,26 @@ export default function AdminArticlesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const fetchMaterials = async () => {
+  const fetchMaterials = useCallback(async () => {
     try {
       const res = await fetch('/api/materials')
       if (res.ok) {
         const data = await res.json()
-        setMaterials(data.data.materials || [])
+        setMaterials(data.data?.materials || data.materials || [])
       }
     } catch (error) {
       console.error('Error fetching materials:', error)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchArticles()
     fetchMaterials()
-  }, [])
+  }, [fetchArticles, fetchMaterials])
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذا المقال؟')) {
       return
     }
@@ -81,7 +102,7 @@ export default function AdminArticlesPage() {
     try {
       const res = await fetch(`/api/articles/${id}`, { method: 'DELETE' })
       if (res.ok) {
-        setArticles(articles.filter((a) => a.id !== id))
+        setArticles((prevArticles: Article[]) => prevArticles.filter((a: Article) => a.id !== id))
         alert('تم الحذف بنجاح')
       } else {
         const errorData = await res.json()
@@ -91,9 +112,9 @@ export default function AdminArticlesPage() {
       console.error('Delete error:', error)
       alert('حدث خطأ أثناء الحذف')
     }
-  }
+  }, [])
 
-  const filteredArticles = articles.filter((article) =>
+  const filteredArticles = articles.filter((article: Article) =>
     article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     article.titleEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
     article.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -152,7 +173,7 @@ export default function AdminArticlesPage() {
             type="text"
             placeholder="بحث عن مقال..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             className="admin-users-search-input"
           />
         </div>
@@ -185,7 +206,7 @@ export default function AdminArticlesPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredArticles.map((article) => {
+              {filteredArticles.map((article: Article) => {
                 return (
                   <tr key={article.id}>
                     <td>
@@ -244,7 +265,9 @@ export default function AdminArticlesPage() {
           setIsModalOpen(false)
           setEditingArticle(null)
         }}
-        onSave={fetchArticles}
+        onSave={() => {
+          fetchArticles()
+        }}
         article={editingArticle}
         materials={materials}
       />

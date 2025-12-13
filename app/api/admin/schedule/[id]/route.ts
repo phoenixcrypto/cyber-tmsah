@@ -4,6 +4,7 @@ import { requireAdmin, getRequestContext } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { z } from 'zod'
+import type { ScheduleItemUpdateInput, ErrorWithCode } from '@/lib/types'
 
 const updateScheduleSchema = z.object({
   title: z.string().min(1).optional(),
@@ -36,7 +37,7 @@ export async function PUT(
     }
 
     const data = validationResult.data
-    const updateData: any = {}
+    const updateData: ScheduleItemUpdateInput = {}
 
     if (data.title) updateData.title = data.title
     if (data.time) updateData.time = data.time
@@ -61,12 +62,13 @@ export async function PUT(
     return successResponse({
       item: { ...item, group: item.group === 'Group1' ? 'Group 1' : 'Group 2' },
     })
-  } catch (error: any) {
-    if (error.code === 'P2025') {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.code === 'P2025') {
       return notFoundResponse('العنصر غير موجود')
     }
 
-    await logger.error('Update schedule error', error as Error, {
+    await logger.error('Update schedule error', err as Error, {
       itemId: params.id,
       ipAddress: context.ipAddress,
     })
@@ -98,12 +100,13 @@ export async function DELETE(
     })
 
     return successResponse({ message: 'تم الحذف بنجاح' })
-  } catch (error: any) {
-    if (error.code === 'P2025') {
+  } catch (error) {
+    const err = error as ErrorWithCode
+    if (err.code === 'P2025') {
       return notFoundResponse('العنصر غير موجود')
     }
 
-    await logger.error('Delete schedule error', error as Error, {
+    await logger.error('Delete schedule error', err as Error, {
       itemId: params.id,
       ipAddress: context.ipAddress,
     })

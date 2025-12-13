@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
       // TODO: Send email with reset link
       // For now, log the token (remove in production)
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env['NODE_ENV'] === 'development') {
         console.log(`Password reset token for ${email}: ${token}`)
       }
 

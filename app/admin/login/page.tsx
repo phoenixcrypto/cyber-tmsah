@@ -104,14 +104,14 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Error Message */}
-        {errors.general && (
+        {errors['general'] && (
           <motion.div
             className="admin-login-error"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <AlertCircle className="w-5 h-5" />
-            <span>{errors.general}</span>
+            <span>{errors['general']}</span>
           </motion.div>
         )}
 
@@ -126,12 +126,12 @@ export default function AdminLoginPage() {
               type="text"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              className={`admin-login-form-input ${errors.username ? 'error' : ''}`}
+              className={`admin-login-form-input ${errors['username'] ? 'error' : ''}`}
               placeholder="أدخل اسم المستخدم"
               required
             />
-            {errors.username && (
-              <span className="admin-login-form-error">{errors.username}</span>
+            {errors['username'] && (
+              <span className="admin-login-form-error">{errors['username']}</span>
             )}
           </div>
 
@@ -145,7 +145,7 @@ export default function AdminLoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className={`admin-login-form-input ${errors.password ? 'error' : ''}`}
+                className={`admin-login-form-input ${errors['password'] ? 'error' : ''}`}
                 placeholder="أدخل كلمة المرور"
                 required
               />
@@ -159,8 +159,8 @@ export default function AdminLoginPage() {
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </motion.button>
             </div>
-            {errors.password && (
-              <span className="admin-login-form-error">{errors.password}</span>
+            {errors['password'] && (
+              <span className="admin-login-form-error">{errors['password']}</span>
             )}
           </div>
 

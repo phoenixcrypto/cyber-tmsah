@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Save, User, Mail, Shield, Lock } from 'lucide-react'
+import type { User } from '@/lib/types'
 
 interface UserModalProps {
   isOpen: boolean
   onClose: () => void
   onSave?: () => void
-  user?: any
+  user?: User | null
 }
 
 export default function UserModal({ isOpen, onClose, onSave, user }: UserModalProps) {
@@ -203,9 +204,12 @@ export default function UserModal({ isOpen, onClose, onSave, user }: UserModalPr
                 </label>
                 <select
                   value={formData.role}
-                  onChange={(e) =>
-                    setFormData({ ...formData, role: e.target.value as any })
-                  }
+                  onChange={(e) => {
+                    const role = e.target.value as 'admin' | 'editor' | 'viewer'
+                    if (role === 'admin' || role === 'editor' || role === 'viewer') {
+                      setFormData({ ...formData, role })
+                    }
+                  }}
                   className="admin-modal-form-select"
                 >
                   <option value="viewer">مشاهد</option>
