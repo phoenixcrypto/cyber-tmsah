@@ -43,6 +43,8 @@
     "@types/node": "^20.19.26",
     "@types/node-fetch": "^2.6.13",
     "@types/prop-types": "^15.7.15",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@types/trusted-types": "^2.0.7",
     "commander": "^14.0.2",
     "eslint": "^9.39.2",
