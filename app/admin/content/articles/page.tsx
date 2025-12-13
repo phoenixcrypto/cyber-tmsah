@@ -19,7 +19,7 @@ interface Article {
   status: 'published' | 'draft'
   publishedAt?: string | null
   views: number
-  tags: unknown
+  tags: string[] | unknown
   createdAt: string
   updatedAt: string
   material?: {
