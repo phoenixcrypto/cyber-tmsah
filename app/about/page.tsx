@@ -223,10 +223,11 @@ export default function AboutPage() {
                     src="/image/zeyad-mohamed.jpeg"
                     alt="زياد محمد"
                     width={320}
-                    height={320}
+                    height={400}
                     className="team-member-image-hero-2030"
                     priority
                     quality={95}
+                    style={{ objectFit: 'contain', objectPosition: 'center top' }}
                   />
                   <div className="team-member-image-glow-2030"></div>
                 </div>
