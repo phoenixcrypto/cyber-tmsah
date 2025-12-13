@@ -41,7 +41,11 @@ export default function AdminArticlesPage() {
       const res = await fetch('/api/articles')
       if (res.ok) {
         const data = await res.json()
-        setArticles(data.data.articles || [])
+        const articles = (data.data.articles || []).map((article: any) => ({
+          ...article,
+          tags: parseTags(article.tags),
+        }))
+        setArticles(articles)
       } else {
         console.error('Failed to fetch articles')
       }
@@ -182,7 +186,6 @@ export default function AdminArticlesPage() {
             </thead>
             <tbody>
               {filteredArticles.map((article) => {
-                const tags = parseTags(article.tags)
                 return (
                   <tr key={article.id}>
                     <td>
@@ -206,7 +209,7 @@ export default function AdminArticlesPage() {
                         <motion.button
                           className="admin-action-btn admin-action-btn-edit"
                           onClick={() => {
-                            setEditingArticle({ ...article, tags })
+                            setEditingArticle(article)
                             setIsModalOpen(true)
                           }}
                           whileHover={{ scale: 1.1 }}
