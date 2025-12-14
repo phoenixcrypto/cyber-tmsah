@@ -16,7 +16,7 @@ export async function GET() {
       .orderBy('name', 'asc')
       .get()
 
-    const downloads = downloadsSnapshot.docs.map((doc) => ({
+    const downloads = downloadsSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => ({
       id: doc.id,
       ...doc.data(),
     }))

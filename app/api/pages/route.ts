@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       .orderBy('createdAt', 'desc')
       .get()
 
-    const pages = pagesSnapshot.docs.map((doc) => ({
+    const pages = pagesSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => ({
       id: doc.id,
       ...doc.data(),
     }))

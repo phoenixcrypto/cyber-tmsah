@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     // Get materials for each article
     const articles = await Promise.all(
-      articlesSnapshot.docs.map(async (doc) => {
+      articlesSnapshot.docs.map(async (doc: { id: string; data: () => Record<string, unknown> }) => {
         const data = doc.data()
         const materialId = data['materialId']
 
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
     const article = {
       id: articleRef.id,
       ...articleData,
-      tags: parseTags(articleData.tags),
+      tags: parseTags(articleData['tags'] || '[]'),
     }
 
     return successResponse({ article }, { status: 201 })

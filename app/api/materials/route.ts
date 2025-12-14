@@ -17,7 +17,7 @@ export async function GET() {
       .get()
 
     const materials = await Promise.all(
-      materialsSnapshot.docs.map(async (doc) => {
+      materialsSnapshot.docs.map(async (doc: { id: string; data: () => Record<string, unknown> }) => {
         const data = doc.data()
         const materialId = doc.id
 

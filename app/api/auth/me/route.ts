@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     const userData = userDoc.data()
+    const lastLogin = userData?.['lastLogin'] as { toDate?: () => Date } | Date | null
 
     return successResponse({
       user: {
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
         email: userData?.['email'] || user.email,
         name: userData?.['name'] || userData?.['username'] || '',
         role: userData?.['role'] || user.role,
-        lastLogin: userData?.['lastLogin']?.toDate?.() || userData?.['lastLogin'] || null,
+        lastLogin: lastLogin && typeof lastLogin === 'object' && 'toDate' in lastLogin ? lastLogin.toDate?.() : lastLogin || null,
       },
     })
   } catch (error) {

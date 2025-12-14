@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     const newsSnapshot = await query.get()
 
-    const news = newsSnapshot.docs.map((doc) => ({
+    const news = newsSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => ({
       id: doc.id,
       ...doc.data(),
     }))

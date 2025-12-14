@@ -30,17 +30,21 @@ export async function GET(request: NextRequest) {
       .orderBy('createdAt', 'desc')
       .get()
 
-    const users = usersSnapshot.docs.map((doc) => {
+    const users = usersSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => {
       const data = doc.data()
+      const lastLogin = data['lastLogin'] as { toDate?: () => Date } | Date | null
+      const createdAt = data['createdAt'] as { toDate?: () => Date } | Date | null
+      const updatedAt = data['updatedAt'] as { toDate?: () => Date } | Date | null
+      
       return {
         id: doc.id,
         username: data['username'],
         email: data['email'] || null,
         name: data['name'],
         role: data['role'],
-        lastLogin: data['lastLogin']?.toDate?.() || data['lastLogin'] || null,
-        createdAt: data['createdAt']?.toDate?.() || data['createdAt'] || null,
-        updatedAt: data['updatedAt']?.toDate?.() || data['updatedAt'] || null,
+        lastLogin: lastLogin && typeof lastLogin === 'object' && 'toDate' in lastLogin ? lastLogin.toDate?.() : lastLogin || null,
+        createdAt: createdAt && typeof createdAt === 'object' && 'toDate' in createdAt ? createdAt.toDate?.() : createdAt || null,
+        updatedAt: updatedAt && typeof updatedAt === 'object' && 'toDate' in updatedAt ? updatedAt.toDate?.() : updatedAt || null,
       }
     })
 

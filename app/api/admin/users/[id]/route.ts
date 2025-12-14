@@ -104,6 +104,8 @@ export async function PUT(
       ipAddress: context.ipAddress,
     })
 
+    const updatedAt = updatedData['updatedAt'] as { toDate?: () => Date } | Date | null
+    
     return successResponse({
       user: {
         id: updatedDoc.id,
@@ -111,7 +113,7 @@ export async function PUT(
         email: updatedData['email'] || null,
         name: updatedData['name'],
         role: updatedData['role'],
-        updatedAt: updatedData['updatedAt']?.toDate?.() || updatedData['updatedAt'] || null,
+        updatedAt: updatedAt && typeof updatedAt === 'object' && 'toDate' in updatedAt ? updatedAt.toDate?.() : updatedAt || null,
       },
     })
   } catch (error) {

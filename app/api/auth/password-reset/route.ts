@@ -115,14 +115,23 @@ export async function POST(request: NextRequest) {
       }
 
       const resetTokenDoc = tokensSnapshot.docs[0]
+      if (!resetTokenDoc) {
+        return errorResponse('Invalid or expired reset token', 400)
+      }
       const resetTokenData = resetTokenDoc.data()
+      const expiresAt = resetTokenData['expiresAt'] as { toDate?: () => Date } | Date | string | null
+      const expiresAtDate = expiresAt && typeof expiresAt === 'object' && 'toDate' in expiresAt 
+        ? expiresAt.toDate?.() 
+        : expiresAt instanceof Date 
+          ? expiresAt 
+          : expiresAt ? new Date(expiresAt as string) : null
 
       // Check if token is used or expired
-      if (resetTokenData.used || (resetTokenData.expiresAt?.toDate?.() || new Date(resetTokenData.expiresAt)) < new Date()) {
+      if (resetTokenData['used'] || (expiresAtDate && expiresAtDate < new Date())) {
         return errorResponse('Invalid or expired reset token', 400)
       }
 
-      const userId = resetTokenData.userId
+      const userId = resetTokenData['userId']
 
       // Get user
       const userDoc = await db.collection('users').doc(userId).get()

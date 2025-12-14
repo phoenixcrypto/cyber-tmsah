@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       .get()
 
     // Transform enum values back to original format for compatibility
-    const transformedItems = itemsSnapshot.docs.map((doc) => {
+    const transformedItems = itemsSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => {
       const data = doc.data()
       return {
         id: doc.id,
