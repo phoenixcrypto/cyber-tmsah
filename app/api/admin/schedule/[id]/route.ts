@@ -1,10 +1,10 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { requireAdmin, getRequestContext } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { z } from 'zod'
-import type { ScheduleItemUpdateInput, ErrorWithCode } from '@/lib/types'
+import { FieldValue } from 'firebase-admin/firestore'
 
 const updateScheduleSchema = z.object({
   title: z.string().min(1).optional(),
@@ -37,7 +37,16 @@ export async function PUT(
     }
 
     const data = validationResult.data
-    const updateData: ScheduleItemUpdateInput = {}
+    const db = getFirestoreDB()
+    const itemDoc = await db.collection('scheduleItems').doc(params.id).get()
+
+    if (!itemDoc.exists) {
+      return notFoundResponse('العنصر غير موجود')
+    }
+
+    const updateData: any = {
+      updatedAt: FieldValue.serverTimestamp(),
+    }
 
     if (data.title) updateData.title = data.title
     if (data.time) updateData.time = data.time
@@ -48,10 +57,10 @@ export async function PUT(
     if (data.sectionNumber !== undefined) updateData.sectionNumber = data.sectionNumber
     if (data.day) updateData.day = data.day
 
-    const item = await prisma.scheduleItem.update({
-      where: { id: params.id },
-      data: updateData,
-    })
+    await db.collection('scheduleItems').doc(params.id).update(updateData)
+
+    const updatedDoc = await db.collection('scheduleItems').doc(params.id).get()
+    const updatedData = updatedDoc.data()!
 
     await logger.info('Schedule item updated', {
       itemId: params.id,
@@ -60,15 +69,14 @@ export async function PUT(
     })
 
     return successResponse({
-      item: { ...item, group: item.group === 'Group1' ? 'Group 1' : 'Group 2' },
+      item: {
+        id: updatedDoc.id,
+        ...updatedData,
+        group: updatedData.group === 'Group1' ? 'Group 1' : 'Group 2',
+      },
     })
   } catch (error) {
-    const err = error as ErrorWithCode
-    if (err.code === 'P2025') {
-      return notFoundResponse('العنصر غير موجود')
-    }
-
-    await logger.error('Update schedule error', err as Error, {
+    await logger.error('Update schedule error', error as Error, {
       itemId: params.id,
       ipAddress: context.ipAddress,
     })
@@ -89,9 +97,14 @@ export async function DELETE(
   try {
     const user = await requireAdmin(request)
 
-    await prisma.scheduleItem.delete({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
+    const itemDoc = await db.collection('scheduleItems').doc(params.id).get()
+
+    if (!itemDoc.exists) {
+      return notFoundResponse('العنصر غير موجود')
+    }
+
+    await db.collection('scheduleItems').doc(params.id).delete()
 
     await logger.info('Schedule item deleted', {
       itemId: params.id,
@@ -101,16 +114,10 @@ export async function DELETE(
 
     return successResponse({ message: 'تم الحذف بنجاح' })
   } catch (error) {
-    const err = error as ErrorWithCode
-    if (err.code === 'P2025') {
-      return notFoundResponse('العنصر غير موجود')
-    }
-
-    await logger.error('Delete schedule error', err as Error, {
+    await logger.error('Delete schedule error', error as Error, {
       itemId: params.id,
       ipAddress: context.ipAddress,
     })
     return errorResponse('حدث خطأ أثناء الحذف', 500)
   }
 }
-

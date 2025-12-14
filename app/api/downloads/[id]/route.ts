@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { requireEditor } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
+import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/downloads/[id]
@@ -13,15 +14,19 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const download = await prisma.downloadSoftware.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
+    const downloadDoc = await db.collection('downloads').doc(params.id).get()
 
-    if (!download) {
+    if (!downloadDoc.exists) {
       return notFoundResponse('البرنامج غير موجود')
     }
 
-    return successResponse({ download })
+    return successResponse({
+      download: {
+        id: downloadDoc.id,
+        ...downloadDoc.data(),
+      },
+    })
   } catch (error) {
     await logger.error('Get download error', error as Error)
     return errorResponse('حدث خطأ أثناء جلب البيانات', 500)
@@ -42,30 +47,36 @@ export async function PUT(
     const body = await request.json()
     const { name, nameEn, description, descriptionEn, icon, videoUrl, downloadUrl, category } = body
 
-    // Check if download exists
-    const existingDownload = await prisma.downloadSoftware.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
+    const downloadDoc = await db.collection('downloads').doc(params.id).get()
 
-    if (!existingDownload) {
+    if (!downloadDoc.exists) {
       return notFoundResponse('البرنامج غير موجود')
     }
 
-    const download = await prisma.downloadSoftware.update({
-      where: { id: params.id },
-      data: {
-        ...(name && { name }),
-        ...(nameEn !== undefined && { nameEn }),
-        ...(description && { description }),
-        ...(descriptionEn !== undefined && { descriptionEn }),
-        ...(icon && { icon }),
-        ...(videoUrl !== undefined && { videoUrl }),
-        ...(downloadUrl !== undefined && { downloadUrl }),
-        ...(category !== undefined && { category }),
+    const updateData: any = {
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    if (name) updateData.name = name
+    if (nameEn !== undefined) updateData.nameEn = nameEn
+    if (description) updateData.description = description
+    if (descriptionEn !== undefined) updateData.descriptionEn = descriptionEn
+    if (icon) updateData.icon = icon
+    if (videoUrl !== undefined) updateData.videoUrl = videoUrl
+    if (downloadUrl !== undefined) updateData.downloadUrl = downloadUrl
+    if (category !== undefined) updateData.category = category
+
+    await db.collection('downloads').doc(params.id).update(updateData)
+
+    const updatedDoc = await db.collection('downloads').doc(params.id).get()
+
+    return successResponse({
+      download: {
+        id: updatedDoc.id,
+        ...updatedDoc.data(),
       },
     })
-
-    return successResponse({ download })
   } catch (error: unknown) {
     if (error instanceof Error && (error.message === 'Unauthorized' || error.message.includes('Forbidden'))) {
       return errorResponse('غير مصرح', 401)
@@ -87,18 +98,14 @@ export async function DELETE(
   try {
     await requireEditor(request)
 
-    // Check if download exists
-    const existingDownload = await prisma.downloadSoftware.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
+    const downloadDoc = await db.collection('downloads').doc(params.id).get()
 
-    if (!existingDownload) {
+    if (!downloadDoc.exists) {
       return notFoundResponse('البرنامج غير موجود')
     }
 
-    await prisma.downloadSoftware.delete({
-      where: { id: params.id },
-    })
+    await db.collection('downloads').doc(params.id).delete()
 
     return successResponse({ message: 'تم حذف البرنامج بنجاح' })
   } catch (error: unknown) {
@@ -110,4 +117,3 @@ export async function DELETE(
     return errorResponse('حدث خطأ أثناء حذف البرنامج', 500)
   }
 }
-
