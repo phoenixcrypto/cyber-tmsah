@@ -41,10 +41,10 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
       let role: 'admin' | 'editor' | 'viewer' = 'viewer'
       if (userDoc.exists) {
         const userData = userDoc.data()
-        role = (userData?.role as 'admin' | 'editor' | 'viewer') || 'viewer'
+        role = (userData?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
       } else {
         // Try to get from custom claims
-        role = (userRecord.customClaims?.role as 'admin' | 'editor' | 'viewer') || 'viewer'
+        role = (userRecord.customClaims?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
       }
 
       return {

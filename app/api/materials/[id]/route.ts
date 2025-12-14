@@ -1,9 +1,8 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { requireEditor } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/materials/[id]
@@ -14,24 +13,17 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const db = getFirestoreDB()
-    const materialDoc = await db.collection('materials').doc(params.id).get()
-
-    if (!materialDoc.exists) {
-      return notFoundResponse('المادة غير موجودة')
-    }
-
-    // Get articles count
-    const articlesSnapshot = await db.collection('articles')
-      .where('materialId', '==', params.id)
-      .get()
-
-    const material = {
-      id: materialDoc.id,
-      ...materialDoc.data(),
-      _count: {
-        articles: articlesSnapshot.size,
+    const material = await prisma.material.findUnique({
+      where: { id: params.id },
+      include: {
+        _count: {
+          select: { articles: true },
+        },
       },
+    })
+
+    if (!material) {
+      return notFoundResponse('المادة غير موجودة')
     }
 
     return successResponse({ material })
@@ -55,40 +47,33 @@ export async function PUT(
     const body = await request.json()
     const { title, titleEn, description, descriptionEn, icon, color } = body
 
-    const db = getFirestoreDB()
-    const materialDoc = await db.collection('materials').doc(params.id).get()
+    // Check if material exists
+    const existingMaterial = await prisma.material.findUnique({
+      where: { id: params.id },
+    })
 
-    if (!materialDoc.exists) {
+    if (!existingMaterial) {
       return notFoundResponse('المادة غير موجودة')
     }
 
-    const updateData: any = {
-      updatedAt: FieldValue.serverTimestamp(),
-    }
-
-    if (title) updateData.title = title
-    if (titleEn !== undefined) updateData.titleEn = titleEn
-    if (description) updateData.description = description
-    if (descriptionEn !== undefined) updateData.descriptionEn = descriptionEn
-    if (icon) updateData.icon = icon
-    if (color) updateData.color = color
-
-    updateData.lastUpdated = new Date().toLocaleDateString('ar-EG', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
-
-    await db.collection('materials').doc(params.id).update(updateData)
-
-    const updatedDoc = await db.collection('materials').doc(params.id).get()
-
-    return successResponse({
-      material: {
-        id: updatedDoc.id,
-        ...updatedDoc.data(),
+    const material = await prisma.material.update({
+      where: { id: params.id },
+      data: {
+        ...(title && { title }),
+        ...(titleEn !== undefined && { titleEn }),
+        ...(description && { description }),
+        ...(descriptionEn !== undefined && { descriptionEn }),
+        ...(icon && { icon }),
+        ...(color && { color }),
+        lastUpdated: new Date().toLocaleDateString('ar-EG', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
       },
     })
+
+    return successResponse({ material })
   } catch (error: unknown) {
     if (error instanceof Error && (error.message === 'Unauthorized' || error.message.includes('Forbidden'))) {
       return errorResponse('غير مصرح', 401)
@@ -110,23 +95,28 @@ export async function DELETE(
   try {
     await requireEditor(request)
 
-    const db = getFirestoreDB()
-    const materialDoc = await db.collection('materials').doc(params.id).get()
+    // Check if material exists
+    const existingMaterial = await prisma.material.findUnique({
+      where: { id: params.id },
+      include: {
+        _count: {
+          select: { articles: true },
+        },
+      },
+    })
 
-    if (!materialDoc.exists) {
+    if (!existingMaterial) {
       return notFoundResponse('المادة غير موجودة')
     }
 
     // Check if material has articles
-    const articlesSnapshot = await db.collection('articles')
-      .where('materialId', '==', params.id)
-      .get()
-
-    if (articlesSnapshot.size > 0) {
+    if (existingMaterial._count.articles > 0) {
       return errorResponse('لا يمكن حذف المادة لأنها تحتوي على مقالات', 400)
     }
 
-    await db.collection('materials').doc(params.id).delete()
+    await prisma.material.delete({
+      where: { id: params.id },
+    })
 
     return successResponse({ message: 'تم حذف المادة بنجاح' })
   } catch (error: unknown) {
@@ -138,3 +128,4 @@ export async function DELETE(
     return errorResponse('حدث خطأ أثناء حذف المادة', 500)
   }
 }
+

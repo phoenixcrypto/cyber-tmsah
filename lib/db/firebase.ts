@@ -17,9 +17,13 @@ let auth: Auth | undefined
 function initializeFirebase(): void {
   // Check if already initialized
   if (getApps().length > 0) {
-    app = getApps()[0]
-    db = getFirestore(app)
-    auth = getAuth(app)
+    const existingApp = getApps()[0]
+    if (!existingApp) {
+      throw new Error('Firebase app not found')
+    }
+    app = existingApp
+    db = getFirestore(existingApp)
+    auth = getAuth(existingApp)
     return
   }
 

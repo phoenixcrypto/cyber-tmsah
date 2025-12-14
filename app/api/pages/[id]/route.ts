@@ -1,9 +1,8 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { requireEditor } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/pages/[id]
@@ -14,41 +13,21 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const db = getFirestoreDB()
-    
-    // Try to find by ID first
-    const pageDoc = await db.collection('pages').doc(params.id).get()
-    
-    if (pageDoc.exists) {
-      return successResponse({
-        page: {
-          id: pageDoc.id,
-          ...pageDoc.data(),
-        },
-      })
-    }
-
-    // Try to find by slug
-    const slugSnapshot = await db.collection('pages')
-      .where('slug', '==', params.id)
-      .limit(1)
-      .get()
-
-    if (slugSnapshot.empty) {
-      return notFoundResponse('الصفحة غير موجودة')
-    }
-
-    const pageDoc2 = slugSnapshot.docs[0]
-    if (!pageDoc2) {
-      return notFoundResponse('الصفحة غير موجودة')
-    }
-    
-    return successResponse({
-      page: {
-        id: pageDoc2.id,
-        ...pageDoc2.data(),
+    // Try to find by ID first, then by slug
+    const page = await prisma.page.findFirst({
+      where: {
+        OR: [
+          { id: params.id },
+          { slug: params.id },
+        ],
       },
     })
+
+    if (!page) {
+      return notFoundResponse('الصفحة غير موجودة')
+    }
+
+    return successResponse({ page })
   } catch (error) {
     await logger.error('Get page error', error as Error)
     return errorResponse('حدث خطأ أثناء جلب البيانات', 500)
@@ -79,51 +58,42 @@ export async function PUT(
       order,
     } = body
 
-    const db = getFirestoreDB()
-    const pageDoc = await db.collection('pages').doc(params.id).get()
+    // Check if page exists
+    const existingPage = await prisma.page.findUnique({
+      where: { id: params.id },
+    })
 
-    if (!pageDoc.exists) {
+    if (!existingPage) {
       return notFoundResponse('الصفحة غير موجودة')
     }
 
-    const existingData = pageDoc.data()!
-
     // If slug is being changed, check if new slug is available
-    if (slug && slug !== existingData['slug']) {
-      const slugSnapshot = await db.collection('pages')
-        .where('slug', '==', slug)
-        .limit(1)
-        .get()
+    if (slug && slug !== existingPage.slug) {
+      const slugExists = await prisma.page.findUnique({
+        where: { slug },
+      })
 
-      if (!slugSnapshot.empty) {
+      if (slugExists) {
         return errorResponse('الرابط مستخدم بالفعل', 400)
       }
     }
 
-    const updateData: any = {
-      updatedAt: FieldValue.serverTimestamp(),
-    }
-
-    if (slug) updateData.slug = slug
-    if (title) updateData.title = title
-    if (titleEn !== undefined) updateData.titleEn = titleEn
-    if (content) updateData.content = content
-    if (contentEn !== undefined) updateData.contentEn = contentEn
-    if (metaDescription !== undefined) updateData.metaDescription = metaDescription
-    if (metaDescriptionEn !== undefined) updateData.metaDescriptionEn = metaDescriptionEn
-    if (status) updateData.status = status === 'published' ? 'published' : 'draft'
-    if (order !== undefined) updateData.order = order
-
-    await db.collection('pages').doc(params.id).update(updateData)
-
-    const updatedDoc = await db.collection('pages').doc(params.id).get()
-
-    return successResponse({
-      page: {
-        id: updatedDoc.id,
-        ...updatedDoc.data(),
+    const page = await prisma.page.update({
+      where: { id: params.id },
+      data: {
+        ...(slug && { slug }),
+        ...(title && { title }),
+        ...(titleEn !== undefined && { titleEn }),
+        ...(content && { content }),
+        ...(contentEn !== undefined && { contentEn }),
+        ...(metaDescription !== undefined && { metaDescription }),
+        ...(metaDescriptionEn !== undefined && { metaDescriptionEn }),
+        ...(status && { status: status === 'published' ? 'published' : 'draft' }),
+        ...(order !== undefined && { order }),
       },
     })
+
+    return successResponse({ page })
   } catch (error: unknown) {
     if (error instanceof Error && (error.message === 'Unauthorized' || error.message.includes('Forbidden'))) {
       return errorResponse('غير مصرح', 401)
@@ -145,14 +115,18 @@ export async function DELETE(
   try {
     await requireEditor(request)
 
-    const db = getFirestoreDB()
-    const pageDoc = await db.collection('pages').doc(params.id).get()
+    // Check if page exists
+    const existingPage = await prisma.page.findUnique({
+      where: { id: params.id },
+    })
 
-    if (!pageDoc.exists) {
+    if (!existingPage) {
       return notFoundResponse('الصفحة غير موجودة')
     }
 
-    await db.collection('pages').doc(params.id).delete()
+    await prisma.page.delete({
+      where: { id: params.id },
+    })
 
     return successResponse({ message: 'تم حذف الصفحة بنجاح' })
   } catch (error: unknown) {
@@ -164,3 +138,4 @@ export async function DELETE(
     return errorResponse('حدث خطأ أثناء حذف الصفحة', 500)
   }
 }
+

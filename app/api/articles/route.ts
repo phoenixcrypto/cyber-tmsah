@@ -1,9 +1,8 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { parseTags, stringifyTags } from '@/lib/utils/json-helpers'
-import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/articles
@@ -14,45 +13,26 @@ export async function GET(request: NextRequest) {
     const { getAuthUser } = await import('@/lib/middleware/auth')
     const user = await getAuthUser(request)
 
-    const db = getFirestoreDB()
-    let articlesQuery = db.collection('articles').orderBy('updatedAt', 'desc')
+    // If admin, return all. Otherwise, only published
+    const where = user?.role === 'admin' ? {} : { status: 'published' as const }
 
-    // If not admin, filter by published status
-    if (user?.role !== 'admin') {
-      articlesQuery = articlesQuery.where('status', '==', 'published') as any
-    }
+    const articles = await prisma.article.findMany({
+      ...(Object.keys(where).length > 0 && { where }),
+      orderBy: { updatedAt: 'desc' },
+      include: {
+        material: {
+          select: { title: true, titleEn: true },
+        },
+      },
+    })
 
-    const articlesSnapshot = await articlesQuery.get()
+    // Transform tags from JSON to array
+    const transformedArticles = articles.map(article => ({
+      ...article,
+      tags: parseTags(article.tags),
+    }))
 
-    // Get materials for each article
-    const articles = await Promise.all(
-      articlesSnapshot.docs.map(async (doc: { id: string; data: () => Record<string, unknown> }) => {
-        const data = doc.data()
-        const materialId = data['materialId'] as string | undefined
-
-        // Get material data
-        let material = null
-        if (materialId && typeof materialId === 'string') {
-          const materialDoc = await db.collection('materials').doc(materialId).get()
-          if (materialDoc.exists) {
-            const materialData = materialDoc.data()
-            material = {
-              title: materialData?.['title'],
-              titleEn: materialData?.['titleEn'],
-            }
-          }
-        }
-
-        return {
-          id: doc.id,
-          ...data,
-          material,
-          tags: parseTags(data['tags'] || '[]'),
-        }
-      })
-    )
-
-    return successResponse({ articles })
+    return successResponse({ articles: transformedArticles })
   } catch (error) {
     await logger.error('Get articles error', error as Error)
     return errorResponse('حدث خطأ أثناء جلب البيانات', 500)
@@ -87,70 +67,57 @@ export async function POST(request: NextRequest) {
       return errorResponse('المادة، العنوان، المحتوى، والمؤلف مطلوبون', 400)
     }
 
-    const db = getFirestoreDB()
-
     // Verify material exists
-    const materialDoc = await db.collection('materials').doc(materialId).get()
+    const material = await prisma.material.findUnique({
+      where: { id: materialId },
+    })
 
-    if (!materialDoc.exists) {
+    if (!material) {
       return errorResponse('المادة المحددة غير موجودة', 404)
     }
 
-    // Get user name if author is not provided
+    // Get user name from database if author is not provided
     let authorName = author
     if (!authorName) {
-      const userDoc = await db.collection('users').doc(user.userId).get()
-      if (userDoc.exists) {
-        const userData = userDoc.data()
-        authorName = userData?.['name'] || userData?.['username'] || user.email
-      } else {
-        authorName = user.email
-      }
+      const fullUser = await prisma.user.findUnique({
+        where: { id: user.userId },
+        select: { name: true },
+      })
+      authorName = fullUser?.name || user.email
     }
 
-    const articleRef = db.collection('articles').doc()
-    const articleData = {
-      materialId,
-      title,
-      titleEn: titleEn || title,
-      content,
-      contentEn: contentEn || content,
-      excerpt: excerpt || null,
-      excerptEn: excerptEn || excerpt || null,
-      author: authorName,
-      status: status === 'published' ? 'published' : 'draft',
-      publishedAt: status === 'published' && publishedAt ? new Date(publishedAt) : status === 'published' ? new Date() : null,
-      views: 0,
-      tags: stringifyTags(tags || []),
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    }
-
-    await articleRef.set(articleData)
-
-    // Update material's articlesCount and lastUpdated
-    const articlesSnapshot = await db.collection('articles')
-      .where('materialId', '==', materialId)
-      .where('status', '==', 'published')
-      .get()
-
-    await db.collection('materials').doc(materialId).update({
-      articlesCount: articlesSnapshot.size + (status === 'published' ? 1 : 0),
-      lastUpdated: new Date().toLocaleDateString('ar-EG', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-      updatedAt: FieldValue.serverTimestamp(),
+    const article = await prisma.article.create({
+      data: {
+        materialId,
+        title,
+        titleEn: titleEn || title,
+        content,
+        contentEn: contentEn || content,
+        excerpt: excerpt || null,
+        excerptEn: excerptEn || excerpt || null,
+        author: authorName,
+        status: status === 'published' ? 'published' : 'draft',
+        publishedAt: status === 'published' && publishedAt ? new Date(publishedAt) : status === 'published' ? new Date() : null,
+        tags: stringifyTags(tags || []),
+      },
     })
 
-    const article = {
-      id: articleRef.id,
-      ...articleData,
-      tags: parseTags(articleData['tags'] || '[]'),
-    }
+    // Update material's articlesCount
+    await prisma.material.update({
+      where: { id: materialId },
+      data: {
+        articlesCount: {
+          increment: 1,
+        },
+        lastUpdated: new Date().toLocaleDateString('ar-EG', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+      },
+    })
 
-    return successResponse({ article }, { status: 201 })
+    return successResponse({ article: { ...article, tags: parseTags(article.tags) } }, { status: 201 })
   } catch (error: unknown) {
     if (error instanceof Error && (error.message === 'Unauthorized' || error.message.includes('Forbidden'))) {
       return errorResponse('غير مصرح', 401)
@@ -160,3 +127,4 @@ export async function POST(request: NextRequest) {
     return errorResponse('حدث خطأ أثناء إنشاء المقال', 500)
   }
 }
+

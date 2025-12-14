@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { requireAdmin } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
@@ -13,21 +13,15 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const db = getFirestoreDB()
-    const itemDoc = await db.collection('scheduleItems').doc(params.id).get()
+    const item = await prisma.scheduleItem.findUnique({
+      where: { id: params.id },
+    })
 
-    if (!itemDoc.exists) {
+    if (!item) {
       return notFoundResponse('عنصر الجدول غير موجود')
     }
 
-    const data = itemDoc.data()!
-    return successResponse({
-      item: {
-        id: itemDoc.id,
-        ...data,
-        group: data['group'] === 'Group1' ? 'Group 1' : 'Group 2',
-      },
-    })
+    return successResponse({ item })
   } catch (error) {
     await logger.error('Get schedule item error', error as Error)
     return errorResponse('حدث خطأ أثناء جلب البيانات', 500)
@@ -45,14 +39,18 @@ export async function DELETE(
   try {
     await requireAdmin(request)
 
-    const db = getFirestoreDB()
-    const itemDoc = await db.collection('scheduleItems').doc(params.id).get()
+    // Check if item exists
+    const existingItem = await prisma.scheduleItem.findUnique({
+      where: { id: params.id },
+    })
 
-    if (!itemDoc.exists) {
+    if (!existingItem) {
       return notFoundResponse('عنصر الجدول غير موجود')
     }
 
-    await db.collection('scheduleItems').doc(params.id).delete()
+    await prisma.scheduleItem.delete({
+      where: { id: params.id },
+    })
 
     return successResponse({ message: 'تم حذف عنصر الجدول بنجاح' })
   } catch (error: unknown) {
@@ -64,3 +62,4 @@ export async function DELETE(
     return errorResponse('حدث خطأ أثناء حذف عنصر الجدول', 500)
   }
 }
+

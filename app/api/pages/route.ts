@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/pages
@@ -13,23 +12,13 @@ export async function GET(request: NextRequest) {
     const { getAuthUser } = await import('@/lib/middleware/auth')
     const user = await getAuthUser(request)
 
-    const db = getFirestoreDB()
-    let query: any = db.collection('pages')
+    // If admin, return all. Otherwise, only published
+    const where = user?.role === 'admin' ? {} : { status: 'published' as const }
 
-    // If not admin, filter by published status
-    if (user?.role !== 'admin') {
-      query = query.where('status', '==', 'published')
-    }
-
-    const pagesSnapshot = await query
-      .orderBy('order', 'asc')
-      .orderBy('createdAt', 'desc')
-      .get()
-
-    const pages = pagesSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
+    const pages = await prisma.page.findMany({
+      ...(Object.keys(where).length > 0 && { where }),
+      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+    })
 
     return successResponse({ pages })
   } catch (error) {
@@ -64,39 +53,28 @@ export async function POST(request: NextRequest) {
       return errorResponse('الرابط، العنوان، والمحتوى مطلوبون', 400)
     }
 
-    const db = getFirestoreDB()
-
     // Check if slug already exists
-    const existingPageSnapshot = await db.collection('pages')
-      .where('slug', '==', slug)
-      .limit(1)
-      .get()
+    const existingPage = await prisma.page.findUnique({
+      where: { slug },
+    })
 
-    if (!existingPageSnapshot.empty) {
+    if (existingPage) {
       return errorResponse('الرابط مستخدم بالفعل', 400)
     }
 
-    const pageRef = db.collection('pages').doc()
-    const pageData = {
-      slug,
-      title,
-      titleEn: titleEn || title,
-      content,
-      contentEn: contentEn || content,
-      metaDescription: metaDescription || null,
-      metaDescriptionEn: metaDescriptionEn || metaDescription || null,
-      status: status === 'published' ? 'published' : 'draft',
-      order: order || 0,
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    }
-
-    await pageRef.set(pageData)
-
-    const page = {
-      id: pageRef.id,
-      ...pageData,
-    }
+    const page = await prisma.page.create({
+      data: {
+        slug,
+        title,
+        titleEn: titleEn || title,
+        content,
+        contentEn: contentEn || content,
+        metaDescription: metaDescription || null,
+        metaDescriptionEn: metaDescriptionEn || metaDescription || null,
+        status: status === 'published' ? 'published' : 'draft',
+        order: order || 0,
+      },
+    })
 
     return successResponse({ page }, { status: 201 })
   } catch (error: unknown) {
@@ -108,3 +86,4 @@ export async function POST(request: NextRequest) {
     return errorResponse('حدث خطأ أثناء إنشاء الصفحة', 500)
   }
 }
+

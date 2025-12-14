@@ -24,8 +24,8 @@ const resources = [
     color: 'from-green-500 to-emerald-500',
   },
   {
-    label: 'وثائق Firebase',
-    href: 'https://firebase.google.com/docs',
+    label: 'وثائق Prisma',
+    href: 'https://www.prisma.io/docs',
     icon: FileText,
     color: 'from-orange-500 to-red-500',
   },

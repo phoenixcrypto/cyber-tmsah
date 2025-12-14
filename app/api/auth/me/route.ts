@@ -1,8 +1,44 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { getAuthUser } from '@/lib/middleware/auth'
 import { successResponse, unauthorizedResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
+import { hashPassword } from '@/lib/auth/bcrypt'
+
+/**
+ * Initialize default admin if no users exist
+ */
+async function initializeDefaultAdmin(): Promise<void> {
+  try {
+    const userCount = await prisma.user.count()
+    
+    if (userCount === 0) {
+      const defaultUsername = process.env['DEFAULT_ADMIN_USERNAME']
+      const defaultPassword = process.env['DEFAULT_ADMIN_PASSWORD']
+      const defaultName = process.env['DEFAULT_ADMIN_NAME']
+      
+      if (!defaultUsername || !defaultPassword) {
+        console.error('❌ DEFAULT_ADMIN_USERNAME and DEFAULT_ADMIN_PASSWORD must be set in environment variables')
+        return
+      }
+      
+      const hashedPassword = await hashPassword(defaultPassword)
+      
+      await prisma.user.create({
+        data: {
+          username: defaultUsername,
+          name: defaultName || defaultUsername,
+          password: hashedPassword,
+          role: 'admin',
+        },
+      })
+      
+      console.log('✅ Default admin user created!')
+    }
+  } catch (error) {
+    console.error('Error initializing default admin:', error)
+  }
+}
 
 /**
  * GET /api/auth/me
@@ -10,30 +46,43 @@ import { logger } from '@/lib/utils/logger'
  */
 export async function GET(request: NextRequest) {
   try {
+    // Initialize default admin if needed (only runs once)
+    try {
+      await initializeDefaultAdmin()
+    } catch (initError) {
+      console.error('Error initializing default admin:', initError)
+    }
+
     const user = await getAuthUser(request)
 
     if (!user) {
       return unauthorizedResponse('Unauthorized')
     }
 
-    // Get full user data from Firestore
-    const db = getFirestoreDB()
-    const userDoc = await db.collection('users').doc(user.userId).get()
+    // Get full user data
+    const fullUser = await prisma.user.findUnique({
+      where: { id: user.userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        lastLogin: true,
+        createdAt: true,
+      },
+    })
 
-    if (!userDoc.exists) {
+    if (!fullUser) {
       return unauthorizedResponse('User not found')
     }
 
-    const userData = userDoc.data()
-    const lastLogin = userData?.['lastLogin'] as { toDate?: () => Date } | Date | null
-
     return successResponse({
       user: {
-        id: user.userId,
-        email: userData?.['email'] || user.email,
-        name: userData?.['name'] || userData?.['username'] || '',
-        role: userData?.['role'] || user.role,
-        lastLogin: lastLogin && typeof lastLogin === 'object' && 'toDate' in lastLogin ? lastLogin.toDate?.() : lastLogin || null,
+        id: fullUser.id,
+        email: fullUser.email,
+        name: fullUser.name,
+        role: fullUser.role,
+        lastLogin: fullUser.lastLogin,
       },
     })
   } catch (error) {
