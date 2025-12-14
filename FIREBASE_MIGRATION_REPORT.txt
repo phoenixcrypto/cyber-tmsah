@@ -1,0 +1,433 @@
+========================================
+تقرير شامل: التحويل من Prisma/SQL إلى Firebase
+========================================
+
+تاريخ التقرير: الآن
+الحالة: مشروع يعتمد على Prisma + PostgreSQL/Supabase
+الهدف: التحويل إلى Firebase (Firestore + Firebase Auth)
+
+========================================
+ملخص سريع
+========================================
+
+الملفات التي تحتاج تغيير: 27 ملف
+العمليات Prisma المستخدمة: 76 عملية
+API Routes: 20 ملف
+Core Files: 7 ملفات
+
+========================================
+1. الملفات الأساسية (Core Files) - يجب حذفها
+========================================
+
+❌ يجب حذف:
+- prisma/schema.prisma (كل الـ Models هنا)
+- lib/db/prisma.ts (استبداله بـ Firebase Admin SDK)
+- database/schema.sql (لا حاجة له)
+- scripts/import-sql.ts (لا حاجة له)
+
+✅ يجب إنشاء:
+- lib/db/firebase.ts (Firebase Admin SDK setup)
+- lib/db/collections.ts (تعريف Collections كبديل للـ Models)
+
+========================================
+2. Authentication System - تغيير كامل
+========================================
+
+📁 الملفات المتأثرة:
+
+1. lib/middleware/auth.ts
+   - إزالة: prisma.user.findUnique()
+   - إضافة: Firebase Admin Auth (getUserByEmail, getUser())
+   - التغيير: JWT verification يبقى، لكن user lookup من Firebase
+
+2. app/api/auth/login/route.ts
+   - إزالة: prisma.user.findUnique(), prisma.user.create(), prisma.user.count()
+   - إضافة: Firebase Auth (signInWithEmailAndPassword) أو Custom Token
+   - إزالة: initializeDefaultAdmin() (استبداله بـ Firebase Admin creation)
+   - التغيير: Password comparison من bcrypt إلى Firebase Auth
+
+3. app/api/auth/me/route.ts
+   - إزالة: prisma.user.findUnique()
+   - إضافة: Firebase Auth getUser()
+   - التغيير: User data من Firebase Auth
+
+4. app/api/auth/password-reset/route.ts
+   - إزالة: prisma.passwordResetToken (collection كاملة)
+   - إضافة: Firebase Auth sendPasswordResetEmail() أو Firestore tokens collection
+
+5. scripts/reset-admin.ts
+   - إزالة: PrismaClient
+   - إضافة: Firebase Admin Auth createUser()
+
+========================================
+3. API Routes - Articles
+========================================
+
+📁 app/api/articles/route.ts
+   العمليات الحالية:
+   - prisma.article.findMany() → Firestore collection('articles').get()
+   - prisma.article.create() → Firestore collection('articles').add()
+   - prisma.material.findUnique() → Firestore collection('materials').doc(id).get()
+   - prisma.material.update() → Firestore collection('materials').doc(id).update()
+   - prisma.user.findUnique() → Firebase Auth getUser()
+
+📁 app/api/articles/[id]/route.ts
+   العمليات الحالية:
+   - prisma.article.findUnique() → Firestore collection('articles').doc(id).get()
+   - prisma.article.update() → Firestore collection('articles').doc(id).update()
+   - prisma.article.delete() → Firestore collection('articles').doc(id).delete()
+   - prisma.material.update() → Firestore collection('materials').doc(id).update()
+
+التغيير المطلوب:
+- Articles Collection في Firestore
+- Material References → subcollection أو field reference
+- Tags (JSON) → Array في Firestore
+
+========================================
+4. API Routes - Materials
+========================================
+
+📁 app/api/materials/route.ts
+   العمليات الحالية:
+   - prisma.material.findMany() → Firestore collection('materials').get()
+   - prisma.material.create() → Firestore collection('materials').add()
+
+📁 app/api/materials/[id]/route.ts
+   العمليات الحالية:
+   - prisma.material.findUnique() → Firestore collection('materials').doc(id).get()
+   - prisma.material.update() → Firestore collection('materials').doc(id).update()
+   - prisma.material.delete() → Firestore collection('materials').doc(id).delete()
+
+التغيير المطلوب:
+- Materials Collection
+- articlesCount → computed field أو aggregation query
+
+========================================
+5. API Routes - Schedule
+========================================
+
+📁 app/api/schedule/route.ts
+   العمليات الحالية:
+   - prisma.scheduleItem.findMany() → Firestore collection('scheduleItems').get()
+   - prisma.scheduleItem.create() → Firestore collection('scheduleItems').add()
+
+📁 app/api/schedule/[id]/route.ts
+   العمليات الحالية:
+   - prisma.scheduleItem.findUnique() → Firestore collection('scheduleItems').doc(id).get()
+   - prisma.scheduleItem.update() → Firestore collection('scheduleItems').doc(id).update()
+   - prisma.scheduleItem.delete() → Firestore collection('scheduleItems').doc(id).delete()
+
+📁 app/api/admin/schedule/[id]/route.ts
+   نفس العمليات
+
+التغيير المطلوب:
+- ScheduleItems Collection
+- Enum types (Group1/Group2, lecture/lab, days) → strings في Firestore
+- Ordering → Firestore orderBy()
+
+========================================
+6. API Routes - Downloads
+========================================
+
+📁 app/api/downloads/route.ts
+   العمليات الحالية:
+   - prisma.downloadSoftware.findMany() → Firestore collection('downloads').get()
+   - prisma.downloadSoftware.create() → Firestore collection('downloads').add()
+
+📁 app/api/downloads/[id]/route.ts
+   العمليات الحالية:
+   - prisma.downloadSoftware.findUnique() → Firestore collection('downloads').doc(id).get()
+   - prisma.downloadSoftware.update() → Firestore collection('downloads').doc(id).update()
+   - prisma.downloadSoftware.delete() → Firestore collection('downloads').doc(id).delete()
+
+========================================
+7. API Routes - News
+========================================
+
+📁 app/api/news/route.ts
+   العمليات الحالية:
+   - prisma.newsArticle.findMany() → Firestore collection('news').get()
+   - prisma.newsArticle.create() → Firestore collection('news').add()
+
+📁 app/api/news/[id]/route.ts
+   العمليات الحالية:
+   - prisma.newsArticle.findUnique() → Firestore collection('news').doc(id).get()
+   - prisma.newsArticle.update() → Firestore collection('news').doc(id).update()
+   - prisma.newsArticle.delete() → Firestore collection('news').doc(id).delete()
+
+========================================
+8. API Routes - Pages
+========================================
+
+📁 app/api/pages/route.ts
+   العمليات الحالية:
+   - prisma.page.findMany() → Firestore collection('pages').get()
+   - prisma.page.findUnique() → Firestore collection('pages').where('slug', '==', slug).get()
+   - prisma.page.create() → Firestore collection('pages').add()
+
+📁 app/api/pages/[id]/route.ts
+   العمليات الحالية:
+   - prisma.page.findFirst() → Firestore query
+   - prisma.page.update() → Firestore update
+   - prisma.page.delete() → Firestore delete
+
+========================================
+9. API Routes - Admin Users
+========================================
+
+📁 app/api/admin/users/route.ts
+   العمليات الحالية:
+   - prisma.user.findMany() → Firebase Admin Auth listUsers()
+   - prisma.user.findUnique() → Firebase Admin Auth getUserByEmail()
+   - prisma.user.create() → Firebase Admin Auth createUser()
+
+📁 app/api/admin/users/[id]/route.ts
+   العمليات الحالية:
+   - prisma.user.findUnique() → Firebase Admin Auth getUser()
+   - prisma.user.update() → Firebase Admin Auth updateUser()
+   - prisma.user.delete() → Firebase Admin Auth deleteUser()
+
+ملاحظة مهمة:
+- User roles → Custom Claims في Firebase Auth
+- User metadata → Firestore collection('users') أو Custom Claims
+
+========================================
+10. Logger System
+========================================
+
+📁 lib/utils/logger.ts
+   العمليات الحالية:
+   - prisma.apiLog.create() → Firestore collection('apiLogs').add()
+
+التغيير المطلوب:
+- إزالة Prisma
+- إضافة Firestore logging
+
+========================================
+11. Scripts
+========================================
+
+📁 scripts/seed-database.ts
+   - إزالة: PrismaClient
+   - إضافة: Firestore batch writes
+   - تغيير: كل seed data إلى Firestore format
+
+📁 scripts/reset-admin.ts
+   - إزالة: PrismaClient
+   - إضافة: Firebase Admin Auth
+
+📁 scripts/import-sql.ts
+   - حذف الملف (لا حاجة له)
+
+========================================
+12. Package.json
+========================================
+
+إزالة:
+- @prisma/client
+- prisma
+
+إضافة:
+- firebase-admin
+- firebase (optional للـ client-side)
+
+Scripts للتغيير:
+- حذف: db:generate, db:push, db:migrate, db:studio, db:seed, db:import
+- إضافة: firebase:init (إذا لزم)
+
+========================================
+13. Environment Variables
+========================================
+
+إزالة:
+- DATABASE_URL
+
+إضافة:
+- FIREBASE_PROJECT_ID
+- FIREBASE_CLIENT_EMAIL
+- FIREBASE_PRIVATE_KEY
+- (أو استخدام service account JSON file)
+
+========================================
+14. Data Structure Changes
+========================================
+
+SQL Tables → Firestore Collections:
+- users → Firebase Auth + Firestore 'users' (للـ metadata)
+- articles → 'articles' collection
+- materials → 'materials' collection
+- schedule_items → 'scheduleItems' collection
+- download_software → 'downloads' collection
+- news_articles → 'news' collection
+- pages → 'pages' collection
+- password_reset_tokens → 'passwordResetTokens' collection (أو Firebase Auth)
+- api_logs → 'apiLogs' collection
+
+Relationships:
+- SQL Foreign Keys → Firestore References أو Nested Data
+- Article.materialId → article.materialRef (DocumentReference)
+- Material.articles → subcollection أو array of IDs
+
+Enums:
+- UserRole, ArticleStatus, etc. → Strings في Firestore
+
+Timestamps:
+- createdAt, updatedAt → Firestore serverTimestamp()
+
+IDs:
+- cuid() → Firestore auto-generated IDs أو custom IDs
+
+========================================
+15. Query Changes
+========================================
+
+Prisma → Firestore:
+
+findMany() → collection().get()
+findUnique() → doc().get() أو where().limit(1).get()
+findFirst() → where().limit(1).get()
+create() → add() أو doc().set()
+update() → update()
+delete() → delete()
+count() → get() ثم .size
+include → get() ثم fetch related documents
+orderBy → orderBy()
+where → where()
+
+Complex Queries:
+- Multiple where conditions → Multiple where() calls
+- OR conditions → Firestore OR queries (limited)
+- Aggregations → Cloud Functions أو client-side
+
+========================================
+16. Authentication Flow Changes
+========================================
+
+الحالي (Custom JWT):
+1. User login → Prisma find user → bcrypt compare → JWT token
+
+الجديد (Firebase):
+1. Option A: Firebase Auth (signInWithEmailAndPassword)
+   - Frontend: Firebase SDK
+   - Backend: Verify ID token
+
+2. Option B: Custom Auth مع Firebase
+   - Custom login → Firebase Admin createCustomToken()
+   - Frontend: signInWithCustomToken()
+
+User Roles:
+- Custom Claims في Firebase Auth tokens
+- أو Firestore 'users' collection للـ roles
+
+========================================
+17. ملخص التغييرات المطلوبة
+========================================
+
+الملفات للحذف: 4
+الملفات للتعديل الكامل: 20
+الملفات للتعديل الجزئي: 7
+الملفات الجديدة: 2-3
+
+الوقت المتوقع: 4-6 ساعات
+
+========================================
+18. خطوات العمل الموصى بها
+========================================
+
+1. Setup Firebase Project
+   - إنشاء Firebase project
+   - تفعيل Authentication
+   - تفعيل Firestore
+   - إنشاء Service Account
+
+2. Setup Firebase Admin SDK
+   - Install firebase-admin
+   - إنشاء lib/db/firebase.ts
+   - إعداد Environment Variables
+
+3. تحويل Authentication
+   - تعديل auth middleware
+   - تعديل login route
+   - تعديل user management
+
+4. تحويل Collections واحدة تلو الأخرى
+   - Materials
+   - Articles
+   - Schedule
+   - Downloads
+   - News
+   - Pages
+
+5. تحويل Logger
+6. حذف Prisma dependencies
+7. Testing
+8. Migration البيانات (إذا لزم)
+
+========================================
+19. تحديات متوقعة
+========================================
+
+1. NoSQL vs SQL mindset
+   - No joins → Multiple queries
+   - No transactions (محدودة) → Batch writes
+
+2. Queries
+   - Complex queries أصعب
+   - Indexing مطلوب للـ queries المعقدة
+
+3. Relations
+   - Foreign keys → References أو nested data
+   - Cascading deletes → Cloud Functions
+
+4. Real-time (إيجابي!)
+   - Firestore real-time listeners
+   - Live updates للبيانات
+
+========================================
+20. الملفات بالتفصيل
+========================================
+
+❌ حذف:
+1. prisma/schema.prisma
+2. lib/db/prisma.ts
+3. database/schema.sql
+4. scripts/import-sql.ts
+
+🔄 تعديل كامل:
+1. lib/middleware/auth.ts
+2. lib/utils/logger.ts
+3. app/api/auth/login/route.ts
+4. app/api/auth/me/route.ts
+5. app/api/auth/password-reset/route.ts
+6. app/api/articles/route.ts
+7. app/api/articles/[id]/route.ts
+8. app/api/materials/route.ts
+9. app/api/materials/[id]/route.ts
+10. app/api/schedule/route.ts
+11. app/api/schedule/[id]/route.ts
+12. app/api/admin/schedule/[id]/route.ts
+13. app/api/downloads/route.ts
+14. app/api/downloads/[id]/route.ts
+15. app/api/news/route.ts
+16. app/api/news/[id]/route.ts
+17. app/api/pages/route.ts
+18. app/api/pages/[id]/route.ts
+19. app/api/admin/users/route.ts
+20. app/api/admin/users/[id]/route.ts
+21. scripts/reset-admin.ts
+22. scripts/seed-database.ts
+
+✅ إنشاء جديد:
+1. lib/db/firebase.ts (Firebase Admin setup)
+2. lib/db/collections.ts (Collection helpers - optional)
+3. lib/types/firebase.ts (Firebase types - optional)
+
+📝 تعديل جزئي:
+1. package.json
+2. next.config.js (قد يحتاج Firebase config)
+3. .env.example (إضافة Firebase vars)
+
+========================================
+انتهى التقرير
+========================================
+
