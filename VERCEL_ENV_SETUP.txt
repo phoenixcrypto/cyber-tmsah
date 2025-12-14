@@ -1,0 +1,173 @@
+========================================
+إعداد Environment Variables في Vercel
+========================================
+
+من ملف JSON الذي حصلت عليه، اتبع الخطوات التالية:
+
+========================================
+الخطوة 1: اذهب إلى Vercel
+========================================
+
+1. افتح: https://vercel.com/dashboard
+2. اختر مشروعك: cyber-tmsah
+3. اضغط على: Settings (الإعدادات)
+4. اضغط على: Environment Variables (متغيرات البيئة)
+
+========================================
+الخطوة 2: أضف المتغيرات الثلاثة
+========================================
+
+من ملف JSON، ستحتاج 3 متغيرات:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+المتغير الأول: FIREBASE_PROJECT_ID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Key (المفتاح):
+FIREBASE_PROJECT_ID
+
+Value (القيمة):
+cyber-tmsah
+
+Environment (البيئة):
+☑ Production
+☑ Preview
+☑ Development
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+المتغير الثاني: FIREBASE_CLIENT_EMAIL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Key (المفتاح):
+FIREBASE_CLIENT_EMAIL
+
+Value (القيمة):
+firebase-adminsdk-fbsvc@cyber-tmsah.iam.gserviceaccount.com
+
+Environment (البيئة):
+☑ Production
+☑ Preview
+☑ Development
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+المتغير الثالث: FIREBASE_PRIVATE_KEY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ مهم جداً: هذا المتغير حساس جداً!
+
+Key (المفتاح):
+FIREBASE_PRIVATE_KEY
+
+Value (القيمة):
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCcmwKR9K9hpgww
+ncKpox1blGDh0ABXNiDR0R8lyZ2iNuUNq0qCQSVJ+B9DK63pCkT1w7Ey9Rwt/Rgr
+fUYWO1pyDLsCiIK8bD4TixygSxkIj4NmnXi/TVaJ07TUZtio0LhoNn8roYvgS8lJ
+aY7HtejCycwKS2vw5f7kSrgrqKL5DJ4VQCES5LkrXl/gW77VKXc6MK7gRyhFJ36D
+U/ucSXMI38zCXxiuMsHc4jWdtC6T8z1SYke+bENEJKI3GDXn32ykMoBJmgSVxRjw
+Y9UmP5+/lf7sms9R1DMgMcQz+qFZJGl8fsCYIBA2/C3xx4EUL4cKsJGjr9faQPmf
+7jqItkdLAgMBAAECggEAEAnwIXKl46JV7US7AxSplQ+FPJtI7aWlhtecEQqtEkf8
+/YFliCGT6Bd5XC/FB/D9Tw5Tv5xK3orlRs71tqEtijCzlnbUrOeJFAdTTzdhwPax
+xniqPS12h3cfNgGyftehi0rJi3ZoFPiuDM66yMlgpVJ1izhePbXQfSEJ667Bwi/X
+gaOzUKz6b8zhe3tKfRMJdEsA8JIloG/VrwGD7StbDrFDlFmhu2pf4buSj2YktLLe
+qExwkU+HkvDWEr4M974xAwrm+5/MfeTYFDD255qieqMP+jrimK+62LrPSV37qDQA
+8egVZpBehI+iCkrVmboW1M06qLgr5KJkr2H+IVz8gQKBgQDXWOaTSs5CWfakv4vq
+8NIFl1lShRdkG1mAwx05FgLzEPMb124E6r8isvPuhUUIncf2Ju4A/nUKuAC/xxxZ
+fBa7+O8slWKoKWjqXc5b0sQE9YCS2b9JqPvM2vNpcquQ37cF58lLC1G3WvVlRDdL
+Mw9mxzw/XAoO48KC3j+alO714wKBgQC6K0sGI5018v64ECcrwQqbxNhhtk0ghIYN
+qVwtrHGDjUVlVnO+cOlGNzl62neJBNTMsZdVLTJhpSUQ/C8iEt89lvm27QQYd+dl
+dKROlj8cRDo+GmBfYfexUFFFisurPfDaqM7PnRAPcP+DpXGzuNxd8Ops52zbFkrY
+8GqtP/DleQKBgCwfdv7u8Nv/et2+sXht51pl7FNQGb7VK72KPM6Zh/ktm+I0fcJc
+JtWBPSG+BKsDSRlSWKmzeV+828pvjYt4NWBGXRsRcKlr8qcymTmPMcKiWrm8C8mX
+6h/LLNyKNkT00ZdQKppJs3CSHn2lQH8T8y/n2pxQy27Jk+0khHuz0FJpAoGAZRi/
+fAz5AWP8qO20p9EDtsU1kBJUXdU5is+ui+r6FaswxTAmWIOuWgABSdK7WP/zo1jJ
+Smrp0hbBQzD/U2yWKDcFUi3xrGvoj7LAyyBSE0KFslXWgdWMkZCBIdeWdF6FnehP
+rnSnVQtS5iWA0k0P9j+uvgcKmQrJCHe+Jmjzo1kCgYEAov83CSNy1RWnX1fcQ9N8
+CRpHjIQW/g0QFH4cIfvwJvA4zxfJHxbvDMnfoArsrLJEwHkfneRq80kBgjrUYx1N
+FeYBYEkeXRwme8DYiRmLbqrpbYIVA1CE4/ruj3c+5Ak7zb2VpuTgz9TmL/WqNF5r
+7fcRFS/wXtd0v18S3QRJEuE=
+-----END PRIVATE KEY-----
+
+ملاحظات مهمة:
+1. انسخ private_key كما هو من JSON (بما فيه -----BEGIN و -----END)
+2. في Vercel، لا حاجة لوضع علامات اقتباس " "
+3. لا تنسى أن \n موجودة في الأصل (Vercel يتعامل معها تلقائياً)
+4. لكن إذا كان لديك مشكلة، يمكنك وضع القيمة بين علامات اقتباس:
+   "-----BEGIN PRIVATE KEY-----\nMIIEvQIBAD...\n-----END PRIVATE KEY-----\n"
+
+Environment (البيئة):
+☑ Production
+☑ Preview
+☑ Development
+
+========================================
+الخطوة 3: حفظ المتغيرات
+========================================
+
+بعد إضافة كل المتغيرات:
+1. اضغط "Save" لكل متغير
+2. تأكد من أن كل متغير مفعّل في: Production, Preview, Development
+
+========================================
+الخطوة 4: Redeploy المشروع
+========================================
+
+بعد إضافة المتغيرات:
+1. اذهب إلى: Deployments
+2. اضغط على آخر deployment
+3. اضغط على "..." (ثلاث نقاط)
+4. اختر "Redeploy"
+5. تأكد من اختيار "Use existing Build Cache" = OFF (لضمان تحديث المتغيرات)
+
+========================================
+كيفية إنشاء Service Account جديد
+========================================
+
+إذا أردت إنشاء Service Account منفصل (مثلاً للتطوير المحلي):
+
+1. اذهب إلى Firebase Console
+2. Project Settings (⚙️)
+3. تبويب "Service accounts"
+4. ستجد Service Account الحالي: firebase-adminsdk-fbsvc@cyber-tmsah.iam.gserviceaccount.com
+
+⚠️ ملاحظة: لا يمكن إنشاء Service Account جديد من Firebase Console مباشرة.
+
+الخيارات المتاحة:
+- استخدام نفس Service Account (الموصى به)
+- إذا أردت فصل الصلاحيات:
+  1. يمكنك حذف Service Account الحالي
+  2. ثم إنشاء واحد جديد
+  3. أو استخدام Firebase Console IAM لإدارة الصلاحيات
+
+========================================
+للتطوير المحلي (.env.local)
+========================================
+
+أنشئ ملف .env.local في جذر المشروع:
+
+FIREBASE_PROJECT_ID=cyber-tmsah
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-fbsvc@cyber-tmsah.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCcmwKR9K9hpgww\nncKpox1blGDh0ABXNiDR0R8lyZ2iNuUNq0qCQSVJ+B9DK63pCkT1w7Ey9Rwt/Rgr\nfUYWO1pyDLsCiIK8bD4TixygSxkIj4NmnXi/TVaJ07TUZtio0LhoNn8roYvgS8lJ\naY7HtejCycwKS2vw5f7kSrgrqKL5DJ4VQCES5LkrXl/gW77VKXc6MK7gRyhFJ36D\nU/ucSXMI38zCXxiuMsHc4jWdtC6T8z1SYke+bENEJKI3GDXn32ykMoBJmgSVxRjw\nY9UmP5+/lf7sms9R1DMgMcQz+qFZJGl8fsCYIBA2/C3xx4EUL4cKsJGjr9faQPmf\n7jqItkdLAgMBAAECggEAEAnwIXKl46JV7US7AxSplQ+FPJtI7aWlhtecEQqtEkf8\n/YFliCGT6Bd5XC/FB/D9Tw5Tv5xK3orlRs71tqEtijCzlnbUrOeJFAdTTzdhwPax\nxniqPS12h3cfNgGyftehi0rJi3ZoFPiuDM66yMlgpVJ1izhePbXQfSEJ667Bwi/X\ngaOzUKz6b8zhe3tKfRMJdEsA8JIloG/VrwGD7StbDrFDlFmhu2pf4buSj2YktLLe\nqExwkU+HkvDWEr4M974xAwrm+5/MfeTYFDD255qieqMP+jrimK+62LrPSV37qDQA\n8egVZpBehI+iCkrVmboW1M06qLgr5KJkr2H+IVz8gQKBgQDXWOaTSs5CWfakv4vq\n8NIFl1lShRdkG1mAwx05FgLzEPMb124E6r8isvPuhUUIncf2Ju4A/nUKuAC/xxxZ\nfBa7+O8slWKoKWjqXc5b0sQE9YCS2b9JqPvM2vNpcquQ37cF58lLC1G3WvVlRDdL\nMw9mxzw/XAoO48KC3j+alO714wKBgQC6K0sGI5018v64ECcrwQqbxNhhtk0ghIYN\nqVwtrHGDjUVlVnO+cOlGNzl62neJBNTMsZdVLTJhpSUQ/C8iEt89lvm27QQYd+dl\ndKROlj8cRDo+GmBfYfexUFFFisurPfDaqM7PnRAPcP+DpXGzuNxd8Ops52zbFkrY\n8GqtP/DleQKBgCwfdv7u8Nv/et2+sXht51pl7FNQGb7VK72KPM6Zh/ktm+I0fcJc\nJtWBPSG+BKsDSRlSWKmzeV+828pvjYt4NWBGXRsRcKlr8qcymTmPMcKiWrm8C8mX\n6h/LLNyKNkT00ZdQKppJs3CSHn2lQH8T8y/n2pxQy27Jk+0khHuz0FJpAoGAZRi/\nfAz5AWP8qO20p9EDtsU1kBJUXdU5is+ui+r6FaswxTAmWIOuWgABSdK7WP/zo1jJ\nSmrp0hbBQzD/U2yWKDcFUi3xrGvoj7LAyyBSE0KFslXWgdWMkZCBIdeWdF6FnehP\nrnSnVQtS5iWA0k0P9j+uvgcKmQrJCHe+Jmjzo1kCgYEAov83CSNy1RWnX1fcQ9N8\nCRpHjIQW/g0QFH4cIfvwJvA4zxfJHxbvDMnfoArsrLJEwHkfneRq80kBgjrUYx1N\nFeYBYEkeXRwme8DYiRmLbqrpbYIVA1CE4/ruj3c+5Ak7zb2VpuTgz9TmL/WqNF5r\n7fcRFS/wXtd0v18S3QRJEuE=\n-----END PRIVATE KEY-----\n"
+
+JWT_SECRET=your-jwt-secret-here
+JWT_REFRESH_SECRET=your-jwt-refresh-secret-here
+
+DEFAULT_ADMIN_USERNAME=zeyadeltmsah26
+DEFAULT_ADMIN_PASSWORD=2610204ZEYAd@@
+DEFAULT_ADMIN_NAME=Admin User
+DEFAULT_ADMIN_EMAIL=admin@cyber-tmsah.site
+
+⚠️ مهم: أضف .env.local إلى .gitignore (لعدم رفعه إلى GitHub)
+
+========================================
+ملاحظات أمنية مهمة:
+========================================
+
+1. ⚠️ لا ترفع ملف JSON إلى GitHub أبداً!
+2. ⚠️ لا تشارك private_key مع أي شخص
+3. ⚠️ إذا تم كشف private_key، احذف Service Account فوراً وأنشئ واحد جديد
+4. ✅ يمكنك استخدام نفس Service Account في Vercel و .env.local
+5. ✅ Firebase يتعامل مع multiple deployments من نفس Service Account
+
+========================================
+
