@@ -37,9 +37,9 @@ function validateDatabaseUrl(): void {
     console.warn('⚠️  Expected MySQL connection string. Current format may not be compatible.')
   }
 
-  // Check for SSL requirement in production
-  if (process.env['NODE_ENV'] === 'production' && !dbUrl.includes('sslaccept=strict')) {
-    console.warn('⚠️  Production database connections should use SSL (sslaccept=strict)')
+  // Check for SSL requirement in production (MySQL format: ?sslaccept=strict)
+  if (process.env['NODE_ENV'] === 'production' && !dbUrl.includes('sslaccept')) {
+    console.warn('⚠️  Production MySQL connections should use SSL (add ?sslaccept=strict to connection string)')
   }
 }
 
