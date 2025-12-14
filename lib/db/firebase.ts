@@ -30,7 +30,31 @@ function initializeFirebase(): void {
   // Check for environment variables
   const projectId = process.env['FIREBASE_PROJECT_ID']
   const clientEmail = process.env['FIREBASE_CLIENT_EMAIL']
-  const privateKey = process.env['FIREBASE_PRIVATE_KEY']?.replace(/\\n/g, '\n')
+  let privateKey = process.env['FIREBASE_PRIVATE_KEY']
+  
+  // Process private key - handle different formats
+  if (privateKey) {
+    // Replace escaped newlines with actual newlines
+    privateKey = privateKey.replace(/\\n/g, '\n')
+    
+    // If the key doesn't have newlines but should (PEM format), try to add them
+    // This handles cases where Vercel strips newlines
+    if (!privateKey.includes('\n') && privateKey.includes('BEGIN PRIVATE KEY')) {
+      // Try to reconstruct the key with proper newlines
+      // This is a fallback - ideally the key should already have \n
+      privateKey = privateKey
+        .replace(/-----BEGIN PRIVATE KEY-----/g, '-----BEGIN PRIVATE KEY-----\n')
+        .replace(/-----END PRIVATE KEY-----/g, '\n-----END PRIVATE KEY-----')
+        .replace(/\s{2,}/g, '\n') // Replace multiple spaces with newline
+    }
+    
+    // Validate that the key looks correct
+    if (!privateKey.includes('BEGIN PRIVATE KEY') || !privateKey.includes('END PRIVATE KEY')) {
+      console.error('❌ FIREBASE_PRIVATE_KEY appears to be malformed')
+      console.error('   Key should start with "-----BEGIN PRIVATE KEY-----" and end with "-----END PRIVATE KEY-----"')
+      throw new Error('FIREBASE_PRIVATE_KEY is malformed. Please check the key format.')
+    }
+  }
 
   if (!projectId || !clientEmail || !privateKey) {
     // Try to use service account JSON file if available
@@ -56,13 +80,30 @@ function initializeFirebase(): void {
     }
   } else {
     // Initialize with environment variables
-    app = initializeApp({
-      credential: cert({
-        projectId,
-        clientEmail,
-        privateKey,
-      }),
-    })
+    try {
+      app = initializeApp({
+        credential: cert({
+          projectId,
+          clientEmail,
+          privateKey,
+        }),
+      })
+    } catch (certError) {
+      const errorMessage = certError instanceof Error ? certError.message : String(certError)
+      console.error('❌ Failed to initialize Firebase with provided credentials')
+      console.error('   Error:', errorMessage)
+      
+      // Provide helpful error message
+      if (errorMessage.includes('DECODER') || errorMessage.includes('unsupported')) {
+        throw new Error(
+          'FIREBASE_PRIVATE_KEY format is incorrect. ' +
+          'In Vercel, make sure to use \\n for newlines (not actual newlines). ' +
+          'Example: -----BEGIN PRIVATE KEY-----\\nMIIE...\\n-----END PRIVATE KEY-----'
+        )
+      }
+      
+      throw certError
+    }
   }
 
   db = getFirestore(app)
