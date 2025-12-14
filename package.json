@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "admin": "node scripts/admin-api.js",
+    "admin": "node scripts/admin-api.js"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
