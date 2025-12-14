@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
+import { FieldValue } from 'firebase-admin/firestore'
 import type { ErrorWithCode } from '@/lib/types'
 
 /**
@@ -13,13 +14,20 @@ export async function GET(request: NextRequest) {
     const { getAuthUser } = await import('@/lib/middleware/auth')
     const user = await getAuthUser(request)
 
-    // If admin, return all. Otherwise, only published
-    const where = user?.role === 'admin' ? {} : { status: 'published' as const }
+    const db = getFirestoreDB()
+    let query: any = db.collection('news').orderBy('publishedAt', 'desc')
 
-    const news = await prisma.newsArticle.findMany({
-      ...(Object.keys(where).length > 0 && { where }),
-      orderBy: { publishedAt: 'desc' },
-    })
+    // If not admin, filter by published status
+    if (user?.role !== 'admin') {
+      query = query.where('status', '==', 'published')
+    }
+
+    const newsSnapshot = await query.get()
+
+    const news = newsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
 
     return successResponse({ news })
   } catch (error) {
@@ -53,18 +61,27 @@ export async function POST(request: NextRequest) {
       return errorResponse('جميع الحقول المطلوبة غير مكتملة', 400)
     }
 
-    const news = await prisma.newsArticle.create({
-      data: {
-        title,
-        titleEn: titleEn || title,
-        subjectId,
-        subjectTitle,
-        subjectTitleEn: subjectTitleEn || subjectTitle,
-        url,
-        status: status === 'published' ? 'published' : 'draft',
-        publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
-      },
-    })
+    const db = getFirestoreDB()
+    const newsRef = db.collection('news').doc()
+    const newsData = {
+      title,
+      titleEn: titleEn || title,
+      subjectId,
+      subjectTitle,
+      subjectTitleEn: subjectTitleEn || subjectTitle,
+      url,
+      status: status === 'published' ? 'published' : 'draft',
+      publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    await newsRef.set(newsData)
+
+    const news = {
+      id: newsRef.id,
+      ...newsData,
+    }
 
     return successResponse({ news }, { status: 201 })
   } catch (error) {

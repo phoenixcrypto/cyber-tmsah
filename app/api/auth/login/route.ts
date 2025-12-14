@@ -1,38 +1,28 @@
 import { NextRequest } from 'next/server'
 import { loginSchema } from '@/lib/validators/schemas'
-import { prisma } from '@/lib/db/prisma'
-import { comparePassword } from '@/lib/auth/bcrypt'
+import { getFirestoreDB, getFirebaseAuth } from '@/lib/db/firebase'
+import { comparePassword, hashPassword } from '@/lib/auth/bcrypt'
 import { generateAccessToken, generateRefreshToken } from '@/lib/auth/jwt'
 import { successResponse, errorResponse, validationErrorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { hashPassword } from '@/lib/auth/bcrypt'
 import { getRequestContext } from '@/lib/middleware/auth'
-import type { ErrorWithCode } from '@/lib/types'
+import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * Initialize default admin if no users exist
  */
 async function initializeDefaultAdmin(): Promise<void> {
   try {
-    // Check if DATABASE_URL is set
-    if (!process.env['DATABASE_URL']) {
-      const error = new Error('DATABASE_URL is not set in environment variables')
-      console.error('❌ DATABASE_URL is not set in environment variables')
-      throw error
-    }
+    const db = getFirestoreDB()
     
-    // Check if DATABASE_URL is valid PostgreSQL connection string (Supabase)
-    const dbUrl = process.env['DATABASE_URL']
-    if (!dbUrl.startsWith('postgresql://') && !dbUrl.startsWith('postgres://')) {
-      console.warn('⚠️ DATABASE_URL should start with postgresql:// or postgres:// for PostgreSQL connection')
-    }
+    // Check if any users exist in Firestore
+    const usersSnapshot = await db.collection('users').limit(1).get()
     
-    const userCount = await prisma.user.count()
-    
-    if (userCount === 0) {
+    if (usersSnapshot.empty) {
       const defaultUsername = process.env['DEFAULT_ADMIN_USERNAME']
       const defaultPassword = process.env['DEFAULT_ADMIN_PASSWORD']
       const defaultName = process.env['DEFAULT_ADMIN_NAME']
+      const defaultEmail = process.env['DEFAULT_ADMIN_EMAIL'] || `${defaultUsername}@cyber-tmsah.site`
       
       if (!defaultUsername || !defaultPassword) {
         console.error('❌ DEFAULT_ADMIN_USERNAME and DEFAULT_ADMIN_PASSWORD must be set in environment variables')
@@ -41,46 +31,68 @@ async function initializeDefaultAdmin(): Promise<void> {
       
       const hashedPassword = await hashPassword(defaultPassword)
       
-      // Check if user already exists before creating
-      const existingUser = await prisma.user.findUnique({
-        where: { username: defaultUsername },
-      })
+      // Check if user already exists
+      const existingUserSnapshot = await db.collection('users')
+        .where('username', '==', defaultUsername)
+        .limit(1)
+        .get()
       
-      if (existingUser) {
+      if (!existingUserSnapshot.empty) {
         console.log('ℹ️  Admin user already exists, skipping creation')
         return
       }
       
-      await prisma.user.create({
-        data: {
+      // Create user in Firebase Auth
+      try {
+        const auth = getFirebaseAuth()
+        const userRecord = await auth.createUser({
+          email: defaultEmail,
+          displayName: defaultName || defaultUsername,
+          emailVerified: false,
+        })
+        
+        // Set custom claims for admin role
+        await auth.setCustomUserClaims(userRecord.uid, { role: 'admin' })
+        
+        // Create user document in Firestore
+        await db.collection('users').doc(userRecord.uid).set({
           username: defaultUsername,
           name: defaultName || defaultUsername,
+          email: defaultEmail,
+          password: hashedPassword, // Store hashed password for custom auth
+          role: 'admin',
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        })
+        
+        console.log('✅ Default admin user created in Firebase!')
+        if (process.env['NODE_ENV'] === 'development') {
+          console.log('📝 Username:', defaultUsername)
+          console.log('📧 Email:', defaultEmail)
+          console.log('🆔 UID:', userRecord.uid)
+        }
+      } catch (authError) {
+        console.error('Error creating Firebase Auth user:', authError)
+        // If Firebase Auth fails, still create in Firestore for custom auth
+        const tempId = `temp_${Date.now()}`
+        await db.collection('users').doc(tempId).set({
+          username: defaultUsername,
+          name: defaultName || defaultUsername,
+          email: defaultEmail,
           password: hashedPassword,
           role: 'admin',
-        },
-      })
-      
-      console.log('✅ Default admin user created!')
-      if (process.env['NODE_ENV'] === 'development') {
-        console.log('📝 Username:', defaultUsername)
-        console.log('🔑 Password hash:', hashedPassword.substring(0, 30) + '...')
-      }
-      if (process.env['NODE_ENV'] === 'development') {
-        console.log('⚠️  Please change the default password after first login!')
+          createdAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        })
+        console.log('✅ Default admin user created in Firestore (Auth creation failed)')
       }
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    const err = error as ErrorWithCode
-    const errorCode = err.code
     console.error('Error initializing default admin:', {
       message: errorMessage,
-      code: errorCode,
-      hasDatabaseUrl: !!process.env['DATABASE_URL'],
-      databaseUrlPreview: process.env['DATABASE_URL']?.substring(0, 50) + '...',
     })
-    // Re-throw to be caught by the main error handler
-    throw error
+    // Don't throw - allow login to proceed
   }
 }
 
@@ -116,123 +128,117 @@ export async function POST(request: NextRequest) {
     const trimmedUsername = username.trim()
     const trimmedPassword = password.trim()
 
-    // Debug logging (always log for troubleshooting)
+    // Debug logging
     console.log('🔍 Login attempt:', {
       username: trimmedUsername,
       usernameLength: trimmedUsername.length,
       passwordLength: trimmedPassword.length,
-      passwordPreview: trimmedPassword.length > 6 
-        ? trimmedPassword.substring(0, 3) + '...' + trimmedPassword.substring(trimmedPassword.length - 3)
-        : '***',
-      hasDatabaseUrl: !!process.env['DATABASE_URL'],
-      hasDefaultUsername: !!process.env['DEFAULT_ADMIN_USERNAME'],
-      defaultUsername: process.env['DEFAULT_ADMIN_USERNAME'],
     })
 
-    // Get user by username (exact match)
-    let user = await prisma.user.findUnique({
-      where: { username: trimmedUsername },
-    })
+    const db = getFirestoreDB()
     
-    if (!user) {
-      // Check if user exists with different case or spaces
-      const allUsers = await prisma.user.findMany({
-        select: { username: true, role: true },
-      })
-      
-      console.log('❌ User not found:', {
-        searchedUsername: trimmedUsername,
-        availableUsers: allUsers.map(u => ({ username: u.username, role: u.role })),
-        totalUsers: allUsers.length,
-      })
-      
-      // If no users exist, try to initialize admin again
-      if (allUsers.length === 0) {
-        console.log('⚠️  No users found. Attempting to initialize default admin...')
-        try {
-          await initializeDefaultAdmin()
-          // Try again after initialization
-          user = await prisma.user.findUnique({
-            where: { username: trimmedUsername },
-          })
-          if (!user) {
-            await logger.warn('Login attempt with invalid username after initialization', {
-              username: trimmedUsername,
-              ipAddress: context.ipAddress,
-            })
-            return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة. تأكد من أن DEFAULT_ADMIN_USERNAME صحيح في Vercel environment variables.', 401)
-          }
-        } catch (initError) {
-          console.error('❌ Failed to initialize admin:', initError)
-          await logger.warn('Login attempt with invalid username', {
-            username: trimmedUsername,
-            ipAddress: context.ipAddress,
-          })
-          return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
-        }
-      } else {
-        await logger.warn('Login attempt with invalid username', {
-          username: trimmedUsername,
-          ipAddress: context.ipAddress,
-        })
-        return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
-      }
-    }
-
-    // Debug logging (always log for troubleshooting)
-    console.log('✅ User found:', {
-      userId: user.id,
-      username: user.username,
-      passwordHashLength: user.password.length,
-      passwordHashPreview: user.password.substring(0, 20) + '...',
-    })
-
-    // Verify password
-    const isPasswordValid = await comparePassword(trimmedPassword, user.password)
+    // Get user by username from Firestore
+    const usersSnapshot = await db.collection('users')
+      .where('username', '==', trimmedUsername)
+      .limit(1)
+      .get()
     
-    console.log('🔐 Password verification:', {
-      isValid: isPasswordValid,
-      inputPasswordLength: trimmedPassword.length,
-      inputPasswordPreview: trimmedPassword.length > 6 
-        ? trimmedPassword.substring(0, 3) + '...' + trimmedPassword.substring(trimmedPassword.length - 3)
-        : '***',
-    })
-    
-    if (!isPasswordValid) {
-      await logger.warn('Login attempt with invalid password', {
-        userId: user.id,
+    if (usersSnapshot.empty) {
+      await logger.warn('Login attempt with invalid username', {
+        username: trimmedUsername,
         ipAddress: context.ipAddress,
       })
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
+    const userDoc = usersSnapshot.docs[0]
+    const userData = userDoc.data()
+    const userId = userDoc.id
+
+    // Verify password
+    const isPasswordValid = await comparePassword(trimmedPassword, userData.password)
+    
+    console.log('🔐 Password verification:', {
+      isValid: isPasswordValid,
+      userId,
+    })
+    
+    if (!isPasswordValid) {
+      await logger.warn('Login attempt with invalid password', {
+        userId,
+        ipAddress: context.ipAddress,
+      })
+      return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
+    }
+
+    // Get or create Firebase Auth user
+    let firebaseUid = userId
+    try {
+      const auth = getFirebaseAuth()
+      
+      // Try to get existing user by email
+      try {
+        if (userData.email) {
+          const userRecord = await auth.getUserByEmail(userData.email)
+          firebaseUid = userRecord.uid
+          
+          // Update custom claims if needed
+          await auth.setCustomUserClaims(firebaseUid, { 
+            role: userData.role || 'viewer' 
+          })
+        }
+      } catch {
+        // User doesn't exist in Auth, create it
+        if (userData.email) {
+          const userRecord = await auth.createUser({
+            email: userData.email,
+            displayName: userData.name || userData.username,
+            emailVerified: false,
+          })
+          firebaseUid = userRecord.uid
+          
+          // Set custom claims
+          await auth.setCustomUserClaims(firebaseUid, { 
+            role: userData.role || 'viewer' 
+          })
+          
+          // Update Firestore doc with Firebase UID if different
+          if (userId !== firebaseUid) {
+            await db.collection('users').doc(firebaseUid).set(userData, { merge: true })
+          }
+        }
+      }
+    } catch (authError) {
+      console.warn('Firebase Auth operation failed, continuing with Firestore UID:', authError)
+    }
+
+    // Update last login
+    await db.collection('users').doc(firebaseUid).update({
+      lastLogin: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    })
+
     // Generate tokens
     const accessToken = generateAccessToken({
-      userId: user.id,
-      email: user.email || user.username,
-      role: user.role,
+      userId: firebaseUid,
+      email: userData.email || '',
+      role: userData.role || 'viewer',
     })
 
     const refreshToken = generateRefreshToken({
-      userId: user.id,
-      email: user.email || user.username,
-      role: user.role,
-    })
-
-    // Update last login
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { lastLogin: new Date() },
+      userId: firebaseUid,
+      email: userData.email || '',
+      role: userData.role || 'viewer',
     })
 
     // Create response
     const response = successResponse(
       {
         user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          id: firebaseUid,
+          email: userData.email || '',
+          name: userData.name || userData.username,
+          role: userData.role || 'viewer',
         },
       },
       {
@@ -242,7 +248,7 @@ export async function POST(request: NextRequest) {
           path: '/api/auth/login',
           ipAddress: context.ipAddress,
           ...(context.userAgent && { userAgent: context.userAgent }),
-          userId: user.id,
+          userId: firebaseUid,
           startTime,
         },
       }
@@ -250,44 +256,36 @@ export async function POST(request: NextRequest) {
 
     // Set secure cookies
     const isProduction = process.env['NODE_ENV'] === 'production' || process.env['VERCEL'] === '1'
-    
-    const cookieOptions = {
+    response.cookies.set('admin-token', accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: 'lax' as const,
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24, // 24 hours
       path: '/',
-    }
-    
-    response.cookies.set('admin-token', accessToken, cookieOptions)
+    })
+
     response.cookies.set('admin-refresh-token', refreshToken, {
-      ...cookieOptions,
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
     })
 
     await logger.info('User logged in successfully', {
-      userId: user.id,
-      username: user.username,
+      userId: firebaseUid,
+      username: userData.username,
       ipAddress: context.ipAddress,
     })
 
     return response
   } catch (error) {
-    // Log detailed error for debugging
     const errorMessage = error instanceof Error ? error.message : String(error)
     const errorStack = error instanceof Error ? error.stack : undefined
-    const err = error as ErrorWithCode
-    const errorCode = err.code
     console.error('Login error details:', {
       message: errorMessage,
-      code: errorCode,
       stack: errorStack,
       ipAddress: context.ipAddress,
-      hasDatabaseUrl: !!process.env['DATABASE_URL'],
-      databaseUrlLength: process.env['DATABASE_URL']?.length || 0,
-      databaseUrlPreview: process.env['DATABASE_URL']?.substring(0, 50) + '...',
-      hasJwtSecret: !!process.env['JWT_SECRET'],
-      hasJwtRefreshSecret: !!process.env['JWT_REFRESH_SECRET'],
     })
     
     await logger.error('Login error', error instanceof Error ? error : new Error(errorMessage), {
@@ -295,30 +293,6 @@ export async function POST(request: NextRequest) {
       path: '/api/auth/login',
       ipAddress: context.ipAddress,
     })
-    
-    // Return more specific error message if it's a known error
-    if (errorMessage.includes('JWT_SECRET') || errorMessage.includes('JWT_REFRESH_SECRET')) {
-      return errorResponse('خطأ في إعدادات النظام. يرجى التحقق من متغيرات البيئة.', 500)
-    }
-    
-    // Check for database connection errors
-    if (
-      errorMessage.includes('Prisma') ||
-      errorMessage.includes('database') ||
-      errorMessage.includes('P1001') ||
-      errorMessage.includes('Can\'t reach database') ||
-      errorMessage.includes('Connection') ||
-      errorMessage.includes('ECONNREFUSED') ||
-      errorMessage.includes('ETIMEDOUT')
-    ) {
-      // Check if DATABASE_URL is missing
-      if (!process.env['DATABASE_URL']) {
-        console.error('❌ DATABASE_URL is not set in environment variables')
-        return errorResponse('خطأ في إعدادات قاعدة البيانات: DATABASE_URL غير موجود. يرجى التحقق من متغيرات البيئة على Vercel.', 500)
-      }
-      
-      return errorResponse('خطأ في الاتصال بقاعدة البيانات PostgreSQL (Supabase). يرجى التحقق من إعدادات DATABASE_URL على Vercel.', 500)
-    }
     
     return errorResponse('حدث خطأ أثناء تسجيل الدخول', 500, {
       logRequest: true,

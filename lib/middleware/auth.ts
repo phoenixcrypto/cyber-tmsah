@@ -1,10 +1,11 @@
 /**
  * Authentication middleware utilities
+ * Updated for Firebase Auth
  */
 
 import { NextRequest } from 'next/server'
 import { verifyAccessToken } from '@/lib/auth/jwt'
-import { prisma } from '@/lib/db/prisma'
+import { getFirebaseAuth, getFirestoreDB } from '@/lib/db/firebase'
 
 export interface AuthUser {
   userId: string
@@ -28,20 +29,32 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
       return null
     }
 
-    // Verify user still exists
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
-      select: { id: true, email: true, role: true },
-    })
+    // Get user from Firebase Auth
+    try {
+      const auth = getFirebaseAuth()
+      const userRecord = await auth.getUser(payload.userId)
+      
+      // Get user role from Firestore users collection or custom claims
+      const db = getFirestoreDB()
+      const userDoc = await db.collection('users').doc(payload.userId).get()
+      
+      let role: 'admin' | 'editor' | 'viewer' = 'viewer'
+      if (userDoc.exists) {
+        const userData = userDoc.data()
+        role = (userData?.role as 'admin' | 'editor' | 'viewer') || 'viewer'
+      } else {
+        // Try to get from custom claims
+        role = (userRecord.customClaims?.role as 'admin' | 'editor' | 'viewer') || 'viewer'
+      }
 
-    if (!user) {
+      return {
+        userId: userRecord.uid,
+        email: userRecord.email || payload.email || '',
+        role,
+      }
+    } catch (firebaseError) {
+      console.error('Firebase Auth error:', firebaseError)
       return null
-    }
-
-    return {
-      userId: user.id,
-      email: user.email || payload.email,
-      role: user.role,
     }
   } catch (error) {
     return null
@@ -96,4 +109,3 @@ export function getRequestContext(request: NextRequest): {
 
   return { ipAddress, userAgent }
 }
-

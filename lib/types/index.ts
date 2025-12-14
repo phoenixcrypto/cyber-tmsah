@@ -2,8 +2,6 @@
  * Shared TypeScript types for Cyber TMSAH
  */
 
-import { Prisma } from '@prisma/client'
-
 // Schedule Item Types
 export interface ScheduleItem {
   id: string
@@ -15,8 +13,8 @@ export interface ScheduleItem {
   group: 'Group 1' | 'Group 2'
   sectionNumber: number | null
   day: 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
-  createdAt?: string
-  updatedAt?: string
+  createdAt?: string | Date
+  updatedAt?: string | Date
 }
 
 // User Types
@@ -26,14 +24,31 @@ export interface User {
   email: string | null
   name: string
   role: 'admin' | 'editor' | 'viewer'
-  lastLogin: string | null
-  createdAt?: string
-  updatedAt?: string
+  lastLogin: string | null | Date
+  createdAt?: string | Date
+  updatedAt?: string | Date
 }
 
-// Prisma Update Types
-export type ScheduleItemUpdateInput = Prisma.ScheduleItemUpdateInput
-export type UserUpdateInput = Prisma.UserUpdateInput
+// Update Input Types (Firestore compatible)
+export interface ScheduleItemUpdateInput {
+  title?: string
+  time?: string
+  location?: string
+  instructor?: string
+  type?: 'lecture' | 'lab'
+  group?: 'Group1' | 'Group2'
+  sectionNumber?: number | null
+  day?: string
+}
+
+export interface UserUpdateInput {
+  username?: string
+  email?: string | null
+  name?: string
+  role?: 'admin' | 'editor' | 'viewer'
+  password?: string
+  lastLogin?: Date | null
+}
 
 // API Response Types
 export interface ApiScheduleResponse {
