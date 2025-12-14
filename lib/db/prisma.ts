@@ -20,42 +20,11 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-/**
- * Validate DATABASE_URL format
- * Ensures database connection string is properly configured
- */
-function validateDatabaseUrl(): void {
-  const dbUrl = process.env['DATABASE_URL']
-  if (!dbUrl) {
-    throw new Error('DATABASE_URL is not set in environment variables')
-  }
-
-  // Validate MySQL connection string format
-  const isMySQL = dbUrl.startsWith('mysql://') || dbUrl.startsWith('mysqlx://')
-  
-  if (!isMySQL) {
-    console.warn('⚠️  Expected MySQL connection string. Current format may not be compatible.')
-  }
-
-  // Check for SSL requirement in production
-  if (process.env['NODE_ENV'] === 'production' && !dbUrl.includes('sslaccept=strict')) {
-    console.warn('⚠️  Production database connections should use SSL (sslaccept=strict)')
-  }
-}
-
 // DISABLED: This project uses Firebase, not Prisma
 // Prisma is kept for reference but should not be initialized
 // All API routes should use Firebase instead
-
-// Validate on module load (only in production/serverless)
-// DISABLED to prevent build errors when DATABASE_URL is not set
-// if (process.env['NODE_ENV'] === 'production' || process.env['VERCEL']) {
-//   try {
-//     validateDatabaseUrl()
-//   } catch (error) {
-//     console.error('❌ DATABASE_URL validation failed:', error instanceof Error ? error.message : String(error))
-//   }
-// }
+// 
+// Validation is disabled to prevent build errors when DATABASE_URL is not set
 
 // Lazy initialization - only create Prisma client when actually used
 // This prevents errors during build when DATABASE_URL is not set
