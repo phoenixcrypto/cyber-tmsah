@@ -116,56 +116,87 @@ export async function POST(request: NextRequest) {
     const trimmedUsername = username.trim()
     const trimmedPassword = password.trim()
 
-    // Debug logging (only in development)
-    if (process.env['NODE_ENV'] === 'development') {
-      console.log('🔍 Login attempt:', {
-        usernameLength: trimmedUsername.length,
-        passwordLength: trimmedPassword.length,
-        usernamePreview: trimmedUsername.substring(0, 10) + '...',
-      })
-    }
+    // Debug logging (always log for troubleshooting)
+    console.log('🔍 Login attempt:', {
+      username: trimmedUsername,
+      usernameLength: trimmedUsername.length,
+      passwordLength: trimmedPassword.length,
+      passwordPreview: trimmedPassword.length > 6 
+        ? trimmedPassword.substring(0, 3) + '...' + trimmedPassword.substring(trimmedPassword.length - 3)
+        : '***',
+      hasDatabaseUrl: !!process.env['DATABASE_URL'],
+      hasDefaultUsername: !!process.env['DEFAULT_ADMIN_USERNAME'],
+      defaultUsername: process.env['DEFAULT_ADMIN_USERNAME'],
+    })
 
     // Get user by username (exact match)
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { username: trimmedUsername },
     })
     
     if (!user) {
       // Check if user exists with different case or spaces
       const allUsers = await prisma.user.findMany({
-        select: { username: true },
+        select: { username: true, role: true },
       })
       
-      if (process.env['NODE_ENV'] === 'development') {
-        console.log('❌ User not found. Available users:', allUsers.map(u => u.username))
+      console.log('❌ User not found:', {
+        searchedUsername: trimmedUsername,
+        availableUsers: allUsers.map(u => ({ username: u.username, role: u.role })),
+        totalUsers: allUsers.length,
+      })
+      
+      // If no users exist, try to initialize admin again
+      if (allUsers.length === 0) {
+        console.log('⚠️  No users found. Attempting to initialize default admin...')
+        try {
+          await initializeDefaultAdmin()
+          // Try again after initialization
+          user = await prisma.user.findUnique({
+            where: { username: trimmedUsername },
+          })
+          if (!user) {
+            await logger.warn('Login attempt with invalid username after initialization', {
+              username: trimmedUsername,
+              ipAddress: context.ipAddress,
+            })
+            return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة. تأكد من أن DEFAULT_ADMIN_USERNAME صحيح في Vercel environment variables.', 401)
+          }
+        } catch (initError) {
+          console.error('❌ Failed to initialize admin:', initError)
+          await logger.warn('Login attempt with invalid username', {
+            username: trimmedUsername,
+            ipAddress: context.ipAddress,
+          })
+          return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
+        }
+      } else {
+        await logger.warn('Login attempt with invalid username', {
+          username: trimmedUsername,
+          ipAddress: context.ipAddress,
+        })
+        return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
       }
-      
-      await logger.warn('Login attempt with invalid username', {
-        username: trimmedUsername,
-        ipAddress: context.ipAddress,
-      })
-      return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
-    // Debug logging (only in development)
-    if (process.env['NODE_ENV'] === 'development') {
-      console.log('✅ User found:', {
-        userId: user.id,
-        username: user.username,
-        passwordHashLength: user.password.length,
-        passwordHashPreview: user.password.substring(0, 20) + '...',
-      })
-    }
+    // Debug logging (always log for troubleshooting)
+    console.log('✅ User found:', {
+      userId: user.id,
+      username: user.username,
+      passwordHashLength: user.password.length,
+      passwordHashPreview: user.password.substring(0, 20) + '...',
+    })
 
     // Verify password
     const isPasswordValid = await comparePassword(trimmedPassword, user.password)
     
-    if (process.env['NODE_ENV'] === 'development') {
-      console.log('🔐 Password verification:', {
-        isValid: isPasswordValid,
-        inputPasswordLength: trimmedPassword.length,
-      })
-    }
+    console.log('🔐 Password verification:', {
+      isValid: isPasswordValid,
+      inputPasswordLength: trimmedPassword.length,
+      inputPasswordPreview: trimmedPassword.length > 6 
+        ? trimmedPassword.substring(0, 3) + '...' + trimmedPassword.substring(trimmedPassword.length - 3)
+        : '***',
+    })
     
     if (!isPasswordValid) {
       await logger.warn('Login attempt with invalid password', {
