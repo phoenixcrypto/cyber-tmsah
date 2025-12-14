@@ -119,12 +119,18 @@ export async function POST(request: NextRequest) {
         return errorResponse('Invalid or expired reset token', 400)
       }
       const resetTokenData = resetTokenDoc.data()
-      const expiresAt = resetTokenData['expiresAt'] as { toDate?: () => Date } | Date | string | null
-      const expiresAtDate = expiresAt && typeof expiresAt === 'object' && 'toDate' in expiresAt 
-        ? expiresAt.toDate?.() 
-        : expiresAt instanceof Date 
-          ? expiresAt 
-          : expiresAt ? new Date(expiresAt as string) : null
+      const expiresAt = resetTokenData['expiresAt'] as { toDate?: () => Date } | Date | string | number | null
+      let expiresAtDate: Date | null = null
+      
+      if (expiresAt) {
+        if (typeof expiresAt === 'object' && 'toDate' in expiresAt && expiresAt.toDate) {
+          expiresAtDate = expiresAt.toDate()
+        } else if (expiresAt instanceof Date) {
+          expiresAtDate = expiresAt
+        } else if (typeof expiresAt === 'string' || typeof expiresAt === 'number') {
+          expiresAtDate = new Date(expiresAt)
+        }
+      }
 
       // Check if token is used or expired
       if (resetTokenData['used'] || (expiresAtDate && expiresAtDate < new Date())) {

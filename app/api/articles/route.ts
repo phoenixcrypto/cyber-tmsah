@@ -28,11 +28,11 @@ export async function GET(request: NextRequest) {
     const articles = await Promise.all(
       articlesSnapshot.docs.map(async (doc: { id: string; data: () => Record<string, unknown> }) => {
         const data = doc.data()
-        const materialId = data['materialId']
+        const materialId = data['materialId'] as string | undefined
 
         // Get material data
         let material = null
-        if (materialId) {
+        if (materialId && typeof materialId === 'string') {
           const materialDoc = await db.collection('materials').doc(materialId).get()
           if (materialDoc.exists) {
             const materialData = materialDoc.data()

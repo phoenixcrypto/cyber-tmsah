@@ -39,6 +39,10 @@ export async function GET(
     }
 
     const pageDoc2 = slugSnapshot.docs[0]
+    if (!pageDoc2) {
+      return notFoundResponse('الصفحة غير موجودة')
+    }
+    
     return successResponse({
       page: {
         id: pageDoc2.id,
