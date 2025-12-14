@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { requireEditor } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { parseTags, stringifyTags } from '@/lib/utils/json-helpers'
+import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/articles/[id]
@@ -14,20 +15,38 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const article = await prisma.article.findUnique({
-      where: { id: params.id },
-      include: {
-        material: {
-          select: { id: true, title: true, titleEn: true },
-        },
-      },
-    })
+    const db = getFirestoreDB()
+    const articleDoc = await db.collection('articles').doc(params['id']).get()
 
-    if (!article) {
+    if (!articleDoc.exists) {
       return notFoundResponse('المقال غير موجود')
     }
 
-    return successResponse({ article: { ...article, tags: parseTags(article.tags) } })
+    const articleData = articleDoc.data()
+    const materialId = articleData?.['materialId'] as string
+
+    // Get material info
+    let material = null
+    if (materialId) {
+      const materialDoc = await db.collection('materials').doc(materialId).get()
+      if (materialDoc.exists) {
+        const materialData = materialDoc.data()
+        material = {
+          id: materialDoc.id,
+          title: materialData?.['title'],
+          titleEn: materialData?.['titleEn'],
+        }
+      }
+    }
+
+    const article = {
+      id: articleDoc.id,
+      ...articleData,
+      tags: parseTags(articleData?.['tags']),
+      material,
+    }
+
+    return successResponse({ article })
   } catch (error) {
     await logger.error('Get article error', error as Error)
     return errorResponse('حدث خطأ أثناء جلب البيانات', 500)
@@ -60,65 +79,79 @@ export async function PUT(
       tags,
     } = body
 
-    // Check if article exists
-    const existingArticle = await prisma.article.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
 
-    if (!existingArticle) {
+    // Check if article exists
+    const articleDoc = await db.collection('articles').doc(params['id']).get()
+    if (!articleDoc.exists) {
       return notFoundResponse('المقال غير موجود')
     }
 
-    // If materialId is being changed, verify new material exists
-    if (materialId && materialId !== existingArticle.materialId) {
-      const material = await prisma.material.findUnique({
-        where: { id: materialId },
-      })
+    const existingArticle = articleDoc.data()
+    const existingMaterialId = existingArticle?.['materialId'] as string
 
-      if (!material) {
+    // If materialId is being changed, verify new material exists
+    if (materialId && materialId !== existingMaterialId) {
+      const newMaterialDoc = await db.collection('materials').doc(materialId).get()
+      if (!newMaterialDoc.exists) {
         return errorResponse('المادة المحددة غير موجودة', 404)
       }
 
       // Update old material's count
-      await prisma.material.update({
-        where: { id: existingArticle.materialId },
-        data: {
-          articlesCount: {
-            decrement: 1,
-          },
-        },
-      })
+      if (existingMaterialId) {
+        const oldMaterialDoc = await db.collection('materials').doc(existingMaterialId).get()
+        if (oldMaterialDoc.exists) {
+          const oldMaterialData = oldMaterialDoc.data()
+          const oldCount = (oldMaterialData?.['articlesCount'] as number) || 0
+          await db.collection('materials').doc(existingMaterialId).update({
+            articlesCount: Math.max(0, oldCount - 1),
+            updatedAt: FieldValue.serverTimestamp(),
+          })
+        }
+      }
 
       // Update new material's count
-      await prisma.material.update({
-        where: { id: materialId },
-        data: {
-          articlesCount: {
-            increment: 1,
-          },
-        },
+      const newMaterialData = newMaterialDoc.data()
+      const newCount = (newMaterialData?.['articlesCount'] as number) || 0
+      await db.collection('materials').doc(materialId).update({
+        articlesCount: newCount + 1,
+        updatedAt: FieldValue.serverTimestamp(),
       })
     }
 
-    const article = await prisma.article.update({
-      where: { id: params.id },
-      data: {
-        ...(materialId && { materialId }),
-        ...(title && { title }),
-        ...(titleEn !== undefined && { titleEn }),
-        ...(content && { content }),
-        ...(contentEn !== undefined && { contentEn }),
-        ...(excerpt !== undefined && { excerpt }),
-        ...(excerptEn !== undefined && { excerptEn }),
-        ...(author && { author }),
-        ...(status && { status: status === 'published' ? 'published' : 'draft' }),
-        ...(status === 'published' && publishedAt && { publishedAt: new Date(publishedAt) }),
-        ...(status === 'published' && !existingArticle.publishedAt && !publishedAt && { publishedAt: new Date() }),
-        ...(tags !== undefined && { tags: stringifyTags(tags) }),
-      },
-    })
+    // Prepare update data
+    const updateData: Record<string, unknown> = {
+      updatedAt: FieldValue.serverTimestamp(),
+    }
 
-    return successResponse({ article: { ...article, tags: parseTags(article.tags) } })
+    if (materialId) updateData['materialId'] = materialId
+    if (title) updateData['title'] = title
+    if (titleEn !== undefined) updateData['titleEn'] = titleEn
+    if (content) updateData['content'] = content
+    if (contentEn !== undefined) updateData['contentEn'] = contentEn
+    if (excerpt !== undefined) updateData['excerpt'] = excerpt
+    if (excerptEn !== undefined) updateData['excerptEn'] = excerptEn
+    if (author) updateData['author'] = author
+    if (status) updateData['status'] = status === 'published' ? 'published' : 'draft'
+    if (status === 'published' && publishedAt) updateData['publishedAt'] = new Date(publishedAt)
+    if (status === 'published' && !existingArticle?.['publishedAt'] && !publishedAt) {
+      updateData['publishedAt'] = new Date()
+    }
+    if (tags !== undefined) updateData['tags'] = stringifyTags(tags)
+
+    await db.collection('articles').doc(params['id']).update(updateData)
+
+    // Get updated article
+    const updatedArticleDoc = await db.collection('articles').doc(params['id']).get()
+    const updatedArticleData = updatedArticleDoc.data()
+
+    const article = {
+      id: updatedArticleDoc.id,
+      ...updatedArticleData,
+      tags: parseTags(updatedArticleData?.['tags']),
+    }
+
+    return successResponse({ article })
   } catch (error: unknown) {
     if (error instanceof Error && (error.message === 'Unauthorized' || error.message.includes('Forbidden'))) {
       return errorResponse('غير مصرح', 401)
@@ -140,29 +173,32 @@ export async function DELETE(
   try {
     await requireEditor(request)
 
-    // Check if article exists
-    const existingArticle = await prisma.article.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
 
-    if (!existingArticle) {
+    // Check if article exists
+    const articleDoc = await db.collection('articles').doc(params['id']).get()
+    if (!articleDoc.exists) {
       return notFoundResponse('المقال غير موجود')
     }
 
+    const articleData = articleDoc.data()
+    const materialId = articleData?.['materialId'] as string
+
     // Delete article
-    await prisma.article.delete({
-      where: { id: params.id },
-    })
+    await db.collection('articles').doc(params['id']).delete()
 
     // Update material's articlesCount
-    await prisma.material.update({
-      where: { id: existingArticle.materialId },
-      data: {
-        articlesCount: {
-          decrement: 1,
-        },
-      },
-    })
+    if (materialId) {
+      const materialDoc = await db.collection('materials').doc(materialId).get()
+      if (materialDoc.exists) {
+        const materialData = materialDoc.data()
+        const currentCount = (materialData?.['articlesCount'] as number) || 0
+        await db.collection('materials').doc(materialId).update({
+          articlesCount: Math.max(0, currentCount - 1),
+          updatedAt: FieldValue.serverTimestamp(),
+        })
+      }
+    }
 
     return successResponse({ message: 'تم حذف المقال بنجاح' })
   } catch (error: unknown) {
@@ -174,4 +210,3 @@ export async function DELETE(
     return errorResponse('حدث خطأ أثناء حذف المقال', 500)
   }
 }
-
