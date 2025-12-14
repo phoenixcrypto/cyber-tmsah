@@ -54,6 +54,9 @@ export async function POST(request: NextRequest) {
       }
 
       const userDoc = usersSnapshot.docs[0]
+      if (!userDoc) {
+        return successResponse({ message: 'If the email exists, a reset link has been sent.' })
+      }
       const userId = userDoc.id
 
       // Generate reset token
