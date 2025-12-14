@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { FieldValue } from 'firebase-admin/firestore'
 import type { ErrorWithCode } from '@/lib/types'
 
 /**
@@ -11,15 +10,9 @@ import type { ErrorWithCode } from '@/lib/types'
  */
 export async function GET() {
   try {
-    const db = getFirestoreDB()
-    const downloadsSnapshot = await db.collection('downloads')
-      .orderBy('name', 'asc')
-      .get()
-
-    const downloads = downloadsSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
+    const downloads = await prisma.downloadSoftware.findMany({
+      orderBy: { name: 'asc' },
+    })
 
     return successResponse({ downloads })
   } catch (error) {
@@ -44,27 +37,18 @@ export async function POST(request: NextRequest) {
       return errorResponse('الاسم والوصف مطلوبان', 400)
     }
 
-    const db = getFirestoreDB()
-    const downloadRef = db.collection('downloads').doc()
-    const downloadData = {
-      name,
-      nameEn: nameEn || name,
-      description,
-      descriptionEn: descriptionEn || description,
-      icon: icon || 'Download',
-      videoUrl: videoUrl || null,
-      downloadUrl: downloadUrl || null,
-      category: category || null,
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    }
-
-    await downloadRef.set(downloadData)
-
-    const download = {
-      id: downloadRef.id,
-      ...downloadData,
-    }
+    const download = await prisma.downloadSoftware.create({
+      data: {
+        name,
+        nameEn: nameEn || name,
+        description,
+        descriptionEn: descriptionEn || description,
+        icon: icon || 'Download',
+        videoUrl: videoUrl || null,
+        downloadUrl: downloadUrl || null,
+        category: category || null,
+      },
+    })
 
     return successResponse({ download }, { status: 201 })
   } catch (error) {

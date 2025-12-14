@@ -1,10 +1,9 @@
 /**
  * Centralized logging utility with error tracking
- * Updated for Firebase Firestore
+ * Updated for Prisma
  */
 
-import { getFirestoreDB } from '@/lib/db/firebase'
-import { FieldValue } from 'firebase-admin/firestore'
+import { prisma } from '@/lib/db/prisma'
 
 export enum LogLevel {
   DEBUG = 'debug',
@@ -52,24 +51,24 @@ class Logger {
         console.log(formatted)
     }
 
-    // Firestore logging for errors and API calls
+    // Database logging for errors and API calls
     if (level === LogLevel.ERROR || (context?.method && context?.path)) {
       try {
-        const db = getFirestoreDB()
-        await db.collection('apiLogs').add({
-          method: context?.method || 'UNKNOWN',
-          path: context?.path || 'UNKNOWN',
-          statusCode: level === LogLevel.ERROR ? 500 : 200,
-          responseTime: 0,
-          ipAddress: context?.ipAddress || null,
-          userAgent: context?.userAgent || null,
-          userId: context?.userId || null,
-          error: level === LogLevel.ERROR ? message : null,
-          createdAt: FieldValue.serverTimestamp(),
+        await prisma.apiLog.create({
+          data: {
+            method: context?.method || 'UNKNOWN',
+            path: context?.path || 'UNKNOWN',
+            statusCode: level === LogLevel.ERROR ? 500 : 200,
+            responseTime: 0,
+            ipAddress: context?.ipAddress || null,
+            userAgent: context?.userAgent || null,
+            userId: context?.userId || null,
+            error: level === LogLevel.ERROR ? message : null,
+          },
         })
       } catch (dbError) {
         // Don't fail if logging fails
-        console.error('Failed to log to Firestore:', dbError)
+        console.error('Failed to log to database:', dbError)
       }
     }
   }
@@ -107,17 +106,17 @@ export async function logApiRequest(
   context?: LogContext
 ): Promise<void> {
   try {
-    const db = getFirestoreDB()
-    await db.collection('apiLogs').add({
-      method,
-      path,
-      statusCode,
-      responseTime,
-      ipAddress: context?.ipAddress || null,
-      userAgent: context?.userAgent || null,
-      userId: context?.userId || null,
-      error: statusCode >= 400 ? (context?.['error'] as string) || null : null,
-      createdAt: FieldValue.serverTimestamp(),
+    await prisma.apiLog.create({
+      data: {
+        method,
+        path,
+        statusCode,
+        responseTime,
+        ipAddress: context?.ipAddress || null,
+        userAgent: context?.userAgent || null,
+        userId: context?.userId || null,
+        error: statusCode >= 400 ? (context?.['error'] as string) || null : null,
+      },
     })
   } catch (error) {
     // Don't fail if logging fails

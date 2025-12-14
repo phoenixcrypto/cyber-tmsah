@@ -1,10 +1,9 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { requireAdmin, getRequestContext } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { z } from 'zod'
-import { FieldValue } from 'firebase-admin/firestore'
 
 const updateScheduleSchema = z.object({
   title: z.string().min(1).optional(),
@@ -37,16 +36,27 @@ export async function PUT(
     }
 
     const data = validationResult.data
-    const db = getFirestoreDB()
-    const itemDoc = await db.collection('scheduleItems').doc(params.id).get()
 
-    if (!itemDoc.exists) {
+    // Check if item exists
+    const existingItem = await prisma.scheduleItem.findUnique({
+      where: { id: params.id },
+    })
+
+    if (!existingItem) {
       return notFoundResponse('العنصر غير موجود')
     }
 
-    const updateData: any = {
-      updatedAt: FieldValue.serverTimestamp(),
-    }
+    // Prepare update data
+    const updateData: {
+      title?: string
+      time?: string
+      location?: string
+      instructor?: string
+      type?: 'lecture' | 'lab'
+      group?: 'Group1' | 'Group2'
+      sectionNumber?: number | null
+      day?: 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
+    } = {}
 
     if (data.title) updateData.title = data.title
     if (data.time) updateData.time = data.time
@@ -57,10 +67,10 @@ export async function PUT(
     if (data.sectionNumber !== undefined) updateData.sectionNumber = data.sectionNumber
     if (data.day) updateData.day = data.day
 
-    await db.collection('scheduleItems').doc(params.id).update(updateData)
-
-    const updatedDoc = await db.collection('scheduleItems').doc(params.id).get()
-    const updatedData = updatedDoc.data()!
+    const updatedItem = await prisma.scheduleItem.update({
+      where: { id: params.id },
+      data: updateData,
+    })
 
     await logger.info('Schedule item updated', {
       itemId: params.id,
@@ -70,9 +80,8 @@ export async function PUT(
 
     return successResponse({
       item: {
-        id: updatedDoc.id,
-        ...updatedData,
-        group: updatedData['group'] === 'Group1' ? 'Group 1' : 'Group 2',
+        ...updatedItem,
+        group: updatedItem.group === 'Group1' ? 'Group 1' : 'Group 2',
       },
     })
   } catch (error) {
@@ -97,14 +106,18 @@ export async function DELETE(
   try {
     const user = await requireAdmin(request)
 
-    const db = getFirestoreDB()
-    const itemDoc = await db.collection('scheduleItems').doc(params.id).get()
+    // Check if item exists
+    const existingItem = await prisma.scheduleItem.findUnique({
+      where: { id: params.id },
+    })
 
-    if (!itemDoc.exists) {
+    if (!existingItem) {
       return notFoundResponse('العنصر غير موجود')
     }
 
-    await db.collection('scheduleItems').doc(params.id).delete()
+    await prisma.scheduleItem.delete({
+      where: { id: params.id },
+    })
 
     await logger.info('Schedule item deleted', {
       itemId: params.id,

@@ -1,16 +1,17 @@
 /**
  * Authentication middleware utilities
- * Updated for Firebase Auth
+ * Updated for Prisma
  */
 
 import { NextRequest } from 'next/server'
 import { verifyAccessToken } from '@/lib/auth/jwt'
-import { getFirebaseAuth, getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 
 export interface AuthUser {
   userId: string
   email: string
   role: 'admin' | 'editor' | 'viewer'
+  name?: string
 }
 
 /**
@@ -29,31 +30,30 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
       return null
     }
 
-    // Get user from Firebase Auth
+    // Get user from Prisma database
     try {
-      const auth = getFirebaseAuth()
-      const userRecord = await auth.getUser(payload.userId)
-      
-      // Get user role from Firestore users collection or custom claims
-      const db = getFirestoreDB()
-      const userDoc = await db.collection('users').doc(payload.userId).get()
-      
-      let role: 'admin' | 'editor' | 'viewer' = 'viewer'
-      if (userDoc.exists) {
-        const userData = userDoc.data()
-        role = (userData?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
-      } else {
-        // Try to get from custom claims
-        role = (userRecord.customClaims?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
+      const user = await prisma.user.findUnique({
+        where: { id: payload.userId },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          name: true,
+        },
+      })
+
+      if (!user) {
+        return null
       }
 
       return {
-        userId: userRecord.uid,
-        email: userRecord.email || payload.email || '',
-        role,
+        userId: user.id,
+        email: user.email || '',
+        role: user.role,
+        name: user.name,
       }
-    } catch (firebaseError) {
-      console.error('Firebase Auth error:', firebaseError)
+    } catch (dbError) {
+      console.error('Database error:', dbError)
       return null
     }
   } catch (error) {

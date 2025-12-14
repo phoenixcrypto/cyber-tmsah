@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server'
-import { getFirestoreDB } from '@/lib/db/firebase'
+import { prisma } from '@/lib/db/prisma'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
-import { FieldValue } from 'firebase-admin/firestore'
 import type { ErrorWithCode } from '@/lib/types'
 
 /**
@@ -11,31 +10,30 @@ import type { ErrorWithCode } from '@/lib/types'
  */
 export async function GET() {
   try {
-    const db = getFirestoreDB()
-    const materialsSnapshot = await db.collection('materials')
-      .orderBy('title', 'asc')
-      .get()
+    const materials = await prisma.material.findMany({
+      orderBy: { title: 'asc' },
+      include: {
+        articles: {
+          where: { status: 'published' },
+        },
+      },
+    })
 
-    const materials = await Promise.all(
-      materialsSnapshot.docs.map(async (doc: { id: string; data: () => Record<string, unknown> }) => {
-        const data = doc.data()
-        const materialId = doc.id
+    const materialsWithCount = materials.map(material => ({
+      id: material.id,
+      title: material.title,
+      titleEn: material.titleEn,
+      description: material.description,
+      descriptionEn: material.descriptionEn,
+      icon: material.icon,
+      color: material.color,
+      articlesCount: material.articles.length,
+      lastUpdated: material.lastUpdated,
+      createdAt: material.createdAt,
+      updatedAt: material.updatedAt,
+    }))
 
-        // Get published articles count
-        const articlesSnapshot = await db.collection('articles')
-          .where('materialId', '==', materialId)
-          .where('status', '==', 'published')
-          .get()
-
-        return {
-          id: materialId,
-          ...data,
-          articlesCount: articlesSnapshot.size,
-        }
-      })
-    )
-
-    return successResponse({ materials })
+    return successResponse({ materials: materialsWithCount })
   } catch (error) {
     await logger.error('Get materials error', error as Error)
     return errorResponse('حدث خطأ أثناء جلب البيانات', 500)
@@ -58,32 +56,22 @@ export async function POST(request: NextRequest) {
       return errorResponse('العنوان والوصف مطلوبان', 400)
     }
 
-    const db = getFirestoreDB()
-    const materialRef = db.collection('materials').doc()
-
-    const materialData = {
-      title,
-      titleEn: titleEn || title,
-      description,
-      descriptionEn: descriptionEn || description,
-      icon: icon || 'BookOpen',
-      color: color || 'from-blue-500 to-blue-600',
-      articlesCount: 0,
-      lastUpdated: new Date().toLocaleDateString('ar-EG', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    }
-
-    await materialRef.set(materialData)
-
-    const material = {
-      id: materialRef.id,
-      ...materialData,
-    }
+    const material = await prisma.material.create({
+      data: {
+        title,
+        titleEn: titleEn || title,
+        description,
+        descriptionEn: descriptionEn || description,
+        icon: icon || 'BookOpen',
+        color: color || 'from-blue-500 to-blue-600',
+        articlesCount: 0,
+        lastUpdated: new Date().toLocaleDateString('ar-EG', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+      },
+    })
 
     return successResponse({ material }, { status: 201 })
   } catch (error) {
