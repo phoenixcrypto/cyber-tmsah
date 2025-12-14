@@ -52,6 +52,9 @@
     ".next",
     "out",
     "dist",
-    "cyber-tmsah-cms"
+    "cyber-tmsah-cms",
+    "scripts",
+    "prisma",
+    "database"
   ]
 }

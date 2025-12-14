@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { requireEditor } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
+import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/downloads/[id]
@@ -13,12 +14,16 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const download = await prisma.downloadSoftware.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
+    const downloadDoc = await db.collection('downloads').doc(params['id']).get()
 
-    if (!download) {
+    if (!downloadDoc.exists) {
       return notFoundResponse('البرنامج غير موجود')
+    }
+
+    const download = {
+      id: downloadDoc.id,
+      ...downloadDoc.data(),
     }
 
     return successResponse({ download })
@@ -42,28 +47,36 @@ export async function PUT(
     const body = await request.json()
     const { name, nameEn, description, descriptionEn, icon, videoUrl, downloadUrl, category } = body
 
-    // Check if download exists
-    const existingDownload = await prisma.downloadSoftware.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
 
-    if (!existingDownload) {
+    // Check if download exists
+    const downloadDoc = await db.collection('downloads').doc(params['id']).get()
+    if (!downloadDoc.exists) {
       return notFoundResponse('البرنامج غير موجود')
     }
 
-    const download = await prisma.downloadSoftware.update({
-      where: { id: params.id },
-      data: {
-        ...(name && { name }),
-        ...(nameEn !== undefined && { nameEn }),
-        ...(description && { description }),
-        ...(descriptionEn !== undefined && { descriptionEn }),
-        ...(icon && { icon }),
-        ...(videoUrl !== undefined && { videoUrl }),
-        ...(downloadUrl !== undefined && { downloadUrl }),
-        ...(category !== undefined && { category }),
-      },
-    })
+    // Prepare update data
+    const updateData: Record<string, unknown> = {
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    if (name) updateData['name'] = name
+    if (nameEn !== undefined) updateData['nameEn'] = nameEn
+    if (description) updateData['description'] = description
+    if (descriptionEn !== undefined) updateData['descriptionEn'] = descriptionEn
+    if (icon) updateData['icon'] = icon
+    if (videoUrl !== undefined) updateData['videoUrl'] = videoUrl
+    if (downloadUrl !== undefined) updateData['downloadUrl'] = downloadUrl
+    if (category !== undefined) updateData['category'] = category
+
+    await db.collection('downloads').doc(params['id']).update(updateData)
+
+    // Get updated download
+    const updatedDownloadDoc = await db.collection('downloads').doc(params['id']).get()
+    const download = {
+      id: updatedDownloadDoc.id,
+      ...updatedDownloadDoc.data(),
+    }
 
     return successResponse({ download })
   } catch (error: unknown) {
@@ -87,18 +100,16 @@ export async function DELETE(
   try {
     await requireEditor(request)
 
-    // Check if download exists
-    const existingDownload = await prisma.downloadSoftware.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
 
-    if (!existingDownload) {
+    // Check if download exists
+    const downloadDoc = await db.collection('downloads').doc(params['id']).get()
+    if (!downloadDoc.exists) {
       return notFoundResponse('البرنامج غير موجود')
     }
 
-    await prisma.downloadSoftware.delete({
-      where: { id: params.id },
-    })
+    // Delete download
+    await db.collection('downloads').doc(params['id']).delete()
 
     return successResponse({ message: 'تم حذف البرنامج بنجاح' })
   } catch (error: unknown) {
@@ -110,4 +121,3 @@ export async function DELETE(
     return errorResponse('حدث خطأ أثناء حذف البرنامج', 500)
   }
 }
-

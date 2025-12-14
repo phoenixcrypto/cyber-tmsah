@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
+import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/pages
@@ -12,13 +13,20 @@ export async function GET(request: NextRequest) {
     const { getAuthUser } = await import('@/lib/middleware/auth')
     const user = await getAuthUser(request)
 
-    // If admin, return all. Otherwise, only published
-    const where = user?.role === 'admin' ? {} : { status: 'published' as const }
+    const db = getFirestoreDB()
+    let query: any = db.collection('pages').orderBy('order', 'asc').orderBy('createdAt', 'desc')
 
-    const pages = await prisma.page.findMany({
-      ...(Object.keys(where).length > 0 && { where }),
-      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-    })
+    // If not admin, filter by published status
+    if (user?.role !== 'admin') {
+      query = query.where('status', '==', 'published')
+    }
+
+    const pagesSnapshot = await query.get()
+
+    const pages = pagesSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
 
     return successResponse({ pages })
   } catch (error) {
@@ -53,28 +61,40 @@ export async function POST(request: NextRequest) {
       return errorResponse('الرابط، العنوان، والمحتوى مطلوبون', 400)
     }
 
-    // Check if slug already exists
-    const existingPage = await prisma.page.findUnique({
-      where: { slug },
-    })
+    const db = getFirestoreDB()
 
-    if (existingPage) {
+    // Check if slug already exists
+    const existingPagesSnapshot = await db.collection('pages')
+      .where('slug', '==', slug)
+      .limit(1)
+      .get()
+
+    if (!existingPagesSnapshot.empty) {
       return errorResponse('الرابط مستخدم بالفعل', 400)
     }
 
-    const page = await prisma.page.create({
-      data: {
-        slug,
-        title,
-        titleEn: titleEn || title,
-        content,
-        contentEn: contentEn || content,
-        metaDescription: metaDescription || null,
-        metaDescriptionEn: metaDescriptionEn || metaDescription || null,
-        status: status === 'published' ? 'published' : 'draft',
-        order: order || 0,
-      },
-    })
+    // Create page
+    const pageRef = db.collection('pages').doc()
+    const pageData = {
+      slug,
+      title,
+      titleEn: titleEn || title,
+      content,
+      contentEn: contentEn || content,
+      metaDescription: metaDescription || null,
+      metaDescriptionEn: metaDescriptionEn || metaDescription || null,
+      status: status === 'published' ? 'published' : 'draft',
+      order: order || 0,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    await pageRef.set(pageData)
+
+    const page = {
+      id: pageRef.id,
+      ...pageData,
+    }
 
     return successResponse({ page }, { status: 201 })
   } catch (error: unknown) {
@@ -86,4 +106,3 @@ export async function POST(request: NextRequest) {
     return errorResponse('حدث خطأ أثناء إنشاء الصفحة', 500)
   }
 }
-

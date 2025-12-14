@@ -90,8 +90,8 @@ export function getErrorCode(error: Error | string, statusCode?: number): ErrorC
   if (
     errorMessage.includes('database') ||
     errorMessage.includes('Database') ||
-    errorMessage.includes('Prisma') ||
-    errorMessage.includes('P1001') ||
+    errorMessage.includes('Firebase') ||
+    errorMessage.includes('Firestore') ||
     errorMessage.includes('Connection')
   ) {
     return ErrorCode.DB_CONNECTION_ERROR

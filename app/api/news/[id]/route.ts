@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { requireEditor } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
+import { FieldValue } from 'firebase-admin/firestore'
 
 /**
  * GET /api/news/[id]
@@ -13,12 +14,16 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const news = await prisma.newsArticle.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
+    const newsDoc = await db.collection('news').doc(params['id']).get()
 
-    if (!news) {
+    if (!newsDoc.exists) {
       return notFoundResponse('الخبر غير موجود')
+    }
+
+    const news = {
+      id: newsDoc.id,
+      ...newsDoc.data(),
     }
 
     return successResponse({ news })
@@ -51,28 +56,36 @@ export async function PUT(
       publishedAt,
     } = body
 
-    // Check if news exists
-    const existingNews = await prisma.newsArticle.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
 
-    if (!existingNews) {
+    // Check if news exists
+    const newsDoc = await db.collection('news').doc(params['id']).get()
+    if (!newsDoc.exists) {
       return notFoundResponse('الخبر غير موجود')
     }
 
-    const news = await prisma.newsArticle.update({
-      where: { id: params.id },
-      data: {
-        ...(title && { title }),
-        ...(titleEn !== undefined && { titleEn }),
-        ...(subjectId && { subjectId }),
-        ...(subjectTitle && { subjectTitle }),
-        ...(subjectTitleEn !== undefined && { subjectTitleEn }),
-        ...(url && { url }),
-        ...(status && { status: status === 'published' ? 'published' : 'draft' }),
-        ...(publishedAt && { publishedAt: new Date(publishedAt) }),
-      },
-    })
+    // Prepare update data
+    const updateData: Record<string, unknown> = {
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    if (title) updateData['title'] = title
+    if (titleEn !== undefined) updateData['titleEn'] = titleEn
+    if (subjectId) updateData['subjectId'] = subjectId
+    if (subjectTitle) updateData['subjectTitle'] = subjectTitle
+    if (subjectTitleEn !== undefined) updateData['subjectTitleEn'] = subjectTitleEn
+    if (url) updateData['url'] = url
+    if (status) updateData['status'] = status === 'published' ? 'published' : 'draft'
+    if (publishedAt) updateData['publishedAt'] = new Date(publishedAt)
+
+    await db.collection('news').doc(params['id']).update(updateData)
+
+    // Get updated news
+    const updatedNewsDoc = await db.collection('news').doc(params['id']).get()
+    const news = {
+      id: updatedNewsDoc.id,
+      ...updatedNewsDoc.data(),
+    }
 
     return successResponse({ news })
   } catch (error: unknown) {
@@ -96,18 +109,16 @@ export async function DELETE(
   try {
     await requireEditor(request)
 
-    // Check if news exists
-    const existingNews = await prisma.newsArticle.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
 
-    if (!existingNews) {
+    // Check if news exists
+    const newsDoc = await db.collection('news').doc(params['id']).get()
+    if (!newsDoc.exists) {
       return notFoundResponse('الخبر غير موجود')
     }
 
-    await prisma.newsArticle.delete({
-      where: { id: params.id },
-    })
+    // Delete news
+    await db.collection('news').doc(params['id']).delete()
 
     return successResponse({ message: 'تم حذف الخبر بنجاح' })
   } catch (error: unknown) {
@@ -119,4 +130,3 @@ export async function DELETE(
     return errorResponse('حدث خطأ أثناء حذف الخبر', 500)
   }
 }
-

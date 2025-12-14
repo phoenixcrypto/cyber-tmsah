@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { hashPassword, validatePasswordStrength } from '@/lib/auth/bcrypt'
 import { z } from 'zod'
 import { successResponse, errorResponse, validationErrorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { getRequestContext } from '@/lib/middleware/auth'
+import { FieldValue } from 'firebase-admin/firestore'
 import crypto from 'crypto'
 
 const requestResetSchema = z.object({
@@ -39,12 +40,23 @@ export async function POST(request: NextRequest) {
 
       const { email } = validationResult.data
 
-      const user = await prisma.user.findUnique({
-        where: { email },
-      })
+      const db = getFirestoreDB()
+
+      // Find user by email (users might have email field or username field)
+      const usersByEmail = await db.collection('users')
+        .where('email', '==', email)
+        .limit(1)
+        .get()
+
+      const usersByUsername = await db.collection('users')
+        .where('username', '==', email)
+        .limit(1)
+        .get()
+
+      let userDoc = usersByEmail.empty ? (usersByUsername.empty ? null : usersByUsername.docs[0]) : usersByEmail.docs[0]
 
       // Don't reveal if user exists (security best practice)
-      if (!user) {
+      if (!userDoc) {
         // Still return success to prevent email enumeration
         return successResponse({ message: 'If the email exists, a reset link has been sent.' })
       }
@@ -54,12 +66,12 @@ export async function POST(request: NextRequest) {
       const expiresAt = new Date()
       expiresAt.setHours(expiresAt.getHours() + 1) // 1 hour expiry
 
-      await prisma.passwordResetToken.create({
-        data: {
-          userId: user.id,
-          token,
-          expiresAt,
-        },
+      await db.collection('passwordResetTokens').add({
+        userId: userDoc.id,
+        token,
+        expiresAt,
+        used: false,
+        createdAt: FieldValue.serverTimestamp(),
       })
 
       // TODO: Send email with reset link
@@ -68,9 +80,10 @@ export async function POST(request: NextRequest) {
         console.log(`Password reset token for ${email}: ${token}`)
       }
 
+      const userData = userDoc.data()
       await logger.info('Password reset requested', {
-        userId: user.id,
-        email: user.email,
+        userId: userDoc.id,
+        email: (userData?.['email'] as string) || email,
         ipAddress: context.ipAddress,
       })
 
@@ -92,43 +105,53 @@ export async function POST(request: NextRequest) {
         return validationErrorResponse(passwordValidation.errors)
       }
 
-      // Find valid reset token
-      const resetToken = await prisma.passwordResetToken.findUnique({
-        where: { token },
-      })
+      const db = getFirestoreDB()
 
-      if (!resetToken) {
+      // Find valid reset token
+      const resetTokensSnapshot = await db.collection('passwordResetTokens')
+        .where('token', '==', token)
+        .limit(1)
+        .get()
+
+      if (resetTokensSnapshot.empty || resetTokensSnapshot.docs.length === 0) {
+        return errorResponse('Invalid or expired reset token', 400)
+      }
+
+      const resetTokenDoc = resetTokensSnapshot.docs[0]
+      if (!resetTokenDoc) {
+        return errorResponse('Invalid or expired reset token', 400)
+      }
+
+      const resetTokenData = resetTokenDoc.data()
+      const userId = resetTokenData['userId'] as string
+      const expiresAt = (resetTokenData['expiresAt'] as { toDate: () => Date })?.toDate() || new Date(resetTokenData['expiresAt'] as string)
+      const used = resetTokenData['used'] as boolean
+
+      if (used || expiresAt < new Date()) {
         return errorResponse('Invalid or expired reset token', 400)
       }
 
       // Get user
-      const user = await prisma.user.findUnique({
-        where: { id: resetToken.userId },
-      })
-
-      if (!user) {
+      const userDoc = await db.collection('users').doc(userId).get()
+      if (!userDoc.exists) {
         return errorResponse('User not found', 404)
-      }
-
-      if (resetToken.used || resetToken.expiresAt < new Date()) {
-        return errorResponse('Invalid or expired reset token', 400)
       }
 
       // Update password
       const hashedPassword = await hashPassword(newPassword)
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { password: hashedPassword },
+      await db.collection('users').doc(userId).update({
+        password: hashedPassword,
+        updatedAt: FieldValue.serverTimestamp(),
       })
 
       // Mark token as used
-      await prisma.passwordResetToken.update({
-        where: { id: resetToken.id },
-        data: { used: true },
+      await db.collection('passwordResetTokens').doc(resetTokenDoc.id).update({
+        used: true,
+        updatedAt: FieldValue.serverTimestamp(),
       })
 
       await logger.info('Password reset successful', {
-        userId: user.id,
+        userId,
         ipAddress: context.ipAddress,
       })
 
@@ -141,4 +164,3 @@ export async function POST(request: NextRequest) {
     return errorResponse('حدث خطأ أثناء إعادة تعيين كلمة المرور', 500)
   }
 }
-

@@ -59,7 +59,7 @@ export interface ApiUserResponse {
   users: User[]
 }
 
-// Error with code (for Prisma errors)
+// Error with code (for Firebase errors)
 export interface ErrorWithCode extends Error {
   code?: string
 }
