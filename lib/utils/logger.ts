@@ -53,23 +53,32 @@ class Logger {
     }
 
     // Firestore logging for errors and API calls
+    // Only try to log if Firebase is configured
     if (level === LogLevel.ERROR || (context?.method && context?.path)) {
-      try {
-        const db = getFirestoreDB()
-        await db.collection('apiLogs').add({
-          method: context?.method || 'UNKNOWN',
-          path: context?.path || 'UNKNOWN',
-          statusCode: level === LogLevel.ERROR ? 500 : 200,
-          responseTime: 0,
-          ipAddress: context?.ipAddress || null,
-          userAgent: context?.userAgent || null,
-          userId: context?.userId || null,
-          error: level === LogLevel.ERROR ? message : null,
-          createdAt: FieldValue.serverTimestamp(),
-        })
-      } catch (dbError) {
-        // Don't fail if logging fails
-        console.error('Failed to log to Firestore:', dbError)
+      const hasFirebaseConfig = !!(
+        process.env['FIREBASE_PROJECT_ID'] &&
+        process.env['FIREBASE_CLIENT_EMAIL'] &&
+        process.env['FIREBASE_PRIVATE_KEY']
+      )
+      
+      if (hasFirebaseConfig) {
+        try {
+          const db = getFirestoreDB()
+          await db.collection('apiLogs').add({
+            method: context?.method || 'UNKNOWN',
+            path: context?.path || 'UNKNOWN',
+            statusCode: level === LogLevel.ERROR ? 500 : 200,
+            responseTime: 0,
+            ipAddress: context?.ipAddress || null,
+            userAgent: context?.userAgent || null,
+            userId: context?.userId || null,
+            error: level === LogLevel.ERROR ? message : null,
+            createdAt: FieldValue.serverTimestamp(),
+          })
+        } catch (dbError) {
+          // Don't fail if logging fails - just log to console
+          console.error('Failed to log to Firestore:', dbError instanceof Error ? dbError.message : String(dbError))
+        }
       }
     }
   }
@@ -106,6 +115,19 @@ export async function logApiRequest(
   responseTime: number,
   context?: LogContext
 ): Promise<void> {
+  // Only try to log if Firebase is configured
+  const hasFirebaseConfig = !!(
+    process.env['FIREBASE_PROJECT_ID'] &&
+    process.env['FIREBASE_CLIENT_EMAIL'] &&
+    process.env['FIREBASE_PRIVATE_KEY']
+  )
+  
+  if (!hasFirebaseConfig) {
+    // Just log to console if Firebase is not configured
+    console.log(`[API Request] ${method} ${path} - ${statusCode} (${responseTime}ms)`)
+    return
+  }
+  
   try {
     const db = getFirestoreDB()
     await db.collection('apiLogs').add({
@@ -120,7 +142,7 @@ export async function logApiRequest(
       createdAt: FieldValue.serverTimestamp(),
     })
   } catch (error) {
-    // Don't fail if logging fails
-    console.error('Failed to log API request:', error)
+    // Don't fail if logging fails - just log to console
+    console.error('Failed to log API request:', error instanceof Error ? error.message : String(error))
   }
 }

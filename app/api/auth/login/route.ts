@@ -67,11 +67,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Initialize default admin if needed (don't fail if this fails)
-    try {
-      await initializeDefaultAdmin()
-    } catch (initError) {
-      console.warn('Warning: Could not initialize default admin:', initError)
-      // Continue with login attempt
+    // Skip initialization if Firebase is not configured to avoid errors
+    const hasFirebaseConfig = !!(
+      process.env['FIREBASE_PROJECT_ID'] &&
+      process.env['FIREBASE_CLIENT_EMAIL'] &&
+      process.env['FIREBASE_PRIVATE_KEY']
+    )
+    
+    if (hasFirebaseConfig) {
+      try {
+        await initializeDefaultAdmin()
+      } catch (initError) {
+        console.warn('Warning: Could not initialize default admin:', initError)
+        // Continue with login attempt
+      }
     }
 
     const body = await request.json()
@@ -116,19 +125,27 @@ export async function POST(request: NextRequest) {
     }
     
     if (usersSnapshot.empty || usersSnapshot.docs.length === 0) {
-      await logger.warn('Login attempt with invalid username', {
-        username: trimmedUsername,
-        ipAddress: context.ipAddress,
-      })
+      try {
+        await logger.warn('Login attempt with invalid username', {
+          username: trimmedUsername,
+          ipAddress: context.ipAddress,
+        })
+      } catch (logError) {
+        console.warn('Failed to log warning:', logError)
+      }
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
     const userDoc = usersSnapshot.docs[0]
     if (!userDoc) {
-      await logger.warn('Login attempt - user document not found', {
-        username: trimmedUsername,
-        ipAddress: context.ipAddress,
-      })
+      try {
+        await logger.warn('Login attempt - user document not found', {
+          username: trimmedUsername,
+          ipAddress: context.ipAddress,
+        })
+      } catch (logError) {
+        console.warn('Failed to log warning:', logError)
+      }
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
@@ -139,10 +156,14 @@ export async function POST(request: NextRequest) {
     const isPasswordValid = await comparePassword(password, userData['password'] as string)
     
     if (!isPasswordValid) {
-      await logger.warn('Login attempt with invalid password', {
-        userId,
-        ipAddress: context.ipAddress,
-      })
+      try {
+        await logger.warn('Login attempt with invalid password', {
+          userId,
+          ipAddress: context.ipAddress,
+        })
+      } catch (logError) {
+        console.warn('Failed to log warning:', logError)
+      }
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
@@ -209,11 +230,16 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
 
-    await logger.info('User logged in successfully', {
-      userId,
-      username: trimmedUsername,
-      ipAddress: context.ipAddress,
-    })
+    try {
+      await logger.info('User logged in successfully', {
+        userId,
+        username: trimmedUsername,
+        ipAddress: context.ipAddress,
+      })
+    } catch (logError) {
+      console.warn('Failed to log info:', logError)
+      // Don't fail login if logging fails
+    }
 
     return response
   } catch (error) {
@@ -231,11 +257,16 @@ export async function POST(request: NextRequest) {
       hasJwtRefreshSecret: !!process.env['JWT_REFRESH_SECRET'],
     })
     
-    await logger.error('Login error', error instanceof Error ? error : new Error(errorMessage), {
-      method: 'POST',
-      path: '/api/auth/login',
-      ipAddress: context.ipAddress,
-    })
+    try {
+      await logger.error('Login error', error instanceof Error ? error : new Error(errorMessage), {
+        method: 'POST',
+        path: '/api/auth/login',
+        ipAddress: context.ipAddress,
+      })
+    } catch (logError) {
+      console.error('Failed to log error:', logError)
+      // Continue with error response even if logging fails
+    }
     
     // Return more specific error message if it's a known error
     if (errorMessage.includes('JWT_SECRET') || errorMessage.includes('JWT_REFRESH_SECRET')) {
