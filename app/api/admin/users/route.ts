@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB, getFirebaseAuth } from '@/lib/db/firebase'
 import { requireAdmin, getRequestContext } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, validationErrorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { hashPassword } from '@/lib/auth/bcrypt'
 import { z } from 'zod'
+import { FieldValue } from 'firebase-admin/firestore'
 
 const createUserSchema = z.object({
   username: z.string().min(3).max(50),
@@ -24,18 +25,27 @@ export async function GET(request: NextRequest) {
   try {
     await requireAdmin(request)
 
-    const users = await prisma.user.findMany({
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        name: true,
-        role: true,
-        lastLogin: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+    const db = getFirestoreDB()
+    const usersSnapshot = await db.collection('users')
+      .orderBy('createdAt', 'desc')
+      .get()
+
+    const users = usersSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => {
+      const data = doc.data()
+      const lastLogin = data['lastLogin'] as { toDate?: () => Date } | Date | null
+      const createdAt = data['createdAt'] as { toDate?: () => Date } | Date | null
+      const updatedAt = data['updatedAt'] as { toDate?: () => Date } | Date | null
+      
+      return {
+        id: doc.id,
+        username: data['username'],
+        email: data['email'] || null,
+        name: data['name'],
+        role: data['role'],
+        lastLogin: lastLogin && typeof lastLogin === 'object' && 'toDate' in lastLogin ? lastLogin.toDate?.() : lastLogin || null,
+        createdAt: createdAt && typeof createdAt === 'object' && 'toDate' in createdAt ? createdAt.toDate?.() : createdAt || null,
+        updatedAt: updatedAt && typeof updatedAt === 'object' && 'toDate' in updatedAt ? updatedAt.toDate?.() : updatedAt || null,
+      }
     })
 
     return successResponse({ users })
@@ -67,22 +77,26 @@ export async function POST(request: NextRequest) {
 
     const { username, email, name, password, role } = validationResult.data
 
-    // Check if username exists
-    const existingUser = await prisma.user.findUnique({
-      where: { username },
-    })
+    const db = getFirestoreDB()
 
-    if (existingUser) {
+    // Check if username exists
+    const usernameSnapshot = await db.collection('users')
+      .where('username', '==', username)
+      .limit(1)
+      .get()
+
+    if (!usernameSnapshot.empty) {
       return errorResponse('اسم المستخدم موجود بالفعل', 400)
     }
 
     // Check if email exists (if provided)
     if (email) {
-      const existingEmail = await prisma.user.findUnique({
-        where: { email },
-      })
+      const emailSnapshot = await db.collection('users')
+        .where('email', '==', email)
+        .limit(1)
+        .get()
 
-      if (existingEmail) {
+      if (!emailSnapshot.empty) {
         return errorResponse('البريد الإلكتروني موجود بالفعل', 400)
       }
     }
@@ -90,27 +104,50 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await hashPassword(password)
 
-    // Create user
-    const newUser = await prisma.user.create({
-      data: {
-        username,
-        email: email || null,
-        name,
-        password: hashedPassword,
-        role,
-      },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-      },
-    })
+    // Create user in Firebase Auth (if email provided)
+    let firebaseUid: string | undefined
+    if (email) {
+      try {
+        const auth = getFirebaseAuth()
+        const userRecord = await auth.createUser({
+          email,
+          displayName: name,
+          emailVerified: false,
+        })
+        firebaseUid = userRecord.uid
+        await auth.setCustomUserClaims(firebaseUid, { role })
+      } catch (authError) {
+        console.warn('Firebase Auth creation failed, continuing with Firestore only:', authError)
+      }
+    }
+
+    // Create user document in Firestore
+    const userRef = firebaseUid 
+      ? db.collection('users').doc(firebaseUid)
+      : db.collection('users').doc()
+    const userData = {
+      username,
+      email: email || null,
+      name,
+      password: hashedPassword,
+      role,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    await userRef.set(userData)
+
+    const newUser = {
+      id: userRef.id,
+      username,
+      email: email || null,
+      name,
+      role,
+      createdAt: new Date(),
+    }
 
     await logger.info('User created', {
-      userId: newUser.id,
+      userId: userRef.id,
       createdBy: user.userId,
       ipAddress: context.ipAddress,
     })

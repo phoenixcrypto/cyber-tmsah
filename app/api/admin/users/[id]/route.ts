@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB, getFirebaseAuth } from '@/lib/db/firebase'
 import { requireAdmin, getRequestContext } from '@/lib/middleware/auth'
 import { successResponse, errorResponse, notFoundResponse, validationErrorResponse } from '@/lib/utils/api-response'
 import { logger } from '@/lib/utils/logger'
 import { hashPassword } from '@/lib/auth/bcrypt'
 import { z } from 'zod'
+import { FieldValue } from 'firebase-admin/firestore'
 
 const updateUserSchema = z.object({
   username: z.string().min(3).max(50).optional(),
@@ -36,67 +37,66 @@ export async function PUT(
     }
 
     const data = validationResult.data
+    const db = getFirestoreDB()
+    const userDoc = await db.collection('users').doc(params.id).get()
 
-    // Check if user exists
-    const existingUser = await prisma.user.findUnique({
-      where: { id: params.id },
-    })
-
-    if (!existingUser) {
+    if (!userDoc.exists) {
       return notFoundResponse('المستخدم غير موجود')
     }
 
-    // Check if username exists (excluding current user)
-    if (data.username && data.username !== existingUser.username) {
-      const usernameExists = await prisma.user.findUnique({
-        where: { username: data.username },
-      })
-      if (usernameExists) {
-        return errorResponse('اسم المستخدم موجود بالفعل', 400)
-      }
+    const updateData: any = {
+      updatedAt: FieldValue.serverTimestamp(),
     }
 
-    // Check if email exists (excluding current user)
-    if (data.email !== undefined && data.email !== existingUser.email) {
+    if (data.username) {
+      // Check if username exists (excluding current user)
+      const usernameSnapshot = await db.collection('users')
+        .where('username', '==', data.username)
+        .limit(1)
+        .get()
+
+      const existingUsernameDoc = usernameSnapshot.docs.find(doc => doc.id !== params.id)
+      if (existingUsernameDoc) {
+        return errorResponse('اسم المستخدم موجود بالفعل', 400)
+      }
+      updateData.username = data.username
+    }
+
+    if (data.email !== undefined) {
       if (data.email) {
-        const emailExists = await prisma.user.findUnique({
-          where: { email: data.email },
-        })
-        if (emailExists) {
+        // Check if email exists (excluding current user)
+        const emailSnapshot = await db.collection('users')
+          .where('email', '==', data.email)
+          .limit(1)
+          .get()
+
+        const existingEmailDoc = emailSnapshot.docs.find(doc => doc.id !== params.id)
+        if (existingEmailDoc) {
           return errorResponse('البريد الإلكتروني موجود بالفعل', 400)
         }
       }
+      updateData.email = data.email
     }
 
-    // Prepare update data
-    const updateData: {
-      username?: string
-      email?: string | null
-      name?: string
-      password?: string
-      role?: 'admin' | 'editor' | 'viewer'
-    } = {}
-
-    if (data.username) updateData.username = data.username
-    if (data.email !== undefined) updateData.email = data.email
     if (data.name) updateData.name = data.name
-    if (data.role) updateData.role = data.role
+    if (data.role) {
+      updateData.role = data.role
+      // Update Firebase Auth custom claims
+      try {
+        const auth = getFirebaseAuth()
+        await auth.setCustomUserClaims(params.id, { role: data.role })
+      } catch (authError) {
+        console.warn('Failed to update Firebase Auth claims:', authError)
+      }
+    }
     if (data.password) {
       updateData.password = await hashPassword(data.password)
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: params.id },
-      data: updateData,
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        name: true,
-        role: true,
-        updatedAt: true,
-      },
-    })
+    await db.collection('users').doc(params.id).update(updateData)
+
+    const updatedDoc = await db.collection('users').doc(params.id).get()
+    const updatedData = updatedDoc.data()!
 
     await logger.info('User updated', {
       userId: params.id,
@@ -104,7 +104,18 @@ export async function PUT(
       ipAddress: context.ipAddress,
     })
 
-    return successResponse({ user: updatedUser })
+    const updatedAt = updatedData['updatedAt'] as { toDate?: () => Date } | Date | null
+    
+    return successResponse({
+      user: {
+        id: updatedDoc.id,
+        username: updatedData['username'],
+        email: updatedData['email'] || null,
+        name: updatedData['name'],
+        role: updatedData['role'],
+        updatedAt: updatedAt && typeof updatedAt === 'object' && 'toDate' in updatedAt ? updatedAt.toDate?.() : updatedAt || null,
+      },
+    })
   } catch (error) {
     if (error instanceof Error && (error.message === 'Unauthorized' || error.message.includes('Forbidden'))) {
       return errorResponse('غير مصرح', 401)
@@ -136,19 +147,24 @@ export async function DELETE(
       return errorResponse('لا يمكنك حذف نفسك', 400)
     }
 
-    // Check if user exists
-    const existingUser = await prisma.user.findUnique({
-      where: { id: params.id },
-    })
+    const db = getFirestoreDB()
+    const userDoc = await db.collection('users').doc(params.id).get()
 
-    if (!existingUser) {
+    if (!userDoc.exists) {
       return notFoundResponse('المستخدم غير موجود')
     }
 
-    // Delete user
-    await prisma.user.delete({
-      where: { id: params.id },
-    })
+    // Delete from Firebase Auth if exists
+    try {
+      const auth = getFirebaseAuth()
+      await auth.deleteUser(params.id)
+    } catch (authError) {
+      // User might not exist in Auth, continue with Firestore deletion
+      console.warn('Firebase Auth user deletion failed, continuing:', authError)
+    }
+
+    // Delete from Firestore
+    await db.collection('users').doc(params.id).delete()
 
     await logger.info('User deleted', {
       userId: params.id,

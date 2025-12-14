@@ -1,11 +1,11 @@
 /**
  * Authentication middleware utilities
- * Updated for Prisma
+ * Updated for Firebase Auth
  */
 
 import { NextRequest } from 'next/server'
 import { verifyAccessToken } from '@/lib/auth/jwt'
-import { prisma } from '@/lib/db/prisma'
+import { getFirebaseAuth, getFirestoreDB } from '@/lib/db/firebase'
 
 export interface AuthUser {
   userId: string
@@ -30,30 +30,35 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
       return null
     }
 
-    // Get user from Prisma database
+    // Get user from Firebase Auth
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: payload.userId },
-        select: {
-          id: true,
-          email: true,
-          role: true,
-          name: true,
-        },
-      })
-
-      if (!user) {
-        return null
+      const auth = getFirebaseAuth()
+      const userRecord = await auth.getUser(payload.userId)
+      
+      // Get user role from Firestore users collection or custom claims
+      const db = getFirestoreDB()
+      const userDoc = await db.collection('users').doc(payload.userId).get()
+      
+      let role: 'admin' | 'editor' | 'viewer' = 'viewer'
+      let name: string | undefined
+      if (userDoc.exists) {
+        const userData = userDoc.data()
+        role = (userData?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
+        name = userData?.['name'] as string | undefined
+      } else {
+        // Try to get from custom claims
+        role = (userRecord.customClaims?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
+        name = userRecord.displayName || undefined
       }
 
       return {
-        userId: user.id,
-        email: user.email || '',
-        role: user.role,
-        name: user.name,
+        userId: userRecord.uid,
+        email: userRecord.email || payload.email || '',
+        role,
+        ...(name && { name }),
       }
-    } catch (dbError) {
-      console.error('Database error:', dbError)
+    } catch (firebaseError) {
+      console.error('Firebase Auth error:', firebaseError)
       return null
     }
   } catch (error) {

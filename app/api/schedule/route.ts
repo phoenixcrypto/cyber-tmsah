@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/db/prisma'
+import { getFirestoreDB } from '@/lib/db/firebase'
 import { successResponse, errorResponse } from '@/lib/utils/api-response'
 import { getRequestContext } from '@/lib/middleware/auth'
 import { logger } from '@/lib/utils/logger'
+import { FieldValue } from 'firebase-admin/firestore'
 import type { ErrorWithCode } from '@/lib/types'
 
 /**
@@ -17,32 +18,28 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const group = searchParams.get('group')
 
-    const where = group === 'Group 1' || group === 'Group 2'
-      ? { group: (group === 'Group 1' ? 'Group1' : 'Group2') as 'Group1' | 'Group2' }
-      : undefined
+    const db = getFirestoreDB()
+    let query: any = db.collection('scheduleItems')
 
-    const items = await prisma.scheduleItem.findMany({
-      ...(where && { where }),
-      orderBy: [
-        { day: 'asc' },
-        { time: 'asc' },
-      ],
-    })
+    if (group === 'Group 1' || group === 'Group 2') {
+      const groupValue = group === 'Group 1' ? 'Group1' : 'Group2'
+      query = query.where('group', '==', groupValue)
+    }
+
+    const itemsSnapshot = await query
+      .orderBy('day', 'asc')
+      .orderBy('time', 'asc')
+      .get()
 
     // Transform enum values back to original format for compatibility
-    const transformedItems = items.map(item => ({
-      id: item.id,
-      title: item.title,
-      time: item.time,
-      location: item.location,
-      instructor: item.instructor,
-      type: item.type,
-      group: item.group === 'Group1' ? 'Group 1' : 'Group 2',
-      sectionNumber: item.sectionNumber,
-      day: item.day,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    }))
+    const transformedItems = itemsSnapshot.docs.map((doc: { id: string; data: () => Record<string, unknown> }) => {
+      const data = doc.data()
+      return {
+        id: doc.id,
+        ...data,
+        group: data['group'] === 'Group1' ? 'Group 1' : 'Group 2',
+      }
+    })
 
     return successResponse(
       { items: transformedItems },
@@ -113,21 +110,25 @@ export async function POST(request: NextRequest) {
     const groupValue = group === 'Group 1' ? 'Group1' : 'Group2'
     const typeValue = type === 'lab' ? 'lab' : 'lecture'
 
-    const item = await prisma.scheduleItem.create({
-      data: {
-        title,
-        time,
-        location,
-        instructor,
-        type: typeValue,
-        group: groupValue,
-        sectionNumber: sectionNumber || null,
-        day,
-      },
-    })
+    const db = getFirestoreDB()
+    const itemRef = db.collection('scheduleItems').doc()
+    const itemData = {
+      title,
+      time,
+      location,
+      instructor,
+      type: typeValue,
+      group: groupValue,
+      sectionNumber: sectionNumber || null,
+      day,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }
+
+    await itemRef.set(itemData)
 
     return successResponse(
-      { item: { ...item, group, type } },
+      { item: { id: itemRef.id, ...itemData, group, type } },
       {
         status: 201,
         logRequest: true,
