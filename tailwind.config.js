@@ -12,6 +12,8 @@ module.exports = {
     extend: {
       colors: {
         // Cyber TMSAH Theme Colors
+        'primary-black': '#080808',
+        'primary-white': '#f9fafb',
         'cyber-dark': '#080808',
         'cyber-neon': '#ff3b40',
         'cyber-red': {

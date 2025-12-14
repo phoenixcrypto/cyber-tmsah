@@ -89,7 +89,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <StructuredData />
       </head>
-      <body className="font-cairo bg-primary-black text-primary-white">
+      <body className="font-cairo text-primary-white">
         <Providers>
           <div className="app-wrapper">
             <Navbar />

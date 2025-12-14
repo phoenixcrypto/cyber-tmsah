@@ -67,13 +67,14 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-surface-0 via-surface-1 to-surface-2;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(255, 59, 64, 0.15) 0%, rgba(255, 59, 64, 0) 35%),
+      radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 30%),
+      linear-gradient(to bottom right, var(--surface-0), var(--surface-1), var(--surface-2));
+    background-attachment: fixed;
     @apply font-cairo leading-relaxed;
     color: var(--dark-100);
     @apply overflow-x-hidden max-w-full w-full min-h-screen;
-    background-image:
-      radial-gradient(circle at 20% 20%, rgba(255, 59, 64, 0.15) 0%, rgba(255, 59, 64, 0) 35%),
-      radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 30%);
     direction: rtl;
     color-scheme: dark;
     /* Content Protection - Disable text selection */
