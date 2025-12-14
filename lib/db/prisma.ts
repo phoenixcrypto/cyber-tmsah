@@ -43,22 +43,45 @@ function validateDatabaseUrl(): void {
   }
 }
 
+// DISABLED: This project uses Firebase, not Prisma
+// Prisma is kept for reference but should not be initialized
+// All API routes should use Firebase instead
+
 // Validate on module load (only in production/serverless)
-if (process.env['NODE_ENV'] === 'production' || process.env['VERCEL']) {
-  try {
-    validateDatabaseUrl()
-  } catch (error) {
-    console.error('❌ DATABASE_URL validation failed:', error instanceof Error ? error.message : String(error))
+// DISABLED to prevent build errors when DATABASE_URL is not set
+// if (process.env['NODE_ENV'] === 'production' || process.env['VERCEL']) {
+//   try {
+//     validateDatabaseUrl()
+//   } catch (error) {
+//     console.error('❌ DATABASE_URL validation failed:', error instanceof Error ? error.message : String(error))
+//   }
+// }
+
+// Lazy initialization - only create Prisma client when actually used
+// This prevents errors during build when DATABASE_URL is not set
+function getPrismaClient(): PrismaClient {
+  if (!globalForPrisma.prisma) {
+    // Check if DATABASE_URL is set before initializing
+    if (!process.env['DATABASE_URL']) {
+      throw new Error(
+        'Prisma is not configured. This project uses Firebase. ' +
+        'If you need Prisma, set DATABASE_URL environment variable.'
+      )
+    }
+    globalForPrisma.prisma = new PrismaClient({
+      log: process.env['NODE_ENV'] === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    })
   }
+  return globalForPrisma.prisma
 }
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env['NODE_ENV'] === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  })
-
-if (process.env['NODE_ENV'] !== 'production') globalForPrisma.prisma = prisma
+// Export a getter function instead of direct instance
+// This prevents Prisma from initializing during module load
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    return getPrismaClient()[prop as keyof PrismaClient]
+  },
+})
 
 export default prisma
 
