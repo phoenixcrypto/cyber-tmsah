@@ -1,0 +1,123 @@
+========================================
+دليل إعداد Firebase للمشروع
+========================================
+
+اسم المشروع المقترح: cyber-tmsah
+Project ID: cyber-tmsah (أو اسم فريد آخر)
+
+========================================
+الخطوات بالترتيب:
+========================================
+
+1. إنشاء Firebase Project
+   - اذهب إلى: https://console.firebase.google.com/
+   - اضغط "Add project" أو "إنشاء مشروع"
+   - اسم المشروع: cyber-tmsah
+   - Project ID: cyber-tmsah (أو اسم فريد)
+   - اختر Region (مثلاً: us-central أو europe-west)
+   - اختر Google Analytics (اختياري)
+   - اضغط "Create project"
+
+2. تفعيل Authentication
+   - من القائمة: Authentication
+   - اضغط "Get started"
+   - في "Sign-in method": فعّل "Email/Password"
+   - اضغط "Save"
+
+3. إنشاء Firestore Database
+   - من القائمة: Firestore Database
+   - اضغط "Create database"
+   - اختر "Start in production mode" (أو test mode للتطوير)
+   - اختر Location: نفس الـ Region
+   - اضغط "Enable"
+
+4. إنشاء Service Account
+   - من Firebase Console: Project Settings (⚙️)
+   - تبويب "Service accounts"
+   - اضغط "Generate new private key"
+   - سيتم تنزيل ملف JSON
+   - احفظ الملف بشكل آمن (لا ترفعه إلى GitHub!)
+
+5. نسخ Credentials من JSON
+   من ملف JSON الذي تم تحميله، انسخ:
+   - project_id
+   - client_email
+   - private_key (كامل بما فيه -----BEGIN و -----END)
+
+6. إضافة Environment Variables في Vercel
+   في Vercel → Settings → Environment Variables:
+   
+   FIREBASE_PROJECT_ID=cyber-tmsah
+   FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@cyber-tmsah.iam.gserviceaccount.com
+   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n"
+
+   ملاحظات:
+   - private_key يجب أن يحتوي على \n كما هي
+   - ضع القيمة بين علامات اقتباس ""
+   - لا تنسى حفظ المتغيرات
+
+7. إعداد .env.local (للتطوير المحلي)
+   أنشئ ملف .env.local في جذر المشروع:
+   
+   FIREBASE_PROJECT_ID=cyber-tmsah
+   FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@cyber-tmsah.iam.gserviceaccount.com
+   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n"
+   
+   JWT_SECRET=your-jwt-secret
+   JWT_REFRESH_SECRET=your-jwt-refresh-secret
+   
+   DEFAULT_ADMIN_USERNAME=zeyadeltmsah26
+   DEFAULT_ADMIN_PASSWORD=2610204ZEYAd@@
+   DEFAULT_ADMIN_NAME=Admin User
+   DEFAULT_ADMIN_EMAIL=admin@cyber-tmsah.site
+
+========================================
+الـ Collections المتوقعة (سيتم إنشاؤها تلقائياً):
+========================================
+
+- users
+- articles
+- materials
+- scheduleItems
+- downloads
+- news
+- pages
+- apiLogs
+- passwordResetTokens
+
+========================================
+Firestore Security Rules (للاختبار فقط):
+========================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+⚠️ تحذير: هذه القواعد تمنع كل الوصول. استخدم فقط للتطوير.
+
+========================================
+أسماء بديلة للمشروع (إذا كان الاسم غير متاح):
+========================================
+
+- cyber-tmsah-app
+- cyber-tmsah-platform
+- tmsah-platform
+- cyber-tmsah-2024
+- cyber-tmsah-site
+
+========================================
+الخطوة التالية بعد الإعداد:
+========================================
+
+بعد إكمال إعداد Firebase:
+1. اختبر الاتصال بتشغيل: npm run dev
+2. جرب تسجيل الدخول
+3. تحقق من إنشاء البيانات في Firestore Console
+
+========================================
+
