@@ -217,15 +217,16 @@ export default function SchedulePage() {
                 
                 <button
                   onClick={() => setScheduleView(scheduleView === 'A' ? 'B' : 'A')}
-                  className={`relative w-20 h-10 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 focus:ring-offset-cyber-dark switch-track switch-track--compact flex-shrink-0 ${
+                  className={`relative rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 focus:ring-offset-cyber-dark switch-track switch-track--compact flex-shrink-0 ${
                     scheduleView === 'A' ? 'switch-track--active' : 'switch-track--inactive'
                   }`}
                   aria-label={t('schedule.chooseView')}
                 >
                   <span
-                    className={`absolute top-1 left-1 w-8 h-8 rounded-full shadow-lg transform transition-transform duration-300 switch-knob ${
-                      scheduleView === 'A' ? 'translate-x-0' : 'translate-x-10'
+                    className={`absolute rounded-full shadow-lg transform transition-transform duration-300 switch-knob ${
+                      scheduleView === 'A' ? 'translate-x-[0.125rem]' : 'translate-x-[1.625rem]'
                     }`}
+                    style={{ top: '2px', left: '2px' }}
                   />
                 </button>
                 

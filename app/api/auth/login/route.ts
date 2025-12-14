@@ -66,8 +66,13 @@ export async function POST(request: NextRequest) {
       return errorResponse('خطأ في إعدادات النظام. يرجى التحقق من متغيرات البيئة.', 500)
     }
 
-    // Initialize default admin if needed
-    await initializeDefaultAdmin()
+    // Initialize default admin if needed (don't fail if this fails)
+    try {
+      await initializeDefaultAdmin()
+    } catch (initError) {
+      console.warn('Warning: Could not initialize default admin:', initError)
+      // Continue with login attempt
+    }
 
     const body = await request.json()
     
@@ -83,7 +88,14 @@ export async function POST(request: NextRequest) {
     const trimmedUsername = username.trim()
 
     // Get user by username from Firestore
-    const db = getFirestoreDB()
+    let db
+    try {
+      db = getFirestoreDB()
+    } catch (firebaseError) {
+      console.error('Firebase initialization error:', firebaseError)
+      return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من إعدادات Firebase.', 500)
+    }
+
     const usersSnapshot = await db.collection('users')
       .where('username', '==', trimmedUsername)
       .limit(1)
