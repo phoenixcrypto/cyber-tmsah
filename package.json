@@ -13,7 +13,8 @@
     "db:migrate": "npx -y prisma@5.19.1 migrate dev",
     "db:studio": "npx -y prisma@5.19.1 studio",
     "db:seed": "tsx scripts/seed-database.ts",
-    "db:import": "tsx scripts/import-sql.ts"
+    "db:import": "tsx scripts/import-sql.ts",
+    "admin:reset": "tsx scripts/reset-admin.ts"
   },
   "dependencies": {
     "next": "^16.0.10",

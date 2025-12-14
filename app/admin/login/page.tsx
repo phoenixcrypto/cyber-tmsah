@@ -41,19 +41,26 @@ export default function AdminLoginPage() {
       if (res.ok) {
         router.push(getAdminBasePath())
       } else {
-        // Improved error messages
+        // Improved error messages with more details
         let errorMessage = data.error || 'حدث خطأ أثناء تسجيل الدخول'
         
         // More specific error messages
         if (errorMessage.includes('اسم المستخدم أو كلمة المرور غير صحيحة')) {
-          errorMessage = 'اسم المستخدم أو كلمة المرور غير صحيحة. تأكد من إدخال البيانات الصحيحة.'
+          errorMessage = 'اسم المستخدم أو كلمة المرور غير صحيحة. تأكد من إدخال البيانات الصحيحة والمستخدم موجود في قاعدة البيانات.'
         } else if (errorMessage.includes('DATABASE_URL')) {
-          errorMessage = 'خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من إعدادات قاعدة البيانات.'
+          errorMessage = 'خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من إعدادات قاعدة البيانات على Vercel.'
         } else if (errorMessage.includes('JWT')) {
-          errorMessage = 'خطأ في إعدادات النظام. يرجى التحقق من متغيرات البيئة.'
+          errorMessage = 'خطأ في إعدادات النظام. يرجى التحقق من JWT_SECRET و JWT_REFRESH_SECRET في Vercel.'
         }
         
         setErrors({ general: errorMessage })
+        
+        // Log error in console for debugging
+        console.error('Login error:', {
+          status: res.status,
+          error: data.error,
+          username: formData.username,
+        })
       }
     } catch (error) {
       setErrors({ general: 'حدث خطأ في الاتصال' })

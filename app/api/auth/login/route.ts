@@ -41,6 +41,16 @@ async function initializeDefaultAdmin(): Promise<void> {
       
       const hashedPassword = await hashPassword(defaultPassword)
       
+      // Check if user already exists before creating
+      const existingUser = await prisma.user.findUnique({
+        where: { username: defaultUsername },
+      })
+      
+      if (existingUser) {
+        console.log('ℹ️  Admin user already exists, skipping creation')
+        return
+      }
+      
       await prisma.user.create({
         data: {
           username: defaultUsername,
@@ -51,6 +61,10 @@ async function initializeDefaultAdmin(): Promise<void> {
       })
       
       console.log('✅ Default admin user created!')
+      if (process.env['NODE_ENV'] === 'development') {
+        console.log('📝 Username:', defaultUsername)
+        console.log('🔑 Password hash:', hashedPassword.substring(0, 30) + '...')
+      }
       if (process.env['NODE_ENV'] === 'development') {
         console.log('⚠️  Please change the default password after first login!')
       }
@@ -102,12 +116,30 @@ export async function POST(request: NextRequest) {
     const trimmedUsername = username.trim()
     const trimmedPassword = password.trim()
 
+    // Debug logging (only in development)
+    if (process.env['NODE_ENV'] === 'development') {
+      console.log('🔍 Login attempt:', {
+        usernameLength: trimmedUsername.length,
+        passwordLength: trimmedPassword.length,
+        usernamePreview: trimmedUsername.substring(0, 10) + '...',
+      })
+    }
+
     // Get user by username (exact match)
     const user = await prisma.user.findUnique({
       where: { username: trimmedUsername },
     })
     
     if (!user) {
+      // Check if user exists with different case or spaces
+      const allUsers = await prisma.user.findMany({
+        select: { username: true },
+      })
+      
+      if (process.env['NODE_ENV'] === 'development') {
+        console.log('❌ User not found. Available users:', allUsers.map(u => u.username))
+      }
+      
       await logger.warn('Login attempt with invalid username', {
         username: trimmedUsername,
         ipAddress: context.ipAddress,
@@ -115,8 +147,25 @@ export async function POST(request: NextRequest) {
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
+    // Debug logging (only in development)
+    if (process.env['NODE_ENV'] === 'development') {
+      console.log('✅ User found:', {
+        userId: user.id,
+        username: user.username,
+        passwordHashLength: user.password.length,
+        passwordHashPreview: user.password.substring(0, 20) + '...',
+      })
+    }
+
     // Verify password
     const isPasswordValid = await comparePassword(trimmedPassword, user.password)
+    
+    if (process.env['NODE_ENV'] === 'development') {
+      console.log('🔐 Password verification:', {
+        isValid: isPasswordValid,
+        inputPasswordLength: trimmedPassword.length,
+      })
+    }
     
     if (!isPasswordValid) {
       await logger.warn('Login attempt with invalid password', {
