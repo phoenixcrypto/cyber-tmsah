@@ -81,17 +81,45 @@ function initializeFirebase(): void {
   } else {
     // Initialize with environment variables
     try {
+      // Additional validation
+      if (!privateKey || privateKey.trim().length === 0) {
+        throw new Error('FIREBASE_PRIVATE_KEY is empty or not set')
+      }
+
+      if (!clientEmail || !clientEmail.includes('@')) {
+        throw new Error('FIREBASE_CLIENT_EMAIL appears to be invalid')
+      }
+
+      if (!projectId || projectId.trim().length === 0) {
+        throw new Error('FIREBASE_PROJECT_ID is empty or not set')
+      }
+
+      // Ensure private key has proper format
+      if (!privateKey.includes('BEGIN PRIVATE KEY') || !privateKey.includes('END PRIVATE KEY')) {
+        throw new Error('FIREBASE_PRIVATE_KEY must include BEGIN PRIVATE KEY and END PRIVATE KEY markers')
+      }
+
       app = initializeApp({
         credential: cert({
-          projectId,
-          clientEmail,
-          privateKey,
+          projectId: projectId.trim(),
+          clientEmail: clientEmail.trim(),
+          privateKey: privateKey.trim(),
         }),
       })
+
+      // Test the connection by trying to get Firestore
+      const testDb = getFirestore(app)
+      if (!testDb) {
+        throw new Error('Failed to initialize Firestore after app creation')
+      }
     } catch (certError) {
       const errorMessage = certError instanceof Error ? certError.message : String(certError)
       console.error('❌ Failed to initialize Firebase with provided credentials')
       console.error('   Error:', errorMessage)
+      console.error('   Project ID:', projectId ? `${projectId.substring(0, 10)}...` : 'NOT SET')
+      console.error('   Client Email:', clientEmail ? `${clientEmail.substring(0, 20)}...` : 'NOT SET')
+      console.error('   Private Key length:', privateKey ? privateKey.length : 0)
+      console.error('   Private Key starts with:', privateKey ? privateKey.substring(0, 30) : 'NOT SET')
       
       // Provide helpful error message
       if (errorMessage.includes('DECODER') || errorMessage.includes('unsupported')) {
@@ -99,6 +127,15 @@ function initializeFirebase(): void {
           'FIREBASE_PRIVATE_KEY format is incorrect. ' +
           'In Vercel, make sure to use \\n for newlines (not actual newlines). ' +
           'Example: -----BEGIN PRIVATE KEY-----\\nMIIE...\\n-----END PRIVATE KEY-----'
+        )
+      }
+
+      if (errorMessage.includes('UNAUTHENTICATED') || errorMessage.includes('invalid authentication')) {
+        throw new Error(
+          'Firebase authentication failed. Please verify: ' +
+          '1. FIREBASE_PROJECT_ID matches your Firebase project ' +
+          '2. FIREBASE_CLIENT_EMAIL is the correct service account email ' +
+          '3. FIREBASE_PRIVATE_KEY is the complete private key from the service account JSON file'
         )
       }
       

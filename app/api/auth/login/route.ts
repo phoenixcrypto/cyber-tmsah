@@ -108,6 +108,11 @@ export async function POST(request: NextRequest) {
       if (errorMessage.includes('FIREBASE_PROJECT_ID') || errorMessage.includes('FIREBASE_CLIENT_EMAIL') || errorMessage.includes('FIREBASE_PRIVATE_KEY')) {
         return errorResponse('خطأ في إعدادات Firebase. يرجى التحقق من متغيرات البيئة على Vercel: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY', 500)
       }
+
+      // Check for authentication errors
+      if (errorMessage.includes('UNAUTHENTICATED') || errorMessage.includes('invalid authentication')) {
+        return errorResponse('خطأ في مصادقة Firebase. يرجى التحقق من صحة FIREBASE_PROJECT_ID و FIREBASE_CLIENT_EMAIL و FIREBASE_PRIVATE_KEY في Vercel', 500)
+      }
       
       return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من إعدادات Firebase.', 500)
     }
@@ -121,6 +126,12 @@ export async function POST(request: NextRequest) {
     } catch (queryError) {
       const errorMessage = queryError instanceof Error ? queryError.message : String(queryError)
       console.error('Firestore query error:', errorMessage)
+      
+      // Check for authentication errors
+      if (errorMessage.includes('UNAUTHENTICATED') || errorMessage.includes('invalid authentication')) {
+        return errorResponse('خطأ في مصادقة Firebase. يرجى التحقق من صحة متغيرات البيئة في Vercel. تأكد من أن FIREBASE_PRIVATE_KEY يحتوي على المفتاح الكامل مع \\n للأسطر الجديدة.', 500)
+      }
+      
       return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى.', 500)
     }
     
