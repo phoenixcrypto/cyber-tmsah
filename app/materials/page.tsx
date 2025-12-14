@@ -31,8 +31,7 @@ const subjectsData: Subject[] = seedMaterials.map((material) => ({
 
 export default function MaterialsPage() {
   const { t } = useLanguage()
-  const [subjects, setSubjects] = useState<Subject[]>([])
-  const [loading, setLoading] = useState(true)
+  const [subjects, setSubjects] = useState<Subject[]>(subjectsData) // Show default data immediately
 
   useEffect(() => {
     const fetchMaterials = async () => {
@@ -59,24 +58,16 @@ export default function MaterialsPage() {
           articlesCount: m.articlesCount || 0,
           lastUpdated: m.lastUpdated || 'لا توجد مقالات بعد'
         }))
-        setSubjects(mappedSubjects.length > 0 ? mappedSubjects : subjectsData)
+        if (mappedSubjects.length > 0) {
+          setSubjects(mappedSubjects)
+        }
       } catch (error) {
         console.error('Error fetching materials:', error)
-        setSubjects(subjectsData) // Fallback
-      } finally {
-        setLoading(false)
+        // Keep default data on error
       }
     }
     fetchMaterials()
   }, [])
-
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center py-20 text-dark-300">جاري التحميل...</div>
-      </div>
-    )
-  }
 
   return (
     <div className="page-container">

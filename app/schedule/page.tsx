@@ -210,16 +210,17 @@ export default function SchedulePage() {
               </h2>
               
               {/* Toggle Switch */}
-              <div className="flex items-center gap-4">
-                <span className={`text-lg font-semibold transition-colors ${scheduleView === 'A' ? 'text-cyber-neon' : 'text-dark-400'}`}>
+              <div className="flex items-center gap-6 px-4">
+                <span className={`text-lg font-semibold transition-colors whitespace-nowrap ${scheduleView === 'A' ? 'text-cyber-neon' : 'text-dark-400'}`}>
                   {t('schedule.groupA')}
                 </span>
                 
                 <button
                   onClick={() => setScheduleView(scheduleView === 'A' ? 'B' : 'A')}
-                  className={`relative w-20 h-10 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 focus:ring-offset-cyber-dark switch-track switch-track--compact ${
+                  className={`relative w-20 h-10 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-neon focus:ring-offset-2 focus:ring-offset-cyber-dark switch-track switch-track--compact flex-shrink-0 ${
                     scheduleView === 'A' ? 'switch-track--active' : 'switch-track--inactive'
                   }`}
+                  aria-label={t('schedule.chooseView')}
                 >
                   <span
                     className={`absolute top-1 left-1 w-8 h-8 rounded-full shadow-lg transform transition-transform duration-300 switch-knob ${
@@ -228,7 +229,7 @@ export default function SchedulePage() {
                   />
                 </button>
                 
-                <span className={`text-lg font-semibold transition-colors ${scheduleView === 'B' ? 'text-cyber-violet' : 'text-dark-400'}`}>
+                <span className={`text-lg font-semibold transition-colors whitespace-nowrap ${scheduleView === 'B' ? 'text-cyber-violet' : 'text-dark-400'}`}>
                   {t('schedule.groupB')}
                 </span>
               </div>
