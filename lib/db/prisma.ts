@@ -5,9 +5,9 @@
  * This pattern prevents multiple Prisma Client instances in development
  * which can cause connection pool exhaustion.
  * 
- * For MySQL connections:
- * - Use standard MySQL connection string format
- * - Ensure SSL is enabled for production
+ * For PostgreSQL connections (Supabase):
+ * - Use PostgreSQL connection string format
+ * - SSL enabled by default in Supabase
  */
 
 import { PrismaClient } from '@prisma/client'
@@ -30,16 +30,11 @@ function validateDatabaseUrl(): void {
     throw new Error('DATABASE_URL is not set in environment variables')
   }
 
-  // Validate MySQL connection string format
-  const isMySQL = dbUrl.startsWith('mysql://') || dbUrl.startsWith('mysqlx://')
+  // Validate PostgreSQL connection string format (Supabase)
+  const isPostgreSQL = dbUrl.startsWith('postgresql://') || dbUrl.startsWith('postgres://')
   
-  if (!isMySQL) {
-    console.warn('⚠️  Expected MySQL connection string. Current format may not be compatible.')
-  }
-
-  // Check for SSL requirement in production (MySQL format: ?sslaccept=strict)
-  if (process.env['NODE_ENV'] === 'production' && !dbUrl.includes('sslaccept')) {
-    console.warn('⚠️  Production MySQL connections should use SSL (add ?sslaccept=strict to connection string)')
+  if (!isPostgreSQL) {
+    console.warn('⚠️  Expected PostgreSQL connection string. Current format may not be compatible.')
   }
 }
 

@@ -21,15 +21,10 @@ async function initializeDefaultAdmin(): Promise<void> {
       throw error
     }
     
-    // Check if DATABASE_URL is valid MySQL connection string
+    // Check if DATABASE_URL is valid PostgreSQL connection string (Supabase)
     const dbUrl = process.env['DATABASE_URL']
-    if (!dbUrl.startsWith('mysql://') && !dbUrl.startsWith('mysqlx://')) {
-      console.warn('⚠️ DATABASE_URL should start with mysql:// or mysqlx:// for MySQL connection')
-    }
-    
-    // Warn about SSL for production MySQL connections
-    if (process.env['NODE_ENV'] === 'production' && !dbUrl.includes('sslaccept')) {
-      console.warn('⚠️ Production MySQL connections should use SSL (add ?sslaccept=strict to connection string)')
+    if (!dbUrl.startsWith('postgresql://') && !dbUrl.startsWith('postgres://')) {
+      console.warn('⚠️ DATABASE_URL should start with postgresql:// or postgres:// for PostgreSQL connection')
     }
     
     const userCount = await prisma.user.count()
@@ -322,7 +317,7 @@ export async function POST(request: NextRequest) {
         return errorResponse('خطأ في إعدادات قاعدة البيانات: DATABASE_URL غير موجود. يرجى التحقق من متغيرات البيئة على Vercel.', 500)
       }
       
-      return errorResponse('خطأ في الاتصال بقاعدة البيانات MySQL. يرجى التحقق من إعدادات DATABASE_URL على Vercel والتأكد من أن الرابط يبدأ بـ mysql:// أو mysqlx://', 500)
+      return errorResponse('خطأ في الاتصال بقاعدة البيانات PostgreSQL (Supabase). يرجى التحقق من إعدادات DATABASE_URL على Vercel.', 500)
     }
     
     return errorResponse('حدث خطأ أثناء تسجيل الدخول', 500, {
