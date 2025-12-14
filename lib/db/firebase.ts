@@ -74,10 +74,16 @@ function initializeFirebase(): void {
  */
 export function getFirestoreDB(): Firestore {
   if (!db) {
-    initializeFirebase()
+    try {
+      initializeFirebase()
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.error('❌ Firebase initialization failed:', errorMessage)
+      throw new Error(`Firebase not initialized: ${errorMessage}. Please check FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY environment variables.`)
+    }
   }
   if (!db) {
-    throw new Error('Firestore not initialized')
+    throw new Error('Firestore not initialized. Please check Firebase configuration.')
   }
   return db
 }
@@ -87,10 +93,16 @@ export function getFirestoreDB(): Firestore {
  */
 export function getFirebaseAuth(): Auth {
   if (!auth) {
-    initializeFirebase()
+    try {
+      initializeFirebase()
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.error('❌ Firebase initialization failed:', errorMessage)
+      throw new Error(`Firebase not initialized: ${errorMessage}. Please check FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY environment variables.`)
+    }
   }
   if (!auth) {
-    throw new Error('Firebase Auth not initialized')
+    throw new Error('Firebase Auth not initialized. Please check Firebase configuration.')
   }
   return auth
 }
@@ -100,25 +112,22 @@ export function getFirebaseAuth(): Auth {
  */
 export function getFirebaseApp(): App {
   if (!app) {
-    initializeFirebase()
+    try {
+      initializeFirebase()
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.error('❌ Firebase initialization failed:', errorMessage)
+      throw new Error(`Firebase not initialized: ${errorMessage}. Please check FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY environment variables.`)
+    }
   }
   if (!app) {
-    throw new Error('Firebase App not initialized')
+    throw new Error('Firebase App not initialized. Please check Firebase configuration.')
   }
   return app
 }
 
-// Initialize on module load (only in server environment)
-if (typeof window === 'undefined') {
-  try {
-    initializeFirebase()
-  } catch (error) {
-    // Don't fail if not configured (for build time)
-    if (process.env['NODE_ENV'] === 'production' || process.env['VERCEL']) {
-      console.warn('⚠️  Firebase not initialized:', error instanceof Error ? error.message : String(error))
-    }
-  }
-}
+// Don't initialize on module load - initialize lazily when needed
+// This prevents errors during build time or when env vars are not set
 
 export default {
   db: getFirestoreDB,

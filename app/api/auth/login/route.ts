@@ -92,14 +92,28 @@ export async function POST(request: NextRequest) {
     try {
       db = getFirestoreDB()
     } catch (firebaseError) {
-      console.error('Firebase initialization error:', firebaseError)
+      const errorMessage = firebaseError instanceof Error ? firebaseError.message : String(firebaseError)
+      console.error('Firebase initialization error:', errorMessage)
+      
+      // Check if it's a configuration error
+      if (errorMessage.includes('FIREBASE_PROJECT_ID') || errorMessage.includes('FIREBASE_CLIENT_EMAIL') || errorMessage.includes('FIREBASE_PRIVATE_KEY')) {
+        return errorResponse('خطأ في إعدادات Firebase. يرجى التحقق من متغيرات البيئة على Vercel: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY', 500)
+      }
+      
       return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من إعدادات Firebase.', 500)
     }
 
-    const usersSnapshot = await db.collection('users')
-      .where('username', '==', trimmedUsername)
-      .limit(1)
-      .get()
+    let usersSnapshot
+    try {
+      usersSnapshot = await db.collection('users')
+        .where('username', '==', trimmedUsername)
+        .limit(1)
+        .get()
+    } catch (queryError) {
+      const errorMessage = queryError instanceof Error ? queryError.message : String(queryError)
+      console.error('Firestore query error:', errorMessage)
+      return errorResponse('خطأ في الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى.', 500)
+    }
     
     if (usersSnapshot.empty || usersSnapshot.docs.length === 0) {
       await logger.warn('Login attempt with invalid username', {
@@ -145,10 +159,15 @@ export async function POST(request: NextRequest) {
       role: (userData['role'] as 'admin' | 'editor' | 'viewer') || 'viewer',
     })
 
-    // Update last login
-    await db.collection('users').doc(userId).update({
-      lastLogin: FieldValue.serverTimestamp(),
-    })
+    // Update last login (don't fail if this fails)
+    try {
+      await db.collection('users').doc(userId).update({
+        lastLogin: FieldValue.serverTimestamp(),
+      })
+    } catch (updateError) {
+      console.warn('Failed to update last login:', updateError)
+      // Continue - this is not critical
+    }
 
     // Create response
     const response = successResponse(
