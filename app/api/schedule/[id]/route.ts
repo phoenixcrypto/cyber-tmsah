@@ -25,7 +25,7 @@ export async function GET(
       item: {
         id: itemDoc.id,
         ...data,
-        group: data.group === 'Group1' ? 'Group 1' : 'Group 2',
+        group: data['group'] === 'Group1' ? 'Group 1' : 'Group 2',
       },
     })
   } catch (error) {

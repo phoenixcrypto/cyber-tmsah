@@ -23,7 +23,7 @@ export async function GET(
     }
 
     const data = articleDoc.data()!
-    const materialId = data.materialId
+    const materialId = data['materialId']
 
     // Get material data
     let material = null
@@ -33,8 +33,8 @@ export async function GET(
         const materialData = materialDoc.data()!
         material = {
           id: materialId,
-          title: materialData.title,
-          titleEn: materialData.titleEn,
+          title: materialData['title'],
+          titleEn: materialData['titleEn'],
         }
       }
     }
@@ -44,7 +44,7 @@ export async function GET(
         id: articleDoc.id,
         ...data,
         material,
-        tags: parseTags(data.tags || '[]'),
+        tags: parseTags(data['tags'] || '[]'),
       },
     })
   } catch (error) {
@@ -92,7 +92,7 @@ export async function PUT(
     }
 
     // If materialId is being changed, verify new material exists
-    if (materialId && materialId !== existingData.materialId) {
+    if (materialId && materialId !== existingData['materialId']) {
       const materialDoc = await db.collection('materials').doc(materialId).get()
       if (!materialDoc.exists) {
         return errorResponse('المادة المحددة غير موجودة', 404)
@@ -100,10 +100,10 @@ export async function PUT(
 
       // Update old material's count
       const oldArticlesSnapshot = await db.collection('articles')
-        .where('materialId', '==', existingData.materialId)
+        .where('materialId', '==', existingData['materialId'])
         .where('status', '==', 'published')
         .get()
-      await db.collection('materials').doc(existingData.materialId).update({
+      await db.collection('materials').doc(existingData['materialId']).update({
         articlesCount: oldArticlesSnapshot.size,
       })
 
@@ -129,7 +129,7 @@ export async function PUT(
     if (status) updateData.status = status === 'published' ? 'published' : 'draft'
     if (status === 'published' && publishedAt) {
       updateData.publishedAt = new Date(publishedAt)
-    } else if (status === 'published' && !existingData.publishedAt && !publishedAt) {
+    } else if (status === 'published' && !existingData['publishedAt'] && !publishedAt) {
       updateData.publishedAt = new Date()
     }
     if (tags !== undefined) updateData.tags = stringifyTags(tags)
@@ -143,7 +143,7 @@ export async function PUT(
       article: {
         id: updatedDoc.id,
         ...updatedData,
-        tags: parseTags(updatedData.tags || '[]'),
+        tags: parseTags(updatedData['tags'] || '[]'),
       },
     })
   } catch (error: unknown) {
@@ -181,11 +181,11 @@ export async function DELETE(
 
     // Update material's articlesCount
     const articlesSnapshot = await db.collection('articles')
-      .where('materialId', '==', data.materialId)
+      .where('materialId', '==', data['materialId'])
       .where('status', '==', 'published')
       .get()
 
-    await db.collection('materials').doc(data.materialId).update({
+    await db.collection('materials').doc(data['materialId']).update({
       articlesCount: articlesSnapshot.size,
       updatedAt: FieldValue.serverTimestamp(),
     })

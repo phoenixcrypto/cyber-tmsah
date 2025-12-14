@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const articles = await Promise.all(
       articlesSnapshot.docs.map(async (doc) => {
         const data = doc.data()
-        const materialId = data.materialId
+        const materialId = data['materialId']
 
         // Get material data
         let material = null
@@ -37,8 +37,8 @@ export async function GET(request: NextRequest) {
           if (materialDoc.exists) {
             const materialData = materialDoc.data()
             material = {
-              title: materialData?.title,
-              titleEn: materialData?.titleEn,
+              title: materialData?.['title'],
+              titleEn: materialData?.['titleEn'],
             }
           }
         }
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
           id: doc.id,
           ...data,
           material,
-          tags: parseTags(data.tags || '[]'),
+          tags: parseTags(data['tags'] || '[]'),
         }
       })
     )
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
       const userDoc = await db.collection('users').doc(user.userId).get()
       if (userDoc.exists) {
         const userData = userDoc.data()
-        authorName = userData?.name || userData?.username || user.email
+        authorName = userData?.['name'] || userData?.['username'] || user.email
       } else {
         authorName = user.email
       }
@@ -129,7 +129,6 @@ export async function POST(request: NextRequest) {
     await articleRef.set(articleData)
 
     // Update material's articlesCount and lastUpdated
-    const materialData = materialDoc.data()
     const articlesSnapshot = await db.collection('articles')
       .where('materialId', '==', materialId)
       .where('status', '==', 'published')

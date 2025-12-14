@@ -72,7 +72,7 @@ export async function PUT(
       item: {
         id: updatedDoc.id,
         ...updatedData,
-        group: updatedData.group === 'Group1' ? 'Group 1' : 'Group 2',
+        group: updatedData['group'] === 'Group1' ? 'Group 1' : 'Group 2',
       },
     })
   } catch (error) {

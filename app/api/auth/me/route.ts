@@ -29,10 +29,10 @@ export async function GET(request: NextRequest) {
     return successResponse({
       user: {
         id: user.userId,
-        email: userData?.email || user.email,
-        name: userData?.name || userData?.username || '',
-        role: userData?.role || user.role,
-        lastLogin: userData?.lastLogin?.toDate?.() || userData?.lastLogin || null,
+        email: userData?.['email'] || user.email,
+        name: userData?.['name'] || userData?.['username'] || '',
+        role: userData?.['role'] || user.role,
+        lastLogin: userData?.['lastLogin']?.toDate?.() || userData?.['lastLogin'] || null,
       },
     })
   } catch (error) {

@@ -107,11 +107,11 @@ export async function PUT(
     return successResponse({
       user: {
         id: updatedDoc.id,
-        username: updatedData.username,
-        email: updatedData.email || null,
-        name: updatedData.name,
-        role: updatedData.role,
-        updatedAt: updatedData.updatedAt?.toDate?.() || updatedData.updatedAt || null,
+        username: updatedData['username'],
+        email: updatedData['email'] || null,
+        name: updatedData['name'],
+        role: updatedData['role'],
+        updatedAt: updatedData['updatedAt']?.toDate?.() || updatedData['updatedAt'] || null,
       },
     })
   } catch (error) {

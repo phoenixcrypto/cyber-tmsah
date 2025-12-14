@@ -152,11 +152,14 @@ export async function POST(request: NextRequest) {
     }
 
     const userDoc = usersSnapshot.docs[0]
+    if (!userDoc) {
+      return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
+    }
     const userData = userDoc.data()
     const userId = userDoc.id
 
     // Verify password
-    const isPasswordValid = await comparePassword(trimmedPassword, userData.password)
+    const isPasswordValid = await comparePassword(trimmedPassword, userData['password'])
     
     console.log('🔐 Password verification:', {
       isValid: isPasswordValid,
@@ -178,28 +181,28 @@ export async function POST(request: NextRequest) {
       
       // Try to get existing user by email
       try {
-        if (userData.email) {
-          const userRecord = await auth.getUserByEmail(userData.email)
+        if (userData['email']) {
+          const userRecord = await auth.getUserByEmail(userData['email'])
           firebaseUid = userRecord.uid
           
           // Update custom claims if needed
           await auth.setCustomUserClaims(firebaseUid, { 
-            role: userData.role || 'viewer' 
+            role: userData['role'] || 'viewer' 
           })
         }
       } catch {
         // User doesn't exist in Auth, create it
-        if (userData.email) {
+        if (userData['email']) {
           const userRecord = await auth.createUser({
-            email: userData.email,
-            displayName: userData.name || userData.username,
+            email: userData['email'] as string,
+            displayName: (userData['name'] || userData['username']) as string,
             emailVerified: false,
           })
           firebaseUid = userRecord.uid
           
           // Set custom claims
           await auth.setCustomUserClaims(firebaseUid, { 
-            role: userData.role || 'viewer' 
+            role: userData['role'] || 'viewer' 
           })
           
           // Update Firestore doc with Firebase UID if different
@@ -221,14 +224,14 @@ export async function POST(request: NextRequest) {
     // Generate tokens
     const accessToken = generateAccessToken({
       userId: firebaseUid,
-      email: userData.email || '',
-      role: userData.role || 'viewer',
+      email: userData['email'] || '',
+      role: userData['role'] || 'viewer',
     })
 
     const refreshToken = generateRefreshToken({
       userId: firebaseUid,
-      email: userData.email || '',
-      role: userData.role || 'viewer',
+      email: userData['email'] || '',
+      role: userData['role'] || 'viewer',
     })
 
     // Create response
@@ -236,9 +239,9 @@ export async function POST(request: NextRequest) {
       {
         user: {
           id: firebaseUid,
-          email: userData.email || '',
-          name: userData.name || userData.username,
-          role: userData.role || 'viewer',
+          email: userData['email'] || '',
+          name: userData['name'] || userData['username'],
+          role: userData['role'] || 'viewer',
         },
       },
       {
@@ -274,7 +277,7 @@ export async function POST(request: NextRequest) {
 
     await logger.info('User logged in successfully', {
       userId: firebaseUid,
-      username: userData.username,
+      username: userData['username'],
       ipAddress: context.ipAddress,
     })
 

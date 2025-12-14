@@ -34,13 +34,13 @@ export async function GET(request: NextRequest) {
       const data = doc.data()
       return {
         id: doc.id,
-        username: data.username,
-        email: data.email || null,
-        name: data.name,
-        role: data.role,
-        lastLogin: data.lastLogin?.toDate?.() || data.lastLogin || null,
-        createdAt: data.createdAt?.toDate?.() || data.createdAt || null,
-        updatedAt: data.updatedAt?.toDate?.() || data.updatedAt || null,
+        username: data['username'],
+        email: data['email'] || null,
+        name: data['name'],
+        role: data['role'],
+        lastLogin: data['lastLogin']?.toDate?.() || data['lastLogin'] || null,
+        createdAt: data['createdAt']?.toDate?.() || data['createdAt'] || null,
+        updatedAt: data['updatedAt']?.toDate?.() || data['updatedAt'] || null,
       }
     })
 
@@ -118,7 +118,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Create user document in Firestore
-    const userRef = db.collection('users').doc(firebaseUid || undefined)
+    const userRef = firebaseUid 
+      ? db.collection('users').doc(firebaseUid)
+      : db.collection('users').doc()
     const userData = {
       username,
       email: email || null,

@@ -85,7 +85,7 @@ export async function PUT(
     const existingData = pageDoc.data()!
 
     // If slug is being changed, check if new slug is available
-    if (slug && slug !== existingData.slug) {
+    if (slug && slug !== existingData['slug']) {
       const slugSnapshot = await db.collection('pages')
         .where('slug', '==', slug)
         .limit(1)

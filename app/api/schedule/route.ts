@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       return {
         id: doc.id,
         ...data,
-        group: data.group === 'Group1' ? 'Group 1' : 'Group 2',
+        group: data['group'] === 'Group1' ? 'Group 1' : 'Group 2',
       }
     })
 
