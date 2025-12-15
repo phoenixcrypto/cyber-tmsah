@@ -123,6 +123,11 @@ function AdminLegalPageContent() {
     setEditingSection(null)
   }
 
+  useEffect(() => {
+    fetchPage()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type])
+
   const handleDeleteSection = (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذا القسم؟')) return
     setPage({
