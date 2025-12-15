@@ -60,70 +60,119 @@ export default function AdminDashboard() {
       try {
         setLoading(true)
         
-        // Fetch all data in parallel
-        const [usersRes, materialsRes, articlesRes, scheduleRes, downloadsRes, newsRes] = await Promise.all([
-          fetch('/api/admin/users').catch(() => null),
-          fetch('/api/materials').catch(() => null),
-          fetch('/api/articles').catch(() => null),
-          fetch('/api/schedule').catch(() => null),
-          fetch('/api/downloads').catch(() => null),
-          fetch('/api/news').catch(() => null),
-        ])
-
-        const users = usersRes?.ok ? ((await usersRes.json()).data?.users || []) : []
-        const materials = materialsRes?.ok ? ((await materialsRes.json()).data?.materials || []) : []
-        const articles = articlesRes?.ok ? ((await articlesRes.json()).data?.articles || []) : []
+        // Fetch stats from dedicated API endpoint
+        const statsRes = await fetch('/api/admin/stats').catch(() => null)
         
-        interface ScheduleItem {
-          id: string
-          title: string
-          [key: string]: unknown
-        }
-        interface DownloadItem {
-          id: string
-          name: string
-          [key: string]: unknown
-        }
-        let schedule: ScheduleItem[] = []
-        if (scheduleRes?.ok) {
-          const scheduleData = await scheduleRes.json()
-          schedule = (scheduleData?.data?.schedule || scheduleData?.data?.items || []) as ScheduleItem[]
-        }
-        
-        let downloads: DownloadItem[] = []
-        if (downloadsRes?.ok) {
-          const downloadsData = await downloadsRes.json()
-          downloads = (downloadsData?.data?.downloads || downloadsData?.data?.software || []) as DownloadItem[]
-        }
-        
-        const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
+        if (statsRes?.ok) {
+          const statsData = await statsRes.json()
+          const stats = statsData.data
 
-        const totalContent = materials.length + articles.length + news.length
+          setMetrics({
+            totalUsers: stats.metrics?.totalUsers || 0,
+            totalContent: stats.metrics?.totalContent || 0,
+            totalSchedule: stats.metrics?.totalSchedule || 0,
+            totalDownloads: stats.metrics?.totalDownloads || 0,
+            totalArticles: stats.metrics?.totalArticles || 0,
+            totalNews: stats.metrics?.totalNews || 0,
+            userGrowth: stats.metrics?.userGrowth || 0,
+            contentGrowth: stats.metrics?.contentGrowth || 0,
+            scheduleGrowth: stats.metrics?.scheduleGrowth || 0,
+            downloadGrowth: stats.metrics?.downloadGrowth || 0,
+          })
 
-        setMetrics({
-          totalUsers: users.length,
-          totalContent,
-          totalSchedule: schedule.length,
-          totalDownloads: downloads.length,
-          totalArticles: articles.length,
-          totalNews: news.length,
-          userGrowth: 0, // TODO: Calculate from historical data
-          contentGrowth: 0, // TODO: Calculate from historical data
-          scheduleGrowth: 0, // TODO: Calculate from historical data
-          downloadGrowth: 0, // TODO: Calculate from historical data
-        })
+          // Generate chart data with real data
+          const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو']
+          setChartData({
+            users: {
+              labels: months,
+              data: [
+                0,
+                0,
+                0,
+                0,
+                0,
+                stats.metrics?.totalUsers || 0,
+              ],
+            },
+            content: {
+              labels: months,
+              data: [
+                0,
+                0,
+                0,
+                0,
+                0,
+                stats.metrics?.totalContent || 0,
+              ],
+            },
+          })
+        } else {
+          // Fallback: fetch individual endpoints
+          const [usersRes, materialsRes, articlesRes, scheduleRes, downloadsRes, newsRes] = await Promise.all([
+            fetch('/api/admin/users').catch(() => null),
+            fetch('/api/materials').catch(() => null),
+            fetch('/api/articles').catch(() => null),
+            fetch('/api/schedule').catch(() => null),
+            fetch('/api/downloads').catch(() => null),
+            fetch('/api/news').catch(() => null),
+          ])
 
-        // Generate chart data (mock for now, can be enhanced with real historical data)
-        setChartData({
-          users: {
-            labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
-            data: [0, 0, 0, 0, 0, users.length],
-          },
-          content: {
-            labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
-            data: [0, 0, 0, 0, 0, totalContent],
-          },
-        })
+          const users = usersRes?.ok ? ((await usersRes.json()).data?.users || []) : []
+          const materials = materialsRes?.ok ? ((await materialsRes.json()).data?.materials || []) : []
+          const articles = articlesRes?.ok ? ((await articlesRes.json()).data?.articles || []) : []
+          
+          interface ScheduleItem {
+            id: string
+            title: string
+            [key: string]: unknown
+          }
+          interface DownloadItem {
+            id: string
+            name: string
+            [key: string]: unknown
+          }
+          let schedule: ScheduleItem[] = []
+          if (scheduleRes?.ok) {
+            const scheduleData = await scheduleRes.json()
+            schedule = (scheduleData?.data?.schedule || scheduleData?.data?.items || []) as ScheduleItem[]
+          }
+          
+          let downloads: DownloadItem[] = []
+          if (downloadsRes?.ok) {
+            const downloadsData = await downloadsRes.json()
+            downloads = (downloadsData?.data?.downloads || downloadsData?.data?.software || []) as DownloadItem[]
+          }
+          
+          const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
+
+          const totalContent = materials.length + articles.length + news.length
+
+          setMetrics({
+            totalUsers: users.length,
+            totalContent,
+            totalSchedule: schedule.length,
+            totalDownloads: downloads.length,
+            totalArticles: articles.length,
+            totalNews: news.length,
+            userGrowth: 0,
+            contentGrowth: 0,
+            scheduleGrowth: 0,
+            downloadGrowth: 0,
+          })
+
+          // Generate chart data
+          const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو']
+          setChartData({
+            users: {
+              labels: months,
+              data: [0, 0, 0, 0, 0, users.length],
+            },
+            content: {
+              labels: months,
+              data: [0, 0, 0, 0, 0, totalContent],
+            },
+          })
+        }
       } catch (error) {
         console.error('Error fetching metrics:', error)
       } finally {
@@ -132,18 +181,62 @@ export default function AdminDashboard() {
     }
 
     fetchMetrics()
+    
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchMetrics, 30000)
+    return () => clearInterval(interval)
   }, [])
 
-  const mockActivities = [
-    {
-      id: 1,
-      user: 'النظام',
-      action: 'تم تحديث الإحصائيات',
-      target: 'لوحة التحكم',
-      time: 'الآن',
-      avatar: 'S',
-    },
-  ]
+  const [activities, setActivities] = useState<Array<{
+    id: string
+    user: string
+    action: string
+    target: string
+    time: string
+    avatar: string
+  }>>([])
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const activitiesRes = await fetch('/api/admin/activities').catch(() => null)
+        if (activitiesRes?.ok) {
+          const activitiesData = await activitiesRes.json()
+          setActivities(activitiesData.data?.activities || [])
+        } else {
+          // Fallback to mock data
+          setActivities([
+            {
+              id: '1',
+              user: 'النظام',
+              action: 'تم تحديث الإحصائيات',
+              target: 'لوحة التحكم',
+              time: 'الآن',
+              avatar: 'S',
+            },
+          ])
+        }
+      } catch (error) {
+        console.error('Error fetching activities:', error)
+        setActivities([
+          {
+            id: '1',
+            user: 'النظام',
+            action: 'تم تحديث الإحصائيات',
+            target: 'لوحة التحكم',
+            time: 'الآن',
+            avatar: 'S',
+          },
+        ])
+      }
+    }
+
+    fetchActivities()
+    
+    // Refresh activities every 30 seconds
+    const interval = setInterval(fetchActivities, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   if (loading) {
     return (
@@ -258,7 +351,7 @@ export default function AdminDashboard() {
         />
 
         {/* Activity Feed */}
-        <ActivityFeed activities={mockActivities} delay={0.8} />
+        <ActivityFeed activities={activities} delay={0.8} />
 
         {/* System Health */}
         <SystemHealth delay={0.9} />

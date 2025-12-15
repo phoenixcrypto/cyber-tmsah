@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { Clock } from 'lucide-react'
 
 interface Activity {
-  id: number
+  id: string | number
   user: string
   action: string
   target: string

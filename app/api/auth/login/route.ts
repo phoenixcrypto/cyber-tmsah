@@ -9,6 +9,14 @@ import { hashPassword } from '@/lib/auth/bcrypt'
 import { getRequestContext } from '@/lib/middleware/auth'
 import { FieldValue } from 'firebase-admin/firestore'
 import type { ErrorWithCode } from '@/lib/types'
+import {
+  isIPBlocked,
+  recordLoginAttempt,
+  applyLoginDelay,
+  getFailedAttempts,
+  getClientIP,
+  sanitizeInput,
+} from '@/lib/utils/security'
 
 /**
  * Initialize default admin if no users exist
@@ -58,8 +66,18 @@ async function initializeDefaultAdmin(): Promise<void> {
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
   const context = getRequestContext(request)
+  const clientIP = getClientIP(request)
 
   try {
+    // Security: Check if IP is blocked
+    const isBlocked = await isIPBlocked(clientIP)
+    if (isBlocked) {
+      await logger.warn('Blocked IP attempted login', {
+        ipAddress: clientIP,
+        ...(context.userAgent && { userAgent: context.userAgent }),
+      })
+      return errorResponse('تم حظر عنوان IP الخاص بك مؤقتاً بسبب محاولات تسجيل دخول فاشلة متعددة. يرجى المحاولة لاحقاً.', 403)
+    }
     // Check if JWT secrets are configured
     if (!process.env['JWT_SECRET'] || !process.env['JWT_REFRESH_SECRET']) {
       console.error('❌ JWT_SECRET and JWT_REFRESH_SECRET must be set in environment variables')
@@ -94,7 +112,17 @@ export async function POST(request: NextRequest) {
     }
 
     const { username, password } = validationResult.data
-    const trimmedUsername = username.trim()
+    const trimmedUsername = sanitizeInput(username)
+    
+    // Security: Apply delay based on failed attempts (exponential backoff)
+    await applyLoginDelay(clientIP, trimmedUsername)
+    
+    // Security: Check failed attempts before processing
+    const failedAttempts = await getFailedAttempts(clientIP, trimmedUsername)
+    if (failedAttempts >= 5) {
+      await recordLoginAttempt(clientIP, trimmedUsername, false)
+      return errorResponse('تم تجاوز عدد المحاولات المسموح بها. يرجى المحاولة لاحقاً.', 429)
+    }
 
     // Get user by username from Firestore
     let db
@@ -136,27 +164,41 @@ export async function POST(request: NextRequest) {
     }
     
     if (usersSnapshot.empty || usersSnapshot.docs.length === 0) {
+      // Security: Record failed attempt
+      await recordLoginAttempt(clientIP, trimmedUsername, false)
+      
       try {
         await logger.warn('Login attempt with invalid username', {
           username: trimmedUsername,
-          ipAddress: context.ipAddress,
+          ipAddress: clientIP,
         })
       } catch (logError) {
         console.warn('Failed to log warning:', logError)
       }
+      
+      // Security: Add delay to prevent brute force
+      const delay = await getFailedAttempts(clientIP, trimmedUsername) * 500
+      if (delay > 0) {
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+      
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
     const userDoc = usersSnapshot.docs[0]
     if (!userDoc) {
+      // Security: Record failed attempt
+      await recordLoginAttempt(clientIP, trimmedUsername, false)
+      
       try {
         await logger.warn('Login attempt - user document not found', {
           username: trimmedUsername,
-          ipAddress: context.ipAddress,
+          ipAddress: clientIP,
         })
       } catch (logError) {
         console.warn('Failed to log warning:', logError)
       }
+      
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
 
@@ -167,16 +209,29 @@ export async function POST(request: NextRequest) {
     const isPasswordValid = await comparePassword(password, userData['password'] as string)
     
     if (!isPasswordValid) {
+      // Security: Record failed attempt
+      await recordLoginAttempt(clientIP, trimmedUsername, false)
+      
       try {
         await logger.warn('Login attempt with invalid password', {
           userId,
-          ipAddress: context.ipAddress,
+          ipAddress: clientIP,
         })
       } catch (logError) {
         console.warn('Failed to log warning:', logError)
       }
+      
+      // Security: Add delay to prevent brute force
+      const delay = await getFailedAttempts(clientIP, trimmedUsername) * 500
+      if (delay > 0) {
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+      
       return errorResponse('اسم المستخدم أو كلمة المرور غير صحيحة', 401)
     }
+
+    // Security: Record successful login attempt
+    await recordLoginAttempt(clientIP, trimmedUsername, true)
 
     // Generate tokens
     const accessToken = generateAccessToken({
@@ -245,7 +300,8 @@ export async function POST(request: NextRequest) {
       await logger.info('User logged in successfully', {
         userId,
         username: trimmedUsername,
-        ipAddress: context.ipAddress,
+        ipAddress: clientIP,
+        ...(context.userAgent && { userAgent: context.userAgent }),
       })
     } catch (logError) {
       console.warn('Failed to log info:', logError)
