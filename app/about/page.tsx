@@ -5,10 +5,53 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
 import Image from 'next/image'
 import PageHeader from '@/components/PageHeader'
+import { useState, useEffect } from 'react'
+import * as Icons from 'lucide-react'
+
+interface AboutCard {
+  id: string
+  title: string
+  description: string
+  icon?: string
+  color?: string
+  order: number
+  size: 'small' | 'medium' | 'large'
+}
+
+interface AboutPageData {
+  title: string
+  description: string
+  cards: AboutCard[]
+  sections: Array<{
+    id: string
+    title: string
+    content: string
+  }>
+}
 
 export default function AboutPage() {
   const { t } = useLanguage()
+  const [pageData, setPageData] = useState<AboutPageData | null>(null)
+  const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const res = await fetch('/api/pages/about')
+        if (res.ok) {
+          const data = await res.json()
+          setPageData(data.data.page)
+        }
+      } catch (error) {
+        console.error('Error fetching about page:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPageData()
+  }, [])
+
+  // Fallback data
   const storySections = [
     {
       icon: Rocket,
@@ -24,33 +67,6 @@ export default function AboutPage() {
       icon: Zap,
       title: 'التطور',
       content: 'تطورت المنصة بسرعة لتصبح منصة شاملة تحتوي على الجدول الدراسي، المواد التعليمية، خريطة الطريق، الكتب، الدورات، البودكاست، والكثير من الموارد التعليمية الأخرى.'
-    }
-  ]
-
-  const features = [
-    {
-      icon: Users,
-      title: 'منصة تعليمية شاملة',
-      description: 'نوفر جميع الموارد التعليمية التي يحتاجها طلاب الأمن السيبراني في مكان واحد',
-      color: 'from-cyber-neon to-cyber-green',
-    },
-    {
-      icon: BookOpen,
-      title: 'محتوى عالي الجودة',
-      description: 'نحرص على تقديم محتوى تعليمي دقيق ومحدث من مصادر موثوقة',
-      color: 'from-cyber-neon to-cyber-green',
-    },
-    {
-      icon: Award,
-      title: 'خريطة طريق واضحة',
-      description: 'نقدم خريطة طريق مفصلة لمساعدة الطلاب على تحديد مسارهم التعليمي',
-      color: 'from-cyber-green to-cyber-neon',
-    },
-    {
-      icon: Target,
-      title: 'سهولة الوصول',
-      description: 'تصميم بسيط وواضح يسهل على الطلاب الوصول للمعلومات بسرعة',
-      color: 'from-cyber-neon to-cyber-green',
     }
   ]
 
@@ -84,12 +100,41 @@ export default function AboutPage() {
     { icon: Target, value: '24/7', label: 'متاح دائماً' }
   ]
 
+  const getIconComponent = (iconName?: string) => {
+    if (!iconName) return BookOpen
+    const Icon = (Icons as unknown as Record<string, typeof BookOpen>)[iconName]
+    return Icon || BookOpen
+  }
+
+  const getCardSizeClass = (size?: string) => {
+    switch (size) {
+      case 'small': return 'md:col-span-1'
+      case 'large': return 'md:col-span-2'
+      default: return 'md:col-span-1'
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="page-container">
+        <PageHeader 
+          title={t('about.title')} 
+          icon={Info}
+          description={t('about.description') || 'تعرف على منصة سايبر تمساح وفريق العمل ورؤيتنا للمستقبل'}
+        />
+        <div className="text-center py-16">
+          <p className="text-dark-400">جاري التحميل...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="page-container">
       <PageHeader 
-        title={t('about.title')} 
+        title={pageData?.title || t('about.title')} 
         icon={Info}
-        description={t('about.description') || 'تعرف على منصة سايبر تمساح وفريق العمل ورؤيتنا للمستقبل'}
+        description={pageData?.description || t('about.description') || 'تعرف على منصة سايبر تمساح وفريق العمل ورؤيتنا للمستقبل'}
       />
 
       {/* Story Section */}
@@ -148,31 +193,34 @@ export default function AboutPage() {
         })}
       </div>
 
-      {/* Features Section */}
-      <div className="mb-16">
-        <div className="flex items-center justify-center gap-4 mb-8">
-          <Star className="w-6 h-6 text-cyber-neon" />
-          <h2 className="section-title mb-0">{t('about.features') || 'مميزاتنا'}</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => {
-            const Icon = feature.icon
-            return (
-              <div
-                key={index}
-                className="enhanced-card-2030 stagger-item"
-                style={{ animationDelay: `${0.9 + index * 0.1}s` }}
-              >
-                <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-cyber-neon/30`}>
-                  <Icon className="w-8 h-8 text-white" />
+      {/* Dynamic Cards from Admin */}
+      {pageData && pageData.cards && pageData.cards.length > 0 && (
+        <div className="mb-16">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <Star className="w-6 h-6 text-cyber-neon" />
+            <h2 className="section-title mb-0">{t('about.features') || 'مميزاتنا'}</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {pageData.cards.sort((a, b) => a.order - b.order).map((card, index) => {
+              const Icon = getIconComponent(card.icon)
+              const sizeClass = getCardSizeClass(card.size)
+              return (
+                <div
+                  key={card.id}
+                  className={`enhanced-card-2030 stagger-item ${sizeClass}`}
+                  style={{ animationDelay: `${0.9 + index * 0.1}s` }}
+                >
+                  <div className={`w-16 h-16 bg-gradient-to-br ${card.color || 'from-cyber-neon to-cyber-green'} rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-cyber-neon/30`}>
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="subsection-title mb-3">{card.title}</h3>
+                  <p className="content-paragraph">{card.description}</p>
                 </div>
-                <h3 className="subsection-title mb-3">{feature.title}</h3>
-                <p className="content-paragraph">{feature.description}</p>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Values Section */}
       <div className="mb-16">

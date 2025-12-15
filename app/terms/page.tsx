@@ -1,65 +1,118 @@
 'use client'
 
-import { FileText, AlertCircle, CheckCircle, XCircle, BookOpen, Shield, Users, Globe, List, ArrowUp } from 'lucide-react'
+import { FileText, List, ArrowUp, CheckCircle, AlertCircle } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 import { useState, useEffect } from 'react'
+import * as Icons from 'lucide-react'
+
+interface LegalSection {
+  id: string
+  icon: string
+  title: string
+  content: string
+  order: number
+}
+
+interface TermsPageData {
+  title: string
+  description: string
+  sections: LegalSection[]
+}
 
 export default function TermsPage() {
   const { t } = useLanguage()
   const [activeSection, setActiveSection] = useState<string | null>(null)
+  const [pageData, setPageData] = useState<TermsPageData | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const termsSections = [
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const res = await fetch('/api/pages/legal?type=terms')
+        if (res.ok) {
+          const data = await res.json()
+          setPageData(data.data.page)
+        }
+      } catch (error) {
+        console.error('Error fetching terms page:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPageData()
+  }, [])
+
+  // Fallback sections
+  const defaultSections: LegalSection[] = [
     {
       id: 'acceptance',
-      icon: BookOpen,
+      icon: 'BookOpen',
       title: 'قبول الشروط',
-      content: 'باستخدام موقع منصة سايبر تمساح، فإنك تقر بأنك قد قرأت وفهمت ووافقت على الالتزام بهذه الشروط والأحكام. إذا كنت لا توافق على أي جزء من هذه الشروط، فيجب عليك عدم استخدام موقعنا.'
+      content: 'باستخدام موقع منصة سايبر تمساح، فإنك تقر بأنك قد قرأت وفهمت ووافقت على الالتزام بهذه الشروط والأحكام. إذا كنت لا توافق على أي جزء من هذه الشروط، فيجب عليك عدم استخدام موقعنا.',
+      order: 0
     },
     {
       id: 'usage',
-      icon: Users,
+      icon: 'Users',
       title: 'استخدام الموقع',
-      content: 'يُسمح لك باستخدام موقعنا للأغراض التعليمية والشخصية فقط. يجب ألا تستخدم الموقع لأي غرض غير قانوني أو غير مصرح به. أنت مسؤول عن الحفاظ على سرية أي معلومات حساب قد تكون لديك.'
+      content: 'يُسمح لك باستخدام موقعنا للأغراض التعليمية والشخصية فقط. يجب ألا تستخدم الموقع لأي غرض غير قانوني أو غير مصرح به. أنت مسؤول عن الحفاظ على سرية أي معلومات حساب قد تكون لديك.',
+      order: 1
     },
     {
       id: 'intellectual',
-      icon: Shield,
+      icon: 'Shield',
       title: 'الملكية الفكرية',
-      content: 'جميع المحتويات الموجودة على موقعنا، بما في ذلك النصوص والصور والتصاميم والشعارات، محمية بحقوق الطبع والنشر والملكية الفكرية. لا يجوز لك نسخ أو توزيع أو تعديل أو إنشاء أعمال مشتقة من محتوى موقعنا دون الحصول على إذن كتابي منا.'
+      content: 'جميع المحتويات الموجودة على موقعنا، بما في ذلك النصوص والصور والتصاميم والشعارات، محمية بحقوق الطبع والنشر والملكية الفكرية. لا يجوز لك نسخ أو توزيع أو تعديل أو إنشاء أعمال مشتقة من محتوى موقعنا دون الحصول على إذن كتابي منا.',
+      order: 2
     },
     {
       id: 'user-content',
-      icon: AlertCircle,
+      icon: 'AlertCircle',
       title: 'المحتوى المقدم من المستخدمين',
-      content: 'إذا قمت بتقديم أي محتوى إلى موقعنا (مثل التعليقات أو المقالات)، فإنك تمنحنا ترخيصاً غير حصري ودائماً لاستخدام وتعديل ونشر هذا المحتوى. أنت تضمن أن المحتوى الذي تقدمه لا ينتهك حقوق أي طرف ثالث.'
+      content: 'إذا قمت بتقديم أي محتوى إلى موقعنا (مثل التعليقات أو المقالات)، فإنك تمنحنا ترخيصاً غير حصري ودائماً لاستخدام وتعديل ونشر هذا المحتوى. أنت تضمن أن المحتوى الذي تقدمه لا ينتهك حقوق أي طرف ثالث.',
+      order: 3
     },
     {
       id: 'limitations',
-      icon: XCircle,
+      icon: 'XCircle',
       title: 'القيود والمسؤوليات',
-      content: 'نحن لا نضمن دقة أو اكتمال أو فائدة أي معلومات على موقعنا. لن نكون مسؤولين عن أي أضرار مباشرة أو غير مباشرة ناتجة عن استخدامك لموقعنا. أنت تستخدم الموقع على مسؤوليتك الخاصة.'
+      content: 'نحن لا نضمن دقة أو اكتمال أو فائدة أي معلومات على موقعنا. لن نكون مسؤولين عن أي أضرار مباشرة أو غير مباشرة ناتجة عن استخدامك لموقعنا. أنت تستخدم الموقع على مسؤوليتك الخاصة.',
+      order: 4
     },
     {
       id: 'external-links',
-      icon: CheckCircle,
+      icon: 'CheckCircle',
       title: 'روابط لمواقع خارجية',
-      content: 'قد يحتوي موقعنا على روابط لمواقع خارجية. نحن لسنا مسؤولين عن محتوى أو ممارسات الخصوصية لهذه المواقع الخارجية. ننصحك بمراجعة سياسات الخصوصية وشروط الاستخدام لأي موقع خارجي تزوره.'
+      content: 'قد يحتوي موقعنا على روابط لمواقع خارجية. نحن لسنا مسؤولين عن محتوى أو ممارسات الخصوصية لهذه المواقع الخارجية. ننصحك بمراجعة سياسات الخصوصية وشروط الاستخدام لأي موقع خارجي تزوره.',
+      order: 5
     },
     {
       id: 'modifications',
-      icon: Globe,
+      icon: 'Globe',
       title: 'التعديلات على الشروط',
-      content: 'نحتفظ بالحق في تعديل أو تحديث هذه الشروط والأحكام في أي وقت. سيتم نشر أي تغييرات على هذه الصفحة. استمرار استخدامك للموقع بعد نشر التغييرات يعني موافقتك على الشروط المحدثة.'
+      content: 'نحتفظ بالحق في تعديل أو تحديث هذه الشروط والأحكام في أي وقت. سيتم نشر أي تغييرات على هذه الصفحة. استمرار استخدامك للموقع بعد نشر التغييرات يعني موافقتك على الشروط المحدثة.',
+      order: 6
     },
     {
       id: 'termination',
-      icon: FileText,
+      icon: 'FileText',
       title: 'إنهاء الاستخدام',
-      content: 'نحتفظ بالحق في إنهاء أو تعليق وصولك إلى موقعنا في أي وقت، دون إشعار مسبق، لأي سبب كان، بما في ذلك انتهاك هذه الشروط والأحكام.'
+      content: 'نحتفظ بالحق في إنهاء أو تعليق وصولك إلى موقعنا في أي وقت، دون إشعار مسبق، لأي سبب كان، بما في ذلك انتهاك هذه الشروط والأحكام.',
+      order: 7
     }
   ]
+
+  const getIconComponent = (iconName?: string) => {
+    if (!iconName) return FileText
+    const Icon = (Icons as unknown as Record<string, typeof FileText>)[iconName]
+    return Icon || FileText
+  }
+
+  const termsSections = pageData?.sections && pageData.sections.length > 0
+    ? pageData.sections.sort((a, b) => a.order - b.order)
+    : defaultSections
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -89,14 +142,29 @@ export default function TermsPage() {
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [termsSections])
+
+  if (loading) {
+    return (
+      <div className="page-container">
+        <PageHeader 
+          title={t('terms.title')} 
+          icon={FileText}
+          description={t('terms.description') || 'شروط وأحكام استخدام منصة سايبر تمساح'}
+        />
+        <div className="text-center py-16">
+          <p className="text-dark-400">جاري التحميل...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="page-container">
       <PageHeader 
-        title={t('terms.title')} 
+        title={pageData?.title || t('terms.title')} 
         icon={FileText}
-        description={t('terms.description') || 'شروط وأحكام استخدام منصة سايبر تمساح'}
+        description={pageData?.description || t('terms.description') || 'شروط وأحكام استخدام منصة سايبر تمساح'}
       />
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -109,7 +177,8 @@ export default function TermsPage() {
             </div>
             <nav className="space-y-2">
               {termsSections.map((section) => {
-                const Icon = section.icon
+                const iconName = typeof section.icon === 'string' ? section.icon : 'FileText'
+                const Icon = getIconComponent(iconName)
                 return (
                   <button
                     key={section.id}
@@ -152,7 +221,8 @@ export default function TermsPage() {
           {/* Terms Sections */}
           <article className="space-y-6">
             {termsSections.map((section, index) => {
-              const Icon = section.icon
+              const iconName = typeof section.icon === 'string' ? section.icon : 'FileText'
+              const Icon = getIconComponent(iconName)
               return (
                 <section 
                   key={section.id}

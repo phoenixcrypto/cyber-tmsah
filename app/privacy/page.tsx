@@ -1,71 +1,125 @@
 'use client'
 
-import { Shield, FileText, Lock, Eye, Cookie, Users, Database, Globe, List, ArrowUp } from 'lucide-react'
+import { Shield, FileText, List, ArrowUp } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 import { useState, useEffect } from 'react'
+import * as Icons from 'lucide-react'
+
+interface LegalSection {
+  id: string
+  icon: string
+  title: string
+  content: string
+  order: number
+}
+
+interface PrivacyPageData {
+  title: string
+  description: string
+  sections: LegalSection[]
+}
 
 export default function PrivacyPage() {
   const { t } = useLanguage()
   const [activeSection, setActiveSection] = useState<string | null>(null)
+  const [pageData, setPageData] = useState<PrivacyPageData | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const privacySections = [
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const res = await fetch('/api/pages/legal?type=privacy')
+        if (res.ok) {
+          const data = await res.json()
+          setPageData(data.data.page)
+        }
+      } catch (error) {
+        console.error('Error fetching privacy page:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPageData()
+  }, [])
+
+  // Fallback sections
+  const defaultSections: LegalSection[] = [
     {
       id: 'introduction',
-      icon: Shield,
+      icon: 'Shield',
       title: 'مقدمة',
-      content: 'نحن في منصة سايبر تمساح نولي أهمية كبيرة لخصوصيتك وحماية بياناتك الشخصية. تشرح هذه السياسة كيفية جمعنا واستخدامنا وحماية معلوماتك عند استخدام موقعنا. باستخدام موقعنا، فإنك توافق على ممارسات جمع المعلومات واستخدامها الموضحة في هذه السياسة.'
+      content: 'نحن في منصة سايبر تمساح نولي أهمية كبيرة لخصوصيتك وحماية بياناتك الشخصية. تشرح هذه السياسة كيفية جمعنا واستخدامنا وحماية معلوماتك عند استخدام موقعنا. باستخدام موقعنا، فإنك توافق على ممارسات جمع المعلومات واستخدامها الموضحة في هذه السياسة.',
+      order: 0
     },
     {
       id: 'data-collection',
-      icon: Database,
+      icon: 'Database',
       title: 'جمع المعلومات',
-      content: 'نقوم بجمع المعلومات التي تقدمها لنا مباشرة عند استخدامك لخدماتنا، مثل المعلومات التي تدخلها في نماذج الاتصال أو عند التسجيل في خدماتنا. قد نقوم أيضاً بجمع معلومات تلقائياً عند زيارتك لموقعنا، بما في ذلك عنوان IP، نوع المتصفح، صفحات الويب التي تزورها، والوقت والتاريخ.'
+      content: 'نقوم بجمع المعلومات التي تقدمها لنا مباشرة عند استخدامك لخدماتنا، مثل المعلومات التي تدخلها في نماذج الاتصال أو عند التسجيل في خدماتنا. قد نقوم أيضاً بجمع معلومات تلقائياً عند زيارتك لموقعنا، بما في ذلك عنوان IP، نوع المتصفح، صفحات الويب التي تزورها، والوقت والتاريخ.',
+      order: 1
     },
     {
       id: 'cookies',
-      icon: Cookie,
+      icon: 'Cookie',
       title: 'ملفات تعريف الارتباط (Cookies)',
-      content: 'نستخدم ملفات تعريف الارتباط لتوفير تجربة أفضل لك وتحسين خدماتنا. قد نستخدم أيضاً خدمات طرف ثالث مثل Google AdSense التي تستخدم ملفات تعريف الارتباط لعرض الإعلانات المخصصة بناءً على زياراتك لمواقعنا ومواقع أخرى على الإنترنت.'
+      content: 'نستخدم ملفات تعريف الارتباط لتوفير تجربة أفضل لك وتحسين خدماتنا. قد نستخدم أيضاً خدمات طرف ثالث مثل Google AdSense التي تستخدم ملفات تعريف الارتباط لعرض الإعلانات المخصصة بناءً على زياراتك لمواقعنا ومواقع أخرى على الإنترنت.',
+      order: 2
     },
     {
       id: 'data-usage',
-      icon: Eye,
+      icon: 'Eye',
       title: 'استخدام المعلومات',
-      content: 'نستخدم المعلومات التي نجمعها لتقديم وتحسين خدماتنا، والرد على استفساراتك، وإرسال التحديثات المهمة، وتحليل كيفية استخدام موقعنا. قد نستخدم أيضاً معلوماتك لأغراض التسويق والترويج، ولكن يمكنك إلغاء الاشتراك في أي وقت.'
+      content: 'نستخدم المعلومات التي نجمعها لتقديم وتحسين خدماتنا، والرد على استفساراتك، وإرسال التحديثات المهمة، وتحليل كيفية استخدام موقعنا. قد نستخدم أيضاً معلوماتك لأغراض التسويق والترويج، ولكن يمكنك إلغاء الاشتراك في أي وقت.',
+      order: 3
     },
     {
       id: 'data-protection',
-      icon: Lock,
+      icon: 'Lock',
       title: 'حماية المعلومات',
-      content: 'نحن ملتزمون بحماية معلوماتك الشخصية. نستخدم تدابير أمنية تقنية وإدارية مناسبة لحماية معلوماتك من الوصول غير المصرح به أو التغيير أو الكشف أو التدمير. ومع ذلك، لا يمكن ضمان الأمان المطلق لأي معلومات يتم إرسالها عبر الإنترنت.'
+      content: 'نحن ملتزمون بحماية معلوماتك الشخصية. نستخدم تدابير أمنية تقنية وإدارية مناسبة لحماية معلوماتك من الوصول غير المصرح به أو التغيير أو الكشف أو التدمير. ومع ذلك، لا يمكن ضمان الأمان المطلق لأي معلومات يتم إرسالها عبر الإنترنت.',
+      order: 4
     },
     {
       id: 'data-sharing',
-      icon: Users,
+      icon: 'Users',
       title: 'مشاركة المعلومات',
-      content: 'لا نبيع معلوماتك الشخصية لأطراف ثالثة. قد نشارك معلوماتك مع مزودي الخدمات الموثوقين الذين يساعدوننا في تشغيل موقعنا، بشرط أن يحافظوا على سرية هذه المعلومات. قد نشارك أيضاً معلومات مجمعة وغير شخصية لأغراض إحصائية أو تحليلية.'
+      content: 'لا نبيع معلوماتك الشخصية لأطراف ثالثة. قد نشارك معلوماتك مع مزودي الخدمات الموثوقين الذين يساعدوننا في تشغيل موقعنا، بشرط أن يحافظوا على سرية هذه المعلومات. قد نشارك أيضاً معلومات مجمعة وغير شخصية لأغراض إحصائية أو تحليلية.',
+      order: 5
     },
     {
       id: 'adsense',
-      icon: Globe,
+      icon: 'Globe',
       title: 'إعلانات Google AdSense',
-      content: 'يستخدم موقعنا Google AdSense لعرض الإعلانات. قد تستخدم Google ملفات تعريف الارتباط لعرض إعلانات مخصصة بناءً على زياراتك لموقعنا ومواقع أخرى. يمكنك إلغاء الاشتراك في الإعلانات المخصصة من Google من خلال زيارة إعدادات الإعلانات في Google.'
+      content: 'يستخدم موقعنا Google AdSense لعرض الإعلانات. قد تستخدم Google ملفات تعريف الارتباط لعرض إعلانات مخصصة بناءً على زياراتك لموقعنا ومواقع أخرى. يمكنك إلغاء الاشتراك في الإعلانات المخصصة من Google من خلال زيارة إعدادات الإعلانات في Google.',
+      order: 6
     },
     {
       id: 'user-rights',
-      icon: FileText,
+      icon: 'FileText',
       title: 'حقوقك',
-      content: 'لديك الحق في الوصول إلى معلوماتك الشخصية وتصحيحها أو حذفها أو تقييد معالجتها. يمكنك أيضاً الاعتراض على معالجة معلوماتك أو طلب نقلها. لتنفيذ أي من هذه الحقوق، يرجى الاتصال بنا عبر نموذج الاتصال الموجود على الموقع.'
+      content: 'لديك الحق في الوصول إلى معلوماتك الشخصية وتصحيحها أو حذفها أو تقييد معالجتها. يمكنك أيضاً الاعتراض على معالجة معلوماتك أو طلب نقلها. لتنفيذ أي من هذه الحقوق، يرجى الاتصال بنا عبر نموذج الاتصال الموجود على الموقع.',
+      order: 7
     },
     {
       id: 'changes',
-      icon: Shield,
+      icon: 'Shield',
       title: 'التغييرات على سياسة الخصوصية',
-      content: 'نحتفظ بالحق في تحديث أو تعديل سياسة الخصوصية هذه في أي وقت. سيتم نشر أي تغييرات على هذه الصفحة مع تحديث تاريخ "آخر تحديث". ننصحك بمراجعة هذه السياسة بانتظام للبقاء على اطلاع بآخر التحديثات.'
+      content: 'نحتفظ بالحق في تحديث أو تعديل سياسة الخصوصية هذه في أي وقت. سيتم نشر أي تغييرات على هذه الصفحة مع تحديث تاريخ "آخر تحديث". ننصحك بمراجعة هذه السياسة بانتظام للبقاء على اطلاع بآخر التحديثات.',
+      order: 8
     }
   ]
+
+  const getIconComponent = (iconName?: string) => {
+    if (!iconName) return Shield
+    const Icon = (Icons as unknown as Record<string, typeof Shield>)[iconName]
+    return Icon || Shield
+  }
+
+  const privacySections = pageData?.sections && pageData.sections.length > 0
+    ? pageData.sections.sort((a, b) => a.order - b.order)
+    : defaultSections
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -95,14 +149,29 @@ export default function PrivacyPage() {
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [privacySections])
+
+  if (loading) {
+    return (
+      <div className="page-container">
+        <PageHeader 
+          title={t('privacy.title')} 
+          icon={Shield}
+          description={t('privacy.description') || 'سياسة الخصوصية لمنصة سايبر تمساح - كيف نحمي بياناتك'}
+        />
+        <div className="text-center py-16">
+          <p className="text-dark-400">جاري التحميل...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="page-container">
       <PageHeader 
-        title={t('privacy.title')} 
+        title={pageData?.title || t('privacy.title')} 
         icon={Shield}
-        description={t('privacy.description') || 'سياسة الخصوصية لمنصة سايبر تمساح - كيف نحمي بياناتك'}
+        description={pageData?.description || t('privacy.description') || 'سياسة الخصوصية لمنصة سايبر تمساح - كيف نحمي بياناتك'}
       />
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -115,7 +184,8 @@ export default function PrivacyPage() {
             </div>
             <nav className="space-y-2">
               {privacySections.map((section) => {
-                const Icon = section.icon
+                const iconName = typeof section.icon === 'string' ? section.icon : 'Shield'
+                const Icon = getIconComponent(iconName)
                 return (
                   <button
                     key={section.id}
@@ -144,7 +214,8 @@ export default function PrivacyPage() {
           {/* Privacy Sections */}
           <article className="space-y-6">
             {privacySections.map((section, index) => {
-              const Icon = section.icon
+              const iconName = typeof section.icon === 'string' ? section.icon : 'Shield'
+              const Icon = getIconComponent(iconName)
               return (
                 <section 
                   key={section.id}
