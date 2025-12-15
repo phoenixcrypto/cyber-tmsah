@@ -58,10 +58,17 @@ export default function QuickActions({ delay = 0 }: QuickActionsProps) {
   return (
     <motion.div
       className="admin-quick-actions"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay }}
-      whileHover={{ y: -5 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ 
+        duration: 0.4, 
+        delay,
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
       <div className="admin-quick-actions-bg"></div>
       <div className="admin-quick-actions-glow"></div>

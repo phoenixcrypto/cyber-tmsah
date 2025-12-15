@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Save, Download, Link as LinkIcon, Video, Tag } from 'lucide-react'
+import { X, Save, Download, Link as LinkIcon, Video, Tag, Sparkles } from 'lucide-react'
 
 interface Download {
   id?: string
@@ -228,10 +228,45 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
 
               {/* Description En */}
               <div className="admin-modal-form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="admin-modal-form-label">
-                  <Download className="w-4 h-4" />
-                  <span>الوصف (إنجليزي)</span>
-                </label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label className="admin-modal-form-label" style={{ margin: 0 }}>
+                    <Download className="w-4 h-4" />
+                    <span>الوصف (إنجليزي)</span>
+                  </label>
+                  <motion.button
+                    type="button"
+                    onClick={async () => {
+                      if (!formData['nameEn']?.trim() && !formData['name']?.trim()) {
+                        alert('يرجى إدخال اسم البرنامج أولاً')
+                        return
+                      }
+                      try {
+                        const res = await fetch('/api/ai/generate-description', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            title: formData['nameEn'] || formData['name'],
+                            type: 'download',
+                            language: 'en'
+                          })
+                        })
+                        const data = await res.json()
+                        if (data.success) {
+                          setFormData({ ...formData, descriptionEn: data.description })
+                        }
+                      } catch (error) {
+                        console.error('Error generating description:', error)
+                      }
+                    }}
+                    className="admin-generate-description-btn"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    disabled={!formData['nameEn']?.trim() && !formData['name']?.trim()}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>توليد وصف</span>
+                  </motion.button>
+                </div>
                 <textarea
                   value={formData['descriptionEn']}
                   onChange={(e) => {

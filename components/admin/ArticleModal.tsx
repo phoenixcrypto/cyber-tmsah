@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Save, FileText, User, Tag, Calendar, BookOpen } from 'lucide-react'
+import { X, Save, FileText, User, Tag, Calendar, BookOpen, Sparkles } from 'lucide-react'
 import RichTextEditor from '@/components/RichTextEditor'
 
 interface Article {
@@ -325,10 +325,45 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
 
               {/* Excerpt */}
               <div className="admin-modal-form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="admin-modal-form-label">
-                  <FileText className="w-4 h-4" />
-                  <span>الملخص (عربي)</span>
-                </label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label className="admin-modal-form-label" style={{ margin: 0 }}>
+                    <FileText className="w-4 h-4" />
+                    <span>الملخص (عربي)</span>
+                  </label>
+                  <motion.button
+                    type="button"
+                    onClick={async () => {
+                      if (!formData['title']?.trim()) {
+                        alert('يرجى إدخال عنوان المقال أولاً')
+                        return
+                      }
+                      try {
+                        const res = await fetch('/api/ai/generate-description', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            title: formData['title'],
+                            type: 'article',
+                            language: 'ar'
+                          })
+                        })
+                        const data = await res.json()
+                        if (data.success) {
+                          setFormData({ ...formData, excerpt: data.description })
+                        }
+                      } catch (error) {
+                        console.error('Error generating description:', error)
+                      }
+                    }}
+                    className="admin-generate-description-btn"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    disabled={!formData['title']?.trim()}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>توليد وصف</span>
+                  </motion.button>
+                </div>
                 <textarea
                   value={formData['excerpt'] || ''}
                   onChange={(e) => {
@@ -344,10 +379,45 @@ export default function ArticleModal({ isOpen, onClose, onSave, article, materia
 
               {/* Excerpt En */}
               <div className="admin-modal-form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="admin-modal-form-label">
-                  <FileText className="w-4 h-4" />
-                  <span>الملخص (إنجليزي)</span>
-                </label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label className="admin-modal-form-label" style={{ margin: 0 }}>
+                    <FileText className="w-4 h-4" />
+                    <span>الملخص (إنجليزي)</span>
+                  </label>
+                  <motion.button
+                    type="button"
+                    onClick={async () => {
+                      if (!formData['titleEn']?.trim() && !formData['title']?.trim()) {
+                        alert('يرجى إدخال عنوان المقال أولاً')
+                        return
+                      }
+                      try {
+                        const res = await fetch('/api/ai/generate-description', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            title: formData['titleEn'] || formData['title'],
+                            type: 'article',
+                            language: 'en'
+                          })
+                        })
+                        const data = await res.json()
+                        if (data.success) {
+                          setFormData({ ...formData, excerptEn: data.description })
+                        }
+                      } catch (error) {
+                        console.error('Error generating description:', error)
+                      }
+                    }}
+                    className="admin-generate-description-btn"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    disabled={!formData['titleEn']?.trim() && !formData['title']?.trim()}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>توليد وصف</span>
+                  </motion.button>
+                </div>
                 <textarea
                   value={formData['excerptEn'] || ''}
                   onChange={(e) => {
