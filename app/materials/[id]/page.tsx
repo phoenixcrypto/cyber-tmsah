@@ -4,21 +4,18 @@ import Link from 'next/link'
 import { ArrowLeft, BookOpen, Clock, User, Calendar, FileText } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useState, useEffect } from 'react'
 
-// Static articles data - no API calls
-interface StaticArticle {
+interface Article {
   id: string
   title: string
+  status?: string
+  excerpt?: string
+  description?: string
+  duration?: string
+  publishedAt?: string | Date
+  type?: string
   [key: string]: unknown
-}
-const staticArticles: Record<string, StaticArticle[]> = {
-  'applied-physics': [],
-  'mathematics': [],
-  'entrepreneurship': [],
-  'information-technology': [],
-  'database-systems': [],
-  'english-language': [],
-  'information-systems': []
 }
 
 // Subject data mapping
@@ -71,8 +68,49 @@ export default function SubjectPage() {
   const { t } = useLanguage()
   const params = useParams()
   const subjectId = params['id'] as string
-  const articles = staticArticles[subjectId] || []
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
   const subject = subjectData[subjectId as keyof typeof subjectData]
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true)
+        // First, get the material ID from the slug
+        const materialsRes = await fetch('/api/materials')
+        const materialsData = await materialsRes.json()
+        const materials = materialsData.data?.materials || []
+        const material = materials.find((m: { id: string }) => m.id === subjectId)
+        
+        if (!material) {
+          setArticles([])
+          setLoading(false)
+          return
+        }
+
+        // Fetch articles for this material
+        const articlesRes = await fetch('/api/articles')
+        const articlesData = await articlesRes.json()
+        const allArticles = articlesData.data?.articles || []
+        
+        // Filter articles by materialId and only published
+        const materialArticles = allArticles.filter((article: Article) => {
+          return article['materialId'] === subjectId && article['status'] === 'published'
+        })
+        
+        setArticles(materialArticles)
+      } catch (error) {
+        console.error('Error fetching articles:', error)
+        setArticles([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (subjectId) {
+      fetchArticles()
+    }
+  }, [subjectId])
 
   if (!subject) {
     return (
@@ -120,7 +158,9 @@ export default function SubjectPage() {
               </div>
               <div className="flex items-center gap-2 px-4 py-2 bg-cyber-dark/50 rounded-lg border border-cyber-neon/20">
                 <FileText className="w-5 h-5 text-cyber-green" />
-                <span className="text-dark-200 font-semibold">{articles.length} {articles.length === 1 ? t('materials.article') : t('materials.articles')}</span>
+                <span className="text-dark-200 font-semibold">
+                  {loading ? '...' : articles.length} {articles.length === 1 ? t('materials.article') : t('materials.articles')}
+                </span>
               </div>
             </div>
           </div>
@@ -128,7 +168,12 @@ export default function SubjectPage() {
 
         {/* Lectures List */}
         <div className="space-y-4">
-          {articles.length > 0 ? articles.map((article, index) => (
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyber-neon mx-auto mb-4"></div>
+              <p className="text-dark-300">جاري التحميل...</p>
+            </div>
+          ) : articles.length > 0 ? articles.map((article, index) => (
             <div 
               key={String(article['id'])}
               className="enhanced-card p-6 hover:scale-[1.02] transition-all duration-300 animate-slide-up-delayed"

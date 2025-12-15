@@ -41,18 +41,24 @@ export async function GET(request: NextRequest) {
     ])
 
     // Calculate statistics
+    // Get published articles count (only count articles with status === 'published')
+    const publishedArticles = articlesSnapshot.docs.filter(
+      (doc) => {
+        const data = doc.data()
+        return data['status'] === 'published'
+      }
+    ).length
+    
+    // Count only published articles for totalArticles
+    const publishedArticlesCount = publishedArticles
+    
     const totalUsers = usersSnapshot.size
     const totalMaterials = materialsSnapshot.size
-    const totalArticles = articlesSnapshot.size
+    const totalArticles = publishedArticlesCount // Only published articles
     const totalSchedule = scheduleSnapshot.size
     const totalDownloads = downloadsSnapshot.size
     const totalNews = newsSnapshot.size
     const totalContent = totalMaterials + totalArticles + totalNews
-
-    // Get published articles count
-    const publishedArticles = articlesSnapshot.docs.filter(
-      (doc) => doc.data()['status'] === 'published'
-    ).length
 
     // Get recent login attempts
     const recentAttempts = loginAttemptsSnapshot.docs.map((doc) => {

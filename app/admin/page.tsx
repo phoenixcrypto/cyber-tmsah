@@ -182,8 +182,8 @@ export default function AdminDashboard() {
 
     fetchMetrics()
     
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchMetrics, 30000)
+    // Refresh every 5 minutes (instead of 30 seconds to prevent reload issues)
+    const interval = setInterval(fetchMetrics, 300000)
     return () => clearInterval(interval)
   }, [])
 
@@ -233,8 +233,8 @@ export default function AdminDashboard() {
 
     fetchActivities()
     
-    // Refresh activities every 30 seconds
-    const interval = setInterval(fetchActivities, 30000)
+    // Refresh activities every 5 minutes (instead of 30 seconds)
+    const interval = setInterval(fetchActivities, 300000)
     return () => clearInterval(interval)
   }, [])
 
@@ -266,6 +266,7 @@ export default function AdminDashboard() {
         </div>
         <motion.button
           className="admin-page-action-btn"
+          onClick={() => window.open('/api/admin/stats', '_blank')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

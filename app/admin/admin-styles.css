@@ -351,10 +351,18 @@
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--dark-400);
-  width: 20px;
-  height: 20px;
+  color: var(--primary-red);
+  width: 22px;
+  height: 22px;
   pointer-events: none;
+  opacity: 0.7;
+  transition: var(--smooth-transition);
+  z-index: 1;
+}
+
+.admin-navbar-search-input:focus ~ .admin-navbar-search-icon {
+  color: var(--primary-red);
+  opacity: 1;
 }
 
 .admin-navbar-search-input {
@@ -489,7 +497,9 @@
   top: calc(100% + 1rem);
   right: 0;
   left: auto;
-  width: 360px;
+  width: 420px;
+  max-width: 90vw;
+  max-height: 600px;
   background: linear-gradient(135deg, rgba(23, 23, 23, 0.98) 0%, rgba(16, 16, 16, 0.98) 100%);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
@@ -675,7 +685,8 @@
   top: calc(100% + 1rem);
   right: 0;
   left: auto;
-  width: 280px;
+  width: 320px;
+  max-width: 90vw;
   background: linear-gradient(135deg, rgba(23, 23, 23, 0.98) 0%, rgba(16, 16, 16, 0.98) 100%);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
