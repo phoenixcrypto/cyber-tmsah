@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Save, BookOpen, Palette, Type, Sparkles } from 'lucide-react'
+import { X, Save, BookOpen, Palette, Type, Sparkles, Wand2 } from 'lucide-react'
 
 interface Material {
   id?: string
@@ -319,10 +319,48 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
 
               {/* Icon */}
               <div className="admin-modal-form-group">
-                <label className="admin-modal-form-label">
-                  <BookOpen className="w-4 h-4" />
-                  <span>الأيقونة</span>
-                </label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label className="admin-modal-form-label" style={{ margin: 0 }}>
+                    <BookOpen className="w-4 h-4" />
+                    <span>الأيقونة</span>
+                  </label>
+                  <motion.button
+                    type="button"
+                    onClick={async () => {
+                      if (!formData['title']?.trim()) {
+                        alert('يرجى إدخال اسم المادة أولاً')
+                        return
+                      }
+                      try {
+                        const res = await fetch('/api/ai/detect-icon-color', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            title: formData['title'],
+                            description: formData['description'] || ''
+                          })
+                        })
+                        const data = await res.json()
+                        if (data.success) {
+                          setFormData({ 
+                            ...formData, 
+                            icon: data.icon,
+                            color: data.color 
+                          })
+                        }
+                      } catch (error) {
+                        console.error('Error detecting icon and color:', error)
+                      }
+                    }}
+                    className="admin-auto-detect-btn"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    disabled={!formData['title']?.trim()}
+                  >
+                    <Wand2 className="w-4 h-4" />
+                    <span>تحديد تلقائي</span>
+                  </motion.button>
+                </div>
                 <select
                   value={formData['icon']}
                   onChange={(e) => {
@@ -342,10 +380,48 @@ export default function MaterialModal({ isOpen, onClose, onSave, material }: Mat
 
               {/* Color */}
               <div className="admin-modal-form-group">
-                <label className="admin-modal-form-label">
-                  <Palette className="w-4 h-4" />
-                  <span>اللون</span>
-                </label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <label className="admin-modal-form-label" style={{ margin: 0 }}>
+                    <Palette className="w-4 h-4" />
+                    <span>اللون</span>
+                  </label>
+                  <motion.button
+                    type="button"
+                    onClick={async () => {
+                      if (!formData['title']?.trim()) {
+                        alert('يرجى إدخال اسم المادة أولاً')
+                        return
+                      }
+                      try {
+                        const res = await fetch('/api/ai/detect-icon-color', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            title: formData['title'],
+                            description: formData['description'] || ''
+                          })
+                        })
+                        const data = await res.json()
+                        if (data.success) {
+                          setFormData({ 
+                            ...formData, 
+                            icon: data.icon,
+                            color: data.color 
+                          })
+                        }
+                      } catch (error) {
+                        console.error('Error detecting icon and color:', error)
+                      }
+                    }}
+                    className="admin-auto-detect-btn"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    disabled={!formData['title']?.trim()}
+                  >
+                    <Wand2 className="w-4 h-4" />
+                    <span>تحديد تلقائي</span>
+                  </motion.button>
+                </div>
                 <select
                   value={formData['color']}
                   onChange={(e) => {
