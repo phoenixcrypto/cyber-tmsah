@@ -54,7 +54,14 @@ export default function AdminContactPage() {
       const res = await fetch('/api/pages/contact')
       if (res.ok) {
         const data = await res.json()
-        setPage(data.data.page || page)
+        if (data.data?.page) {
+          setPage(data.data.page)
+        } else if (data.page) {
+          setPage(data.page)
+        }
+      } else {
+        const errorData = await res.json().catch(() => ({}))
+        console.error('Failed to fetch contact page:', errorData)
       }
     } catch (error) {
       console.error('Error fetching contact page:', error)

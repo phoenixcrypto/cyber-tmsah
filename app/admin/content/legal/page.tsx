@@ -36,17 +36,20 @@ function AdminLegalPageContent() {
   const [editingSection, setEditingSection] = useState<LegalSection | null>(null)
   const [isSectionModalOpen, setIsSectionModalOpen] = useState(false)
 
-  useEffect(() => {
-    fetchPage()
-  }, [type])
-
   const fetchPage = async () => {
     try {
       setLoading(true)
       const res = await fetch(`/api/pages/legal?type=${type}`)
       if (res.ok) {
         const data = await res.json()
-        setPage(data.data.page || page)
+        if (data.data?.page) {
+          setPage(data.data.page)
+        } else if (data.page) {
+          setPage(data.page)
+        }
+      } else {
+        const errorData = await res.json().catch(() => ({}))
+        console.error('Failed to fetch legal page:', errorData)
       }
     } catch (error) {
       console.error('Error fetching legal page:', error)
