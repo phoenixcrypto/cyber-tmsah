@@ -6,8 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Palette, Download, Trash2, Check, X, RefreshCw } from 'lucide-react'
-import { getAdminBasePath } from '@/lib/utils/admin-path'
+import { Palette, Trash2, Check, RefreshCw } from 'lucide-react'
 
 interface Theme {
   name: string
@@ -21,7 +20,6 @@ export default function ThemesPage() {
   const [themes, setThemes] = useState<Theme[]>([])
   const [loading, setLoading] = useState(true)
   const [activating, setActivating] = useState<string | null>(null)
-  const basePath = getAdminBasePath()
 
   useEffect(() => {
     fetchThemes()

@@ -5,7 +5,6 @@ import { logger } from '@/lib/utils/logger'
 import { FieldValue } from 'firebase-admin/firestore'
 import { getAuthUser } from '@/lib/middleware/auth'
 import bcrypt from 'bcryptjs'
-import type { ErrorWithCode } from '@/lib/types'
 
 /**
  * PUT /api/admin/profile
@@ -90,8 +89,7 @@ export async function PUT(request: NextRequest) {
       }
     })
   } catch (error) {
-    const err = error as ErrorWithCode
-    await logger.error('Update profile error', err as Error)
+    await logger.error('Update profile error', error as Error)
     return errorResponse('حدث خطأ أثناء تحديث الملف الشخصي', 500)
   }
 }

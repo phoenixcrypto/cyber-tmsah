@@ -2,7 +2,7 @@
  * Social Media Integration - Auto-posting
  */
 
-import { db } from '@/lib/db/firebase'
+import { getFirestoreDB } from '@/lib/db/firebase'
 
 export interface SocialMediaConfig {
   platform: 'facebook' | 'twitter' | 'linkedin'
@@ -18,10 +18,11 @@ export interface SocialMediaConfig {
 export async function postToFacebook(
   content: string,
   link?: string,
-  imageUrl?: string
+  _imageUrl?: string
 ): Promise<boolean> {
   try {
     // Get Facebook config
+    const db = getFirestoreDB()
     const configDoc = await db.collection('social_media_config').doc('facebook').get()
     const config = configDoc.data() as SocialMediaConfig
 
@@ -57,10 +58,11 @@ export async function postToFacebook(
  */
 export async function postToTwitter(
   content: string,
-  imageUrl?: string
+  _imageUrl?: string
 ): Promise<boolean> {
   try {
     // Get Twitter config
+    const db = getFirestoreDB()
     const configDoc = await db.collection('social_media_config').doc('twitter').get()
     const config = configDoc.data() as SocialMediaConfig
 
@@ -83,10 +85,11 @@ export async function postToTwitter(
  */
 export async function postToLinkedIn(
   content: string,
-  link?: string
+  _link?: string
 ): Promise<boolean> {
   try {
     // Get LinkedIn config
+    const db = getFirestoreDB()
     const configDoc = await db.collection('social_media_config').doc('linkedin').get()
     const config = configDoc.data() as SocialMediaConfig
 
@@ -123,18 +126,19 @@ export async function autoPostToSocialMedia(
   }
 
   const postContent = content.excerpt || content.title || ''
-  const postLink = `${process.env.NEXT_PUBLIC_BASE_URL}/${contentType === 'article' ? 'articles' : 'news'}/${contentId}`
+  const baseUrl = process.env['NEXT_PUBLIC_BASE_URL'] || ''
+  const postLink = `${baseUrl}/${contentType === 'article' ? 'articles' : 'news'}/${contentId}`
 
   for (const platform of platforms) {
     switch (platform) {
       case 'facebook':
-        results.facebook = await postToFacebook(postContent, postLink)
+        results['facebook'] = await postToFacebook(postContent, postLink)
         break
       case 'twitter':
-        results.twitter = await postToTwitter(postContent)
+        results['twitter'] = await postToTwitter(postContent)
         break
       case 'linkedin':
-        results.linkedin = await postToLinkedIn(postContent, postLink)
+        results['linkedin'] = await postToLinkedIn(postContent, postLink)
         break
     }
   }

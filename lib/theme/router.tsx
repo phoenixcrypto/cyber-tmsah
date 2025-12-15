@@ -2,9 +2,8 @@
  * Theme Router - Routes theme pages
  */
 
-import React from 'react'
-import { themeManager } from './manager'
 import { loadThemePage } from './loader'
+import type React from 'react'
 
 export interface ThemeRoute {
   path: string
@@ -19,7 +18,7 @@ export class ThemeRouter {
    * Register a route
    */
   registerRoute(path: string, page: string, layout?: string): void {
-    this.routes.set(path, { path, page, layout })
+    this.routes.set(path, { path, page, ...(layout && { layout }) })
   }
 
   /**

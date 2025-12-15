@@ -4,8 +4,7 @@
 
 import { Server as SocketIOServer } from 'socket.io'
 import type { Server as HTTPServer } from 'http'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { verifyAuth } from '@/lib/middleware/auth'
+import { getAuthUser } from '@/lib/middleware/auth'
 
 export interface RealtimeEvent {
   type: string
@@ -24,7 +23,7 @@ class RealtimeServer {
     this.io = new SocketIOServer(server, {
       path: '/api/realtime',
       cors: {
-        origin: process.env.NEXT_PUBLIC_BASE_URL || '*',
+        origin: process.env['NEXT_PUBLIC_BASE_URL'] || '*',
         methods: ['GET', 'POST'],
       },
     })
@@ -36,16 +35,31 @@ class RealtimeServer {
       // Handle authentication
       socket.on('authenticate', async (token: string) => {
         try {
-          // Verify token
-          const authResult = await verifyAuth({
-            headers: {
-              authorization: `Bearer ${token}`,
+          // Verify token - create a mock request for getAuthUser
+          const mockRequest = {
+            cookies: {
+              get: (name: string) => {
+                if (name === 'admin-token') {
+                  return { value: token }
+                }
+                return null
+              },
             },
-          } as any)
+            headers: {
+              get: (name: string) => {
+                if (name === 'authorization') {
+                  return `Bearer ${token}`
+                }
+                return null
+              },
+            },
+          } as any
 
-          if (authResult.success) {
+          const user = await getAuthUser(mockRequest)
+
+          if (user) {
             socket.data.authenticated = true
-            socket.data.userId = authResult.userId
+            socket.data.userId = user.userId
             socket.emit('authenticated', { success: true })
           } else {
             socket.emit('authenticated', { success: false })
@@ -152,4 +166,3 @@ export function broadcastAdminUpdate(data: any) {
     timestamp: Date.now(),
   })
 }
-

@@ -2,7 +2,7 @@
  * Collaboration Features - Comments System
  */
 
-import { db } from '@/lib/db/firebase'
+import { getFirestoreDB } from '@/lib/db/firebase'
 
 export interface Comment {
   id: string
@@ -34,6 +34,7 @@ export async function getComments(
   }
 ): Promise<Comment[]> {
   try {
+    const db = getFirestoreDB()
     let query = db
       .collection('comments')
       .where('contentId', '==', contentId)
@@ -62,12 +63,15 @@ export async function getComments(
     }
 
     const snapshot = await query.orderBy('createdAt', 'desc').get()
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate() || new Date(),
-      updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-    })) as Comment[]
+    return snapshot.docs.map((doc) => {
+      const data = doc.data()
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data['createdAt']?.toDate() || new Date(),
+        updatedAt: data['updatedAt']?.toDate() || new Date(),
+      }
+    }) as Comment[]
   } catch (error) {
     console.error('Error fetching comments:', error)
     return []
@@ -100,6 +104,7 @@ export async function createComment(
       updatedAt: new Date(),
     }
 
+    const db = getFirestoreDB()
     const docRef = await db.collection('comments').add(commentData)
 
     return {
@@ -120,6 +125,7 @@ export async function updateComment(
   updates: Partial<Comment>
 ): Promise<boolean> {
   try {
+    const db = getFirestoreDB()
     await db.collection('comments').doc(commentId).update({
       ...updates,
       updatedAt: new Date(),
@@ -136,6 +142,7 @@ export async function updateComment(
  */
 export async function deleteComment(commentId: string): Promise<boolean> {
   try {
+    const db = getFirestoreDB()
     await db.collection('comments').doc(commentId).delete()
     return true
   } catch (error) {
@@ -153,6 +160,7 @@ export async function toggleCommentReaction(
   reaction: 'like' | 'dislike'
 ): Promise<boolean> {
   try {
+    const db = getFirestoreDB()
     const commentRef = db.collection('comments').doc(commentId)
     const commentDoc = await commentRef.get()
 
@@ -161,11 +169,11 @@ export async function toggleCommentReaction(
     }
 
     const comment = commentDoc.data()
-    const reactions = comment?.reactions || {}
+    const reactions = (comment?.['reactions'] as Record<string, string>) || {}
     const userReaction = reactions[userId]
 
-    let likes = comment?.likes || 0
-    let dislikes = comment?.dislikes || 0
+    let likes = (comment?.['likes'] as number) || 0
+    let dislikes = (comment?.['dislikes'] as number) || 0
 
     if (userReaction === reaction) {
       // Remove reaction

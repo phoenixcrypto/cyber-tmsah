@@ -54,7 +54,7 @@ async function generateHomeSEO(): Promise<SEOData> {
       '@type': 'WebSite',
       name: 'Cyber TMSAH',
       description: 'المنصة الأكاديمية الشاملة',
-      url: process.env.NEXT_PUBLIC_BASE_URL || 'https://cyber-tmsah.site',
+      url: process.env['NEXT_PUBLIC_BASE_URL'] || 'https://cyber-tmsah.site',
     },
   }
 }
@@ -139,7 +139,7 @@ export async function generateSitemap(): Promise<string> {
   const materials = await getMaterials()
   const pages = await getPages({ status: 'published' })
   
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://cyber-tmsah.site'
+  const baseUrl = process.env['NEXT_PUBLIC_BASE_URL'] || 'https://cyber-tmsah.site'
   
   const urls = [
     { loc: baseUrl, changefreq: 'daily', priority: '1.0' },
@@ -193,7 +193,7 @@ ${urls.map((url) => `  <url>
  * Generate robots.txt
  */
 export function generateRobotsTxt(): string {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://cyber-tmsah.site'
+  const baseUrl = process.env['NEXT_PUBLIC_BASE_URL'] || 'https://cyber-tmsah.site'
   
   return `User-agent: *
 Allow: /

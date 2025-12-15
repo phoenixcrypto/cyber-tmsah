@@ -3,7 +3,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyAuth } from '@/lib/middleware/auth'
+import { getAuthUser } from '@/lib/middleware/auth'
 import {
   generateTitleSuggestions,
   generateTagSuggestions,
@@ -15,8 +15,8 @@ import {
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication
-    const authResult = await verifyAuth(request)
-    if (!authResult.success) {
+    const user = await getAuthUser(request)
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

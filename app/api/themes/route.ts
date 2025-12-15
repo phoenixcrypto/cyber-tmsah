@@ -4,20 +4,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { themeManager } from '@/lib/theme/manager'
-import { verifyAuth } from '@/lib/middleware/auth'
+import { getAuthUser } from '@/lib/middleware/auth'
 
-// GET /api/themes - Get all themes
-export async function GET(request: NextRequest) {
+// GET /api/themes - Get all themes (public endpoint)
+export async function GET(_request: NextRequest) {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth(request)
-    if (!authResult.success) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
     const themes = await themeManager.getThemes()
     const activeTheme = await themeManager.getActiveTheme()
 
@@ -41,8 +32,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication
-    const authResult = await verifyAuth(request)
-    if (!authResult.success) {
+    const user = await getAuthUser(request)
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

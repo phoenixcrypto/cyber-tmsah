@@ -3,23 +3,17 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Edit, Trash2, CheckCircle2, XCircle, Ban } from 'lucide-react'
+import type { User } from '@/lib/types'
 
-interface User {
-  id: string
-  name: string
-  email: string | null
-  username: string
-  role: 'admin' | 'editor' | 'viewer'
-  lastLogin: string | null
-  createdAt: string
+interface UserWithStatus extends User {
   status?: 'online' | 'offline' | 'banned' // Optional, calculated from lastLogin
 }
 
 interface UserTableProps {
-  users: User[]
+  users: UserWithStatus[]
   selectedUsers: string[]
   onSelectionChange: (ids: string[]) => void
-  onEdit: (user: User) => void
+  onEdit: (user: UserWithStatus) => void
   onDelete: (userId: string) => void
 }
 
@@ -30,7 +24,7 @@ export default function UserTable({
   onEdit,
   onDelete,
 }: UserTableProps) {
-  const [sortField, setSortField] = useState<keyof User>('createdAt')
+  const [sortField, setSortField] = useState<keyof UserWithStatus>('createdAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [page, setPage] = useState(1)
   const [rowsPerPage] = useState(10)
@@ -49,7 +43,7 @@ export default function UserTable({
   const paginatedUsers = sortedUsers.slice((page - 1) * rowsPerPage, page * rowsPerPage)
   const totalPages = Math.ceil(sortedUsers.length / rowsPerPage)
 
-  const handleSort = (field: keyof User) => {
+  const handleSort = (field: keyof UserWithStatus) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
     } else {
@@ -74,11 +68,11 @@ export default function UserTable({
     }
   }
 
-  const getStatusFromUser = (user: User): 'online' | 'offline' | 'banned' => {
+  const getStatusFromUser = (user: UserWithStatus): 'online' | 'offline' | 'banned' => {
     if (user.status) return user.status
     // Calculate status from lastLogin
     if (!user.lastLogin) return 'offline'
-    const lastLogin = new Date(user.lastLogin)
+    const lastLogin = user.lastLogin instanceof Date ? user.lastLogin : new Date(user.lastLogin)
     const now = new Date()
     const hoursSinceLogin = (now.getTime() - lastLogin.getTime()) / (1000 * 60 * 60)
     return hoursSinceLogin < 24 ? 'online' : 'offline'
@@ -216,7 +210,7 @@ export default function UserTable({
                   <td>{getStatusBadge(getStatusFromUser(user))}</td>
                   <td>
                     {user.lastLogin
-                      ? new Date(user.lastLogin).toLocaleDateString('ar-EG', {
+                      ? (user.lastLogin instanceof Date ? user.lastLogin : new Date(user.lastLogin)).toLocaleDateString('ar-EG', {
                           year: 'numeric',
                           month: 'short',
                           day: 'numeric',

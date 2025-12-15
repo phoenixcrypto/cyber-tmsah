@@ -19,7 +19,9 @@ self.addEventListener('install', (event: any) => {
       return cache.addAll(STATIC_ASSETS)
     })
   )
-  self.skipWaiting()
+  if ('skipWaiting' in self && typeof (self as any).skipWaiting === 'function') {
+    (self as any).skipWaiting()
+  }
 })
 
 // Activate event - Clean up old caches
@@ -33,7 +35,9 @@ self.addEventListener('activate', (event: any) => {
       )
     })
   )
-  return self.clients.claim()
+  if ('clients' in self && (self as any).clients && typeof (self as any).clients.claim === 'function') {
+    return (self as any).clients.claim()
+  }
 })
 
 // Fetch event - Serve from cache, fallback to network
@@ -97,16 +101,20 @@ self.addEventListener('push', (event: any) => {
     data: data.url || '/',
   }
 
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  )
+  if ('registration' in self && (self as any).registration && typeof (self as any).registration.showNotification === 'function') {
+    event.waitUntil(
+      (self as any).registration.showNotification(title, options)
+    )
+  }
 })
 
 // Notification click
 self.addEventListener('notificationclick', (event: any) => {
   event.notification.close()
-  event.waitUntil(
-    clients.openWindow(event.notification.data || '/')
-  )
+  if ('clients' in self && (self as any).clients && typeof (self as any).clients.openWindow === 'function') {
+    event.waitUntil(
+      (self as any).clients.openWindow(event.notification.data || '/')
+    )
+  }
 })
 

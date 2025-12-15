@@ -2,8 +2,9 @@
  * Theme Loader - Loads and renders theme components
  */
 
+'use client'
+
 import React from 'react'
-import { themeManager } from './manager'
 import type { ThemeConfig } from './manager'
 
 export interface ThemeContextType {
@@ -71,13 +72,24 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     async function loadTheme() {
       try {
-        const activeTheme = await themeManager.getActiveTheme()
-        const themeConfig = await themeManager.getThemeConfig(activeTheme)
+        // Get active theme from API instead of directly from manager
+        const res = await fetch('/api/themes')
+        const data = await res.json()
         
-        setThemeName(activeTheme)
-        setTheme(themeConfig)
+        if (data.success) {
+          const activeTheme = data.data.activeTheme || 'default'
+          const themeConfig = data.data.themes.find((t: ThemeConfig) => t.name === activeTheme) || null
+          
+          setThemeName(activeTheme)
+          setTheme(themeConfig)
+        } else {
+          setThemeName('default')
+          setTheme(null)
+        }
       } catch (error) {
         console.error('Error loading theme:', error)
+        setThemeName('default')
+        setTheme(null)
       } finally {
         setLoading(false)
       }
@@ -118,4 +130,3 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     </ThemeContext.Provider>
   )
 }
-

@@ -2,8 +2,8 @@
  * Automation & Workflows System
  */
 
-import { db } from '@/lib/db/firebase'
-import { doAction, HOOKS } from '@/lib/theme/hooks'
+import { getFirestoreDB } from '@/lib/db/firebase'
+import { doAction } from '@/lib/theme/hooks'
 
 export interface WorkflowStep {
   id: string
@@ -34,6 +34,7 @@ class WorkflowEngine {
    */
   async registerWorkflow(workflow: Workflow): Promise<boolean> {
     try {
+      const db = getFirestoreDB()
       await db.collection('workflows').doc(workflow.id).set({
         ...workflow,
         createdAt: new Date(),
@@ -72,7 +73,7 @@ class WorkflowEngine {
   private async executeSteps(
     steps: WorkflowStep[],
     context: Record<string, any>,
-    workflowId: string
+    _workflowId: string
   ): Promise<void> {
     const stepMap = new Map(steps.map((step) => [step.id, step]))
     const executed = new Set<string>()
@@ -117,7 +118,7 @@ class WorkflowEngine {
     }
 
     // Start from first step
-    if (steps.length > 0) {
+    if (steps.length > 0 && steps[0]) {
       await executeStep(steps[0].id)
     }
   }
@@ -184,7 +185,7 @@ class WorkflowEngine {
   /**
    * Execute delay step
    */
-  private async executeDelay(step: WorkflowStep, context: Record<string, any>): Promise<void> {
+  private async executeDelay(step: WorkflowStep, _context: Record<string, any>): Promise<void> {
     const { duration } = step.config // in milliseconds
     await new Promise((resolve) => setTimeout(resolve, duration))
   }
@@ -241,6 +242,7 @@ class WorkflowEngine {
    */
   async loadWorkflows(): Promise<void> {
     try {
+      const db = getFirestoreDB()
       const snapshot = await db.collection('workflows').get()
       snapshot.docs.forEach((doc) => {
         this.workflows.set(doc.id, doc.data() as Workflow)

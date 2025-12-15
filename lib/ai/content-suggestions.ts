@@ -43,7 +43,7 @@ export async function generateTitleSuggestions(content: string): Promise<Content
 /**
  * Generate tag suggestions
  */
-export async function generateTagSuggestions(content: string, existingTags: string[] = []): Promise<ContentSuggestion[]> {
+export async function generateTagSuggestions(_content: string, existingTags: string[] = []): Promise<ContentSuggestion[]> {
   // Get similar articles
   const articles = await getArticles({ limit: 10 })
   
@@ -108,7 +108,7 @@ export async function generateCategorySuggestions(content: string): Promise<Cont
 /**
  * Generate related content suggestions
  */
-export async function generateRelatedContent(contentId: string, contentType: 'article' | 'material'): Promise<ContentSuggestion[]> {
+export async function generateRelatedContent(contentId: string, _contentType: 'article' | 'material'): Promise<ContentSuggestion[]> {
   // Get similar content based on tags, categories, etc.
   const articles = await getArticles({ limit: 20 })
   

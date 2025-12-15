@@ -5,7 +5,7 @@ import { BookOpen, ArrowRight, FileText } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import PageHeader from '../components/PageHeader'
+import PageHeader from '../../components/PageHeader'
 import * as Icons from 'lucide-react'
 interface Subject {
   id: string

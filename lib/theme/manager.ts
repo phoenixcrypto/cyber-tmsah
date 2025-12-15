@@ -4,7 +4,7 @@
 
 import fs from 'fs'
 import path from 'path'
-import { db } from '@/lib/db/firebase'
+import { getFirestoreDB } from '@/lib/db/firebase'
 
 export interface ThemeConfig {
   name: string
@@ -68,9 +68,11 @@ export class ThemeManager {
    */
   async getActiveTheme(): Promise<string> {
     try {
+      const db = getFirestoreDB()
       const doc = await db.collection('settings').doc('theme').get()
       if (doc.exists) {
-        this.activeTheme = doc.data()?.activeTheme || 'default'
+        const data = doc.data()
+        this.activeTheme = (data?.['activeTheme'] as string) || 'default'
       } else {
         this.activeTheme = 'default'
       }
@@ -93,6 +95,7 @@ export class ThemeManager {
       }
 
       // Update active theme in database
+      const db = getFirestoreDB()
       await db.collection('settings').doc('theme').set({
         activeTheme: themeName,
         updatedAt: new Date(),

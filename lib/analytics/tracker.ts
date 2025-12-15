@@ -100,7 +100,7 @@ class AnalyticsTracker {
       name: 'user_behavior',
       category: 'user',
       action,
-      properties: details,
+      ...(details && { properties: details }),
     })
   }
 
@@ -128,8 +128,8 @@ class AnalyticsTracker {
       name: 'conversion',
       category: 'conversion',
       action: conversionType,
-      value,
-      properties: details,
+      ...(value !== undefined && { value }),
+      ...(details && { properties: details }),
     })
   }
 

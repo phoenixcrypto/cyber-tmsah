@@ -36,7 +36,7 @@ export function useRealtime(options: UseRealtimeOptions = {}) {
   useEffect(() => {
     if (!autoConnect) return
 
-    const socketUrl = process.env.NEXT_PUBLIC_REALTIME_URL || '/api/realtime'
+    const socketUrl = process.env['NEXT_PUBLIC_REALTIME_URL'] || '/api/realtime'
     const newSocket = io(socketUrl, {
       path: '/api/realtime',
       transports: ['websocket', 'polling'],

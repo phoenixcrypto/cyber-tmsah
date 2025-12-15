@@ -4,11 +4,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { themeManager } from '@/lib/theme/manager'
-import { verifyAuth } from '@/lib/middleware/auth'
+import { getAuthUser } from '@/lib/middleware/auth'
 
 // GET /api/themes/[name] - Get theme config
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { name: string } }
 ) {
   try {
@@ -42,8 +42,8 @@ export async function DELETE(
 ) {
   try {
     // Verify authentication
-    const authResult = await verifyAuth(request)
-    if (!authResult.success) {
+    const user = await getAuthUser(request)
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

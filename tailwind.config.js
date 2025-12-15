@@ -5,6 +5,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './lib/**/*.{js,ts,jsx,tsx}',
+    './themes/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   // JIT mode is enabled by default in Tailwind CSS v3+

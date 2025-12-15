@@ -26,7 +26,9 @@ export function initGoogleAnalytics(measurementId: string): void {
   // Initialize dataLayer
   window.dataLayer = window.dataLayer || []
   window.gtag = function(...args: any[]) {
-    window.dataLayer.push(args)
+    if (window.dataLayer) {
+      window.dataLayer.push(args)
+    }
   }
 
   window.gtag('js', new Date())
@@ -41,7 +43,10 @@ export function initGoogleAnalytics(measurementId: string): void {
 export function trackPageView(path: string, title?: string): void {
   if (typeof window === 'undefined' || !window.gtag) return
 
-  window.gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
+  const measurementId = process.env['NEXT_PUBLIC_GA_MEASUREMENT_ID']
+  if (!measurementId) return
+
+  window.gtag('config', measurementId, {
     page_path: path,
     page_title: title,
   })

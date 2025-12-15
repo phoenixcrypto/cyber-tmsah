@@ -3,15 +3,15 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyAuth } from '@/lib/middleware/auth'
+import { getAuthUser } from '@/lib/middleware/auth'
 import { workflowEngine } from '@/lib/automation/workflows'
 import type { Workflow } from '@/lib/automation/workflows'
 
 // GET /api/workflows - Get all workflows
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await verifyAuth(request)
-    if (!authResult.success) {
+    const user = await getAuthUser(request)
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -37,8 +37,8 @@ export async function GET(request: NextRequest) {
 // POST /api/workflows - Create workflow
 export async function POST(request: NextRequest) {
   try {
-    const authResult = await verifyAuth(request)
-    if (!authResult.success) {
+    const user = await getAuthUser(request)
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

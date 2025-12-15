@@ -3,7 +3,7 @@
  * This API provides a single interface for themes to access content
  */
 
-import { db } from '@/lib/db/firebase'
+import { getFirestoreDB } from '@/lib/db/firebase'
 
 // Cache configuration
 const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
@@ -46,6 +46,7 @@ export async function getArticles(options?: {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const articlesRef = db.collection('articles')
     let query: FirebaseFirestore.Query = articlesRef
 
@@ -92,6 +93,7 @@ export async function getArticle(id: string) {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const doc = await db.collection('articles').doc(id).get()
     if (!doc.exists) return null
 
@@ -115,6 +117,7 @@ export async function getMaterials(options?: {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const materialsRef = db.collection('materials')
     let query: FirebaseFirestore.Query = materialsRef
 
@@ -151,6 +154,7 @@ export async function getMaterial(id: string) {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const doc = await db.collection('materials').doc(id).get()
     if (!doc.exists) return null
 
@@ -174,6 +178,7 @@ export async function getNews(options?: {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const newsRef = db.collection('news_articles')
     let query: FirebaseFirestore.Query = newsRef
 
@@ -213,6 +218,7 @@ export async function getPages(options?: {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const pagesRef = db.collection('pages')
     let query: FirebaseFirestore.Query = pagesRef
 
@@ -244,15 +250,17 @@ export async function getPage(slug: string) {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const snapshot = await db.collection('pages')
       .where('slug', '==', slug)
       .where('status', '==', 'published')
       .limit(1)
       .get()
 
-    if (snapshot.empty) return null
+    if (snapshot.empty || !snapshot.docs[0]) return null
 
-    const page = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() }
+    const firstDoc = snapshot.docs[0]
+    const page = { id: firstDoc.id, ...firstDoc.data() }
     setCache(cacheKey, page)
     return page
   } catch (error) {
@@ -271,6 +279,7 @@ export async function getSchedule(options?: {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const scheduleRef = db.collection('schedule_items')
     let query: FirebaseFirestore.Query = scheduleRef
 
@@ -306,6 +315,7 @@ export async function getDownloads(options?: {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const downloadsRef = db.collection('download_software')
     let query: FirebaseFirestore.Query = downloadsRef
 
@@ -340,6 +350,7 @@ export async function getSettings() {
   try {
     // Settings might be stored in a single document or collection
     // Adjust based on your database structure
+    const db = getFirestoreDB()
     const doc = await db.collection('settings').doc('main').get()
     if (!doc.exists) return {}
 
@@ -359,6 +370,7 @@ export async function getThemeSettings(themeName: string = 'default') {
   if (cached) return cached
 
   try {
+    const db = getFirestoreDB()
     const doc = await db.collection('theme_settings').doc(themeName).get()
     if (!doc.exists) {
       // Return default settings

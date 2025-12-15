@@ -5,16 +5,7 @@ import { motion } from 'framer-motion'
 import { Search, Filter, Plus, Download } from 'lucide-react'
 import UserTable from '@/components/admin/UserTable'
 import UserModal from '@/components/admin/UserModal'
-
-interface User {
-  id: string
-  name: string
-  email: string | null
-  username: string
-  role: 'admin' | 'editor' | 'viewer'
-  lastLogin: string | null
-  createdAt: string
-}
+import type { User } from '@/lib/types'
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([])
