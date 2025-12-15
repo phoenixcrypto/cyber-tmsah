@@ -96,6 +96,11 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
       href: `${basePath}/downloads`,
     },
     {
+      label: 'القوالب',
+      icon: Palette,
+      href: `${basePath}/themes`,
+    },
+    {
       label: 'التصميم والثيم',
       icon: Palette,
       href: `${basePath}/design`,
@@ -189,6 +194,11 @@ export function getSidebarItemsSync(): SidebarItem[] {
       label: 'التنزيلات',
       icon: Download,
       href: `${basePath}/downloads`,
+    },
+    {
+      label: 'القوالب',
+      icon: Palette,
+      href: `${basePath}/themes`,
     },
     {
       label: 'التصميم والثيم',

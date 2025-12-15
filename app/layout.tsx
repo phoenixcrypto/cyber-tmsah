@@ -92,11 +92,9 @@ export default function RootLayout({
       <body className="font-cairo text-primary-white">
         <Providers>
           <div className="app-wrapper">
-            <Navbar />
-            <main className="main-content" role="main">
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
+            {/* Theme pages will render their own Navbar/Footer via MainLayout */}
+            {/* Admin pages and legacy pages will use the old structure */}
+            {children}
             <FloatingLanguageButton />
           </div>
         </Providers>

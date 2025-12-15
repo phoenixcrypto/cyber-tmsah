@@ -27,6 +27,16 @@ const nextConfig = {
   // Turbopack configuration (Next.js 16+)
   turbopack: {},
   
+  // Webpack configuration for theme support
+  webpack: (config, { isServer }) => {
+    // Add alias for themes
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@themes': require('path').join(__dirname, 'themes'),
+    }
+    return config
+  },
+  
   // Headers for security
   async headers() {
     return [

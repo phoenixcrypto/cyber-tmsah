@@ -1,0 +1,43 @@
+{
+  "name": "default",
+  "version": "1.0.0",
+  "description": "Default Cyber TMSAH Theme",
+  "author": "Cyber TMSAH Team",
+  "license": "MIT",
+  "main": "index.tsx",
+  "config": {
+    "colors": {
+      "primary": "#ff3b40",
+      "secondary": "#080808",
+      "accent": "#f9fafb"
+    },
+    "fonts": {
+      "primary": "Cairo",
+      "fallback": "system-ui, sans-serif"
+    },
+    "layout": {
+      "container": "max-w-7xl mx-auto",
+      "spacing": "default"
+    },
+    "features": {
+      "darkMode": true,
+      "rtl": true,
+      "animations": true,
+      "pwa": true
+    }
+  },
+  "pages": {
+    "home": "pages/home.tsx",
+    "materials": "pages/materials.tsx",
+    "schedule": "pages/schedule.tsx",
+    "downloads": "pages/downloads.tsx",
+    "contact": "pages/contact.tsx",
+    "about": "pages/about.tsx"
+  },
+  "components": {
+    "navbar": "components/Navbar.tsx",
+    "footer": "components/Footer.tsx",
+    "layout": "layouts/MainLayout.tsx"
+  }
+}
+
