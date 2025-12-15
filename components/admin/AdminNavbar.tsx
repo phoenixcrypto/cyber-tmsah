@@ -165,10 +165,15 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
               {notificationsOpen && (
                 <motion.div
                   className="admin-navbar-notifications-dropdown"
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
+                  initial={{ opacity: 0, y: -15, scale: 0.9, rotateX: -10 }}
+                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                  exit={{ opacity: 0, y: -15, scale: 0.9, rotateX: -10 }}
+                  transition={{ 
+                    duration: 0.3,
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 20
+                  }}
                 >
                   <div className="admin-navbar-notifications-header">
                     <h3>الإشعارات</h3>
@@ -226,10 +231,15 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
               {userMenuOpen && (
                 <motion.div
                   className="admin-navbar-user-dropdown"
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
+                  initial={{ opacity: 0, y: -15, scale: 0.9, rotateX: -10 }}
+                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                  exit={{ opacity: 0, y: -15, scale: 0.9, rotateX: -10 }}
+                  transition={{ 
+                    duration: 0.3,
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 20
+                  }}
                 >
                   <div className="admin-navbar-user-dropdown-header">
                     <div className="admin-navbar-user-dropdown-avatar">

@@ -2728,54 +2728,574 @@
   }
 }
 
-/* Action Buttons */
+/* Action Buttons - Enhanced */
 .admin-action-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--smooth-transition);
-  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
   color: var(--dark-300);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-action-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.2) 0%, rgba(255, 59, 64, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .admin-action-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+  transform: scale(1.1) translateY(-2px);
+  border-color: rgba(255, 59, 64, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.3);
+}
+
+.admin-action-btn:hover::before {
+  opacity: 1;
+}
+
+.admin-action-btn:active {
+  transform: scale(1.05) translateY(0);
 }
 
 .admin-action-btn-edit {
   color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .admin-action-btn-edit:hover {
-  background: rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
   color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .admin-action-btn-delete {
   color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .admin-action-btn-delete:hover {
-  background: rgba(239, 68, 68, 0.2);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.15) 100%);
   color: #f87171;
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
-/* Badge */
+/* Badge - Enhanced */
 .admin-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-strong) 100%);
   color: var(--primary-white);
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 0.75rem;
   font-weight: 700;
-  box-shadow: 0 0 10px rgba(255, 59, 64, 0.3);
+  box-shadow: 0 0 15px rgba(255, 59, 64, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-badge:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 59, 64, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.admin-badge:hover::before {
+  opacity: 1;
+}
+/* ============================================
+   ENHANCED DROPDOWNS - Premium Design 2024
+   ============================================ */
+
+.admin-navbar-notifications-dropdown,
+.admin-navbar-user-dropdown {
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 2px solid rgba(255, 59, 64, 0.4);
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 59, 64, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    var(--neon-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-navbar-notifications-dropdown::before,
+.admin-navbar-user-dropdown::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 59, 64, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.admin-navbar-notifications-dropdown > *,
+.admin-navbar-user-dropdown > * {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-navbar-search-results {
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 2px solid rgba(255, 59, 64, 0.3);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 59, 64, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-navbar-search-results::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 59, 64, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.admin-navbar-search-result {
+  position: relative;
+  z-index: 1;
+  border-radius: 8px;
+  margin: 0.25rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-navbar-search-result:hover {
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.2) 0%, rgba(255, 59, 64, 0.1) 100%);
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.3);
+}
+
+/* ============================================
+   ENHANCED MODALS - Premium Design 2024
+   ============================================ */
+
+.admin-modal-overlay {
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  background: rgba(0, 0, 0, 0.75);
+  animation: admin-fade-in 0.3s ease;
+}
+
+@keyframes admin-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.admin-modal {
+  border: 2px solid rgba(255, 59, 64, 0.4);
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 59, 64, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    var(--neon-glow-strong);
+  animation: admin-modal-enter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes admin-modal-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.admin-modal-glow {
+  opacity: 0.3;
+  filter: blur(40px);
+  animation: admin-pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes admin-pulse-glow {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+}
+
+.admin-modal-close {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-modal-close::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.3) 0%, rgba(255, 59, 64, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-modal-close:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 0 20px rgba(255, 59, 64, 0.5);
+}
+
+.admin-modal-close:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   ENHANCED BUTTONS - Premium Design 2024
+   ============================================ */
+
+.admin-modal-btn-primary,
+.admin-page-action-btn,
+.admin-login-form-submit {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-modal-btn-primary::before,
+.admin-page-action-btn::before,
+.admin-login-form-submit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-modal-btn-primary:hover:not(:disabled),
+.admin-page-action-btn:hover:not(:disabled),
+.admin-login-form-submit:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    var(--neon-glow-ultra),
+    0 8px 25px rgba(255, 59, 64, 0.4);
+}
+
+.admin-modal-btn-primary:hover:not(:disabled)::before,
+.admin-page-action-btn:hover:not(:disabled)::before,
+.admin-login-form-submit:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.admin-modal-btn-primary:active:not(:disabled),
+.admin-page-action-btn:active:not(:disabled),
+.admin-login-form-submit:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.admin-modal-btn-secondary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-modal-btn-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.15) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-modal-btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 59, 64, 0.3);
+}
+
+.admin-modal-btn-secondary:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   ENHANCED SIDEBAR - Premium Design 2024
+   ============================================ */
+
+.admin-sidebar-item {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-sidebar-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255, 59, 64, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+}
+
+.admin-sidebar-item:hover::before {
+  opacity: 1;
+}
+
+.admin-sidebar-item.active {
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.2) 0%, rgba(255, 59, 64, 0.1) 100%);
+  border: 1px solid rgba(255, 59, 64, 0.4);
+  box-shadow: 
+    0 4px 15px rgba(255, 59, 64, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar-link {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-sidebar-link:hover {
+  transform: translateX(-4px);
+}
+
+.admin-sidebar-active-indicator {
+  border-radius: 12px;
+  box-shadow: 
+    0 0 20px rgba(255, 59, 64, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.admin-sidebar-submenu-item {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-sidebar-submenu-item::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--primary-red) 0%, var(--primary-red-soft) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+.admin-sidebar-submenu-item:hover::before,
+.admin-sidebar-submenu-item.active::before {
+  opacity: 1;
+}
+
+.admin-sidebar-submenu-item:hover,
+.admin-sidebar-submenu-item.active {
+  transform: translateX(-4px);
+  box-shadow: 0 2px 8px rgba(255, 59, 64, 0.2);
+}
+
+/* ============================================
+   ENHANCED NAVBAR - Premium Design 2024
+   ============================================ */
+
+.admin-navbar-icon-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-navbar-icon-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 59, 64, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-navbar-icon-btn:hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 59, 64, 0.4);
+}
+
+.admin-navbar-icon-btn:hover::before {
+  opacity: 1;
+}
+
+.admin-navbar-user-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-navbar-user-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.admin-navbar-user-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 59, 64, 0.3);
+}
+
+.admin-navbar-user-btn:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   ENHANCED FORM INPUTS - Premium Design 2024
+   ============================================ */
+
+.admin-modal-form-input,
+.admin-modal-form-select,
+.admin-login-form-input {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-modal-form-input:focus,
+.admin-modal-form-select:focus,
+.admin-login-form-input:focus {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 25px rgba(255, 59, 64, 0.4),
+    0 4px 12px rgba(255, 59, 64, 0.2);
+}
+
+.admin-modal-form-input.error,
+.admin-login-form-input.error {
+  animation: admin-shake 0.5s ease;
+  border-color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes admin-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* ============================================
+   ENHANCED NOTIFICATIONS - Premium Design 2024
+   ============================================ */
+
+.admin-navbar-notification-item {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
+  margin: 0.25rem;
+}
+
+.admin-navbar-notification-item::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--primary-red) 0%, var(--primary-red-soft) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+.admin-navbar-notification-item.unread::before {
+  opacity: 1;
+}
+
+.admin-navbar-notification-item:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(255, 59, 64, 0.2);
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.15) 0%, rgba(255, 59, 64, 0.05) 100%);
+}
+
+/* ============================================
+   ENHANCED USER DROPDOWN MENU - Premium Design 2024
+   ============================================ */
+
+.admin-navbar-user-dropdown-menu button {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-navbar-user-dropdown-menu button::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--primary-red) 0%, var(--primary-red-soft) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+.admin-navbar-user-dropdown-menu button:hover {
+  transform: translateX(-4px);
+  background: linear-gradient(135deg, rgba(255, 59, 64, 0.15) 0%, rgba(255, 59, 64, 0.05) 100%);
+  box-shadow: 0 2px 8px rgba(255, 59, 64, 0.2);
+}
+
+.admin-navbar-user-dropdown-menu button:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   ENHANCED SCROLLBAR - Premium Design 2024
+   ============================================ */
+
+.admin-sidebar::-webkit-scrollbar,
+.admin-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track,
+.admin-modal-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb,
+.admin-modal-body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--primary-red) 0%, var(--primary-red-soft) 100%);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover,
+.admin-modal-body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--primary-red-strong) 0%, var(--primary-red) 100%);
+  box-shadow: 0 0 10px rgba(255, 59, 64, 0.5);
 }

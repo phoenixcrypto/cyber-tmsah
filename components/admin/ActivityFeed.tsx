@@ -21,10 +21,17 @@ export default function ActivityFeed({ activities, delay = 0 }: ActivityFeedProp
   return (
     <motion.div
       className="admin-activity-feed"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay }}
-      whileHover={{ y: -5 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ 
+        duration: 0.4, 
+        delay,
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
       <div className="admin-activity-feed-bg"></div>
       <div className="admin-activity-feed-glow"></div>
@@ -42,7 +49,8 @@ export default function ActivityFeed({ activities, delay = 0 }: ActivityFeedProp
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: delay + index * 0.1 }}
-            whileHover={{ x: 5 }}
+            whileHover={{ x: 8, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             <div className="admin-activity-feed-avatar">
               {activity.avatar}

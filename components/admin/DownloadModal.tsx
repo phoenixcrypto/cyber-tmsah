@@ -130,9 +130,15 @@ export default function DownloadModal({ isOpen, onClose, onSave, download }: Dow
       <div className="admin-modal-overlay" onClick={onClose}>
         <motion.div
           className="admin-modal"
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, scale: 0.85, y: 30, rotateX: -15 }}
+          animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
+          exit={{ opacity: 0, scale: 0.85, y: 30, rotateX: -15 }}
+          transition={{
+            duration: 0.4,
+            type: "spring",
+            stiffness: 150,
+            damping: 15
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="admin-modal-bg"></div>

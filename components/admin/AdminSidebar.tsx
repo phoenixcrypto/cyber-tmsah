@@ -126,8 +126,9 @@ export default function AdminSidebar({
             <div key={item.href} className="admin-sidebar-item-wrapper">
               <motion.div
                 className={`admin-sidebar-item ${isActive ? 'active' : ''}`}
-                whileHover={{ x: isOpen ? 5 : 0 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ x: isOpen ? 8 : 0, scale: 1.02 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 <Link
                   href={item.href}
@@ -185,23 +186,34 @@ export default function AdminSidebar({
               <AnimatePresence>
                 {isOpen && hasChildren && isExpanded && (
                   <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    initial={{ height: 0, opacity: 0, y: -10 }}
+                    animate={{ height: 'auto', opacity: 1, y: 0 }}
+                    exit={{ height: 0, opacity: 0, y: -10 }}
+                    transition={{
+                      duration: 0.3,
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20
+                    }}
                     className="admin-sidebar-submenu"
                   >
                     {item.children?.map((child) => {
                       const ChildIcon = child.icon
                       const isChildActive = pathname === child.href
                       return (
-                        <Link
+                        <motion.div
                           key={child.href}
-                          href={child.href}
-                          className={`admin-sidebar-submenu-item ${isChildActive ? 'active' : ''}`}
+                          whileHover={{ x: -6, scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
-                          <ChildIcon className="w-4 h-4" />
-                          <span>{child.label}</span>
-                        </Link>
+                          <Link
+                            href={child.href}
+                            className={`admin-sidebar-submenu-item ${isChildActive ? 'active' : ''}`}
+                          >
+                            <ChildIcon className="w-4 h-4" />
+                            <span>{child.label}</span>
+                          </Link>
+                        </motion.div>
                       )
                     })}
                   </motion.div>
@@ -217,8 +229,9 @@ export default function AdminSidebar({
         <motion.button
           className="admin-sidebar-logout"
           onClick={handleLogout}
-          whileHover={{ x: isOpen ? 5 : 0 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ x: isOpen ? 8 : 0, scale: 1.02 }}
+          whileTap={{ scale: 0.96 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <LogOut className="admin-sidebar-icon" />
           <AnimatePresence>

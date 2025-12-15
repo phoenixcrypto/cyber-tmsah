@@ -78,10 +78,16 @@ export default function QuickActions({ delay = 0 }: QuickActionsProps) {
               key={action.label}
               className="admin-quick-action-btn"
               onClick={action.onClick}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: delay + index * 0.1 }}
-              whileHover={{ scale: 1.1, y: -5 }}
+              initial={{ opacity: 0, scale: 0.8, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ 
+                duration: 0.4, 
+                delay: delay + index * 0.1,
+                type: "spring",
+                stiffness: 150,
+                damping: 12
+              }}
+              whileHover={{ scale: 1.08, y: -6 }}
               whileTap={{ scale: 0.95 }}
             >
               <div className={`admin-quick-action-icon bg-gradient-to-br ${action.color}`}>

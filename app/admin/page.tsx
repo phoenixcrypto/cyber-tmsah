@@ -258,9 +258,14 @@ export default function AdminDashboard() {
       {/* Page Header */}
       <motion.div
         className="admin-page-header"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        initial={{ opacity: 0, y: -30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ 
+          duration: 0.4,
+          type: "spring",
+          stiffness: 100,
+          damping: 15
+        }}
       >
         <div>
           <h1 className="admin-page-title">لوحة التحكم</h1>
@@ -269,8 +274,9 @@ export default function AdminDashboard() {
         <motion.button
           className="admin-page-action-btn"
           onClick={() => window.open('/api/admin/stats', '_blank')}
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.08, y: -3 }}
           whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           <TrendingUp className="w-5 h-5" />
           <span>تقرير كامل</span>
