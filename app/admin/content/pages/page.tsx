@@ -33,9 +33,10 @@ export default function AdminPagesPage() {
       const res = await fetch('/api/pages')
       if (res.ok) {
         const data = await res.json()
-        setPages(data.data.pages || [])
+        setPages(data.data?.pages || data.pages || [])
       } else {
         console.error('Failed to fetch pages')
+        setPages([])
       }
     } catch (error) {
       console.error('Error fetching pages:', error)

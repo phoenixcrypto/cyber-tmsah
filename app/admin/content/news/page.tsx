@@ -32,9 +32,10 @@ export default function AdminNewsPage() {
       const res = await fetch('/api/news')
       if (res.ok) {
         const data = await res.json()
-        setNews(data.data.news || [])
+        setNews(data.data?.news || data.news || [])
       } else {
         console.error('Failed to fetch news')
+        setNews([])
       }
     } catch (error) {
       console.error('Error fetching news:', error)

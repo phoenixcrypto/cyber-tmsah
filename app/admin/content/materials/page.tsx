@@ -32,9 +32,10 @@ export default function AdminMaterialsPage() {
       const res = await fetch('/api/materials')
       if (res.ok) {
         const data = await res.json()
-        setMaterials(data.data.materials || [])
+        setMaterials(data.data?.materials || data.materials || [])
       } else {
         console.error('Failed to fetch materials')
+        setMaterials([])
       }
     } catch (error) {
       console.error('Error fetching materials:', error)
