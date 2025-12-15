@@ -104,21 +104,30 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     await requireEditor(request)
 
+    // Handle both Promise and direct params
+    const resolvedParams = params instanceof Promise ? await params : params
+    const newsId = resolvedParams['id']
+
+    // Validate news ID
+    if (!newsId || typeof newsId !== 'string' || newsId.trim() === '') {
+      return errorResponse('معرف الخبر غير صالح', 400)
+    }
+
     const db = getFirestoreDB()
 
     // Check if news exists
-    const newsDoc = await db.collection('news').doc(params['id']).get()
+    const newsDoc = await db.collection('news').doc(newsId).get()
     if (!newsDoc.exists) {
       return notFoundResponse('الخبر غير موجود')
     }
 
     // Delete news
-    await db.collection('news').doc(params['id']).delete()
+    await db.collection('news').doc(newsId).delete()
 
     return successResponse({ message: 'تم حذف الخبر بنجاح' })
   } catch (error: unknown) {

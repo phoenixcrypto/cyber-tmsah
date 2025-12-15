@@ -113,22 +113,31 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     await requireEditor(request)
 
+    // Handle both Promise and direct params
+    const resolvedParams = params instanceof Promise ? await params : params
+    const materialId = resolvedParams['id']
+
+    // Validate material ID
+    if (!materialId || typeof materialId !== 'string' || materialId.trim() === '') {
+      return errorResponse('معرف المادة غير صالح', 400)
+    }
+
     const db = getFirestoreDB()
 
     // Check if material exists
-    const materialDoc = await db.collection('materials').doc(params['id']).get()
+    const materialDoc = await db.collection('materials').doc(materialId).get()
     if (!materialDoc.exists) {
       return notFoundResponse('المادة غير موجودة')
     }
 
     // Check if material has articles
     const articlesSnapshot = await db.collection('articles')
-      .where('materialId', '==', params['id'])
+      .where('materialId', '==', materialId)
       .limit(1)
       .get()
 
@@ -137,7 +146,7 @@ export async function DELETE(
     }
 
     // Delete material
-    await db.collection('materials').doc(params['id']).delete()
+    await db.collection('materials').doc(materialId).delete()
 
     return successResponse({ message: 'تم حذف المادة بنجاح' })
   } catch (error: unknown) {

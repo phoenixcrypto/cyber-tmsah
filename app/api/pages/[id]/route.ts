@@ -139,21 +139,30 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     await requireEditor(request)
 
+    // Handle both Promise and direct params
+    const resolvedParams = params instanceof Promise ? await params : params
+    const pageId = resolvedParams['id']
+
+    // Validate page ID
+    if (!pageId || typeof pageId !== 'string' || pageId.trim() === '') {
+      return errorResponse('معرف الصفحة غير صالح', 400)
+    }
+
     const db = getFirestoreDB()
 
     // Check if page exists
-    const pageDoc = await db.collection('pages').doc(params['id']).get()
+    const pageDoc = await db.collection('pages').doc(pageId).get()
     if (!pageDoc.exists) {
       return notFoundResponse('الصفحة غير موجودة')
     }
 
     // Delete page
-    await db.collection('pages').doc(params['id']).delete()
+    await db.collection('pages').doc(pageId).delete()
 
     return successResponse({ message: 'تم حذف الصفحة بنجاح' })
   } catch (error: unknown) {

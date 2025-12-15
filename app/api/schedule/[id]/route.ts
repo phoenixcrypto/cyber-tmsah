@@ -41,21 +41,30 @@ export async function GET(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     await requireAdmin(request)
 
+    // Handle both Promise and direct params
+    const resolvedParams = params instanceof Promise ? await params : params
+    const itemId = resolvedParams['id']
+
+    // Validate item ID
+    if (!itemId || typeof itemId !== 'string' || itemId.trim() === '') {
+      return errorResponse('معرف العنصر غير صالح', 400)
+    }
+
     const db = getFirestoreDB()
 
     // Check if item exists
-    const itemDoc = await db.collection('scheduleItems').doc(params['id']).get()
+    const itemDoc = await db.collection('scheduleItems').doc(itemId).get()
     if (!itemDoc.exists) {
       return notFoundResponse('عنصر الجدول غير موجود')
     }
 
     // Delete item
-    await db.collection('scheduleItems').doc(params['id']).delete()
+    await db.collection('scheduleItems').doc(itemId).delete()
 
     return successResponse({ message: 'تم حذف عنصر الجدول بنجاح' })
   } catch (error: unknown) {

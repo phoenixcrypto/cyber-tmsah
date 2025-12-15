@@ -95,21 +95,30 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     await requireEditor(request)
 
+    // Handle both Promise and direct params
+    const resolvedParams = params instanceof Promise ? await params : params
+    const downloadId = resolvedParams['id']
+
+    // Validate download ID
+    if (!downloadId || typeof downloadId !== 'string' || downloadId.trim() === '') {
+      return errorResponse('معرف البرنامج غير صالح', 400)
+    }
+
     const db = getFirestoreDB()
 
     // Check if download exists
-    const downloadDoc = await db.collection('downloads').doc(params['id']).get()
+    const downloadDoc = await db.collection('downloads').doc(downloadId).get()
     if (!downloadDoc.exists) {
       return notFoundResponse('البرنامج غير موجود')
     }
 
     // Delete download
-    await db.collection('downloads').doc(params['id']).delete()
+    await db.collection('downloads').doc(downloadId).delete()
 
     return successResponse({ message: 'تم حذف البرنامج بنجاح' })
   } catch (error: unknown) {

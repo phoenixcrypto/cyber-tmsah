@@ -135,20 +135,30 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   const context = getRequestContext(request)
+  let userId: string | undefined
 
   try {
     const admin = await requireAdmin(request)
 
+    // Handle both Promise and direct params
+    const resolvedParams = params instanceof Promise ? await params : params
+    userId = resolvedParams['id'] || resolvedParams.id
+
+    // Validate user ID
+    if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+      return errorResponse('معرف المستخدم غير صالح', 400)
+    }
+
     // Prevent deleting yourself
-    if (params.id === admin.userId) {
+    if (userId === admin.userId) {
       return errorResponse('لا يمكنك حذف نفسك', 400)
     }
 
     const db = getFirestoreDB()
-    const userDoc = await db.collection('users').doc(params.id).get()
+    const userDoc = await db.collection('users').doc(userId).get()
 
     if (!userDoc.exists) {
       return notFoundResponse('المستخدم غير موجود')
@@ -157,17 +167,17 @@ export async function DELETE(
     // Delete from Firebase Auth if exists
     try {
       const auth = getFirebaseAuth()
-      await auth.deleteUser(params.id)
+      await auth.deleteUser(userId)
     } catch (authError) {
       // User might not exist in Auth, continue with Firestore deletion
       console.warn('Firebase Auth user deletion failed, continuing:', authError)
     }
 
     // Delete from Firestore
-    await db.collection('users').doc(params.id).delete()
+    await db.collection('users').doc(userId).delete()
 
     await logger.info('User deleted', {
-      userId: params.id,
+      userId: userId,
       deletedBy: admin.userId,
       ipAddress: context.ipAddress,
     })
@@ -179,7 +189,7 @@ export async function DELETE(
     }
 
     await logger.error('Delete user error', error as Error, {
-      userId: params.id,
+      userId: userId || 'unknown',
       ipAddress: context.ipAddress,
     })
     return errorResponse('حدث خطأ أثناء حذف المستخدم', 500)

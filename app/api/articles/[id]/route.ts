@@ -168,15 +168,24 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
     await requireEditor(request)
 
+    // Handle both Promise and direct params
+    const resolvedParams = params instanceof Promise ? await params : params
+    const articleId = resolvedParams['id']
+
+    // Validate article ID
+    if (!articleId || typeof articleId !== 'string' || articleId.trim() === '') {
+      return errorResponse('معرف المقال غير صالح', 400)
+    }
+
     const db = getFirestoreDB()
 
     // Check if article exists
-    const articleDoc = await db.collection('articles').doc(params['id']).get()
+    const articleDoc = await db.collection('articles').doc(articleId).get()
     if (!articleDoc.exists) {
       return notFoundResponse('المقال غير موجود')
     }
@@ -185,7 +194,7 @@ export async function DELETE(
     const materialId = articleData?.['materialId'] as string
 
     // Delete article
-    await db.collection('articles').doc(params['id']).delete()
+    await db.collection('articles').doc(articleId).delete()
 
     // Update material's articlesCount
     if (materialId) {
