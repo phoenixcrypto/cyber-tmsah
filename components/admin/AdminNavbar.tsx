@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { getAdminBasePath, getAdminLoginPath } from '@/lib/utils/admin-path'
-import { getSidebarItems } from '@/lib/admin/sidebar-items'
+import { getSidebarItemsSync } from '@/lib/admin/sidebar-items'
 import type { User } from '@/lib/types'
 
 export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }) {
@@ -58,7 +58,7 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
   ]
 
   const searchOptions = useMemo(() => {
-    const items = getSidebarItems()
+    const items = getSidebarItemsSync()
     return items
       .flatMap((item) => [item, ...(item.children || [])])
       .map((entry) => ({ label: entry.label, href: entry.href }))

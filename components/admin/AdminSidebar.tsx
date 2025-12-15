@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, LogOut, Shield } from 'lucide-react'
 import { getAdminLoginPath } from '@/lib/utils/admin-path'
-import { getSidebarItems } from '@/lib/admin/sidebar-items'
+import { getSidebarItemsSync } from '@/lib/admin/sidebar-items'
 
 export default function AdminSidebar({
   isOpen,
@@ -17,7 +17,38 @@ export default function AdminSidebar({
 }) {
   const pathname = usePathname()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
-  const sidebarItems = getSidebarItems()
+  const [badges, setBadges] = useState<Record<string, number>>({})
+  const sidebarItems = getSidebarItemsSync()
+
+  // Fetch badges
+  useEffect(() => {
+    const fetchBadges = async () => {
+      try {
+        const [usersRes, activitiesRes] = await Promise.all([
+          fetch('/api/admin/users').catch(() => null),
+          fetch('/api/admin/activities').catch(() => null),
+        ])
+        
+        if (usersRes?.ok) {
+          const usersData = await usersRes.json()
+          setBadges(prev => ({ ...prev, users: usersData.data?.users?.length || 0 }))
+        }
+        
+        if (activitiesRes?.ok) {
+          const activitiesData = await activitiesRes.json()
+          const activities = activitiesData.data?.activities || []
+          const failedLogins = activities.filter((a: { type: string; success: boolean }) => a.type === 'login' && !a.success).length
+          setBadges(prev => ({ ...prev, notifications: failedLogins }))
+        }
+      } catch (error) {
+        console.error('Error fetching badges:', error)
+      }
+    }
+    
+    fetchBadges()
+    const interval = setInterval(fetchBadges, 60000) // Update every minute
+    return () => clearInterval(interval)
+  }, [])
 
   const toggleExpand = (href: string) => {
     setExpandedItems((prev) =>
@@ -130,13 +161,13 @@ export default function AdminSidebar({
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  {isOpen && item.badge && (
+                  {isOpen && (item.badge || badges[item.href]) && (
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       className="admin-sidebar-badge"
                     >
-                      {item.badge}
+                      {typeof item.badge === 'number' ? item.badge : badges[item.href] || 0}
                     </motion.span>
                   )}
                   {isOpen && hasChildren && (
