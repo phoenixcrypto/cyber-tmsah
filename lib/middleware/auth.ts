@@ -5,7 +5,7 @@
 
 import { NextRequest } from 'next/server'
 import { verifyAccessToken } from '@/lib/auth/jwt'
-import { getFirebaseAuth, getFirestoreDB } from '@/lib/db/firebase'
+import { getFirestoreDB } from '@/lib/db/firebase'
 
 export interface AuthUser {
   userId: string
@@ -30,35 +30,30 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
       return null
     }
 
-    // Get user from Firebase Auth
+    // Get user from Firestore (users are stored in Firestore, not Firebase Auth)
     try {
-      const auth = getFirebaseAuth()
-      const userRecord = await auth.getUser(payload.userId)
-      
-      // Get user role from Firestore users collection or custom claims
       const db = getFirestoreDB()
       const userDoc = await db.collection('users').doc(payload.userId).get()
       
-      let role: 'admin' | 'editor' | 'viewer' = 'viewer'
-      let name: string | undefined
-      if (userDoc.exists) {
-        const userData = userDoc.data()
-        role = (userData?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
-        name = userData?.['name'] as string | undefined
-      } else {
-        // Try to get from custom claims
-        role = (userRecord.customClaims?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
-        name = userRecord.displayName || undefined
+      if (!userDoc.exists) {
+        // User not found in Firestore
+        return null
       }
 
+      const userData = userDoc.data()
+      const role = (userData?.['role'] as 'admin' | 'editor' | 'viewer') || 'viewer'
+      const name = userData?.['name'] as string | undefined
+      const email = (userData?.['email'] as string) || payload.email || ''
+      const username = (userData?.['username'] as string) || ''
+
       return {
-        userId: userRecord.uid,
-        email: userRecord.email || payload.email || '',
+        userId: userDoc.id,
+        email: email || username || payload.email || '',
         role,
         ...(name && { name }),
       }
     } catch (firebaseError) {
-      console.error('Firebase Auth error:', firebaseError)
+      console.error('Firestore error:', firebaseError)
       return null
     }
   } catch (error) {
