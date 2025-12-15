@@ -14,9 +14,12 @@ import {
   Palette,
   Globe,
   Image as ImageIcon,
-  Code,
   Mail,
   Activity,
+  Search,
+  Type,
+  Layout,
+  Link as LinkIcon,
 } from 'lucide-react'
 import { getAdminBasePath } from '@/lib/utils/admin-path'
 
@@ -47,11 +50,11 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
       usersCount = usersData.data?.users?.length || 0
     }
     
-        if (notificationsRes?.ok) {
-          const notificationsData = await notificationsRes.json()
-          const activities = notificationsData.data?.activities || []
-          notificationsCount = activities.filter((a: { type?: string; success?: boolean }) => a.type === 'login' && !a.success).length
-        }
+    if (notificationsRes?.ok) {
+      const notificationsData = await notificationsRes.json()
+      const activities = notificationsData.data?.activities || []
+      notificationsCount = activities.filter((a: { type?: string; success?: boolean }) => a.type === 'login' && !a.success).length
+    }
   } catch (error) {
     console.error('Error fetching sidebar counts:', error)
   }
@@ -90,25 +93,26 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
       href: `${basePath}/downloads`,
     },
     {
-      label: 'التصميم',
+      label: 'التصميم والثيم',
       icon: Palette,
       href: `${basePath}/design`,
       children: [
         { label: 'الألوان والثيم', icon: Palette, href: `${basePath}/design/theme` },
-        { label: 'الخطوط', icon: Code, href: `${basePath}/design/fonts` },
-        { label: 'التخطيط', icon: LayoutDashboard, href: `${basePath}/design/layout` },
+        { label: 'الخطوط', icon: Type, href: `${basePath}/design/fonts` },
+        { label: 'التخطيط', icon: Layout, href: `${basePath}/design/layout` },
         { label: 'الصور والوسائط', icon: ImageIcon, href: `${basePath}/design/media` },
       ],
     },
     {
-      label: 'إدارة الموقع',
-      icon: Globe,
-      href: `${basePath}/site`,
+      label: 'الإعدادات',
+      icon: Settings,
+      href: `${basePath}/settings`,
       children: [
-        { label: 'الإعدادات العامة', icon: Settings, href: `${basePath}/site/general` },
-        { label: 'SEO', icon: BarChart3, href: `${basePath}/site/seo` },
-        { label: 'الشعار والهوية', icon: ImageIcon, href: `${basePath}/site/branding` },
-        { label: 'القوائم والروابط', icon: FileText, href: `${basePath}/site/menus` },
+        { label: 'الإعدادات العامة', icon: Globe, href: `${basePath}/settings` },
+        { label: 'SEO', icon: Search, href: `${basePath}/settings/seo` },
+        { label: 'الشعار والهوية', icon: ImageIcon, href: `${basePath}/settings/branding` },
+        { label: 'القوائم والروابط', icon: LinkIcon, href: `${basePath}/settings/menus` },
+        { label: 'البريد الإلكتروني', icon: Mail, href: `${basePath}/settings/email` },
       ],
     },
     {
@@ -136,16 +140,6 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
       icon: Bell,
       href: `${basePath}/notifications`,
       badge: notificationsCount,
-    },
-    {
-      label: 'البريد الإلكتروني',
-      icon: Mail,
-      href: `${basePath}/email`,
-    },
-    {
-      label: 'الإعدادات',
-      icon: Settings,
-      href: `${basePath}/settings`,
     },
     {
       label: 'الملف الشخصي',
@@ -191,25 +185,26 @@ export function getSidebarItemsSync(): SidebarItem[] {
       href: `${basePath}/downloads`,
     },
     {
-      label: 'التصميم',
+      label: 'التصميم والثيم',
       icon: Palette,
       href: `${basePath}/design`,
       children: [
         { label: 'الألوان والثيم', icon: Palette, href: `${basePath}/design/theme` },
-        { label: 'الخطوط', icon: Code, href: `${basePath}/design/fonts` },
-        { label: 'التخطيط', icon: LayoutDashboard, href: `${basePath}/design/layout` },
+        { label: 'الخطوط', icon: Type, href: `${basePath}/design/fonts` },
+        { label: 'التخطيط', icon: Layout, href: `${basePath}/design/layout` },
         { label: 'الصور والوسائط', icon: ImageIcon, href: `${basePath}/design/media` },
       ],
     },
     {
-      label: 'إدارة الموقع',
-      icon: Globe,
-      href: `${basePath}/site`,
+      label: 'الإعدادات',
+      icon: Settings,
+      href: `${basePath}/settings`,
       children: [
-        { label: 'الإعدادات العامة', icon: Settings, href: `${basePath}/site/general` },
-        { label: 'SEO', icon: BarChart3, href: `${basePath}/site/seo` },
-        { label: 'الشعار والهوية', icon: ImageIcon, href: `${basePath}/site/branding` },
-        { label: 'القوائم والروابط', icon: FileText, href: `${basePath}/site/menus` },
+        { label: 'الإعدادات العامة', icon: Globe, href: `${basePath}/settings` },
+        { label: 'SEO', icon: Search, href: `${basePath}/settings/seo` },
+        { label: 'الشعار والهوية', icon: ImageIcon, href: `${basePath}/settings/branding` },
+        { label: 'القوائم والروابط', icon: LinkIcon, href: `${basePath}/settings/menus` },
+        { label: 'البريد الإلكتروني', icon: Mail, href: `${basePath}/settings/email` },
       ],
     },
     {
@@ -236,16 +231,6 @@ export function getSidebarItemsSync(): SidebarItem[] {
       label: 'الإشعارات',
       icon: Bell,
       href: `${basePath}/notifications`,
-    },
-    {
-      label: 'البريد الإلكتروني',
-      icon: Mail,
-      href: `${basePath}/email`,
-    },
-    {
-      label: 'الإعدادات',
-      icon: Settings,
-      href: `${basePath}/settings`,
     },
     {
       label: 'الملف الشخصي',
