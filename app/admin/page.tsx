@@ -134,25 +134,27 @@ export default function AdminDashboard() {
           let schedule: ScheduleItem[] = []
           if (scheduleRes?.ok) {
             const scheduleData = await scheduleRes.json()
-            schedule = (scheduleData?.data?.schedule || scheduleData?.data?.items || []) as ScheduleItem[]
+            schedule = (scheduleData?.data?.schedule || scheduleData?.data?.items || scheduleData?.items || []) as ScheduleItem[]
           }
           
           let downloads: DownloadItem[] = []
           if (downloadsRes?.ok) {
             const downloadsData = await downloadsRes.json()
-            downloads = (downloadsData?.data?.downloads || downloadsData?.data?.software || []) as DownloadItem[]
+            downloads = (downloadsData?.data?.downloads || downloadsData?.data?.software || downloadsData?.downloads || []) as DownloadItem[]
           }
           
           const news = newsRes?.ok ? ((await newsRes.json()).data?.news || []) : []
 
-          const totalContent = materials.length + articles.length + news.length
+          // Count only published articles
+          const publishedArticles = articles.filter((a: { status?: string }) => a.status === 'published')
+          const totalContent = materials.length + publishedArticles.length + news.length
 
           setMetrics({
             totalUsers: users.length,
             totalContent,
             totalSchedule: schedule.length,
             totalDownloads: downloads.length,
-            totalArticles: articles.length,
+            totalArticles: publishedArticles.length,
             totalNews: news.length,
             userGrowth: 0,
             contentGrowth: 0,

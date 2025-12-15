@@ -10,7 +10,6 @@ import {
   Database,
   Shield,
   Bell,
-  HelpCircle,
   Newspaper,
   Palette,
   Globe,
@@ -153,11 +152,6 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
       icon: Users,
       href: `${basePath}/profile`,
     },
-    {
-      label: 'المساعدة',
-      icon: HelpCircle,
-      href: `${basePath}/help`,
-    },
   ]
 }
 
@@ -257,11 +251,6 @@ export function getSidebarItemsSync(): SidebarItem[] {
       label: 'الملف الشخصي',
       icon: Users,
       href: `${basePath}/profile`,
-    },
-    {
-      label: 'المساعدة',
-      icon: HelpCircle,
-      href: `${basePath}/help`,
     },
   ]
 }

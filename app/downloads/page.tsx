@@ -6,8 +6,6 @@ import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
 import * as Icons from 'lucide-react'
-import { seedDownloads } from '@/lib/seed-data/downloads'
-
 interface Software {
   id: string
   name: string
@@ -20,30 +18,29 @@ interface Software {
   category?: string
 }
 
-const softwareList: Software[] = seedDownloads
-
 export default function DownloadsPage() {
   const { t, language } = useLanguage()
-  const [software, setSoftware] = useState<Software[]>(softwareList) // Show default data immediately
-  const [loading, setLoading] = useState(false) // Start with false since we have default data
+  const [software, setSoftware] = useState<Software[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchSoftware = async () => {
-      setLoading(true)
       try {
+        setLoading(true)
         const res = await fetch('/api/downloads')
+        if (!res.ok) {
+          throw new Error('Failed to fetch downloads')
+        }
         const data = await res.json()
-        const downloads = (data.downloads || data.software || []) as Software[]
+        const downloads = (data.data?.downloads || data.data?.software || []) as Software[]
         const normalized = downloads.map((item) => ({
           ...item,
           icon: item.icon || 'FileText',
         }))
-        if (normalized.length > 0) {
-          setSoftware(normalized)
-        }
+        setSoftware(normalized)
       } catch (error) {
         console.error('Error fetching software:', error)
-        // Keep default data on error
+        setSoftware([]) // Empty array on error, no fallback data
       } finally {
         setLoading(false)
       }
@@ -75,9 +72,26 @@ export default function DownloadsPage() {
       />
 
         {loading && (
-          <div className="text-center py-4 text-dark-300 text-sm mb-4">جاري تحديث البيانات...</div>
+          <div className="text-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyber-neon mx-auto mb-4"></div>
+            <p className="text-dark-300">جاري التحميل...</p>
+          </div>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+
+        {!loading && software.length === 0 && (
+          <div className="text-center py-20 animate-fade-in">
+            <Download className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
+            <h3 className="text-2xl font-semibold text-dark-100 mb-4">
+              {language === 'ar' ? 'لا توجد برامج متاحة حالياً' : 'No software available at the moment'}
+            </h3>
+            <p className="text-dark-300">
+              {language === 'ar' ? 'سيتم إضافة البرامج قريباً' : 'Software will be added soon'}
+            </p>
+          </div>
+        )}
+
+        {!loading && software.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {software.map((item, index) => {
             const SoftwareIcon = getIcon(item.icon)
             return (
@@ -124,17 +138,6 @@ export default function DownloadsPage() {
               </div>
             )
           })}
-        </div>
-
-        {software.length === 0 && (
-          <div className="text-center py-20 animate-fade-in">
-            <Download className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
-            <h3 className="text-2xl font-semibold text-dark-100 mb-4">
-              {language === 'ar' ? 'لا توجد برامج متاحة حالياً' : 'No software available at the moment'}
-            </h3>
-            <p className="text-dark-300">
-              {language === 'ar' ? 'سيتم إضافة البرامج قريباً' : 'Software will be added soon'}
-            </p>
           </div>
         )}
     </div>

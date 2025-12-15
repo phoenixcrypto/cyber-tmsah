@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     })
 
     return successResponse(
-      { items: transformedItems },
+      { schedule: transformedItems, items: transformedItems },
       {
         logRequest: true,
         logContext: {

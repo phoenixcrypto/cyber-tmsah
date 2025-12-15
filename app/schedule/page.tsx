@@ -4,7 +4,6 @@ import { Calendar, Clock, MapPin, User, Search, BookOpen, FlaskConical, PartyPop
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
-import { seedScheduleLectures, seedScheduleSections } from '@/lib/seed-data/schedule'
 import type { ScheduleItem } from '@/lib/types'
 
 export default function SchedulePage() {
@@ -13,34 +12,29 @@ export default function SchedulePage() {
   const [validationError, setValidationError] = useState('')
   const [scheduleView, setScheduleView] = useState<'A' | 'B'>('A') // Toggle between Group A and B
   const [allScheduleData, setAllScheduleData] = useState<ScheduleItem[]>([])
+  const [loading, setLoading] = useState(true)
 
   // Fetch schedule data from API
   useEffect(() => {
     const fetchScheduleData = async () => {
       try {
+        setLoading(true)
         const res = await fetch('/api/schedule')
+        if (!res.ok) {
+          throw new Error('Failed to fetch schedule')
+        }
         const data = await res.json()
-        setAllScheduleData(data.items || [])
+        const items = (data.data?.schedule || data.data?.items || data.items || []) as ScheduleItem[]
+        setAllScheduleData(items)
       } catch (error) {
         console.error('Error fetching schedule:', error)
-        // Fallback to empty array
-        setAllScheduleData([])
+        setAllScheduleData([]) // Empty array on error, no fallback data
+      } finally {
+        setLoading(false)
       }
     }
     fetchScheduleData()
   }, [])
-
-  // Convert seed data to ScheduleItem format
-  const sectionsData: ScheduleItem[] = seedScheduleSections.map(item => ({
-    ...item,
-    day: item.day as ScheduleItem['day'],
-    group: item.group as ScheduleItem['group'],
-  }))
-  const scheduleData: ScheduleItem[] = seedScheduleLectures.map(item => ({
-    ...item,
-    day: item.day as ScheduleItem['day'],
-    group: item.group as ScheduleItem['group'],
-  }))
 
   // Validation function
   const validateGroupAndSection = useCallback((group: string, section: string): string => {
@@ -100,14 +94,10 @@ export default function SchedulePage() {
     return 0
   }, [periods]);
   
-  // Use API data if available, otherwise fallback to hardcoded
+  // Use API data only
   const allScheduleDataMemo = useMemo(() => {
-    if (allScheduleData.length > 0) {
-      return allScheduleData
-    }
-    // Fallback to hardcoded data during migration
-    return [...scheduleData, ...sectionsData]
-  }, [allScheduleData, scheduleData, sectionsData])
+    return allScheduleData
+  }, [allScheduleData])
 
   // Compute derived values
   const groupFilter = useMemo(() => {
@@ -192,6 +182,22 @@ export default function SchedulePage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduleView, selectedSection])
+
+  if (loading) {
+    return (
+      <div className="page-container">
+        <PageHeader 
+          title={t('schedule.title')} 
+          icon={Calendar}
+          description={t('schedule.description')}
+        />
+        <div className="text-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyber-neon mx-auto mb-4"></div>
+          <p className="text-dark-300">جاري التحميل...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="page-container">
@@ -449,7 +455,7 @@ export default function SchedulePage() {
         </div>
 
         {/* Empty State */}
-        {scheduleData.length === 0 && (
+        {allScheduleDataMemo.length === 0 && (
           <div className="text-center py-20 animate-fade-in">
             <Calendar className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
             <h3 className="text-2xl font-semibold text-dark-100 mb-4">

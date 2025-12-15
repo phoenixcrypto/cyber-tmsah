@@ -7,8 +7,6 @@ import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import PageHeader from '@/components/PageHeader'
 import * as Icons from 'lucide-react'
-import { seedMaterials } from '@/lib/seed-data/materials'
-
 interface Subject {
   id: string
   title: string
@@ -19,24 +17,19 @@ interface Subject {
   lastUpdated: string
 }
 
-const subjectsData: Subject[] = seedMaterials.map((material) => ({
-  id: material.id,
-  title: material.title,
-  description: material.description,
-  icon: material.icon,
-  color: material.color,
-  articlesCount: material.articlesCount,
-  lastUpdated: material.lastUpdated,
-}))
-
 export default function MaterialsPage() {
   const { t } = useLanguage()
-  const [subjects, setSubjects] = useState<Subject[]>(subjectsData) // Show default data immediately
+  const [subjects, setSubjects] = useState<Subject[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
+        setLoading(true)
         const res = await fetch('/api/materials')
+        if (!res.ok) {
+          throw new Error('Failed to fetch materials')
+        }
         const data = await res.json()
         // Map API data to Subject format
         interface ApiMaterial {
@@ -48,22 +41,22 @@ export default function MaterialsPage() {
           articlesCount?: number
           lastUpdated?: string
         }
-        const materials = (data.materials || []) as ApiMaterial[]
+        const materials = (data.data?.materials || []) as ApiMaterial[]
         const mappedSubjects = materials.map((m): Subject => ({
           id: m.id,
           title: m.title,
           description: m.description,
-          icon: m.icon,
-          color: m.color,
+          icon: m.icon || 'BookOpen',
+          color: m.color || 'from-blue-500 to-cyan-500',
           articlesCount: m.articlesCount || 0,
           lastUpdated: m.lastUpdated || 'لا توجد مقالات بعد'
         }))
-        if (mappedSubjects.length > 0) {
-          setSubjects(mappedSubjects)
-        }
+        setSubjects(mappedSubjects)
       } catch (error) {
         console.error('Error fetching materials:', error)
-        // Keep default data on error
+        setSubjects([]) // Empty array on error, no fallback data
+      } finally {
+        setLoading(false)
       }
     }
     fetchMaterials()
@@ -77,8 +70,26 @@ export default function MaterialsPage() {
         description={t('materials.description')}
       />
 
+      {/* Loading State */}
+      {loading && (
+        <div className="text-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyber-neon mx-auto mb-4"></div>
+          <p className="text-dark-300">جاري التحميل...</p>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && subjects.length === 0 && (
+        <div className="text-center py-20">
+          <BookOpen className="w-16 h-16 text-cyber-neon mx-auto mb-4" />
+          <h3 className="text-2xl font-semibold text-dark-100 mb-4">لا توجد مواد دراسية</h3>
+          <p className="text-dark-300">سيتم إضافة المواد الدراسية قريباً</p>
+        </div>
+      )}
+
       {/* Subjects Grid - Enhanced 2026 Design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+      {!loading && subjects.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {subjects.map((subject, index) => {
             // Type-safe icon lookup
             const IconComponent = (Icons as unknown as Record<string, LucideIcon>)[subject.icon]
@@ -122,6 +133,7 @@ export default function MaterialsPage() {
             )
           })}
         </div>
+      )}
     </div>
   )
 }
