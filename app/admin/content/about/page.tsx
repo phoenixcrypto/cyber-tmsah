@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Edit, Trash2, Save, RefreshCw, GripVertical, X } from 'lucide-react'
+import { Plus, Edit, Trash2, Save, RefreshCw, GripVertical, X, Eye, EyeOff } from 'lucide-react'
+import RichTextEditor from '@/components/RichTextEditor'
+import Link from 'next/link'
 
 interface AboutCard {
   id: string
@@ -39,6 +41,7 @@ export default function AdminAboutPage() {
   const [saving, setSaving] = useState(false)
   const [editingCard, setEditingCard] = useState<AboutCard | null>(null)
   const [isCardModalOpen, setIsCardModalOpen] = useState(false)
+  const [previewMode, setPreviewMode] = useState(false)
 
   useEffect(() => {
     fetchPage()
@@ -161,6 +164,24 @@ export default function AdminAboutPage() {
             <span>إضافة كارت</span>
           </motion.button>
           <motion.button
+            className={`admin-page-action-btn ${previewMode ? 'bg-cyber-neon/20' : ''}`}
+            onClick={() => setPreviewMode(!previewMode)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {previewMode ? (
+              <>
+                <EyeOff className="w-5 h-5" />
+                <span>إخفاء المعاينة</span>
+              </>
+            ) : (
+              <>
+                <Eye className="w-5 h-5" />
+                <span>معاينة الصفحة</span>
+              </>
+            )}
+          </motion.button>
+          <motion.button
             className="admin-page-action-btn"
             onClick={handleSave}
             disabled={saving}
@@ -203,10 +224,12 @@ export default function AdminAboutPage() {
           </div>
           <div>
             <label className="block text-sm font-semibold text-dark-200 mb-2">وصف الصفحة</label>
-            <textarea
+            <RichTextEditor
               value={page.description}
-              onChange={(e) => setPage({ ...page, description: e.target.value })}
-              className="admin-navbar-search-input w-full min-h-[100px]"
+              onChange={(value) => setPage({ ...page, description: value })}
+              placeholder="اكتب وصف الصفحة هنا..."
+              height="150px"
+              language="ar"
             />
           </div>
         </div>
@@ -297,10 +320,12 @@ export default function AdminAboutPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-dark-200 mb-2">الوصف</label>
-                  <textarea
+                  <RichTextEditor
                     value={editingCard.description}
-                    onChange={(e) => setEditingCard({ ...editingCard, description: e.target.value })}
-                    className="admin-navbar-search-input w-full min-h-[100px]"
+                    onChange={(value) => setEditingCard({ ...editingCard, description: value })}
+                    placeholder="اكتب وصف الكارت هنا..."
+                    height="200px"
+                    language="ar"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -363,6 +388,63 @@ export default function AdminAboutPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Preview Mode */}
+      {previewMode && (
+        <motion.div
+          className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-cyber-neon">معاينة الصفحة</h2>
+              <motion.button
+                className="admin-page-action-btn"
+                onClick={() => setPreviewMode(false)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <X className="w-5 h-5" />
+                <span>إغلاق</span>
+              </motion.button>
+            </div>
+            <div className="bg-cyber-dark/50 rounded-xl p-8 border-2 border-cyber-neon/30">
+              <h1 className="text-4xl font-bold text-cyber-neon mb-4">{page.title}</h1>
+              <div 
+                className="text-dark-200 mb-8 prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: page.description }}
+              />
+              {page.cards.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                  {page.cards.sort((a, b) => a.order - b.order).map((card) => (
+                    <div
+                      key={card.id}
+                      className="p-6 bg-cyber-dark/30 rounded-xl border-2 border-cyber-neon/20"
+                    >
+                      <h3 className="text-xl font-bold text-cyber-neon mb-3">{card.title}</h3>
+                      <div 
+                        className="text-dark-300 prose prose-invert max-w-none"
+                        dangerouslySetInnerHTML={{ __html: card.description }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="mt-8 text-center">
+                <Link 
+                  href="/about" 
+                  target="_blank"
+                  className="text-cyber-neon hover:text-cyber-green underline"
+                >
+                  عرض الصفحة الكاملة →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </div>
   )
 }
