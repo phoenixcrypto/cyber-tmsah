@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { User, Mail, Shield, Calendar, Edit } from 'lucide-react'
+import { User, Mail, Shield, Calendar } from 'lucide-react'
 import ProfileDetails from './profile-details'
 
 interface UserProfile {
@@ -143,16 +143,6 @@ export default function AdminProfilePage() {
             </div>
           </div>
 
-          <motion.button
-            className="admin-page-action-btn"
-            style={{ width: '100%', marginTop: '2rem' }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => alert('ميزة تعديل الملف الشخصي قيد التطوير')}
-          >
-            <Edit className="w-5 h-5" />
-            <span>تعديل الملف الشخصي</span>
-          </motion.button>
         </motion.div>
       )}
 

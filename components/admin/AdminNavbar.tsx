@@ -10,7 +10,6 @@ import {
   X,
   Settings,
   LogOut,
-  HelpCircle,
   ChevronDown,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -249,10 +248,6 @@ export default function AdminNavbar({ onMenuClick }: { onMenuClick: () => void }
                     <button onClick={() => handleNavigate(`${basePath}/settings`)}>
                       <Settings className="w-4 h-4" />
                       <span>الإعدادات</span>
-                    </button>
-                    <button onClick={() => handleNavigate(`${basePath}/help`)}>
-                      <HelpCircle className="w-4 h-4" />
-                      <span>المساعدة</span>
                     </button>
                     <div className="admin-navbar-user-dropdown-divider"></div>
                     <button onClick={handleLogout}>
